@@ -52,10 +52,8 @@ export class FrameActionHandler implements PH.IActionHandler {
     }
   }
 
-  async getProcessDetails(processId: string): Promise<PH.ProcessDetailsShort> {
-    return this.sendCommand("getProcessDetails", { 
-      processId: processId
-    });
+  async getEnvironment(): Promise<any> {
+    return this.sendCommand("getEnvironment", {});
   }
 }
 
