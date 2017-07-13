@@ -1,4 +1,4 @@
-import * as PH from "../";
+import * as PH from "./";
 
 let waitingCommands: { [key: string]: any } = {};
 let parenthost: string = "*";

@@ -4,17 +4,17 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": false,
-    "outDir": "./lib/",
+    "outDir": "./lib",
+    "rootDir": "./src",
     "removeComments": true,
-    "noLib": false,
     "preserveConstEnums": true,
     "declaration": true
   },
    "include": [
-    "./src/**/*.ts"
+    "./src/**/*"
   ],
   "exclude": [ 
-    "./lib", 
-    "./node_modules"
+    "lib",
+    "node_modules"
   ]
 }
