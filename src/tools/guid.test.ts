@@ -1,7 +1,7 @@
 import { assert } from "chai";
 import * as Guid from "./guid";
 
-describe("sdk", function() {
+describe("tools", function() {
   describe("guid", function() {
 
     describe("createId", function() {
@@ -65,6 +65,13 @@ describe("sdk", function() {
       });
 
     });
+    describe("createInstanceNumber", function() {
+      it("soll gültige Nummern erzeugen", function() {
+        let numStr = Guid.createInstanceNumber();  
+        assert.equal(numStr.length, 7);           
+        assert.equal(numStr.substr(3, 1), ".");          
+      });
+    });
 
-  }); 
+  });
 });

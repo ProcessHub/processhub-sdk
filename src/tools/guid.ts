@@ -1,4 +1,5 @@
 const ID_LENGTH = 16;
+const TEMP_USERID_PREFIX = "tmpUserId_";
 
 function idHelper(count: number) {
   let out = "";
@@ -50,4 +51,14 @@ export function isWorkspaceId(id: string): boolean {
 
 export function nullId(): string {
   return "0000000000000000";
+}
+
+export function isTempUserId(id: string): boolean {
+  let prefixLength = TEMP_USERID_PREFIX.length;
+  return (id.substr(0, prefixLength) == TEMP_USERID_PREFIX);
+}
+
+// Nummer im Format 123.456
+export function createInstanceNumber(): string {
+  return Math.floor(1000 + Math.random() * 1000).toString().substr(1, 3) + "." + Math.floor(1000 + Math.random() * 1000).toString().substr(1, 3);
 }

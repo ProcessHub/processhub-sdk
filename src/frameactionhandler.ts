@@ -16,18 +16,18 @@ export class FrameActionHandler implements PH.IActionHandler {
     if (typeof window !== "undefined") {
       window.addEventListener("message", this.actionReplyListener, false);
       // Send init to "*" (no security risk here)
-      window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":init" + ":" + PH.createId() + ":{}", "*");
+      window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":init" + ":" + PH.Tools.createId() + ":{}", "*");
     }
   }
 
   private sendMessage(command: string, jsonData: any): void {
-    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + PH.createId() + ":" + JSON.stringify(jsonData), parenthost);    
+    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + PH.Tools.createId() + ":" + JSON.stringify(jsonData), parenthost);    
   }
 
   // Command format: 
   // [PHActionHandler]Plugin_Component:command:commandId:{data}
   private sendCommand(command: string, jsonData: any): Promise<any> {
-    let commandId = PH.createId(); 
+    let commandId = PH.Tools.createId(); 
     window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
 
     return new Promise<PH.ProcessDetailsShort>(function(resolve, reject) {
