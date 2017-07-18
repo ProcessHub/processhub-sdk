@@ -30,7 +30,7 @@ export class FrameActionHandler implements PH.IActionHandler {
     let commandId = PH.Tools.createId(); 
     window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
 
-    return new Promise<PH.ProcessDetailsShort>(function(resolve, reject) {
+    return new Promise<any>(function(resolve, reject) {
       waitingCommands[commandId] = resolve;
     });    
   }
