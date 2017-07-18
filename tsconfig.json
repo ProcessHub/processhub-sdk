@@ -4,7 +4,7 @@
     "module": "commonjs",
     "noImplicitAny": true,
     "sourceMap": false,
-    "outDir": "./lib",
+    "outDir": "./tsc_out",
     "rootDir": "./src",
     "removeComments": true,
     "preserveConstEnums": true,
@@ -16,6 +16,7 @@
   ],
   "exclude": [ 
     "lib",
+    "tsc_out",
     "node_modules"
   ]
 }

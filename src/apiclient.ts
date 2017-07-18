@@ -1,12 +1,11 @@
 import "fetch-everywhere";
-import { ApolloClient, ApolloProvider, createNetworkInterface, toIdValue } from "react-apollo";
+import { ApolloClient, createNetworkInterface, toIdValue } from "apollo-client";
 
 // All clients share the same backend client to optimize caching
 // -> The first instance defines the host, further host settings will be ignored.
 let apiClient: ApolloClient = null;
 
 export type ApiClient = ApolloClient;
-export class ProcessHubProvider extends ApolloProvider {}
 
 export function getApiClient(host: string = "https://app.processhub.com", accessToken: string = null): ApiClient {
   if (!apiClient) {
