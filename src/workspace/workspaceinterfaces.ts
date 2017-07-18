@@ -1,5 +1,4 @@
-import { ProcessDetails } from "../process";
-import { UserDetails } from "../user";
+import * as PH from "../";
 
 // WorkspaceType
 export const WorkspaceType = {
@@ -26,7 +25,7 @@ export interface WorkspaceDetails {
     // Wenn ein Knoten (z.B. extras.members) == null ist, wurden die Daten nicht ermittelt.
     // Falls es wirklich keine Inhalte zum Knoten gibt, wird z.B. extras.members = [] gesetzt.
     members?: WorkspaceMember[];
-    processes?: ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
+    processes?: PH.Process.ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
   };
 }
 
@@ -38,6 +37,6 @@ export enum WorkspaceRole {
 }
 
 export interface WorkspaceMember {
-  userDetails: UserDetails;
+  userDetails: PH.User.UserDetails;
   memberRole: WorkspaceRole;
 }

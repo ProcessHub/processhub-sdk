@@ -20,6 +20,23 @@ export class UserDetails {
   isLibraryAdmin?: boolean;
 }
 
+export const emptyUser: PH.User.UserDetails = {
+  userId: PH.Tools.nullId(),
+  mail: null,
+  realName: null,
+  extras: {},
+};
+
+export function getUserWorkspace(user: PH.User.UserDetails, workspaceId: string): PH.Workspace.WorkspaceDetails {
+  if (user == null)
+    return null; // Kein PH.Assert, falls kein User angemeldet
+
+  // ExtrasWorkspaces erforderlich
+  PH.Assert.isTrue(user.extras.workspaces != null, "getUserWorkspace: user.extras.workspaces == null");
+
+  return user.extras.workspaces.find((workspace) => workspace.workspaceId == workspaceId);
+}
+
 export enum AccountState {
   Preregistered, // Einladung versandt oder als Gastuser im System
   Registered, // User hat sich registriert, Mailadresse aber noch nicht bestätigt
@@ -55,3 +72,11 @@ export function getPredefinedGroupName(groupId: string): string {
       return PH.tl("Nur Prozessbeteiligte");
   }
 }
+
+// Sonderfall weil seltsamerweise undefined wenn es in den Actions ist
+export const UserActionsType = {
+  LoggedIn: "USERACTION_LOGGEDIN", // Benutzer hat sich erfolgreich angemeldet
+  LoggedOut: "USERACTION_LOGGEDOUT",
+  Failed: "USERACTION_FAILED" // Allgemeiner Api-Aufruffehler
+};
+export type UserActionsType = keyof typeof UserActionsType;

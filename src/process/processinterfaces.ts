@@ -1,3 +1,4 @@
+import * as PH from "../";
 import { ProcessAccessRights, ProcessRoles } from "./processrights";
 import { InstanceDetails } from "../instance";
 import { TodoDetails } from "../todo";
@@ -48,3 +49,30 @@ export interface ProcessStatistics {
   openTasksWarning: number;
   openTasksAlert: number;
 }
+
+export const ProcessResult = PH.Tools.strEnum([
+  "Ok",
+  "Error"
+]);
+export type ProcessResult = keyof typeof ProcessResult;
+
+export type TaskSettingsValueType = "List" | "Text";
+
+export const TaskSettings = {
+  Description: "description",
+  Jumps: "jumps",
+  UserForm: "processhub-userform",
+  SendTaskReceiver: "send-task-receiver"
+};
+export type TaskSettings = keyof typeof TaskSettings;
+
+export interface TaskExtensions {
+  description: string;
+  // jumpMode: JumpModeType;
+  // jumpValues: string[];
+  customFormSchemaString: string;
+  sendTaskReceiver: string[];
+}
+
+
+
