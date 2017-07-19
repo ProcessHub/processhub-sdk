@@ -47,3 +47,11 @@ export function requiredProcessViewExtras(page: PH.Path.Page, view: ProcessView)
       return null;
   }
 }
+
+export interface RowDetails {
+  rowNumber: number;
+  selectedRole: string;
+  task: string;
+  taskId: string;
+  laneId?: string;
+}

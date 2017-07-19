@@ -1,0 +1,1 @@
+/// <reference path="./diagram-js/lib/model/index.d.ts" />

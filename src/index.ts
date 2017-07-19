@@ -20,3 +20,4 @@ import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
 export * from "./tl";
+require("./process/types");

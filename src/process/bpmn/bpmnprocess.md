@@ -1,0 +1,2 @@
+- die Dateien bpmnprocess.ts und bpmnprocessdiagram.ts sind für die Erzeugung des BPMN 2.0 konformen XML
+- die datei mit "diagram" am Ende ist hierbei dafür zuständig aus dem eigentlichen Prozess (oberer Teil in der XML Datei) ein passendes Diagram zu übersetzen
