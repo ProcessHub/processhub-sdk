@@ -1,3 +1,4 @@
+/// <reference path="./process/types/index.d.ts" />
 export * from "./iactionhandler";
 export * from "./frameactionhandler";
 import * as Tools from "./tools";
@@ -20,4 +21,3 @@ import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
 export * from "./tl";
-require("./process/types");

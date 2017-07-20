@@ -3,7 +3,6 @@ import BpmnModdle = require("bpmn-moddle");
 import { assert } from "chai";
 import * as Process from "../../process";
 import * as BpmnProcess from "./bpmnprocess";
-import { Bpmn } from "modeler/bpmn/bpmn";
 
 async function createTestBpmnProcess(): Promise<Process.BpmnProcess> {
   let bpmnProcess: Process.BpmnProcess = new Process.BpmnProcess();
@@ -80,7 +79,7 @@ describe("common", function () {
           assert(processes.length > 0);
           assert(processes.length === 1);
 
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           assert(process.id != null);
           assert(process.id === processes[0].id);
@@ -94,18 +93,18 @@ describe("common", function () {
           assert(processes.length > 0);
           assert(processes.length === 1);
 
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           assert(process.id != null);
           assert(process.id === processes[0].id);
 
           // wie test zuvor bis hier her
 
-          let startEvent: Bpmn.StartEvent = bpmnProcess.getStartEvent(process.id);
+          let startEvent: PH.Process.Bpmn.StartEvent = bpmnProcess.getStartEvent(process.id);
           assert(startEvent.outgoing[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
           assert(startEvent.outgoing[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
 
-          let endEvent: Bpmn.EndEvent = bpmnProcess.getEndEvent(process.id);
+          let endEvent: PH.Process.Bpmn.EndEvent = bpmnProcess.getEndEvent(process.id);
           assert(endEvent.incoming[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
           assert(endEvent.incoming[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
         });
@@ -114,12 +113,12 @@ describe("common", function () {
           let bpmnProcess: Process.BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
           let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           let testId: string = BpmnProcess.BpmnProcess.getBpmnId(BpmnProcess.BPMN_LANE);
           let testLaneId: string = bpmnProcess.addLane(process.id, testId, "Test Lane");
 
-          let lanes: Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
+          let lanes: PH.Process.Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
 
           assert(lanes.length === 1);
           assert(lanes[lanes.length - 1].id === testLaneId);
@@ -130,7 +129,7 @@ describe("common", function () {
           let bpmnProcess: Process.BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
           let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           // wie test zuvor bis hier her
           let testLaneName: string = "Test Lane";
@@ -142,7 +141,7 @@ describe("common", function () {
 
           let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails);
 
-          let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
+          let testTaskObject: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
           assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
@@ -151,14 +150,14 @@ describe("common", function () {
           rowDetails.task = testTaskName;
           testTaskId = bpmnProcess.addOrModifyTask(process.id, rowDetails);
 
-          testTaskObject = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
+          testTaskObject = bpmnProcess.getExistingTask(process.id, testTaskId) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
           assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
 
-          let allLanes: Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
+          let allLanes: PH.Process.Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
 
-          let lanesWithTasks: Bpmn.Lane[] = bpmnProcess.getLanes(process.id, true);
+          let lanesWithTasks: PH.Process.Bpmn.Lane[] = bpmnProcess.getLanes(process.id, true);
 
           assert(allLanes.length === lanesWithTasks.length);
           assert(lanesWithTasks[0].name === testLaneName);
@@ -168,13 +167,13 @@ describe("common", function () {
           let bpmnProcess: Process.BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
           let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           // wie test zuvor bis hier her
           let testLaneName: string = "Test Lane";
           let testId: string = BpmnProcess.BpmnProcess.getBpmnId(BpmnProcess.BPMN_LANE);
           let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
-          let testLane: Bpmn.Lane = bpmnProcess.getProcessLane(process.id, testLaneId);
+          let testLane: PH.Process.Bpmn.Lane = bpmnProcess.getProcessLane(process.id, testLaneId);
 
           assert(testLane.flowNodeRef.length === 0);
 
@@ -185,7 +184,7 @@ describe("common", function () {
           // +2 hier wegen dem Start und End Event!!!!
           assert(testLane.flowNodeRef.length === (1 + 2));
 
-          let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
+          let testTaskObject: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as PH.Process.Bpmn.UserTask;
 
           bpmnProcess.removeTaskObjectFromLanes(process.id, testTaskObject);
 
@@ -199,7 +198,7 @@ describe("common", function () {
           let bpmnProcess: Process.BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
           let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           // wie test zuvor bis hier her
           let testLaneName: string = "Test Lane";
@@ -211,7 +210,7 @@ describe("common", function () {
 
           let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails);
 
-          let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
+          let testTaskObject: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
           assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
@@ -228,7 +227,7 @@ describe("common", function () {
             let bpmnProcess: Process.BpmnProcess;
             bpmnProcess = await createTestBpmnProcess();
             let processes = bpmnProcess.getProcesses();
-            let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+            let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
             // wie test zuvor bis hier her
             let testLaneName: string = "Test Lane";
@@ -244,7 +243,7 @@ describe("common", function () {
             let rowDetails1: Process.RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null };
             let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
 
-            let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
+            let testTaskObject1: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as PH.Process.Bpmn.UserTask;
             assert(testTaskObject1.name === testTaskName1);
             assert(testTaskObject1.id === testTaskId1);
             assert(testTaskObject1.$type === BpmnProcess.BPMN_TASK);
@@ -254,7 +253,7 @@ describe("common", function () {
             let rowDetails2: Process.RowDetails = { rowNumber: 1, selectedRole: testLaneId2, task: testTaskName2, taskId: null };
             let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
 
-            let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
+            let testTaskObject2: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as PH.Process.Bpmn.UserTask;
             assert(testTaskObject2.name === testTaskName2);
             assert(testTaskObject2.id === testTaskId2);
             assert(testTaskObject2.$type === BpmnProcess.BPMN_TASK);
@@ -264,7 +263,7 @@ describe("common", function () {
             let rowDetails3: Process.RowDetails = { rowNumber: 2, selectedRole: testLaneId, task: testTaskName3, taskId: null };
             let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3);
 
-            let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
+            let testTaskObject3: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as PH.Process.Bpmn.UserTask;
             assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
             assert(testTaskObject3.id === testTaskId3, testTaskObject3.id + " === " + testTaskId3);
             assert(testTaskObject3.$type === BpmnProcess.BPMN_TASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_TASK);
@@ -291,7 +290,7 @@ describe("common", function () {
           let bpmnProcess: Process.BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
           let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let process: PH.Process.Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           // wie test zuvor bis hier her
           let testLaneName: string = "Test Lane";
@@ -303,7 +302,7 @@ describe("common", function () {
           let rowDetails1: Process.RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null };
           let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
 
-          let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
+          let testTaskObject1: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject1.name === testTaskName1);
           assert(testTaskObject1.id === testTaskId1);
           assert(testTaskObject1.$type === BpmnProcess.BPMN_TASK);
@@ -313,7 +312,7 @@ describe("common", function () {
           let rowDetails2: Process.RowDetails = { rowNumber: 1, selectedRole: testLaneId, task: testTaskName2, taskId: null };
           let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
 
-          let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
+          let testTaskObject2: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject2.name === testTaskName2);
           assert(testTaskObject2.id === testTaskId2);
           assert(testTaskObject2.$type === BpmnProcess.BPMN_TASK);
@@ -323,7 +322,7 @@ describe("common", function () {
           let rowDetails3: Process.RowDetails = { rowNumber: 2, selectedRole: testLaneId, task: testTaskName3, taskId: null };
           let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3);
 
-          let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
+          let testTaskObject3: PH.Process.Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as PH.Process.Bpmn.UserTask;
           assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
           assert(testTaskObject3.id === testTaskId3, testTaskObject3.id + " === " + testTaskId3);
           assert(testTaskObject3.$type === BpmnProcess.BPMN_TASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_TASK);

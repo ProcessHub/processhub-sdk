@@ -1,3 +1,5 @@
+/// <reference path="./dc.d.ts" />
+
 // tslint:disable:no-empty-interface
 // tslint:disable:interface-name
 declare module "modeler/bpmn/di" {
