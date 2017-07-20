@@ -3,7 +3,7 @@ import * as PH from "../../";
 import { BpmnProcess } from "./bpmnprocess";
 import * as BpmnProcessDiagramFile from "./bpmnprocessdiagram";
 import * as BpmnProcessFile from "./bpmnprocess";
-import { Processhub, Bpmn, Dc } from "../";
+import { Processhub, Bpmn, Dc } from "../bpmn";
 
 export type ModdleElementType = Bpmn.bpmnType;
 
