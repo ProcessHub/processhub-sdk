@@ -11,9 +11,6 @@ export type BpmnModdleTask = Bpmn.Task;
 export type BpmnModdleUserTask = Bpmn.UserTask;
 export type BpmnModdleSendTask = Bpmn.SendTask;
 export type BpmnModdleExtensionElements = Bpmn.ExtensionElements;
-export type CamundaInputParameter = Processhub.InputParameter;
-export type CamundaOutputParameter = Processhub.OutputParameter;
-export type CamundaInputOutput = Processhub.InputOutput;
 export type BpmnModdleStartEvent = Bpmn.StartEvent;
 export type BpmnModdleEndEvent = Bpmn.EndEvent;
 export type BpmnModdleIntermediateThrowEvent = Bpmn.IntermediateThrowEvent;
@@ -33,7 +30,7 @@ const processhubNs = "http://processhub.com/schema/1.0/bpmn";
 export function createTaskExtensionTemplate(): BpmnModdleExtensionElements {
   let moddle = new BpmnModdle([], {});
 
-  let inputOutput: CamundaInputOutput = moddle.createAny("processhub:inputOutput", processhubNs, {
+  let inputOutput: Processhub.InputOutput = moddle.createAny("processhub:inputOutput", processhubNs, {
     $children: []
   });
 

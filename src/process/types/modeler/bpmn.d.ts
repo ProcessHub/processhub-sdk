@@ -904,7 +904,7 @@ declare module "modeler/bpmn/bpmn" {
       "xmlns:bpmndi": "http://www.omg.org/spec/BPMN/20100524/DI";
       "xmlns:dc": "http://www.omg.org/spec/DD/20100524/DC";
       "xmlns:di": "http://www.omg.org/spec/DD/20100524/DI";
-      "xmlns:processhub": "http://camunda.org/schema/1.0/bpmn";
+      "xmlns:processhub": "http://processhub.com/schema/1.0/bpmn";
       "xmlns:xsi": "http://www.w3.org/2001/XMLSchema-instance";
     }
 
