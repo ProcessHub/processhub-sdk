@@ -50,7 +50,7 @@
     "cross-env": "^5.0.1",
     "json-loader": "^0.5.4",
     "mocha": "^3.4.2",
-    "ts-loader": "^2.2.2",
+    "ts-loader": "2.3.0",
     "tslint": "^5.5.0",
     "tslint-loader": "^3.5.3",
     "typescript": "^2.4.1"
