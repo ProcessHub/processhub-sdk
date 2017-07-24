@@ -1,6 +1,7 @@
 /// <reference path="./process/types/index.d.ts" />
 export * from "./iactionhandler";
 export * from "./frameactionhandler";
+export * from "./tl";
 import * as Tools from "./tools";
 export { Tools };
 import * as Assert from "./tools/assert";
@@ -17,7 +18,9 @@ import * as User from "./user";
 export { User };
 import * as Path from "./path";
 export { Path };
+import * as Forms from "./forms";
+export { Forms };
 import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
-export * from "./tl";
+export * from "./environment";
