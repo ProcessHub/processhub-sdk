@@ -5,7 +5,7 @@ import * as Todo from "../../todo";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
 import BpmnModdle = require("bpmn-moddle");
-import { Bpmn } from "./";
+import { Bpmn } from "../bpmn";
 
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";

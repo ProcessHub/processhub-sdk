@@ -58,6 +58,12 @@
 /// <reference path="./moddle/lib/factory.d.ts" />
 /// <reference path="./moddle/lib/moddle.d.ts" />
 /// <reference path="./moddle-xml/lib/reader.d.ts" />
+/// <reference path="./modeler/bpmn.d.ts" />
+/// <reference path="./modeler/bpmndi.d.ts" />
+/// <reference path="./modeler/di.d.ts" />
+/// <reference path="./modeler/dc.d.ts" />
+/// <reference path="./modeler/processhub.d.ts" />
 /// <reference path="./tiny-svg/lib/append.d.ts" />
 /// <reference path="./tiny-svg/lib/clone.d.ts" />
 /// <reference path="./tiny-svg/lib/create.d.ts" />
+

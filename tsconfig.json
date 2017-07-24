@@ -6,7 +6,6 @@
     "sourceMap": false,
     "outDir": "./tsc_out",
     "rootDir": "./src",
-    "removeComments": true,
     "preserveConstEnums": true,
     "declaration": true,
     "jsx" : "react"

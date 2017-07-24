@@ -1,6 +1,5 @@
-
 import * as BpmnProcess from "./bpmnprocess";
-import { Bpmn, Bpmndi } from "./";
+import { Bpmn, Bpmndi } from "../bpmn";
 
 // bpmn Diagram
 export const DiagramShapeTypes = {

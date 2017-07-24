@@ -3,7 +3,7 @@ import BpmnModdle = require("bpmn-moddle");
 import { assert } from "chai";
 import * as Process from "../../process";
 import * as BpmnProcess from "./bpmnprocess";
-import { Bpmn } from "modeler/bpmn/bpmn";
+import { Bpmn } from "../../process/bpmn";
 
 async function createTestBpmnProcess(): Promise<Process.BpmnProcess> {
   let bpmnProcess: Process.BpmnProcess = new Process.BpmnProcess();

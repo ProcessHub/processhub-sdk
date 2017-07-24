@@ -128,6 +128,8 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "drag.start", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
 
+    public on(events: "drag.ended", callback: (event: EventBus.DragEndedEvent) => void): void;
+
     public on(events: "element.click", callback: (event: EventBus.ElementClickEvent) => void): void;
 
     public on(events: "resize.ended", callback: (event: EventBus.EventBusEvent<EventBus.IResizeEndedContext>) => void): void;
@@ -144,6 +146,7 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "spaceTool.ended", priority: number, callback: () => void): void;
     public on(events: "spaceTool.ended", callback: () => void): void;
+    public on(events: "spaceTool.ended", callback: (event: EventBus.SpaceToolEndedEvent) => void): void;
 
     /**
      * Register an event listener that is executed only once.
@@ -303,6 +306,55 @@ declare module "diagram-js/lib/core/EventBus" {
     }
 
     export class CreateRejectedEvent extends EventBusEvent<ICreateRejectedContext> {
+      dx: number;
+      dy: number;
+      hover: Shape;
+      hoverGfx: SVGGElement;
+      originalEvent: MouseEvent;
+      previousSelection: {}[];
+      shape: Shape;
+      x: number;
+      y: number;
+    }
+
+    export interface ISpaceToolEndedContext {
+      axis: "x" | "y";
+      direction: "e" | "w" | "s" | "n";
+      dragGroup: SVGGElement;
+      frameGroup: SVGGElement;
+      frames: {}[];
+      initialized: boolean;
+      line: SVGPathElement;
+      movingConnections: Connection[];
+      movingShapes: Shape[];
+      resizingShapes: Shape[];
+    }
+
+    export class SpaceToolEndedEvent extends EventBusEvent<ISpaceToolEndedContext> {
+      dx: number;
+      dy: number;
+      hover: Shape;
+      hoverGfx: SVGGElement;
+      originalEvent: MouseEvent;
+      previousSelection: {}[];
+      x: number;
+      y: number;
+    }
+
+    export interface IDragEndedEventContext {
+      allDraggedElements: Base[];
+      canExecute: boolean;
+      delta: IPoint;
+      differentParents: boolean;
+      dragGroup: SVGGElement;
+      shape: Shape;
+      shapes: Shape[];
+      snapContext: SnapContext;
+      target: Shape;
+      validatedShapes: Shape[];
+    }
+
+    export class DragEndedEvent extends EventBusEvent<IDragEndedEventContext> {
       dx: number;
       dy: number;
       hover: Shape;
