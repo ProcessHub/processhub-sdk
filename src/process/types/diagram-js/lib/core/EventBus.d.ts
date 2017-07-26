@@ -124,6 +124,8 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "commandStack.changed", callback: () => void): void;
 
+    public on(events: "connection.added", callback: (event: EventBus.ConnectionAddedEvent) => void): void;
+
     public on(events: "connectionSegment.move.ended", callback: (event: EventBus.ConnectionSegmentMoveEndedEvent) => void): void;
 
     public on(events: "drag.start", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
@@ -364,6 +366,11 @@ declare module "diagram-js/lib/core/EventBus" {
       shape: Shape;
       x: number;
       y: number;
+    }
+
+    export class ConnectionAddedEvent extends EventBusEvent<void> {
+      element: Connection;
+      gfx: SVGGElement;      
     }
   }
 }
