@@ -18,8 +18,6 @@ import * as User from "./user";
 export { User };
 import * as Path from "./path";
 export { Path };
-import * as Forms from "./forms";
-export { Forms };
 import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
