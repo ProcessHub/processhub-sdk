@@ -3,13 +3,9 @@ import { FormSchema } from "../formgeneratorclass";
 
 export namespace TaskSettings {
   export interface TaskSettingsTemplate extends FormSchema {
-    properties: TaskSettingsProperties;
-  }
-
-  export interface TaskSettingsProperties {
-    description: any;
-    // jumpRadio: any;
-    // jumpToTasks: any;
+    properties: {
+      "description": any
+    };
   }
 
   export const Schema: TaskSettingsTemplate = {

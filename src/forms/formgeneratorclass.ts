@@ -6,12 +6,12 @@ export interface FormSchema {
   title: string;
   type: string;
   required: string[];
-  properties: any;
+  properties: { [key: string]: PropertyObject };
 }
 
 interface PropertyStash {
   id: string;
-  propertyObject: PropertyObject[];
+  propertyObject: PropertyObject;
 }
 
 export enum FormTemplate {
@@ -22,7 +22,8 @@ export const FormGeneratorFieldTypes = {
   String: "ProcessHubTextInput",
   Textarea: "ProcessHubTextArea",
   Checkbox: "ProcessHubCheckbox",
-  FileUpload: "ProcessHubFileUpload"
+  FileUpload: "ProcessHubFileUpload",
+  Date: "ProcessHubDate",
 };
 export type FormGeneratorFieldTypes = keyof typeof FormGeneratorFieldTypes;
 
@@ -35,7 +36,8 @@ export interface PropertyObject {
   type: string;
   title: string;
   default?: string;
-  customWidgetClass: FormGeneratorFieldTypes;
+  format?: string;
+  customWidgetClass?: FormGeneratorFieldTypes;
   required: boolean;
 }
 
@@ -51,8 +53,10 @@ export class FormGeneratorClass {
   }
 
   // Attributes
-  private schemaObject: any;
-  private schemaUiObject: any = {};
+  private schemaObject: FormSchema;
+  private schemaUiObject: {} = {
+
+  };
   private propertiesStash: PropertyStash[];
 
   constructor(formTitle: string = null) {
@@ -101,21 +105,17 @@ export class FormGeneratorClass {
     }
   }
 
-  public getSchemaUiObject(): FormSchema {
-    return this.schemaUiObject;
-  }
-
-  public addStringField(rowNumber: number, title: string, defaultValue: any, isRequired: boolean): void {
+  public addStringField(rowNumber: number, title: string, defaultValue: string, isRequired: boolean): void {
     let propObj: PropertyObject = { type: "string", title: title, default: defaultValue, customWidgetClass: FormGeneratorFieldTypes.String as FormGeneratorFieldTypes, required: isRequired };
     this.addField(rowNumber, "string", propObj);
   }
 
-  public addTextAreaField(rowNumber: number, title: string, defaultValue: any, isRequired: boolean): void {
+  public addTextAreaField(rowNumber: number, title: string, defaultValue: string, isRequired: boolean): void {
     let propObj: PropertyObject = { type: "string", title: title, default: defaultValue, customWidgetClass: FormGeneratorFieldTypes.Textarea as FormGeneratorFieldTypes, required: isRequired };
     this.addField(rowNumber, "string", propObj);
   }
 
-  public addCheckboxField(rowNumber: number, title: string, defaultValue: any, isRequired: boolean): void {
+  public addCheckboxField(rowNumber: number, title: string, defaultValue: string, isRequired: boolean): void {
     let propObj: PropertyObject = { type: "string", title: title, customWidgetClass: FormGeneratorFieldTypes.Checkbox as FormGeneratorFieldTypes, required: isRequired };
     this.addField(rowNumber, "string", propObj);
   }
@@ -138,12 +138,12 @@ export class FormGeneratorClass {
     this.fillStashInProperties();
   }
 
-  public addDateField(rowNumber: number, type: string, title: string, defaultValue: any): void {
-    let propObj: any = { type: "string", title: title, format: "date", default: defaultValue, customWidgetClass: "ProcessHubDate" };
+  public addDateField(rowNumber: number, type: string, title: string, defaultValue: string, required: boolean): void {
+    let propObj: PropertyObject = { type: "string", title: title, format: "date", default: defaultValue, customWidgetClass: FormGeneratorFieldTypes.Date as FormGeneratorFieldTypes, required };
     this.addField(rowNumber, type, propObj);
   }
 
-  private addField(rowNumber: number, type: string, propObj: any): void {
+  private addField(rowNumber: number, type: string, propObj: PropertyObject): void {
     let id: string;
     if (this.propertiesStash[rowNumber] != null) {
       id = this.propertiesStash[rowNumber].id;
@@ -168,7 +168,7 @@ export class FormGeneratorClass {
     }
   }
 
-  public getFormDataFromUserInput(prevInput: PH.Instance.FieldContents): any {
+  public getFormDataFromUserInput(prevInput: PH.Instance.FieldContents): PH.Instance.FieldContents {
     return prevInput;
   }
 }
