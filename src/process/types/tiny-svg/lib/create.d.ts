@@ -35,7 +35,8 @@ declare module "tiny-svg/lib/create" {
       stroke: SVGPaint;
       strokeWidth: number;
       markerEnd?: string;
-      strokeDasharray?: string;
+      strokeDasharray?: string | number[];
+      strokeLinecap?: "round";
     }
     
     export interface ISVGPathAttrib extends ISVGPresentationAttrib {
