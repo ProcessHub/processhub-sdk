@@ -30,7 +30,6 @@ export interface TodoDetails {
   fullUrl?: string;
 
   fixHoursForCreateTime?: number;
-  guestMailAddress?: string;
 
   extras: {
     instance?: InstanceDetails;

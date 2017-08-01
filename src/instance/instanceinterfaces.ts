@@ -1,6 +1,7 @@
 import { RoleOwnerMap } from "../process";
 import { DecisionTask } from "../todo";
 import { FieldContents } from "../instance";
+import * as PH from "../";
 
 export interface InstanceDetails {
   instanceId: string;
@@ -17,8 +18,21 @@ export interface InstanceDetails {
   };
 }
 
+export const FieldType = PH.Tools.strEnum([
+  "String",
+  "Boolean",
+  "RoleOwner",
+  "Url"
+]);
+export type FieldType = keyof typeof FieldType;
+
+export interface FieldContent {
+  type: FieldType; // TODO: sync with formgenerator-types
+  data: any;
+}
+
 export interface FieldContents {
-  [field: string]: string;
+  [field: string]: FieldContent;
 }
 
 export interface ResumeInstanceDetails {
