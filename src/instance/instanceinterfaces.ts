@@ -1,6 +1,6 @@
 import { RoleOwnerMap } from "../process";
 import { DecisionTask } from "../todo";
-import { FieldContents } from "../instance";
+import { FieldMap } from "../data";
 import * as PH from "../";
 
 export interface InstanceDetails {
@@ -13,26 +13,9 @@ export interface InstanceDetails {
   isSimulation?: boolean;
   extras: {
     instanceState?: any;
-    fieldContents?: FieldContents;
+    dataFields?: FieldMap;
     roleOwners?: RoleOwnerMap;
   };
-}
-
-export const FieldType = PH.Tools.strEnum([
-  "String",
-  "Boolean",
-  "RoleOwner",
-  "Url"
-]);
-export type FieldType = keyof typeof FieldType;
-
-export interface FieldContent {
-  type: FieldType; // TODO: sync with formgenerator-types
-  data: any;
-}
-
-export interface FieldContents {
-  [field: string]: FieldContent;
 }
 
 export interface ResumeInstanceDetails {
@@ -40,5 +23,5 @@ export interface ResumeInstanceDetails {
   completedTodoId: string;
   // Sollte nächste Activity Exclusive Gateway sein, wird hier die Entscheidung über den SF mitgeteilt
   choosenTask?: DecisionTask;
-  fieldContents?: FieldContents;
+  dataFields?: FieldMap;
 }

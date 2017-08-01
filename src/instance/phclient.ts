@@ -19,7 +19,7 @@ export enum InstanceExtras {
   ExtrasState = 1 << 0,
   ExtrasRoleOwners = 1 << 1,
   ExtrasRoleOwnersWithNames = 1 << 2, // ermittelt zusätzlich die Namen der Rolleninhaber
-  ExtrasFieldContents = 1 << 3
+  ExtrasDataFields = 1 << 3
 }
 
 // Extras, die für den angegebenen View benötigt werden
@@ -28,11 +28,11 @@ export function requiredInstanceViewExtras(page: Page, view: InstanceView): Inst
     case Page.InstancePage:
       switch (view) {
         case InstanceView.Show:
-          return InstanceExtras.None | InstanceExtras.ExtrasFieldContents;
+          return InstanceExtras.None | InstanceExtras.ExtrasDataFields;
         default:
           if (Tools.isId(view.toUpperCase())) {
             // View scheint ein Todo zu sein
-            return InstanceExtras.None | InstanceExtras.ExtrasFieldContents;
+            return InstanceExtras.None | InstanceExtras.ExtrasDataFields;
           } else
             return null;  // -> View ungültig
       }
