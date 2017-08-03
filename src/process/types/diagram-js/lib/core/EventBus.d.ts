@@ -134,6 +134,8 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "element.click", callback: (event: EventBus.ElementClickEvent) => void): void;
 
+    public on(events: "element.dblclick", callback: (event: EventBus.ElementDblClickEvent) => void): void;
+
     public on(events: "resize.ended", callback: (event: EventBus.EventBusEvent<EventBus.IResizeEndedContext>) => void): void;
 
     public on(events: "shape.added", priority: number, callback: (Event: EventBus.ShapeAddedEvent) => void): void;
@@ -261,6 +263,9 @@ declare module "diagram-js/lib/core/EventBus" {
       public stopPropagation(): void;
       public preventDefault(): void;
       public init(data: Object): void;
+    }
+
+    export class ElementDblClickEvent extends ElementClickEvent {
     }
 
     export class ElementClickEvent extends EventBusEvent<void> {
