@@ -109,7 +109,7 @@ declare module "diagram-js/lib/core/EventBus" {
      * @param {Number} [priority=1000] the priority in which this listener is called, larger is higher
      * @param {Function} callback
      * @param {Object} [that] Pass context (`this`) to the callback
-     */    
+     */
     public on(events: EventBus.EventType, priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that: Object): void;
     public on(events: EventBus.EventType, callback: (event: EventBus.EventBusEvent<Object>) => void): void;
 
@@ -117,7 +117,7 @@ declare module "diagram-js/lib/core/EventBus" {
     public on(events: "bendpoint.move.ended", callback: (Event: EventBus.BEndpointMoveEndedEvent) => void): void;
 
     public on(events: "canvas.init", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
-    
+
     public on(events: "create.ended", callback: (event: EventBus.CreateEndedEvent) => void): void;
 
     public on(events: "create.rejected", callback: (event: EventBus.CreateRejectedEvent) => void): void;
@@ -207,6 +207,8 @@ declare module "diagram-js/lib/core/EventBus" {
      * Clear the diagram, removing all contents.
      */
     public fire(type: "diagram.clear" | "diagram.init"): void;
+    public fire(type: "render.shape", data: { gfx: SVGElement, element: Shape }): SVGElement;
+    public fire(type: "render.connection", data: { gfx: SVGElement, element: Connection }): SVGElement;
 
     /*
      * Add new listener with a certain priority to the list
@@ -375,7 +377,7 @@ declare module "diagram-js/lib/core/EventBus" {
 
     export class ConnectionAddedEvent extends EventBusEvent<void> {
       element: Connection;
-      gfx: SVGGElement;      
+      gfx: SVGGElement;
     }
   }
 }

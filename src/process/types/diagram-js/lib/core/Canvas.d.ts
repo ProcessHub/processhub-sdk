@@ -278,7 +278,7 @@ declare module "diagram-js/lib/core/Canvas" {
      * @param  {ElementDescriptor} element
      * @return {Bounds} the absolute bounding box
      */
-    public getAbsoluteBBox(element: {}): Object;
+    public getAbsoluteBBox(element: Base): IBounds;
 
     /**
      * Fires an event in order other modules can react to the

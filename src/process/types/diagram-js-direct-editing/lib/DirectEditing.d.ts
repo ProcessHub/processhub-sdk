@@ -4,6 +4,7 @@ declare module "diagram-js-direct-editing/lib/DirectEditing" {
   import Canvas = require("diagram-js/lib/core/Canvas");
   import EventBus = require("diagram-js/lib/core/EventBus");
   import { Base } from "diagram-js/lib/model";
+  import { IBounds } from "diagram-js";
 
   /**
    * A direct editing component that allows users
@@ -51,7 +52,7 @@ declare module "diagram-js-direct-editing/lib/DirectEditing" {
      * @param {Object} ElementDescriptor the descriptor for a shape or connection
      * @return {Boolean} true if the activation was possible
      */
-    public activate(element: {}): {};
+    public activate(element: Base): void;
 
   }
 
@@ -67,7 +68,8 @@ declare module "diagram-js-direct-editing/lib/DirectEditing" {
     }
 
     export interface DirectEditingProvider {
-      activate(Element: Base): Context;
+      activate(element: Base): Context;
+      update(element: Base, value: string, oldValue: string, bounds: IBounds): void;
     }
   }
 }
