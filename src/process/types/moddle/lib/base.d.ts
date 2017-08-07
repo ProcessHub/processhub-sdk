@@ -11,6 +11,7 @@ declare module "moddle/lib/base" {
     public $type: string;
     public $children?: Base[];
     public $body?: string;
+    public $parent: Base;
     public name?: string;
 
     public $instanceOf(element: {}, type: {}): boolean;

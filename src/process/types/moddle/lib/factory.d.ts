@@ -12,7 +12,6 @@ declare module "moddle/lib/factory" {
     class ModddleElement extends Base {
       public $type: string;
       public $attrs: Object;
-      public $parent: Object;
 
       constructor(attrs: Object);
     }

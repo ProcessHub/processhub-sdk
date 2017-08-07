@@ -9,7 +9,6 @@ import { Bpmn } from "../bpmn";
 
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
-import * as _ from "lodash";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";

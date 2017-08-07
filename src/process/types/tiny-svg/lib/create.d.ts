@@ -15,6 +15,7 @@ declare module "tiny-svg/lib/create" {
   function create(name: "marker", attrs: create.ISVGMarkerAttrib): SVGMarkerElement;
   function create(name: "rect", attrs: create.ISVGRectAttrib): SVGRectElement;
   function create(name: "circle", attrs: create.ISVGCircleAttrib): SVGCircleElement;
+  function create(name: "ellipse", attrs: create.ISVGEllipseAttrib): SVGEllipseElement;
   function create(name: "polyline", attrs: create.ISVGPolylineAttrib): SVGPolylineElement;
   function create(name: "tspan", attrs: create.ISVGTSpanAttrib): SVGTSpanElement;
   function create(name: "text", attrs: create.ISVGTextAttrib): SVGTextElement;
@@ -35,7 +36,8 @@ declare module "tiny-svg/lib/create" {
       stroke: SVGPaint;
       strokeWidth: number;
       markerEnd?: string;
-      strokeDasharray?: string;
+      strokeDasharray?: string | number[];
+      strokeLinecap?: "round";
     }
     
     export interface ISVGPathAttrib extends ISVGPresentationAttrib {
@@ -133,6 +135,14 @@ declare module "tiny-svg/lib/create" {
       y: number;
       width: number;
       height: number;
+    }
+
+    // https://developer.mozilla.org/de/docs/Web/SVG/Element/ellipse
+    export interface ISVGEllipseAttrib extends ISVGPresentationAttrib {
+      cx: number;
+      cy: number;
+      rx: number;
+      ry: number;
     }
   }
 }

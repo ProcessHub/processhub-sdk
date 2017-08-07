@@ -77,6 +77,7 @@ declare module "diagram-js/lib/features/rules/RuleProvider" {
     public addRule(actions: "connection.reconnectEnd", fn: (context: RuleProvider.IConnectionReconnectEndContext) => boolean): void;
     public addRule(actions: "connection.reconnectStart", fn: (context: RuleProvider.IConnectionReconnectStartContext) => boolean): void;
     public addRule(actions: "shape.create", fn: (context: RuleProvider.IShapeCreateContext) => boolean): void;
+    public addRule(actions: "shape.append", fn: (context: RuleProvider.IShapeAppendContext) => boolean): void;
     public addRule(actions: "elements.delete", fn: (context: RuleProvider.IElementsDeleteContext) => boolean): void;
 
     /**
@@ -134,6 +135,13 @@ declare module "diagram-js/lib/features/rules/RuleProvider" {
 
     export interface IElementsDeleteContext {
       elements: Base[];
+    }
+
+    export interface IShapeAppendContext {
+      position: IPoint;
+      shape: Shape;
+      source: Shape;
+      target: Shape;
     }
 
   }

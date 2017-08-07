@@ -49,6 +49,9 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
      * @param  {Object} attrs   a number of attributes to initialize the model instance with
      * @return {Object}         model instance
      */
+    public create(descriptor: "bpmn:DataInputAssociation", attrs: Partial<Bpmn.DataInputAssociation>): Bpmn.DataInputAssociation;
+    public create(descriptor: "bpmn:DataObjectReference", attrs: Partial<Bpmn.DataObjectReference>): Bpmn.DataObjectReference;
+    public create(descriptor: "bpmn:DataStoreReference", attrs: Partial<Bpmn.DataStoreReference>): Bpmn.DataStoreReference;
     public create(descriptor: "bpmn:Collaboration", attrs: Partial<Bpmn.Collaboration>): Bpmn.Collaboration;
     public create(descriptor: "bpmn:BoundaryEvent", attrs: Partial<Bpmn.BoundaryEvent>): Bpmn.BoundaryEvent;
     public create(descriptor: "bpmn:Definitions", attrs: Partial<Bpmn.Definitions>): Bpmn.Definitions;
