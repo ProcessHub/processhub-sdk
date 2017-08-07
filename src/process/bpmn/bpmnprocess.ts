@@ -227,10 +227,12 @@ export class BpmnProcess {
     for (let processObject of gat.outgoing) {
       let tmpRes = null;
       // let tmpRouteStack = routeStack == null ? [] : _.cloneDeep(routeStack);
-      // if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY) {
+      if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY) {
+        if (processObject.targetRef.outgoing.length == 1)
+          tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway);
       //   tmpRouteStack.push(processObject.targetRef.id);
       //   tmpRes = getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, tmpRouteStack);
-      // }
+      }
 
       // wenn es kein gateway ist dann füge zusammen
       if (tmpRes != null) {
