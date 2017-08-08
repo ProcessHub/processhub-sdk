@@ -14,7 +14,8 @@ export function isValidWorkspaceName(workspaceName: string): boolean {
   // Erlaubt sind alphanumerische Zeichen sowie max. ein Bindestrich
   // Am Anfang muss ein Buchstabe stehen, am Ende Zahl oder Buchstabe
   // Format soll evtl. als Subdomain geeignet sein
-  let re = /^[A-Za-z][A-Za-z0-9]*[A-Za-z0-9\-]{0,1}[A-Za-z0-9]+$/;
+  let re = /^[A-Za-z][A-Za-z0-9]*[A-Za-z0-9\-]*[A-Za-z0-9]+$/;
+  // let re = /^[A-Za-z][A-Za-z0-9]*[A-Za-z0-9]+$/;
   return re.test(workspaceName);
 }
 
@@ -87,4 +88,26 @@ export function splitStringOnMultipleSigns(parameter: string, splitSignListOrdne
   });
 
   return result;
+}
+
+export function getShuffledNumberArray(amountOfElements: number, numberLenght: number = 3) {
+  let array: number[] = [];
+  for (let i = 0; i < amountOfElements; i++) {
+    let value = ("000" + i).slice(-(numberLenght));
+    array.push(parseInt(value));
+  }
+  return shuffleArray(array);
+}
+
+/**
+ * Randomize array element order in-place.
+ */
+function shuffleArray(array: number[]) {
+  for (let i = array.length - 1; i > 0; i--) {
+    let j = Math.floor(Math.random() * (i + 1));
+    let temp = array[i];
+    array[i] = array[j];
+    array[j] = temp;
+  }
+  return array;
 }
