@@ -71,6 +71,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
     public create(descriptor: "bpmn:StartEvent", attrs: Partial<Bpmn.StartEvent>): Bpmn.StartEvent;
     public create(descriptor: "bpmn:TimerEventDefinition", attrs: Partial<Bpmn.TimerEventDefinition>): Bpmn.TimerEventDefinition;
     public create(descriptor: "bpmn:UserTask", attrs: Partial<Bpmn.UserTask>): Bpmn.UserTask;
+    public create(descriptor: "bpmn:TextAnnotation", attrs: Partial<Bpmn.TextAnnotation>): Bpmn.TextAnnotation;
 
     public create(descriptor: "bpmndi:BPMNDiagram", attrs: Partial<Bpmndi.BPMNDiagram>): Bpmndi.BPMNDiagram;
     public create(descriptor: "bpmndi:BPMNEdge", attrs: Partial<Bpmndi.BPMNEdge>): Bpmndi.BPMNEdge;
