@@ -27,7 +27,7 @@ declare module "diagram-js/lib/core/ElementFactory" {
   }
 
   namespace ElementFactory {
-    export type ElementType = "shape" | "connection";
+    export type ElementType = "shape" | "connection" | "label";
 
     export interface ICreationAttrs {
       businessObject?: Object;

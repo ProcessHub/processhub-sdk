@@ -113,7 +113,7 @@ declare module "diagram-js/lib/model" {
    *
    * @extends Shape
    */
-  class Label extends Base {
+  class Label extends Shape {
     /**
      * The labeled element
      *

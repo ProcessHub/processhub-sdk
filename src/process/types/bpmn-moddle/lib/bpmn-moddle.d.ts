@@ -78,6 +78,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
     public create(descriptor: "bpmndi:BPMNEdge", attrs: Partial<Bpmndi.BPMNEdge>): Bpmndi.BPMNEdge;
     public create(descriptor: "bpmndi:BPMNPlane", attrs: Partial<Bpmndi.BPMNPlane>): Bpmndi.BPMNPlane;
     public create(descriptor: "bpmndi:BPMNShape", attrs: Partial<Bpmndi.BPMNShape>): Bpmndi.BPMNShape;
+    public create(descriptor: "bpmndi:BPMNLabel", attrs: Partial<Bpmndi.BPMNLabel>): Bpmndi.BPMNLabel;
 
     public create(descriptor: "dc:Bounds", attrs: Partial<Dc.Bounds>): Dc.Bounds;
     public create(descriptor: "dc:Point", attrs: Partial<Dc.Point>): Dc.Point;
