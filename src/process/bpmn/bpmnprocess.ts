@@ -13,7 +13,7 @@ import { ModdleElementType } from "./bpmnmoddlehelper";
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
 export const BPMN_PARTICIPANT = "bpmn:Participant";
-export const BPMN_TASK = "bpmn:UserTask";
+export const BPMN_USERTASK = "bpmn:UserTask";
 export const BPMN_SENDTASK = "bpmn:SendTask";
 export const BPMN_STARTEVENT = "bpmn:StartEvent";
 export const BPMN_ENDEVENT = "bpmn:EndEvent";
@@ -332,7 +332,7 @@ export class BpmnProcess {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
     let flowElements: Bpmn.FlowElement[] = process.flowElements.filter(
       (e: Bpmn.FlowElement) =>
-        e.$type === BPMN_TASK
+        e.$type === BPMN_USERTASK
         || e.$type === BPMN_STARTEVENT
       // || e.$type === BPMN_ENDEVENT
     );
@@ -351,7 +351,7 @@ export class BpmnProcess {
 
   public getExistingTask(processId: string, taskId: string): Bpmn.Task {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
-    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_TASK || e.$type === BPMN_SENDTASK));
+    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_USERTASK || e.$type === BPMN_SENDTASK));
     let task = flowElements.find(element => element.id == taskId);
 
     return task as Bpmn.Task;
@@ -379,7 +379,7 @@ export class BpmnProcess {
     let lanes = this.getProcessLanes(this.processId());
 
     for (let lane of lanes) {
-      let mapForLane = lane.flowNodeRef ? lane.flowNodeRef.filter(node => (node.$type == BPMN_TASK || node.$type == BPMN_SENDTASK || node.$type == BPMN_EXCLUSIVEGATEWAY)) : null;
+      let mapForLane = lane.flowNodeRef ? lane.flowNodeRef.filter(node => (node.$type == BPMN_USERTASK || node.$type == BPMN_SENDTASK || node.$type == BPMN_EXCLUSIVEGATEWAY)) : null;
       let mapForLaneNodes = null;
       if (mapForLane != null) {
         mapForLaneNodes = mapForLane.map(taskNode => {
@@ -627,7 +627,7 @@ export class BpmnProcess {
     // Weiteren Prozess einfügen
     let id: string;
     if (rowDetails.taskId == null) {
-      id = BpmnProcess.getBpmnId(BPMN_TASK);
+      id = BpmnProcess.getBpmnId(BPMN_USERTASK);
       rowDetails.taskId = id;
     }
 
@@ -640,7 +640,7 @@ export class BpmnProcess {
 
     if (focusedTask == null) {
       let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
-      focusedTask = this.moddle.create(BPMN_TASK, { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+      focusedTask = this.moddle.create(BPMN_USERTASK, { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
       processContext.flowElements.push(focusedTask);
       isNewTask = true;
     } else {
@@ -851,7 +851,7 @@ export class BpmnProcess {
 
     // Liste enthält nur einen Pfad nach Gateways und ist daher nicht unbedingt vollständig
     // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
-    let tasks = this.getEvents(processId, BPMN_TASK);
+    let tasks = this.getEvents(processId, BPMN_USERTASK);
     if (tasks != null) {
       tasks.map(task => {
         if (sortedTasks.find(e => e.id == task.id) == null) {

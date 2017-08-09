@@ -25,7 +25,7 @@ describe("common", function () {
         });
 
         it("soll eine ID mit einem Prefix zurückgeben", function () {
-          let id: string = Process.BpmnProcess.getBpmnId(BpmnProcess.BPMN_TASK);
+          let id: string = Process.BpmnProcess.getBpmnId(BpmnProcess.BPMN_USERTASK);
           assert(id.length > 16);
         });
 
@@ -145,7 +145,7 @@ describe("common", function () {
           let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
-          assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
+          assert(testTaskObject.$type === BpmnProcess.BPMN_USERTASK);
 
           testTaskName += " Test Edit";
           rowDetails.task = testTaskName;
@@ -154,7 +154,7 @@ describe("common", function () {
           testTaskObject = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
-          assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
+          assert(testTaskObject.$type === BpmnProcess.BPMN_USERTASK);
 
           let allLanes: Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
 
@@ -214,7 +214,7 @@ describe("common", function () {
           let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
           assert(testTaskObject.id === testTaskId);
-          assert(testTaskObject.$type === BpmnProcess.BPMN_TASK);
+          assert(testTaskObject.$type === BpmnProcess.BPMN_USERTASK);
 
           let testDescription = "tritra test 123!";
           BpmnProcess.BpmnProcess.addOrUpdateExtension(testTaskObject, Process.TaskSettings.Description as Process.TaskSettings, testDescription, "Text");
@@ -247,7 +247,7 @@ describe("common", function () {
             let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
             assert(testTaskObject1.name === testTaskName1);
             assert(testTaskObject1.id === testTaskId1);
-            assert(testTaskObject1.$type === BpmnProcess.BPMN_TASK);
+            assert(testTaskObject1.$type === BpmnProcess.BPMN_USERTASK);
 
 
             let testTaskName2: string = "Test Aufgabe B";
@@ -257,7 +257,7 @@ describe("common", function () {
             let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
             assert(testTaskObject2.name === testTaskName2);
             assert(testTaskObject2.id === testTaskId2);
-            assert(testTaskObject2.$type === BpmnProcess.BPMN_TASK);
+            assert(testTaskObject2.$type === BpmnProcess.BPMN_USERTASK);
 
 
             let testTaskName3: string = "Test Aufgabe C";
@@ -267,7 +267,7 @@ describe("common", function () {
             let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
             assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
             assert(testTaskObject3.id === testTaskId3, testTaskObject3.id + " === " + testTaskId3);
-            assert(testTaskObject3.$type === BpmnProcess.BPMN_TASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_TASK);
+            assert(testTaskObject3.$type === BpmnProcess.BPMN_USERTASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_USERTASK);
 
 
             // 3 Aufgaben hinzugefügt sollte so aussehen nun Start -> a -> b -> c -> Ende
@@ -306,7 +306,7 @@ describe("common", function () {
           let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
           assert(testTaskObject1.name === testTaskName1);
           assert(testTaskObject1.id === testTaskId1);
-          assert(testTaskObject1.$type === BpmnProcess.BPMN_TASK);
+          assert(testTaskObject1.$type === BpmnProcess.BPMN_USERTASK);
 
 
           let testTaskName2: string = "Test Aufgabe B";
@@ -316,7 +316,7 @@ describe("common", function () {
           let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
           assert(testTaskObject2.name === testTaskName2);
           assert(testTaskObject2.id === testTaskId2);
-          assert(testTaskObject2.$type === BpmnProcess.BPMN_TASK);
+          assert(testTaskObject2.$type === BpmnProcess.BPMN_USERTASK);
 
 
           let testTaskName3: string = "Test Aufgabe C";
@@ -326,7 +326,7 @@ describe("common", function () {
           let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
           assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
           assert(testTaskObject3.id === testTaskId3, testTaskObject3.id + " === " + testTaskId3);
-          assert(testTaskObject3.$type === BpmnProcess.BPMN_TASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_TASK);
+          assert(testTaskObject3.$type === BpmnProcess.BPMN_USERTASK, testTaskObject3.$type + " === " + BpmnProcess.BPMN_USERTASK);
 
           // 3 Aufgaben hinzugefügt sollte so aussehen nun Start -> a -> b -> c -> Ende
           let tasks = bpmnProcess.getSortedTasks(bpmnProcess.processId());
