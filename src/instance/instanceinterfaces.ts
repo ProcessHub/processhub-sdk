@@ -1,6 +1,6 @@
 import { RoleOwnerMap } from "../process";
 import { DecisionTask } from "../todo";
-import { FieldMap } from "../data";
+import { FieldContentMap } from "../data";
 import * as PH from "../";
 
 export interface InstanceDetails {
@@ -13,7 +13,7 @@ export interface InstanceDetails {
   isSimulation?: boolean;
   extras: {
     instanceState?: any;
-    dataFields?: FieldMap;
+    fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
   };
 }
@@ -23,5 +23,5 @@ export interface ResumeInstanceDetails {
   completedTodoId: string;
   // Sollte nächste Activity Exclusive Gateway sein, wird hier die Entscheidung über den SF mitgeteilt
   choosenTask?: DecisionTask;
-  dataFields?: FieldMap;
+  fieldContents?: FieldContentMap;
 }
