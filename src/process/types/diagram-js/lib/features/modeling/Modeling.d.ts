@@ -5,7 +5,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
   import CommandStack = require("diagram-js/lib/command/CommandStack");
   import ElementFactory = require("diagram-js/lib/core/ElementFactory");
   import { IBounds, IPoint } from "diagram-js";
-  import { Base, Connection, Shape } from "diagram-js/lib/model";
+  import { Base, Connection, Shape, Label } from "diagram-js/lib/model";
 
   class Modeling {
     /**
@@ -75,7 +75,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
     public createShape(shape: Base, position: {}, target: Base, targetIndex: number, isAttach: boolean, hints: Object): {};
 
-    public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): {};
+    public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): Label;
 
     public appendShape(source: {}, shape: Base, position: {}, parent: {}, connection: {}, connectionParent: {}): {};
 
