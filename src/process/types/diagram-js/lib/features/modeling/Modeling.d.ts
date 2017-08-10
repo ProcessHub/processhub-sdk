@@ -75,7 +75,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
     public createShape(shape: Base, position: {}, target: Base, targetIndex: number, isAttach: boolean, hints: Object): {};
 
-    public createLabel(labelTarget: {}, position: {}, label: {}, parent: {}): {};
+    public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): {};
 
     public appendShape(source: {}, shape: Base, position: {}, parent: {}, connection: {}, connectionParent: {}): {};
 
@@ -113,6 +113,14 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
     export interface IRemoveShapeHints {
       nested: boolean;
+    }
+
+    export interface ICreateLabelOptions {
+      id: string;
+      hidden: boolean;
+      businessObject?: Object;
+      width: number;
+      height: number;
     }
   }
 }

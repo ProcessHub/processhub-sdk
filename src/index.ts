@@ -6,6 +6,8 @@ import * as Tools from "./tools";
 export { Tools };
 import * as Assert from "./tools/assert";
 export { Assert };
+import * as Data from "./data";
+export { Data };
 import * as Instance from "./instance";
 export { Instance };
 import * as Process from "./process";
