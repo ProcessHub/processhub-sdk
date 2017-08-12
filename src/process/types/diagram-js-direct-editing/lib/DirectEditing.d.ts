@@ -63,8 +63,8 @@ declare module "diagram-js-direct-editing/lib/DirectEditing" {
         y: number,
         width: number,
         height: number,
-      },
-      text: string,
+      };
+      text: string;
     }
 
     export interface DirectEditingProvider {

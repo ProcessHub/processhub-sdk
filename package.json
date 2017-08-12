@@ -34,7 +34,7 @@
     "test": "cross-env HOTRELOAD=no mocha \"./lib/**/*.test.js\" --timeout 10000 --compilers js:babel-register --recursive --require babel-polyfill",
     "lint": "tslint --type-check --project tsconfig.json \"./src/**/*.ts*\"",
     "testall": "npm run lint && npm run test",
-    "copytypings": "copyfiles -u 1 src/**/*.d.ts lib && copyfiles -u 1 src/*.d.ts lib && copyfiles -u 1 tsc_out/**/*.d.ts lib && copyfiles -u 1 tsc_out/*.d.ts lib && copyfiles -u 1 src/process/types/index.d.ts lib"
+    "copytypings": "copyfiles -u 1 \"src/**/*.d.ts\" lib && copyfiles -u 1 \"src/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/**/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/*.d.ts\" lib && copyfiles -u 1 src/process/types/index.d.ts lib"
   },
   "devDependencies": {
     "@types/chai": "^4.0.0",
@@ -49,6 +49,7 @@
     "babel-preset-stage-0": "^6.24.1",
     "babel-register": "^6.24.1",
     "chai": "^4.0.2",
+    "copyfiles": "^1.2.0",
     "cross-env": "^5.0.1",
     "json-loader": "^0.5.7",
     "mocha": "^3.4.2",
@@ -61,7 +62,8 @@
     "index.js",
     "LICENSE",
     "README.md",
-    "lib/"
+    "lib/",
+    "src/"
   ],
   "homepage": "https://github.com/processhub/processhub-sdk",
   "keywords": [
