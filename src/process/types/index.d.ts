@@ -2,6 +2,7 @@
 /// <reference path="./bpmn-moddle/lib/bpmn-moddle.d.ts" />
 /// <reference path="./bpmn-moddle/lib/simple.d.ts" />
 /// <reference path="./diagram-js/index.d.ts" />
+/// <reference path="./diagram-js/lib/command/CommandHandler.d.ts" />
 /// <reference path="./diagram-js/lib/command/CommandInterceptor.d.ts" />
 /// <reference path="./diagram-js/lib/command/CommandStack.d.ts" />
 /// <reference path="./diagram-js/lib/command/index.d.ts" />

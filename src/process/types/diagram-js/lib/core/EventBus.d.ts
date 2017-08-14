@@ -136,6 +136,8 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "element.dblclick", callback: (event: EventBus.ElementDblClickEvent) => void): void;
 
+    public on(events: "resize.end", callback: (event: EventBus.ResizeEndEvent) => void): void;
+    public on(events: "resize.end", priority: number, callback: (event: EventBus.ResizeEndEvent) => void): void;
     public on(events: "resize.ended", callback: (event: EventBus.EventBusEvent<EventBus.IResizeEndedContext>) => void): void;
 
     public on(events: "shape.added", priority: number, callback: (Event: EventBus.ShapeAddedEvent) => void): void;
@@ -378,6 +380,28 @@ declare module "diagram-js/lib/core/EventBus" {
     export class ConnectionAddedEvent extends EventBusEvent<void> {
       element: Connection;
       gfx: SVGGElement;
+    }
+
+    export interface IResizeEndContext {
+      canExecute: true;
+      delta: IPoint;
+      direction: "se" | "sw" | "ne" | "nw";
+      frame: SVGRectElement;
+      newBounds: IBounds;
+      resizeConstraints: {};
+      shape: Shape;      
+    }
+
+    export class ResizeEndEvent  extends EventBusEvent<IResizeEndContext> {
+      dx: number;
+      dy: number;
+      hover: Shape;
+      hoverGfx: SVGGElement;
+      originalEvent: MouseEvent;
+      previousSelection: Shape;
+      shape: Shape;
+      x: number;
+      y: number;
     }
   }
 }
