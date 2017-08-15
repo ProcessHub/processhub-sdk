@@ -68,8 +68,9 @@ describe("tools", function() {
     describe("createInstanceNumber", function() {
       it("soll gültige Nummern erzeugen", function() {
         let numStr = Guid.createInstanceNumber();  
-        assert.equal(numStr.length, 7);           
+        assert.equal(numStr.length, 12);           
         assert.equal(numStr.substr(3, 1), ".");          
+        assert.equal(numStr.substr(8, 1), "."); 
       });
     });
 
