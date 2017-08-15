@@ -82,13 +82,22 @@ export interface UploadAttachmentReply extends InstanceReply {
 
 export enum AudittrailAction {
   instanceStarted = 1,
+  completedTodo = 2,
 }
+export interface AudittrailEntryDetails {
+  // must be set for AudittrailAction.completedTodo
+  todoDisplayName: string;
+}
+export type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
 export interface AudittrailEntry { 
   action: AudittrailAction;
   userDisplayName: string;
   userMail: string;
   // time of action in UTC
   createdAt: Date;
+  details: Partial<AudittrailEntryDetails>;
 }
 export interface AudittrailRequest extends InstanceRequest {
   instanceId: string;
