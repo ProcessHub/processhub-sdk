@@ -67,5 +67,5 @@
 /// <reference path="./tiny-svg/lib/append.d.ts" />
 /// <reference path="./tiny-svg/lib/clone.d.ts" />
 /// <reference path="./tiny-svg/lib/create.d.ts" />
-/// <reference path="./diagram-js-direct-editing/lib/DirectEditing.d.ts" />
+/// <reference path="./diagram-js-direct-editing/lib/directediting.d.ts" />
 /// <reference path="./diagram-js-direct-editing/index.d.ts" />
