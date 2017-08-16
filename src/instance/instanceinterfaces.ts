@@ -3,6 +3,12 @@ import { DecisionTask } from "../todo";
 import { FieldContentMap } from "../data";
 import * as PH from "../";
 
+export enum State {
+  Running = 1,
+  Finished = 2,
+  Canceled = 3,
+}
+
 export interface InstanceDetails {
   instanceId: string;
   processId: string;
@@ -11,6 +17,7 @@ export interface InstanceDetails {
   fullUrl?: string;
   createdAt?: Date;
   isSimulation?: boolean;
+  state: State;
   extras: {
     instanceState?: any;
     fieldContents?: FieldContentMap;
