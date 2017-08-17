@@ -52,8 +52,10 @@ export class FrameActionHandler implements PH.IActionHandler {
     }
   }
 
-  async getEnvironment(): Promise<any> {
-    return this.sendCommand("getEnvironment", {});
+  gotoPage(path: string) {
+  }
+
+  openInstancePopup(instanceId: string, todoId?: string) {
   }
 }
 
