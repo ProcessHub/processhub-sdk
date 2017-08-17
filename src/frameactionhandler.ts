@@ -55,7 +55,7 @@ export class FrameActionHandler implements PH.IActionHandler {
   gotoPage(path: string) {
   }
 
-  openInstancePopup(instanceId: string, todoId?: string) {
+  openInstancePopup(todoEnv: PH.TodoEnvironment | PH.InstanceEnvironment) {
   }
 }
 
