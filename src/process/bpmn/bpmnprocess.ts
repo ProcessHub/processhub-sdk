@@ -719,7 +719,7 @@ export class BpmnProcess {
   }
 
   public getSortedLanesWithTasks(processId: string): Bpmn.Lane[] {
-    let laneElementsList: Bpmn.Lane[] = this.getLanes(processId);
+    let laneElementsList: Bpmn.Lane[] = this.getLanes(processId, true);
 
     // Testweise sortiert
     let sortedLaneElementsList = [];
@@ -770,8 +770,13 @@ export class BpmnProcess {
     return sortedLaneElementsList;
   }
 
-  // Wenn onlyLanesWithTasks true ist, dann werden nur lanes zurückgegeben die einen Task inne haben
-  public getLanes(processId: string, onlyLanesWithTasks: boolean = true): Bpmn.Lane[] {
+  /**
+   * Gets the lanes of the process
+   * @param processId id of process
+   * @param onlyLanesWithTasks if true, only lanes containing a task are returned
+   * @return {Bpmn.Lane} the lanes of the process - if onlyLanesWithTasks is true, only the lanes containing a task are returned
+   */
+  public getLanes(processId: string, onlyLanesWithTasks: boolean): Bpmn.Lane[] {
     let laneElementsList: Bpmn.Lane[] = [];
     let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter((e: any) => e.$type === BPMN_PROCESS) as Bpmn.Process[];
 
