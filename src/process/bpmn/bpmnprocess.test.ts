@@ -101,9 +101,9 @@ describe("common", function () {
 
           // wie test zuvor bis hier her
 
-          let startEvent: Bpmn.StartEvent = bpmnProcess.getStartEvent(process.id);
-          assert(startEvent.outgoing[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
-          assert(startEvent.outgoing[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
+          let startEvents: Bpmn.StartEvent[] = bpmnProcess.getStartEvents(process.id);
+          assert(startEvents[0].outgoing[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
+          assert(startEvents[0].outgoing[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
 
           let endEvent: Bpmn.EndEvent = bpmnProcess.getEndEvent(process.id);
           assert(endEvent.incoming[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
@@ -190,7 +190,7 @@ describe("common", function () {
           bpmnProcess.removeTaskObjectFromLanes(process.id, testTaskObject);
 
           assert(testLane.flowNodeRef.length === 2);
-          bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getStartEvent(process.id));
+          bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getStartEvents(process.id)[0]);
           bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getEndEvent(process.id));
           assert(testLane.flowNodeRef.length === 0);
         });

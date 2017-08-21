@@ -92,7 +92,7 @@ export class BpmnProcess {
                 returnValue.sendTaskReceiver = JSON.parse(child.$body);
               } catch (ex) {
                 console.log(ex);
-                
+
                 returnValue.sendTaskReceiver = [];
               }
             }
@@ -152,21 +152,21 @@ export class BpmnProcess {
 
           // fixes für boundary events
           let boundaryEvents: Bpmn.BoundaryEvent[] = this.getFlowElementsOfType<Bpmn.BoundaryEvent>(BPMN_BOUNDARYEVENT);
-          
+
           // console.log(boundaryEvents);
-          
-          for ( let t of boundaryEvents ) {
+
+          for (let t of boundaryEvents) {
             // console.log(this.getExistingTask(this.processId(), t.attachedToRef.id).boundaryEventRefs);
-            
+
             if (this.getExistingTask(this.processId(), t.attachedToRef.id).boundaryEventRefs == null)
               this.getExistingTask(this.processId(), t.attachedToRef.id).boundaryEventRefs = [];
 
             if (!this.getExistingTask(this.processId(), t.attachedToRef.id).boundaryEventRefs.find(e => e.id == t.id))
               this.getExistingTask(this.processId(), t.attachedToRef.id).boundaryEventRefs.push(t);
           }
-            
+
           // console.log(boundaryEvents);
-          
+
           // fixes ende
 
           this.processDiagram = new BpmnProcessDiagram(this);
@@ -201,7 +201,7 @@ export class BpmnProcess {
     PH.Assert.isTrue(currentTask != null, "An dieser Stelle darf currentTask nicht null sein!");
     PH.Assert.isTrue(currentTask != null, "An dieser Stelle darf currentTask nicht null sein!");
     PH.Assert.isTrue(currentTask.outgoing != null, "An dieser Stelle darf outgoing nicht null sein!");
-    
+
     let tmpList = [];
     for (let task of currentTask.outgoing) {
       tmpList.push(task.targetRef);
@@ -227,8 +227,8 @@ export class BpmnProcess {
       let tmpRes = null;
       // let tmpRouteStack = routeStack == null ? [] : _.cloneDeep(routeStack);
       // if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY) {
-        // if (processObject.targetRef.outgoing.length == 1)
-          // tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway);
+      // if (processObject.targetRef.outgoing.length == 1)
+      // tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway);
       //   tmpRouteStack.push(processObject.targetRef.id);
       //   tmpRes = getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, tmpRouteStack);
       // }
@@ -309,10 +309,13 @@ export class BpmnProcess {
     return this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
   }
 
-  public getStartEvent(processId: string): BpmnModdleHelper.BpmnModdleStartEvent {
-    let events = this.getEvents(processId, BPMN_STARTEVENT);
-    if (events != null && events.length >= 1)
-      return events[0] as BpmnModdleHelper.BpmnModdleStartEvent;
+  /**
+   * Get the StartEvents of the process
+   * @param processId process id
+   * @returns {Bpmn.StartEvent[]} the start events of the process
+   */
+  public getStartEvents(processId: string): Bpmn.StartEvent[] {
+    return this.getEvents(processId, BPMN_STARTEVENT) as Bpmn.StartEvent[];
   }
 
   public getEndEvent(processId: string): BpmnModdleHelper.BpmnModdleEndEvent {
@@ -745,7 +748,7 @@ export class BpmnProcess {
     }
 
     // Start und Ende aus Lanes entfernen und dann neu hinzufügen
-    this.removeTaskObjectFromLanes(processId, this.getStartEvent(processId));
+    this.removeTaskObjectFromLanes(processId, this.getStartEvents(processId)[0]);
     this.removeTaskObjectFromLanes(processId, this.getEndEvent(processId));
 
     let laneOfStartEvent: Bpmn.Lane = null;
@@ -763,7 +766,7 @@ export class BpmnProcess {
     }
 
     if (laneOfStartEvent != null && laneOfEndEvent != null) {
-      this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvent(processId));
+      this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvents(processId)[0]);
       this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvent(processId));
     }
 
@@ -803,7 +806,7 @@ export class BpmnProcess {
     return laneElementsList;
   }
 
-  public getLaneOfTask(taskId: string): Bpmn.Lane {
+  public getLaneOfFlowNode(flowNodeId: string): Bpmn.Lane {
     let laneElement: Bpmn.Lane = null;
     let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter((e: any) => e.$type === BPMN_PROCESS) as Bpmn.Process[];
 
@@ -814,7 +817,7 @@ export class BpmnProcess {
         if (laneSetElements[t].lanes != null) {
           laneElement = laneSetElements[t].lanes.find(lane => {
             if (lane.flowNodeRef != null) {
-              let flowObj = lane.flowNodeRef.find(fo => fo.id === taskId);
+              let flowObj = lane.flowNodeRef.find(fo => fo.id === flowNodeId);
               if (flowObj != null)
                 return true;
             }
@@ -826,19 +829,28 @@ export class BpmnProcess {
     return laneElement;
   }
 
-  public getStartLaneId(): string {
-    let startEvent = this.getStartEvent(this.processId());
-    if (startEvent != null) {
-      let startLane = this.getLaneOfTask(startEvent.id);
-      if (startLane != null)
-        return startLane.id;
+  /**
+   * Gets the lane ids containing a start event
+   * @return {string[]} the ids of the lanes containig a start event
+   */
+  public getStartLaneIds(): string[] {
+    const laneIds: string[] = [];
+
+    const startEvents: Bpmn.StartEvent[] = this.getStartEvents(this.processId());
+    if (startEvents) {
+      for (const startEvent of startEvents) {
+        const startLane: Bpmn.Lane = this.getLaneOfFlowNode(startEvent.id);
+        if (startLane != null) {
+          laneIds.push(startLane.id);
+        }
+      }
     }
 
-    return null;
+    return laneIds;
   }
 
   public getSortedTasks(processId: string): Bpmn.Task[] {
-    let startEventObject: BpmnModdleHelper.BpmnModdleStartEvent = this.getStartEvent(processId);
+    let startEventObject: Bpmn.StartEvent = this.getStartEvents(processId)[0];
 
     let taskObject = startEventObject.outgoing[0].targetRef;
 

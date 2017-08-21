@@ -11,7 +11,6 @@ export type BpmnModdleTask = Bpmn.Task;
 export type BpmnModdleUserTask = Bpmn.UserTask;
 export type BpmnModdleSendTask = Bpmn.SendTask;
 export type BpmnModdleExtensionElements = Bpmn.ExtensionElements;
-export type BpmnModdleStartEvent = Bpmn.StartEvent;
 export type BpmnModdleEndEvent = Bpmn.EndEvent;
 export type BpmnModdleIntermediateThrowEvent = Bpmn.IntermediateThrowEvent;
 export type BpmnModdleIntermediateCatchEvent = Bpmn.IntermediateCatchEvent;

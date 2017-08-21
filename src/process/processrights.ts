@@ -88,9 +88,12 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
       }
       processRoles[lane.id].roleName = lane.name;
     });
-    let startLane = bpmnProcess.getStartLaneId();
-    if (startLane != null)
-      processRoles[startLane].isStartingRole = true;
+    const startLanes: string[] = bpmnProcess.getStartLaneIds();
+    if (startLanes) {
+      for (const startLane of startLanes) {
+        processRoles[startLane].isStartingRole = true;
+      }
+    }      
 
     // Im Prozess nicht mehr vorhandene Lanes entfernen
     for (let role in processRoles) {
