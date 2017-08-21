@@ -66,7 +66,7 @@ export class BpmnProcess {
     }
   }
 
-  public getExtensionValues(taskObject: Bpmn.Task): Process.TaskExtensions {
+  public getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): Process.TaskExtensions {
     let returnValue: Process.TaskExtensions = {
       description: null,
       customFormSchemaString: null,
@@ -414,7 +414,7 @@ export class BpmnProcess {
     }
   }
 
-  public static addOrUpdateExtension(task: Bpmn.Task, key: Process.TaskSettings, value: any, extensionValueType: Process.TaskSettingsValueType): void {
+  public static addOrUpdateExtension(task: Bpmn.Task | Bpmn.Activity, key: Process.TaskSettings, value: any, extensionValueType: Process.TaskSettingsValueType): void {
 
     if (extensionValueType === "List") {
       value = JSON.stringify(value);
