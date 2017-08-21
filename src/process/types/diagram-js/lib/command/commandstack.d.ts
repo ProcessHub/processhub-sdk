@@ -108,6 +108,8 @@ declare module "diagram-js/lib/command/CommandStack" {
      */
     public _currentExecution: Object;
 
+    public _eventBus: EventBus;
+
     /**
      * @param {EventBus} eventBus
      * @param {Injector} injector

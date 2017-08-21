@@ -11,6 +11,7 @@ export const UserRequestRoutes = {
   UpdateUser: "/api/user/update",
   UpdatePassword: "/api/user/passwordupdate",
   LoadUser: "/api/user/loaduser",
+  UploadProfilePicture: "/api/user/uploadprofilepicture",
 };
 export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 
@@ -65,4 +66,8 @@ export interface ResetPasswordRequest extends PH.LegacyApi.BaseMessage {
 
 export interface ConfirmMailRequest extends PH.LegacyApi.BaseMessage {
   token: string;
+}
+
+export interface UploadProfilePictureRequest extends PH.LegacyApi.BaseMessage {
+  data: string;
 }

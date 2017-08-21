@@ -10,6 +10,7 @@ export const ProcessEngineApiRoutes = {
   getInstances: "/api/processengine/getinstances",
   getInstanceDetails: "/api/processengine/getinstancedetails",
   uploadAttachment: "/api/processengine/uploadattachment",
+  audittrail: "/api/processengine/audittrail",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -75,9 +76,34 @@ export interface UploadAttachmentRequest extends InstanceRequest {
   fileName: string;
   data: string;
 }
-
 export interface UploadAttachmentReply extends InstanceReply {
   url: string;
+}
+
+export enum AudittrailAction {
+  instanceStarted = 1,
+  completedTodo = 2,
+}
+export interface AudittrailEntryDetails {
+  // must be set for AudittrailAction.completedTodo
+  todoDisplayName: string;
+}
+export type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
+export interface AudittrailEntry { 
+  action: AudittrailAction;
+  userDisplayName: string;
+  userMail: string;
+  // time of action in UTC
+  createdAt: Date;
+  details: Partial<AudittrailEntryDetails>;
+}
+export interface AudittrailRequest extends InstanceRequest {
+  instanceId: string;
+}
+export interface AudittrailReply extends InstanceReply {
+  entries?: AudittrailEntry[];
 }
 
 export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";

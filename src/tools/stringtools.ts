@@ -41,7 +41,7 @@ export function toCleanUrl(text: string): string {
     .trim();
 }
 
-export function stringExcerpt(source: string, maxLen: number = 100) {
+export function stringExcerpt(source: string, maxLen: number) {
   if (source == null || source.length <= maxLen)
     return source;
   else {

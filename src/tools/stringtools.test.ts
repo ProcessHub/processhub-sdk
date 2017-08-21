@@ -65,7 +65,7 @@ describe("tools", function () {
 
     describe("stringExcerpt", function () {
       it("soll Strings kürzen", function () {
-        assert.equal(StringTools.stringExcerpt("Mein schöner Titel"), "Mein schöner Titel");  // Unter Limit
+        assert.equal(StringTools.stringExcerpt("Mein schöner Titel", 100), "Mein schöner Titel");  // Unter Limit
         assert.equal(StringTools.stringExcerpt("Mein schöner Titel", 4), "Mein...");
         assert.equal(StringTools.stringExcerpt("Mein schöner Titel", 3), "Mei...");
         assert.equal(StringTools.stringExcerpt("Mein schöner Titel", 10), "Mein...");

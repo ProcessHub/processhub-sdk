@@ -3,6 +3,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
   import EventBus = require("diagram-js/lib/core/EventBus");
   import CommandStack = require("diagram-js/lib/command/CommandStack");
+  import CommandHandler = require("diagram-js/lib/command/CommandHandler");
   import ElementFactory = require("diagram-js/lib/core/ElementFactory");
   import { IBounds, IPoint } from "diagram-js";
   import { Base, Connection, Shape, Label } from "diagram-js/lib/model";
@@ -17,7 +18,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
      */
     constructor(eventBus: EventBus, elementFactory: ElementFactory, commandStack: CommandStack);
 
-    public getHandlers(): {}[];
+    public getHandlers(): { [command: string]: Function };
 
     /**
      * Register handlers with the command stack
