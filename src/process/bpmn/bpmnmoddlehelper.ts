@@ -23,6 +23,7 @@ export type BpmnModdleLane = Bpmn.Lane;
 export type BpmnModdleCollaboration = Bpmn.Collaboration;
 export type BpmndiModdleBounds = Dc.Bounds;
 export type BpmnModdleParticipant = Bpmn.Participant;
+export type BpmnModdleStartEvent = Bpmn.StartEvent;
 
 const processhubNs = "http://processhub.com/schema/1.0/bpmn";
 
