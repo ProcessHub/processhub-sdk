@@ -8,7 +8,7 @@ export interface MessageNotificationMailContent {
 }
 
 export interface SendMailTemplateRequest extends MessageNotificationMailContent, PH.LegacyApi.BaseRequest {
-  receiverMails: string[];
+  receiverIdOrMails: string[];
 }
 
 export interface SendMailTemplateReply extends PH.LegacyApi.BaseReply {
