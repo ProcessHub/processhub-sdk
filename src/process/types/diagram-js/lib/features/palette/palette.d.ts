@@ -81,7 +81,7 @@ declare module "diagram-js/lib/features/palette/Palette" {
   namespace Palette {
     export interface IPaletteEntryAction {
       click: (event: Event) => void;
-      dragStart?: (event: Event) => void;
+      dragstart?: (event: Event) => void;
     }
 
     export interface IPaletteEntryDescriptor {
