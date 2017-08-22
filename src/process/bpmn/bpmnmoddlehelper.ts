@@ -11,7 +11,6 @@ export type BpmnModdleTask = Bpmn.Task;
 export type BpmnModdleUserTask = Bpmn.UserTask;
 export type BpmnModdleSendTask = Bpmn.SendTask;
 export type BpmnModdleExtensionElements = Bpmn.ExtensionElements;
-export type BpmnModdleStartEvent = Bpmn.StartEvent;
 export type BpmnModdleEndEvent = Bpmn.EndEvent;
 export type BpmnModdleIntermediateThrowEvent = Bpmn.IntermediateThrowEvent;
 export type BpmnModdleIntermediateCatchEvent = Bpmn.IntermediateCatchEvent;
@@ -24,6 +23,7 @@ export type BpmnModdleLane = Bpmn.Lane;
 export type BpmnModdleCollaboration = Bpmn.Collaboration;
 export type BpmndiModdleBounds = Dc.Bounds;
 export type BpmnModdleParticipant = Bpmn.Participant;
+export type BpmnModdleStartEvent = Bpmn.StartEvent;
 
 const processhubNs = "http://processhub.com/schema/1.0/bpmn";
 
