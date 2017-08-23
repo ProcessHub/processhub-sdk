@@ -71,9 +71,9 @@ export class BpmnProcess {
       description: null,
       customFormSchemaString: null,
       sendTaskReceiver: null,
-      sendTaskInstanceLink: null,
+      sendTaskInstanceLink: true,
       sendTaskSubject: null,
-      sendTaskWithFieldContents: null
+      sendTaskWithFieldContents: true
     };
 
     if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
