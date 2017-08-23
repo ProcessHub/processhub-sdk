@@ -219,7 +219,7 @@ describe("common", function () {
           let testDescription = "tritra test 123!";
           BpmnProcess.BpmnProcess.addOrUpdateExtension(testTaskObject, Process.TaskSettings.Description as Process.TaskSettings, testDescription, "Text");
 
-          let extensionValues = bpmnProcess.getExtensionValues(testTaskObject);
+          let extensionValues = BpmnProcess.BpmnProcess.getExtensionValues(testTaskObject);
 
           assert(extensionValues.description === testDescription, extensionValues.description + " == " + testDescription);
         });

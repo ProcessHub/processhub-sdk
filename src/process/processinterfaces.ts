@@ -56,13 +56,16 @@ export const ProcessResult = PH.Tools.strEnum([
 ]);
 export type ProcessResult = keyof typeof ProcessResult;
 
-export type TaskSettingsValueType = "List" | "Text";
+export type TaskSettingsValueType = "List" | "Text" | "Boolean";
 
 export const TaskSettings = {
   Description: "description",
   Jumps: "jumps",
   UserForm: "processhub-userform",
-  SendTaskReceiver: "send-task-receiver"
+  SendTaskReceiver: "send-task-receiver",
+  SendTaskWithFieldContents: "send-task-with-field-contents",
+  SendTaskInstanceLink: "send-task-instance-link",
+  SendTaskSubject: "send-task-subject"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -72,6 +75,9 @@ export interface TaskExtensions {
   // jumpValues: string[];
   customFormSchemaString: string;
   sendTaskReceiver: string[];
+  sendTaskWithFieldContents: boolean;
+  sendTaskInstanceLink: boolean;
+  sendTaskSubject: string;
 }
 
 

@@ -66,11 +66,14 @@ export class BpmnProcess {
     }
   }
 
-  public getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): Process.TaskExtensions {
+  public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): Process.TaskExtensions {
     let returnValue: Process.TaskExtensions = {
       description: null,
       customFormSchemaString: null,
-      sendTaskReceiver: null
+      sendTaskReceiver: null,
+      sendTaskInstanceLink: null,
+      sendTaskSubject: null,
+      sendTaskWithFieldContents: null
     };
 
     if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
@@ -86,6 +89,15 @@ export class BpmnProcess {
             //   break;
             case Process.TaskSettings.Description:
               returnValue.description = child.$body;
+              break;
+            case Process.TaskSettings.SendTaskSubject:
+              returnValue.sendTaskSubject = child.$body;
+              break;
+            case Process.TaskSettings.SendTaskInstanceLink:
+              returnValue.sendTaskInstanceLink = child.$body == "true";
+              break;
+            case Process.TaskSettings.SendTaskWithFieldContents:
+              returnValue.sendTaskWithFieldContents = child.$body == "true";
               break;
             case Process.TaskSettings.SendTaskReceiver: {
               try {
@@ -422,6 +434,13 @@ export class BpmnProcess {
     if (extensionValueType === "List") {
       value = JSON.stringify(value);
     }
+
+    if (extensionValueType === "Boolean") {
+      value = Boolean(value).toString();
+    }
+
+    if (value == null)
+      value = "";
 
     let extensionElement;
     if (!task.extensionElements || task.extensionElements.values == null) {
