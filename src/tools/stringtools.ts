@@ -132,7 +132,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
     if (fieldName != null) {
       if (fieldContentMap[fieldName] != null) {
-        inputString = inputString.replace(fieldPlaceholder, fieldContentMap[fieldName]);
+        inputString = inputString.replace(fieldPlaceholder, fieldContentMap[fieldName].toString());
       }
     }
   }
