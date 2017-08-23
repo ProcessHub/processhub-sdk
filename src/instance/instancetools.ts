@@ -6,11 +6,13 @@ export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxL
 
   let excerpt = "";
   for (const key in instance.extras.fieldContents) {
-    if (typeof(instance.extras.fieldContents[key]) == "string"
-      && instance.extras.fieldContents[key].trim() != ""
-      && !instance.extras.fieldContents[key].startsWith("http://")
-      && !instance.extras.fieldContents[key].startsWith("https://"))
-    excerpt += instance.extras.fieldContents[key] + " / ";
+    const value = instance.extras.fieldContents[key];
+    if (typeof (value) == "string"
+      && (value as string).trim() != ""
+      && !(value as string).startsWith("http://")
+      && !(value as string).startsWith("https://")) {
+      excerpt += instance.extras.fieldContents[key] + " / ";
+    }
   }
   if (excerpt.endsWith(" / "))
     excerpt = excerpt.substr(0, excerpt.length - 3);
