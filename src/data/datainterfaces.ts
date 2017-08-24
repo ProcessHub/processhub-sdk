@@ -13,8 +13,7 @@ export interface FieldValue {
 export function isFieldValue(element: {}): element is FieldValue {
   return element
     && (element as FieldValue).type !== undefined    
-    && typeof (element as FieldValue).type === "string"
-    && (element as FieldValue).value !== undefined;
+    && typeof (element as FieldValue).type === "string";
 }
 
 
