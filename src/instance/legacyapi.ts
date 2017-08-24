@@ -24,7 +24,7 @@ export interface InstanceReply extends PH.LegacyApi.BaseReply {
 export interface ExecuteRequest extends InstanceRequest {
   processId: string;
   displayName: string;
-  roleOwners?: PH.Process.RoleOwnerMap;
+  instanceDetails?: PH.Instance.InstanceDetails;
 }
 export interface ExecuteReply extends InstanceReply { // ExecuteReply ist das selbe wie ResumeReply
   instanceId?: string;
