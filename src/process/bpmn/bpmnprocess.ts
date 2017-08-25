@@ -233,23 +233,25 @@ export class BpmnProcess {
     return this.getDecisionTasksAfterGateway(exclusiveGateway);
   }
 
-  public getDecisionTasksAfterGateway(gat: Bpmn.ExclusiveGateway, routeStack: string[] = null): Todo.DecisionTask[] {
+  public getDecisionTasksAfterGateway(gat: Bpmn.ExclusiveGateway, rootTaskId: string = null): Todo.DecisionTask[] {
     let decisionTasks: Todo.DecisionTask[] = [];
     for (let processObject of gat.outgoing) {
       let tmpRes = null;
       // let tmpRouteStack = routeStack == null ? [] : _.cloneDeep(routeStack);
-      // if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY) {
+      if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY && processObject.targetRef.outgoing.length == 1) {
       // if (processObject.targetRef.outgoing.length == 1)
-      // tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway);
+        tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, processObject.targetRef.id);
       //   tmpRouteStack.push(processObject.targetRef.id);
       //   tmpRes = getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, tmpRouteStack);
-      // }
+      }
 
       // wenn es kein gateway ist dann füge zusammen
       if (tmpRes != null) {
-        decisionTasks.concat(tmpRes);
+        decisionTasks = decisionTasks.concat(tmpRes);
       } else {
         let taskId: string = processObject.targetRef.id;
+        if (rootTaskId != null)
+          taskId = rootTaskId;
 
         let nameValue: string = processObject.targetRef.name;
         if (nameValue == null) {
