@@ -2,7 +2,7 @@ import * as PH from "../";
 
 export interface FieldValue {
   type: string;
-  value: Date | string | boolean;
+  value: Date | string | boolean | string[];
 }
 
 /**
