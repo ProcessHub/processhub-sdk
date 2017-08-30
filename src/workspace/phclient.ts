@@ -3,6 +3,11 @@ import * as PH from "../";
 
 export class WorkspaceState {
   currentWorkspace: PH.Workspace.WorkspaceDetails;
+
+  // Workspace Cache
+  workspace: { 
+    [workspaceId: string]: PH.Workspace.WorkspaceDetails
+  };
 }
 
 // WorkspaceView
