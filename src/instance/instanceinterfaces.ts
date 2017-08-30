@@ -17,6 +17,7 @@ export interface InstanceDetails {
   fullUrl?: string;
   createdAt?: Date;
   isSimulation?: boolean;
+  sendSimulationMails?: boolean;
   state: State;
   extras: {
     instanceState?: any;
