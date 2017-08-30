@@ -3,6 +3,11 @@ import * as PH from "../";
 
 export class WorkspaceState {
   currentWorkspace: PH.Workspace.WorkspaceDetails;
+
+  // Workspace Cache
+  workspace: { 
+    [workspaceId: string]: PH.Workspace.WorkspaceDetails
+  };
 }
 
 // WorkspaceView
@@ -23,8 +28,7 @@ export type WorkspaceMessages = keyof typeof WorkspaceMessages;
 export enum WorkspaceExtras {
   None = 0,
   ExtrasMembers = 1 << 0,
-  ExtrasProcesses = 1 << 1,
-  ExtrasSettings = 1 << 2
+  ExtrasProcesses = 1 << 1
 }
 
 // Extras, die für die angegebene Ansicht benötigt werden
@@ -41,7 +45,7 @@ export function requiredWorkspaceViewExtras(page: PH.Path.Page, view: WorkspaceV
         case PH.Process.ProcessView.Instances:
           return WorkspaceExtras.ExtrasMembers;
         case WorkspaceView.Settings:
-          return WorkspaceExtras.ExtrasSettings;
+          return null;
         default:
           return null;  // -> View ungültig
       }

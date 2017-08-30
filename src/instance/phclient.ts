@@ -5,7 +5,11 @@ import * as PH from "../";
 
 export class InstanceState {
   currentInstance?: PH.Instance.InstanceDetails;
-  // instances: InstanceDetails[];
+
+  // Instance Cache
+  instance: {
+    [instanceId: string]: PH.Instance.InstanceDetails
+  };  
 }
 
 export const InstanceView = {

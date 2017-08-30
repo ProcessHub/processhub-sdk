@@ -5,6 +5,11 @@ export class ProcessState {
   errorMessage: string;
 
   currentProcess: PH.Process.ProcessDetails;
+
+  // Process Cache
+  process: {
+    [processId: string]: PH.Process.ProcessDetails
+  };  
 }
 
 export const ProcessView = {
