@@ -1,5 +1,6 @@
 import { assert } from "chai";
 import * as StringTools from "./stringtools";
+import { FieldContentMap } from "../data/datainterfaces";
 
 describe("tools", function () {
   describe("stringtools", function () {
@@ -104,6 +105,18 @@ describe("tools", function () {
         assert(res, "splitStringOnMultipleSigns lieferte " + res);
         assert(res.length === 1, "res hat " + res.length + " Einträge");
       });
+    });
+
+    describe("testregex", function () {
+      it("soll regex replace testen", async function () {
+
+        let testString = "Hallo {{ field.existiert }}, wie gehts {{ field.existiertnicht }}\n{trölölö} {{{moepmoep}}}\n{{ field.existiert2 }}\n";
+        let resultString = "Hallo Teststring eingesetzt!, wie gehts {{ field.existiertnicht }}\n{trölölö} {{{moepmoep}}}\n{{ field.existiert2 }}\n";
+        let res = StringTools.parseAndInsertStringWithFieldContent(testString, { existiert: "Teststring eingesetzt!" } as FieldContentMap);
+
+        assert.equal(res, resultString);
+      });
+
     });
 
   });
