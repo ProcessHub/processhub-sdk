@@ -17,7 +17,7 @@ export const ProcessView = {
   Show: "show",
   Edit: "edit",
   Dashboard: "dashboard",
-  NewProcess: "newprocess",
+  NewProcess: "newprocess",  
   Instances: "instances",
 };
 export type ProcessView = keyof typeof ProcessView;
