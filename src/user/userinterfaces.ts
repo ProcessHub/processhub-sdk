@@ -14,7 +14,7 @@ export class UserDetails {
     // Details zum extras-Prinzip siehe workspaceobjects.ts
     workspaces?: WorkspaceDetails[];  // Workspaces, zu denen User gehört (>=1)
     accessToken?: string;  // Wird bei Api-Zugriffen vom Server gesetzt (z.B. für Logout erforderlich)
-    todos?: TodoDetails[]; // 
+    todos?: TodoDetails[];
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean;

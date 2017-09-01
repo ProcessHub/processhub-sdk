@@ -22,8 +22,9 @@ export enum InstanceExtras {
   None = 0,
   ExtrasState = 1 << 0,
   ExtrasRoleOwners = 1 << 1,
-  ExtrasRoleOwnersWithNames = 1 << 2, // ermittelt zusätzlich die Namen der Rolleninhaber
-  ExtrasFieldContents = 1 << 3
+  ExtrasRoleOwnersWithNames = 1 << 2, // include roleowner-names
+  ExtrasFieldContents = 1 << 3,
+  ExtrasTodos = 1 << 4 // NOT IMPLEMENTED YET
 }
 
 // Extras, die für den angegebenen View benötigt werden
