@@ -41,6 +41,7 @@ export function requiredWorkspaceViewExtras(page: PH.Path.Page, view: WorkspaceV
         case WorkspaceView.Processes:
           return WorkspaceExtras.ExtrasProcesses;
         case WorkspaceView.Members:
+          return WorkspaceExtras.None;
         case PH.Process.ProcessView.Dashboard:
         case PH.Process.ProcessView.Show:
         case PH.Process.ProcessView.Instances:

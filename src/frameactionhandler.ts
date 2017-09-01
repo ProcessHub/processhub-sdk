@@ -55,7 +55,19 @@ export class FrameActionHandler implements PH.IActionHandler {
   gotoPage(path: string) {
   }
 
-  openInstancePopup(todoEnv: PH.TodoEnvironment | PH.InstanceEnvironment) {
+  
+  async requireWorkspaceExtras(extras: PH.Workspace.WorkspaceExtras, forceReload: boolean = false) {
+  }
+  async requireProcessExtras(extras: PH.Process.ProcessExtras, forceReload: boolean = false) {
+  }
+  async requireInstanceExtras(extras: PH.Instance.InstanceExtras, forceReload: boolean = false) {
+  }
+  async requireTodoExtras(extras: PH.Todo.TodoExtras, forceReload: boolean = false) {
+  }
+  async requireUserExtras(extras: PH.User.UserExtras, forceReload: boolean = false) {
+  }
+
+  openInstancePopup(instanceId: string, todoId?: string) {
   }
 }
 
