@@ -16,7 +16,8 @@ export interface ProcessRoles {
 export const DefaultRoles = {
   Owner: "OWNER", // String in Datenbank - nicht ändern
   Manager: "MANAGER", // String in Datenbank - nicht ändern
-  Viewer: "VIEWER" // String in Datenbank - nicht ändern
+  Viewer: "VIEWER", // String in Datenbank - nicht ändern
+  InstanceOwner: "IOWNER"
 };
 export type DefaultRoles = keyof typeof DefaultRoles;
 
@@ -48,6 +49,7 @@ export interface RoleOwnerMap {
 export interface RoleOwner {
   memberId: string; // UserId, GroupId oder Mailadresse
   displayName?: string;
+  user?: PH.User.UserDetails;
 }
 
 export function isDefaultRole(roleId: string): boolean {
