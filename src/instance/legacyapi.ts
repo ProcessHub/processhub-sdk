@@ -87,24 +87,24 @@ export interface DeleteAttachmentRequest extends InstanceRequest {
 export interface DeleteAttachmentReply extends InstanceReply {
 }
 
-export enum AudittrailAction {
+export enum AuditTrailAction {
   instanceStarted = 1,
   completedTodo = 2,
 }
-export interface AudittrailEntryDetails {
-  // must be set for AudittrailAction.completedTodo
+export interface AuditTrailEntryDetails {
+  // must be set for AuditTrailAction.completedTodo
   todoDisplayName: string;
 }
 export type Partial<T> = {
   [P in keyof T]?: T[P];
 };
-export interface AudittrailEntry { 
-  action: AudittrailAction;
+export interface AuditTrailEntry { 
+  action: AuditTrailAction;
   userDisplayName: string;
   userMail: string;
   // time of action in UTC
   createdAt: Date;
-  details: Partial<AudittrailEntryDetails>;
+  details: Partial<AuditTrailEntryDetails>;
 }
 
 export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";
