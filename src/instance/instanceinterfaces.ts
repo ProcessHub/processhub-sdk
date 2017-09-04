@@ -24,6 +24,7 @@ export interface InstanceDetails {
     fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
     todos?: PH.Todo.TodoDetails[];
+    audittrail?: PH.Instance.AudittrailEntry[];
   };
 }
 

@@ -11,7 +11,6 @@ export const ProcessEngineApiRoutes = {
   getInstanceDetails: "/api/processengine/getinstancedetails",
   uploadAttachment: "/api/processengine/uploadattachment",
   deleteAttachment: "/api/processengine/deleteattachment",
-  audittrail: "/api/processengine/audittrail",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -106,12 +105,6 @@ export interface AudittrailEntry {
   // time of action in UTC
   createdAt: Date;
   details: Partial<AudittrailEntryDetails>;
-}
-export interface AudittrailRequest extends InstanceRequest {
-  instanceId: string;
-}
-export interface AudittrailReply extends InstanceReply {
-  entries?: AudittrailEntry[];
 }
 
 export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";
