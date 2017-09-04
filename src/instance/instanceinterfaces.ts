@@ -23,6 +23,7 @@ export interface InstanceDetails {
     instanceState?: any;
     fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
+    todos?: PH.Todo.TodoDetails[];
   };
 }
 

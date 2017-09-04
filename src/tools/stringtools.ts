@@ -85,9 +85,11 @@ export function splitStringOnMultipleSigns(parameter: string, splitSignListOrdne
     return splitStringOnMultipleSigns(parameter, (splitSignListOrdner + 1));
   }
 
-  let result: string[] = splitResult.map(res => {
-    return res.trim();
-  });
+  let result: string[] = [];
+  for (let split of splitResult) { 
+    if (split.trim().length > 0)
+      result.push(split.trim());
+  }
 
   return result;
 }

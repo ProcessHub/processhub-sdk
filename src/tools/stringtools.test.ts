@@ -87,7 +87,8 @@ describe("tools", function () {
     describe("splitStringOnMultipleSigns", function () {
       it("soll eingegebene Emailadressen mit Separator als Array zurückliefern", function () {
         let initSign = StringTools.SPLITSIGN_EMAILADDRESSES[0];
-        let testString = "testuser@processhub.com" + initSign + "testuser2@processhub.com" + initSign + "testuser3@processhub.com" + initSign + "test@processhub.com";
+        // Should also accept+ignore multiple signs
+        let testString = "testuser@processhub.com" + initSign + "testuser2@processhub.com" + initSign + initSign + "testuser3@processhub.com" + initSign + "test@processhub.com" + initSign;
 
         for (let i = 0; i < StringTools.SPLITSIGN_EMAILADDRESSES.length; i++) {
           let res = StringTools.splitStringOnMultipleSigns(testString);

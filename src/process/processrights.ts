@@ -16,7 +16,8 @@ export interface ProcessRoles {
 export const DefaultRoles = {
   Owner: "OWNER", // String in Datenbank - nicht ändern
   Manager: "MANAGER", // String in Datenbank - nicht ändern
-  Viewer: "VIEWER" // String in Datenbank - nicht ändern
+  Viewer: "VIEWER", // String in Datenbank - nicht ändern
+  InstanceOwner: "IOWNER"
 };
 export type DefaultRoles = keyof typeof DefaultRoles;
 
@@ -48,6 +49,7 @@ export interface RoleOwnerMap {
 export interface RoleOwner {
   memberId: string; // UserId, GroupId oder Mailadresse
   displayName?: string;
+  user?: PH.User.UserDetails;
 }
 
 export function isDefaultRole(roleId: string): boolean {
@@ -164,51 +166,54 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
 }
 
 export function isProcessOwner(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
 
   return ((process.userRights & PH.Process.ProcessAccessRights.EditProcess) != 0);
 }
 
 export function isProcessManager(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
 
   // Owner sind automatisch Manager
   return isProcessOwner(process) || ((process.userRights & PH.Process.ProcessAccessRights.ManageProcess) != 0);
 }
 
 export function canViewProcess(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
 
   return ((process.userRights & PH.Process.ProcessAccessRights.ViewProcess) != 0);
 }
 
 export function canEditProcess(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
-
   return isProcessOwner(process);
 }
 
 export function canStartProcess(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
+
   // Es dürfen wirklich nur Mitglieder der Startrolle ausführen, auch nicht der Eigner, falls er nicht in dieser Rolle ist
   return ((process.userRights & PH.Process.ProcessAccessRights.StartProcess) != 0);
 }
 
 export function canViewDashboard(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
 
   // Kann Dashboard sowie Todos zu allen Instanzen sehen
   return ((process.userRights & PH.Process.ProcessAccessRights.ViewDashboard) != 0);
 }
 export function couldViewDashboard(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
+  if (process == null)
+    return false;
 
   // Könnte das Dashboard sehen, hat jedoch keine ausreichende Lizenz
   return canViewDashboard(process) || ((process.userRights & PH.Process.ProcessAccessRights.CouldViewDashboard) != 0);
 }
 
 export function canDeleteProcess(process: PH.Process.ProcessDetails): boolean {
-  PH.Assert.isTrue(process != null, "process is null");
-
   return isProcessOwner(process);
 }

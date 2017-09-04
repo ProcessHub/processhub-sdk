@@ -18,17 +18,20 @@ export interface ProcessDetails {
   previewUrl?: string;
   description: string;
   useModeler?: boolean;
-  isNewProcess?: boolean;
-  userRights?: ProcessAccessRights;  // Rolle des angemeldeten Users im Prozess 
-  rating?: number; // Aktuell nur in Bibliothek gesetzt
+  isNewProcess?: boolean;  
+  userRights?: ProcessAccessRights; // Access rights of the current user
+  rating?: number; // Currently only available in library
   attachments?: ProcessAttachment[];
   extras: {
+    // bpmnXml can be serialized and is used to/from server 
+    // Code is responsible to instance bpmnProcess if required
     bpmnXml?: string;
+    bpmnProcess?: PH.Process.BpmnProcess; 
     instances?: InstanceDetails[];
     todos?: TodoDetails[];
     statistics?: ProcessStatistics;
     processRoles?: ProcessRoles;
-    svgString?: string; // Wird nur für die Übermittlung an den Server beim Speichern genutzt
+    svgString?: string; // Only used to save preview to server
   };
 }
 

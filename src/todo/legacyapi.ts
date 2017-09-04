@@ -3,7 +3,6 @@ import * as PH from "../";
 // API routes 
 export const TodoRequestRoutes = {
   GetTodosForUser: "/api/todo/todosforuser",
-  GetTodosForInstance: "/api/todo/todosforinstance",
   GetTodo: "/api/todo/gettodo",
   UpdateTodo: "/api/todo/updatetodo"
 };
@@ -34,15 +33,6 @@ export interface GetTodoRequest extends PH.LegacyApi.BaseRequest {
 
 export interface GetTodosForUserReply extends TodoReply {
   todos?: Array<PH.Todo.TodoDetails>;
-}
-
-export interface GetTodosForInstanceRequest {
-  instanceId: string;
-  getSimulationTodos: boolean;
-}
-
-export interface GetTodosForInstanceReply extends TodoReply {
-  todos?: PH.Todo.TodoDetails[];
 }
 
 export interface GetTodoReply extends TodoReply {
