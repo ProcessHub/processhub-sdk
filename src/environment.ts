@@ -1,7 +1,6 @@
 import * as PH from "./";
 
 export interface CoreEnvironment {
-  actionHandler: PH.IActionHandler;
   user: PH.User.UserDetails;
 }
 

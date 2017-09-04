@@ -56,15 +56,7 @@ export class FrameActionHandler implements PH.IActionHandler {
   }
 
   
-  async requireWorkspaceExtras(extras: PH.Workspace.WorkspaceExtras, forceReload: boolean = false) {
-  }
-  async requireProcessExtras(extras: PH.Process.ProcessExtras, forceReload: boolean = false) {
-  }
-  async requireInstanceExtras(extras: PH.Instance.InstanceExtras, forceReload: boolean = false) {
-  }
-  async requireTodoExtras(extras: PH.Todo.TodoExtras, forceReload: boolean = false) {
-  }
-  async requireUserExtras(extras: PH.User.UserExtras, forceReload: boolean = false) {
+  async requestExtras(environment: PH.CoreEnvironment, requestedExtras: PH.ExtrasRequest, forceReload?: boolean) {
   }
 
   openInstancePopup(instanceId: string, todoId?: string) {
