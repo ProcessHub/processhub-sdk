@@ -32,6 +32,7 @@ export interface TodoDetails {
   fixHoursForCreateTime?: number;
 
   extras: {
+    // New Extras must be added to cache-handling in todoactions -> loadTodo!
     instance?: InstanceDetails;
     process?: ProcessDetails;
     user?: UserDetails;

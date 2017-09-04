@@ -18,12 +18,7 @@ export interface WorkspaceDetails {
   description?: string;
   userRole?: WorkspaceRole;  // Rolle des angemeldeten Users im Workspace  
   extras: {
-    // Erweiterte Daten, die nach Bedarf ermittelt werden. 
-    // Aus Performancegründen sind die in extras enthaltenen Knoten nicht immer befüllt, sondern müssen
-    // über Flags bei der serverseitigen Abfrage explizit angefragt werden (siehe SWorkspace.getWorkspaceDetails)
-    // Grundkonzept:
-    // Wenn ein Knoten (z.B. extras.members) == null ist, wurden die Daten nicht ermittelt.
-    // Falls es wirklich keine Inhalte zum Knoten gibt, wird z.B. extras.members = [] gesetzt.
+    // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
     processes?: PH.Process.ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
   };

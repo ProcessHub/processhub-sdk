@@ -22,11 +22,10 @@ export interface ProcessDetails {
   userRights?: ProcessAccessRights; // Access rights of the current user
   rating?: number; // Currently only available in library
   attachments?: ProcessAttachment[];
-  extras: {
-    // bpmnXml can be serialized and is used to/from server 
-    // Code is responsible to instance bpmnProcess if required
+  extras: { 
+    // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
-    bpmnProcess?: PH.Process.BpmnProcess; 
+    bpmnProcess?: PH.Process.BpmnProcess; // available if bpmnXml is available
     instances?: InstanceDetails[];
     todos?: TodoDetails[];
     statistics?: ProcessStatistics;

@@ -11,7 +11,7 @@ export class UserDetails {
   displayName?: string; // Realname oder Mailadresse, falls kein Name angegeben
   photoUrl?: string;    // Url zum Profilbild
   extras: {             // Erweiterte Daten, die nach Bedarf ermittelt werden. 
-    // Details zum extras-Prinzip siehe workspaceobjects.ts
+    // New Extras must be added to cache-handling in useractions -> loadUser!
     workspaces?: WorkspaceDetails[];  // Workspaces, zu denen User gehört (>=1)
     accessToken?: string;  // Wird bei Api-Zugriffen vom Server gesetzt (z.B. für Logout erforderlich)
     todos?: TodoDetails[];

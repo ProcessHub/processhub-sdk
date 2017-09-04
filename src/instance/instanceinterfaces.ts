@@ -20,6 +20,7 @@ export interface InstanceDetails {
   sendSimulationMails?: boolean;
   state: State;
   extras: {
+    // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;
     fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
