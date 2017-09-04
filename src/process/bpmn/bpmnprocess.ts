@@ -133,7 +133,7 @@ export class BpmnProcess {
     return returnValue;
   }
 
-  public async loadProcess(processXmlStr: string): Promise<void> {
+  public async loadXml(processXmlStr: string): Promise<void> {
     return await new Promise<void>((resolve, reject): void => {
       if (processXmlStr != null) {
         this.moddle.fromXML(processXmlStr, (err: any, bpmnXml: any, bpmnContext: any) => {
