@@ -1,5 +1,5 @@
 // Mailadresse auf Gültigkeit prüfen
-import { FieldContentMap } from "../data/datainterfaces";
+import { FieldContentMap, isFieldValue, FieldValue } from "../data/datainterfaces";
 
 export function isValidMailAddress(mail: string): boolean {
   // Lockere Prüfung, wir möchten keine User fälschlich blocken
@@ -131,8 +131,12 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     let fieldName = match[groupIndexForFieldName];
 
     if (fieldName != null) {
-      if (fieldContentMap[fieldName] != null) {
-        inputString = inputString.replace(fieldPlaceholder, fieldContentMap[fieldName].toString());
+      let valueObject = fieldContentMap[fieldName];      
+      if (isFieldValue(valueObject)) {
+        inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
+      } else {
+        inputString = inputString.replace(fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
+
       }
     }
   }
