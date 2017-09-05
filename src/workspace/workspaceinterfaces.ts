@@ -21,7 +21,12 @@ export interface WorkspaceDetails {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
     processes?: PH.Process.ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
+    settings?: WorkspaceSettings;
   };
+}
+
+export interface WorkspaceSettings {
+  mailSignature?: string;
 }
 
 export enum WorkspaceRole {

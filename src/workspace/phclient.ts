@@ -29,7 +29,8 @@ export type WorkspaceMessages = keyof typeof WorkspaceMessages;
 export enum WorkspaceExtras {
   None = 0,
   ExtrasMembers = 1 << 0,
-  ExtrasProcesses = 1 << 1
+  ExtrasProcesses = 1 << 1,
+  ExtrasSettings = 1 << 2
 }
 
 // Extras, die für die angegebene Ansicht benötigt werden
