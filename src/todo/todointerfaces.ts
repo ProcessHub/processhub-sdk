@@ -15,6 +15,7 @@ export enum TodoType {
 
 export interface TodoDetails {
   todoId: string;
+  todoType?: TodoType;
   userId?: string;
   processId: string;
   instanceId: string;
@@ -24,13 +25,9 @@ export interface TodoDetails {
   description: string;
   bpmnTaskId: string;
   createdAt?: Date;
-
   decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
-
   fullUrl?: string;
-
   fixHoursForCreateTime?: number;
-
   extras: {
     // New Extras must be added to cache-handling in todoactions -> loadTodo!
     instance?: InstanceDetails;
@@ -39,8 +36,15 @@ export interface TodoDetails {
     potentialOwners?: PotentialRoleOwners;
     canClaimTodo?: boolean;
   };
+}
 
-  todoType?: TodoType;
+export enum TodoExtras {
+  None = 0,
+  ExtrasInstance = 1 << 0,
+  ExtrasProcess = 1 << 1,
+  ExtrasUser = 1 << 2, // UserDetails des zuständigen Benutzers
+  ExtrasPotentialOwners = 1 << 3, // Liste der zulässigen User für diese Aufgabe
+  ExtrasCanClaimTodo = 1 << 4, // Darf der angemeldete User diese Aufgabe übernehmen?
 }
 
 export const DecisionTaskTypes = {

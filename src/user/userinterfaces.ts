@@ -20,6 +20,13 @@ export class UserDetails {
   isLibraryAdmin?: boolean;
 }
 
+export enum UserExtras {
+  None = 0,
+  ExtrasWorkspaces = 1 << 0,
+  ExtrasAccessToken = 1 << 1,
+  ExtrasTodos = 1 << 2
+}
+
 export const emptyUser: PH.User.UserDetails = {
   userId: PH.Tools.nullId(),
   mail: null,

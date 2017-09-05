@@ -26,30 +26,23 @@ export const WorkspaceMessages = {
 };
 export type WorkspaceMessages = keyof typeof WorkspaceMessages;
 
-export enum WorkspaceExtras {
-  None = 0,
-  ExtrasMembers = 1 << 0,
-  ExtrasProcesses = 1 << 1,
-  ExtrasSettings = 1 << 2
-}
-
 // Extras, die für die angegebene Ansicht benötigt werden
-export function requiredWorkspaceViewExtras(page: PH.Path.Page, view: WorkspaceView): WorkspaceExtras {
+export function requiredWorkspaceViewExtras(page: PH.Path.Page, view: WorkspaceView): PH.Workspace.WorkspaceExtras {
   switch (page) {
     case PH.Path.Page.ProcessPage:
     case PH.Path.Page.WorkspacePage:
       switch (view) {
         case WorkspaceView.Processes:
-          return WorkspaceExtras.ExtrasProcesses;
+          return PH.Workspace.WorkspaceExtras.ExtrasProcesses;
         case WorkspaceView.Members:
-          return WorkspaceExtras.None;
+          return PH.Workspace.WorkspaceExtras.None;
         case PH.Process.ProcessView.Dashboard:
         case PH.Process.ProcessView.Show:
         case PH.Process.ProcessView.Instances:
-          return WorkspaceExtras.ExtrasMembers;
+          return PH.Workspace.WorkspaceExtras.ExtrasMembers;
         case WorkspaceView.Settings:
         case WorkspaceView.AddProcess:
-          return WorkspaceExtras.None;
+          return PH.Workspace.WorkspaceExtras.None;
         default:
           return null;  // -> View ungültig
       }

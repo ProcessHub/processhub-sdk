@@ -6,13 +6,6 @@ export class UserState {
   lastApiResult?: PH.LegacyApi.ApiResult;  // Ergebnis des letzten UserApi-Aufrufs
 }
 
-export enum UserExtras {
-  None = 0,
-  ExtrasWorkspaces = 1 << 0,
-  ExtrasAccessToken = 1 << 1,
-  ExtrasTodos = 1 << 2
-}
-
 export const UserMessages = {
   UserLoadedMessage: "UserLoadedMessage",
 

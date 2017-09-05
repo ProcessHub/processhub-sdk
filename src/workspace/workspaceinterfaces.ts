@@ -25,6 +25,13 @@ export interface WorkspaceDetails {
   };
 }
 
+export enum WorkspaceExtras {
+  None = 0,
+  ExtrasMembers = 1 << 0,
+  ExtrasProcesses = 1 << 1,
+  ExtrasSettings = 1 << 2
+}
+
 export interface WorkspaceSettings {
   mailSignature?: string;
 }

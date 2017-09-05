@@ -29,6 +29,16 @@ export interface InstanceDetails {
   };
 }
 
+export enum InstanceExtras {
+  None = 0,
+  ExtrasState = 1 << 0,
+  ExtrasRoleOwners = 1 << 1,
+  ExtrasRoleOwnersWithNames = 1 << 2, // include roleowner-names
+  ExtrasFieldContents = 1 << 3,
+  ExtrasTodos = 1 << 4, // NOT IMPLEMENTED YET,
+  ExtrasAuditTrail = 1 << 5,
+}
+
 export interface ResumeInstanceDetails {
   instanceId: string;
   completedTodoId: string;
