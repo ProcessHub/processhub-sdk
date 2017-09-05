@@ -10,6 +10,10 @@ export class WorkspaceState {
   };
 }
 
+export function getDefaultMailSignature() {
+  return PH.tl("Diese Nachricht wurde durch einen Geschäftsprozess auf [ProcessHub](https://www.processhub.com) erzeugt.");  
+}
+
 // WorkspaceView
 export const WorkspaceView = {
   Processes: "processes",
