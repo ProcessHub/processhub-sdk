@@ -14,15 +14,6 @@ export const WorkspaceRequestRoutes = {
 export type WorkspaceRequestRoutes = keyof typeof WorkspaceRequestRoutes;
 
 
-// Einladungen noch nicht vorhandener User werden in Redis verwaltet
-export interface WorkspaceMemberInvites {
-  invites: WorkspaceMemberInvite[];
-}
-export interface WorkspaceMemberInvite {
-  workspaceId: string;
-  memberRole: PH.Workspace.WorkspaceRole;
-}
-
 export interface LoadWorkspaceRequest extends PH.LegacyApi.BaseRequest {
   workspaceId: string;
   getExtras: PH.Workspace.WorkspaceExtras;
