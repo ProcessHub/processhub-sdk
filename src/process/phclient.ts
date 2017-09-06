@@ -22,29 +22,19 @@ export const ProcessView = {
 };
 export type ProcessView = keyof typeof ProcessView;
 
-export enum ProcessExtras {
-  None = 0,
-  ExtrasBpmnXml = 1 << 0,
-  ExtrasInstances = 1 << 1,
-  ExtrasTodos = 1 << 2,
-  ExtrasStatistics = 1 << 3,
-  ExtrasProcessRoles = 1 << 4,
-  ExtrasProcessRolesWithMemberNames = 1 << 5 // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
-}
-
 // Extras, die für die angegebene Ansicht benötigt werden
-export function requiredProcessViewExtras(page: PH.Path.Page, view: ProcessView): ProcessExtras {
+export function requiredProcessViewExtras(page: PH.Path.Page, view: ProcessView): PH.Process.ProcessExtras {
   switch (page) {
     case PH.Path.Page.ProcessPage:
       switch (view) {
         case ProcessView.Show:
-          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
+          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
         case ProcessView.Edit:
-          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
+          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
         case ProcessView.Dashboard:
-          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasTodos | ProcessExtras.ExtrasInstances | ProcessExtras.ExtrasProcessRolesWithMemberNames;
+          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasTodos | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames;
         case ProcessView.Instances:
-          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasInstances | ProcessExtras.ExtrasProcessRolesWithMemberNames;
+          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasInstances | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames;
         default:
           return null;  // -> View ungültig
       }

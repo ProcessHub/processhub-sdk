@@ -73,6 +73,7 @@ export interface GetInstanceDetailsReply extends InstanceReply {
 
 export interface UploadAttachmentRequest extends InstanceRequest {
   instanceId: string;
+  processId: string;
   fileName: string;
   data: string;
 }

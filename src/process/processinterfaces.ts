@@ -34,6 +34,16 @@ export interface ProcessDetails {
   };
 }
 
+export enum ProcessExtras {
+  None = 0,
+  ExtrasBpmnXml = 1 << 0,
+  ExtrasInstances = 1 << 1,
+  ExtrasTodos = 1 << 2,
+  ExtrasStatistics = 1 << 3,
+  ExtrasProcessRoles = 1 << 4,
+  ExtrasProcessRolesWithMemberNames = 1 << 5 // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
+}
+
 export interface TaskToLaneMapEntry {
   taskId: string;
   laneId: string;

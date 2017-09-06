@@ -18,27 +18,17 @@ export const InstanceView = {
 };
 export type InstanceView = keyof typeof InstanceView;
 
-export enum InstanceExtras {
-  None = 0,
-  ExtrasState = 1 << 0,
-  ExtrasRoleOwners = 1 << 1,
-  ExtrasRoleOwnersWithNames = 1 << 2, // include roleowner-names
-  ExtrasFieldContents = 1 << 3,
-  ExtrasTodos = 1 << 4, // NOT IMPLEMENTED YET,
-  ExtrasAuditTrail = 1 << 5,
-}
-
 // Extras, die für den angegebenen View benötigt werden
-export function requiredInstanceViewExtras(page: Page, view: InstanceView): InstanceExtras {
+export function requiredInstanceViewExtras(page: Page, view: InstanceView): PH.Instance.InstanceExtras {
   switch (page) {
     case Page.InstancePage:
       switch (view) {
         case InstanceView.Show:
-          return InstanceExtras.None | InstanceExtras.ExtrasFieldContents;
+          return PH.Instance.InstanceExtras.None | PH.Instance.InstanceExtras.ExtrasFieldContents;
         default:
           if (Tools.isId(view.toUpperCase())) {
             // View scheint ein Todo zu sein
-            return InstanceExtras.None | InstanceExtras.ExtrasFieldContents;
+            return PH.Instance.InstanceExtras.None | PH.Instance.InstanceExtras.ExtrasFieldContents;
           } else
             return null;  // -> View ungültig
       }
