@@ -26,7 +26,10 @@ export type WorkspaceView = keyof typeof WorkspaceView;
 
 // WorkspaceMessages
 export const WorkspaceMessages = {
-  WorkspaceLoadedMessage: "WorkspaceLoadedMessage"
+  WorkspaceLoadedMessage: "WorkspaceLoadedMessage",
+  WorkspaceCreatedMessage: "WorkspaceCreatedMessage",
+  WorkspaceUpdatedMessage: "WorkspaceUpdatedMessage",
+  WorkspaceDeletedMessage: "WorkspaceDeletedMessage",
 };
 export type WorkspaceMessages = keyof typeof WorkspaceMessages;
 

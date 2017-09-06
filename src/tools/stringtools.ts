@@ -2,14 +2,12 @@
 import { FieldContentMap, isFieldValue, FieldValue } from "../data/datainterfaces";
 
 export function isValidMailAddress(mail: string): boolean {
-  // Lockere Prüfung, wir möchten keine User fälschlich blocken
+  // fault tolerant - don't block too many
   let re = /\S+@\S+\.\S+/;
   return re.test(mail);
 }
 
-// Workspacenamen auf Gültigkeit prüfen
 export function isValidWorkspaceName(workspaceName: string): boolean {
-  // Mindestlänge 5 Zeichen
   if (workspaceName == null || workspaceName.length < 5)
     return false;
 
