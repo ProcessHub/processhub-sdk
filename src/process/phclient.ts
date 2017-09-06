@@ -42,7 +42,7 @@ export function requiredProcessViewExtras(page: PH.Path.Page, view: ProcessView)
         case ProcessView.Edit:
           return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
         case ProcessView.Dashboard:
-          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasTodos | ProcessExtras.ExtrasProcessRolesWithMemberNames;
+          return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasTodos | ProcessExtras.ExtrasInstances | ProcessExtras.ExtrasProcessRolesWithMemberNames;
         case ProcessView.Instances:
           return ProcessExtras.ExtrasBpmnXml | ProcessExtras.ExtrasInstances | ProcessExtras.ExtrasProcessRolesWithMemberNames;
         default:
