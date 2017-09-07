@@ -11,7 +11,7 @@ export class WorkspaceState {
 }
 
 export function getDefaultMailSignature() {
-  return PH.tl("Diese Nachricht wurde durch einen Geschäftsprozess auf [ProcessHub](https://www.processhub.com) erzeugt.");  
+  return PH.tl("Wir verwenden [ProcessHub](https://www.processhub.com) für die Steuerung unserer Geschäftsprozesse.");  
 }
 
 // WorkspaceView
