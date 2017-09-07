@@ -24,6 +24,7 @@ export interface LoginRequest extends PH.LegacyApi.BaseRequest {
   mail: string;
   password: string;       // Kennworthash
   accessToken: string;
+  isGoogleAccessToken: boolean;
 }
 export interface LoginReply extends PH.LegacyApi.BaseMessage {
   userDetails?: PH.User.UserDetails;
