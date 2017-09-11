@@ -11,6 +11,7 @@ export const ProcessEngineApiRoutes = {
   getInstanceDetails: "/api/processengine/getinstancedetails",
   uploadAttachment: "/api/processengine/uploadattachment",
   deleteAttachment: "/api/processengine/deleteattachment",
+  comment: "/api/processengine/comment",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -88,13 +89,21 @@ export interface DeleteAttachmentRequest extends InstanceRequest {
 export interface DeleteAttachmentReply extends InstanceReply {
 }
 
+export interface CommentRequest extends InstanceRequest {
+  instanceId: string;
+  comment: string;
+}
+
 export enum AuditTrailAction {
   instanceStarted = 1,
   completedTodo = 2,
+  comment = 3,
 }
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
   todoDisplayName: string;
+  // must be set for AuditTrailAction.comment
+  comment: string;
 }
 export type Partial<T> = {
   [P in keyof T]?: T[P];
@@ -103,6 +112,7 @@ export interface AuditTrailEntry {
   action: AuditTrailAction;
   userDisplayName: string;
   userMail: string;
+  userId: string;
   // time of action in UTC
   createdAt: Date;
   details: Partial<AuditTrailEntryDetails>;
