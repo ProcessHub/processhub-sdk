@@ -5,15 +5,14 @@ import * as PH from "../";
 export class UserDetails {
   userId: string;
   mail: string;
-  urlName?: string;     // Eindeutiger, url-kompatibler Name. Wird derzeit als userId.toLowerCase() gesetzt,
-  // damit in Urls Privatsphäre geschützt wird
-  realName: string;     // Realname des Users
-  displayName?: string; // Realname oder Mailadresse, falls kein Name angegeben
-  photoUrl?: string;    // Url zum Profilbild
-  extras: {             // Erweiterte Daten, die nach Bedarf ermittelt werden. 
+  urlName?: string; // userId.toLowerCase()
+  realName: string;     
+  displayName?: string; // realName or mail if no name is defined
+  photoUrl?: string;  
+  extras: {
     // New Extras must be added to cache-handling in useractions -> loadUser!
-    workspaces?: WorkspaceDetails[];  // Workspaces, zu denen User gehört (>=1)
-    accessToken?: string;  // Wird bei Api-Zugriffen vom Server gesetzt (z.B. für Logout erforderlich)
+    workspaces?: WorkspaceDetails[];
+    accessToken?: string;  // only used during login
     todos?: TodoDetails[];
   };
   accountState?: AccountState;
@@ -22,9 +21,8 @@ export class UserDetails {
 
 export enum UserExtras {
   None = 0,
-  ExtrasWorkspaces = 1 << 0,
-  ExtrasAccessToken = 1 << 1,
-  ExtrasTodos = 1 << 2
+  ExtrasWorkspaces = 1 << 0, // get workspaces where user is a member
+  ExtrasTodos = 1 << 1 // get todos for user
 }
 
 export const emptyUser: PH.User.UserDetails = {

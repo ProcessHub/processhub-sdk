@@ -13,9 +13,6 @@ export interface GetPathRequest extends PH.LegacyApi.BaseRequest {
 export interface GetPathReply extends PH.LegacyApi.BaseReply {
   workspace?: PH.Workspace.WorkspaceDetails;
   process?: PH.Process.ProcessDetails;
-  instance?: PH.Instance.InstanceDetails;
-  todo?: PH.Todo.TodoDetails;
-  user?: PH.User.UserDetails;
 
   pathDetails?: PH.Path.PathDetails; // Falls ein nicht vorhandener Path angefragt wird, sind pathStack und pathDetails = null
 }

@@ -14,8 +14,8 @@ export interface InstanceDetails {
   instanceId: string;
   processId: string;
   displayName: string;
-  urlName?: string;
-  fullUrl?: string;
+  urlName?: string; // = instanceId.toLowerCase()
+  fullUrl?: string; // = /i/instanceid
   createdAt?: Date;
   isSimulation?: boolean;
   sendSimulationMails?: boolean;

@@ -20,13 +20,13 @@ export interface TodoDetails {
   processId: string;
   instanceId: string;
   status?: TodoStatus;
-  urlName?: string;  // = todoId.toLowerCase()
+  urlName?: string; // = todoId.toLowerCase()
+  fullUrl?: string; // = /i/instanceid/todoid
   displayName: string;
   description: string;
   bpmnTaskId: string;
   createdAt?: Date;
   decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
-  fullUrl?: string;
   fixHoursForCreateTime?: number;
   extras: {
     // New Extras must be added to cache-handling in todoactions -> loadTodo!

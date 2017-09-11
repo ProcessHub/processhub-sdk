@@ -12,8 +12,8 @@ export type WorkspaceType = keyof typeof WorkspaceType;
 export interface WorkspaceDetails {
   workspaceId: string;
   workspaceType: WorkspaceType;
-  urlName: string;    // Eindeutiger, url-kompatibler Name
-  fullUrl?: string;
+  urlName: string; // displayName converted to Uri segment
+  fullUrl?: string; // @urlname
   displayName: string;
   description?: string;
   userRole?: WorkspaceRole;  // Rolle des angemeldeten Users im Workspace  

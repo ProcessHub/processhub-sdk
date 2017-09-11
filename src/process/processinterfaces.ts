@@ -13,8 +13,8 @@ export interface ProcessDetails {
   workspaceId: string;
   processId: string;
   displayName: string;
-  urlName?: string;
-  fullUrl?: string;
+  urlName?: string; 
+  fullUrl?: string; // @workspace/p/urlname
   previewUrl?: string;
   description: string;
   useModeler?: boolean;
@@ -30,7 +30,7 @@ export interface ProcessDetails {
     todos?: TodoDetails[];
     statistics?: ProcessStatistics;
     processRoles?: ProcessRoles;
-    svgString?: string; // Only used to save preview to server
+    svgString?: string; // only used to save preview to server
   };
 }
 
