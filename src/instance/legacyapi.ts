@@ -12,6 +12,7 @@ export const ProcessEngineApiRoutes = {
   uploadAttachment: "/api/processengine/uploadattachment",
   deleteAttachment: "/api/processengine/deleteattachment",
   comment: "/api/processengine/comment",
+  deleteComment: "/api/processengine/deletecomment",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -92,6 +93,10 @@ export interface DeleteAttachmentReply extends InstanceReply {
 export interface CommentRequest extends InstanceRequest {
   instanceId: string;
   comment: string;
+  trailId: string;
+}
+export interface DeleteCommentRequest extends InstanceRequest {
+  trailId: string;
 }
 
 export enum AuditTrailAction {
@@ -109,6 +114,8 @@ export type Partial<T> = {
   [P in keyof T]?: T[P];
 };
 export interface AuditTrailEntry { 
+  instanceId: string;
+  trailId: string;
   action: AuditTrailAction;
   userDisplayName: string;
   userMail: string;
