@@ -19,14 +19,14 @@ export interface TodoDetails {
   userId?: string;
   workspaceId?: string;  
   status?: TodoStatus;
-  urlName?: string;  // = todoId.toLowerCase()
+  urlName?: string; // = todoId.toLowerCase()
+  fullUrl?: string; // = /i/instanceid/todoid
   displayName: string;
   description: string;
   bpmnTaskId: string;
   bpmnLaneId: string;  
   createdAt?: Date;
   decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
-  fullUrl?: string;
   fixHoursForCreateTime?: number;
 
   canClaimTodo?: boolean;

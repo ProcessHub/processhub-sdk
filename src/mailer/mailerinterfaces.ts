@@ -10,6 +10,7 @@ export interface MailContent {
 }
 
 export interface MessageNotificationMailContent extends MailContent {
+  todoUserId?: string;
   sender?: MailSender;
   instanceLink?: string;  
   todoTitle: string;

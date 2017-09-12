@@ -2,11 +2,6 @@
 import * as PH from "../";
 import { TodoDetails } from "./todointerfaces";
 
-export const TodoView = {
-  Show: "show",
-};
-export type TodoView = keyof typeof TodoView;
-
 export class TodoState {
   requestPending: boolean;
   currentTodo?: PH.Todo.TodoDetails;
