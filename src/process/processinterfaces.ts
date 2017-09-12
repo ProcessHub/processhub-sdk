@@ -27,7 +27,7 @@ export interface ProcessDetails {
     bpmnXml?: string;
     bpmnProcess?: PH.Process.BpmnProcess; // available if bpmnXml is available
     instances?: InstanceDetails[];
-    todos?: TodoDetails[];
+    // todos?: TodoDetails[];
     statistics?: ProcessStatistics;
     processRoles?: ProcessRoles;
     svgString?: string; // Only used to save preview to server
@@ -38,7 +38,7 @@ export enum ProcessExtras {
   None = 0,
   ExtrasBpmnXml = 1 << 0,
   ExtrasInstances = 1 << 1,
-  ExtrasTodos = 1 << 2,
+  // ExtrasTodos = 1 << 2,
   ExtrasStatistics = 1 << 3,
   ExtrasProcessRoles = 1 << 4,
   ExtrasProcessRolesWithMemberNames = 1 << 5 // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder

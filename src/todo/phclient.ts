@@ -1,5 +1,6 @@
 // Internal objects used by ProcessHub client and server
 import * as PH from "../";
+import { TodoDetails } from "./todointerfaces";
 
 export const TodoView = {
   Show: "show",
@@ -16,3 +17,12 @@ export class TodoState {
   };
 }
 
+export function getTodosForProcess(todos: TodoDetails[], processId: string): TodoDetails[] {
+  let processTodos: TodoDetails[] = todos.filter(todo => todo.process.processId == processId);
+  return processTodos;
+}
+
+export function getTodosForWorkspace(todos: TodoDetails[], workspaceId: string): TodoDetails[] {
+  let workspaceTodos: TodoDetails[] = todos.filter(todo => todo.process.workspaceId == workspaceId);
+  return workspaceTodos;
+}

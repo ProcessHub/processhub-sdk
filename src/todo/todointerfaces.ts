@@ -17,25 +17,33 @@ export interface TodoDetails {
   todoId: string;
   todoType?: TodoType;
   userId?: string;
-  processId: string;
-  instanceId: string;
+  workspaceId?: string;  
   status?: TodoStatus;
   urlName?: string;  // = todoId.toLowerCase()
   displayName: string;
   description: string;
   bpmnTaskId: string;
+  bpmnLaneId: string;  
   createdAt?: Date;
   decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
   fullUrl?: string;
   fixHoursForCreateTime?: number;
-  extras: {
+
+  canClaimTodo?: boolean;
+  
+  instance?: InstanceDetails;
+  process?: ProcessDetails;
+  user?: UserDetails;
+  potentialOwners?: PotentialRoleOwners;
+  
+/*  extras: {
     // New Extras must be added to cache-handling in todoactions -> loadTodo!
     instance?: InstanceDetails;
     process?: ProcessDetails;
     user?: UserDetails;
     potentialOwners?: PotentialRoleOwners;
     canClaimTodo?: boolean;
-  };
+  };*/
 }
 
 export enum TodoExtras {

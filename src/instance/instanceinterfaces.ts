@@ -26,7 +26,7 @@ export interface InstanceDetails {
     instanceState?: any;
     fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
-    todos?: PH.Todo.TodoDetails[];
+    // todos?: PH.Todo.TodoDetails[];
     auditTrail?: PH.Instance.AuditTrailEntry[];
   };
 }
@@ -37,7 +37,7 @@ export enum InstanceExtras {
   ExtrasRoleOwners = 1 << 1,
   ExtrasRoleOwnersWithNames = 1 << 2, // include roleowner-names
   ExtrasFieldContents = 1 << 3,
-  ExtrasTodos = 1 << 4, // NOT IMPLEMENTED YET,
+  // ExtrasTodos = 1 << 4, // NOT IMPLEMENTED YET,
   ExtrasAuditTrail = 1 << 5,
 }
 
