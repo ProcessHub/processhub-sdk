@@ -2,6 +2,7 @@ import * as PH from "./";
 
 export interface CoreEnvironment {
   user: PH.User.UserDetails;
+  todos: PH.Todo.TodoDetails[];
 }
 
 export interface WorkspaceEnvironment extends CoreEnvironment {

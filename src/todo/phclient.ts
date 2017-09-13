@@ -3,6 +3,8 @@ import * as PH from "../";
 import { TodoDetails } from "./todointerfaces";
 
 export class TodoState {
+  todos: PH.Todo.TodoDetails[];
+  
   requestPending: boolean;
   currentTodo?: PH.Todo.TodoDetails;
 

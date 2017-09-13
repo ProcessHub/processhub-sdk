@@ -3,7 +3,8 @@ import * as PH from "../";
 
 export class UserState {
   currentUser?: PH.User.UserDetails;
-  lastApiResult?: PH.LegacyApi.ApiResult;  // Ergebnis des letzten UserApi-Aufrufs
+
+  lastApiResult?: PH.LegacyApi.ApiResult;  // result of the last Api call
 }
 
 export const UserMessages = {
