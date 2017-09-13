@@ -38,9 +38,8 @@ export interface WorkspaceSettings {
 
 export enum WorkspaceRole {
   None = 0,
-  WorkspaceAdmin = 1 << 0,     // WorkspaceAdmin erzwingt ebenfalls ProcessManagerLicense
-  ProcessManagerLicense = 1 << 1,
-  WorkspaceMember = 1 << 2,         // Einfaches Mitglied ohne Sonderrolle
+  WorkspaceAdmin = 1 << 0,     
+  WorkspaceMember = 1 << 2,    // regular member
 }
 
 export interface WorkspaceMember {

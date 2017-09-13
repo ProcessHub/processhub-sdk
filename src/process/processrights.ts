@@ -6,8 +6,7 @@ export enum ProcessAccessRights {
   ManageProcess = 1 << 1,
   StartProcess = 1 << 2, // User darf Prozess starten
   ViewProcess = 1 << 3,
-  ViewDashboard = 1 << 4,
-  CouldViewDashboard = 1 << 5,  // User würde Dashboard sehen, hat jedoch keine ausreichende Lizenz
+  ViewProcessInstances = 1 << 4
 }
 
 export interface ProcessRoles {
@@ -176,7 +175,7 @@ export function isProcessManager(process: PH.Process.ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  // Owner sind automatisch Manager
+  // owner are managers
   return isProcessOwner(process) || ((process.userRights & PH.Process.ProcessAccessRights.ManageProcess) != 0);
 }
 
@@ -195,23 +194,18 @@ export function canStartProcess(process: PH.Process.ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  // Es dürfen wirklich nur Mitglieder der Startrolle ausführen, auch nicht der Eigner, falls er nicht in dieser Rolle ist
+  // Only users in the start lane may start the process - even administrators don't inherit that right!
   return ((process.userRights & PH.Process.ProcessAccessRights.StartProcess) != 0);
 }
 
-export function canViewDashboard(process: PH.Process.ProcessDetails): boolean {
+// Can user view any instances, dashboard and history?
+// Note: There are additional limitations that not all users can see all instances. This flag decides
+// if there is any access at all
+export function canViewProcessInstances(process: PH.Process.ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  // Kann Dashboard sowie Todos zu allen Instanzen sehen
-  return ((process.userRights & PH.Process.ProcessAccessRights.ViewDashboard) != 0);
-}
-export function couldViewDashboard(process: PH.Process.ProcessDetails): boolean {
-  if (process == null)
-    return false;
-
-  // Könnte das Dashboard sehen, hat jedoch keine ausreichende Lizenz
-  return canViewDashboard(process) || ((process.userRights & PH.Process.ProcessAccessRights.CouldViewDashboard) != 0);
+  return ((process.userRights & PH.Process.ProcessAccessRights.ViewProcessInstances) != 0);
 }
 
 export function canDeleteProcess(process: PH.Process.ProcessDetails): boolean {
