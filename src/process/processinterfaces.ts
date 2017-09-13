@@ -27,8 +27,6 @@ export interface ProcessDetails {
     bpmnXml?: string;
     bpmnProcess?: PH.Process.BpmnProcess; // available if bpmnXml is available
     instances?: InstanceDetails[];
-    // todos?: TodoDetails[];
-    statistics?: ProcessStatistics;
     processRoles?: ProcessRoles;
     svgString?: string; // only used to save preview to server
   };
@@ -38,8 +36,6 @@ export enum ProcessExtras {
   None = 0,
   ExtrasBpmnXml = 1 << 0,
   ExtrasInstances = 1 << 1,
-  // ExtrasTodos = 1 << 2,
-  ExtrasStatistics = 1 << 3,
   ExtrasProcessRoles = 1 << 4,
   ExtrasProcessRolesWithMemberNames = 1 << 5 // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
 }
@@ -53,13 +49,6 @@ export interface ModelValidationResult {
   isValid: boolean;
   tooManyOutgoings: string[];
   tooManyIncomings: string[];
-}
-
-export interface ProcessStatistics {
-  openTasksTotal: number;
-  openTasksOnTime: number;
-  openTasksWarning: number;
-  openTasksAlert: number;
 }
 
 export const ProcessResult = PH.Tools.strEnum([

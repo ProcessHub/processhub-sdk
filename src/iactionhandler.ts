@@ -4,7 +4,6 @@ export interface ExtrasRequest {
   workspaceExtras?: PH.Workspace.WorkspaceExtras;
   processExtras?: PH.Process.ProcessExtras;
   instanceExtras?: PH.Instance.InstanceExtras;
-  todoExtras?: PH.Todo.TodoExtras;
   userExtras?: PH.User.UserExtras;
 }
 
