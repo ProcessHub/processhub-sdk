@@ -5,8 +5,7 @@ import * as PH from "../";
 export class UserDetails {
   userId: string;
   mail: string;
-  urlName?: string; // userId.toLowerCase()
-  realName: string;     
+  realName?: string;     
   displayName?: string; // realName or mail if no name is defined
   photoUrl?: string;  
   extras: {
@@ -34,18 +33,19 @@ export const emptyUser: PH.User.UserDetails = {
 
 export function getUserWorkspace(user: PH.User.UserDetails, workspaceId: string): PH.Workspace.WorkspaceDetails {
   if (user == null)
-    return null; // Kein PH.Assert, falls kein User angemeldet
+    return null; 
 
-  // ExtrasWorkspaces erforderlich
+  // ExtrasWorkspaces required
   PH.Assert.isTrue(user.extras.workspaces != null, "getUserWorkspace: user.extras.workspaces == null");
 
   return user.extras.workspaces.find((workspace) => workspace.workspaceId == workspaceId);
 }
 
 export enum AccountState {
-  Preregistered, // Einladung versandt oder als Gastuser im System
-  Registered, // User hat sich registriert, Mailadresse aber noch nicht bestätigt
-  Confirmed, // Mailadresse wurde bestätigt
+  // DON'T CHANGE NUMBER VALUES - used in database
+  Preregistered = 0, // user invited, mail addres known but not yet registered
+  Registered = 1, // user has registered but not yet confirmed mail address
+  Confirmed = 2, // fully registered, mail address confirmed
   Deleted
 }
 
@@ -74,7 +74,7 @@ export function getPredefinedGroupName(groupId: string): string {
     case PredefinedGroups.AllWorkspaceMembers:
       return PH.tl("Alle Mitglieder des Arbeitsbereichs");
     case PredefinedGroups.AllParticipants:
-      return PH.tl("Nur Prozessbeteiligte");
+      return PH.tl("Nur Prozessbeteiligte Mitglieder des Arbeitsbereichs");
   }
 }
 

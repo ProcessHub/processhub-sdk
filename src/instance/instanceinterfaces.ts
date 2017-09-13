@@ -5,6 +5,7 @@ import * as PH from "../";
 import { InstanceAccessRights } from "./instancerights";
 
 export enum State {
+  // DON'T CHANGE NUMBERS - used in database
   Running = 1,
   Finished = 2,
   Canceled = 3,
