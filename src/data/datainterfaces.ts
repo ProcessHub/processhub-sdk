@@ -2,7 +2,12 @@ import * as PH from "../";
 
 export interface FieldValue {
   type: string;
-  value: Date | string | boolean | string[];
+  value:
+    Date | // Date
+    string | // TextInput, TextArea
+    boolean | // Checkbox
+    string[] | // FileUpload
+    { [key: string]: boolean }; // Checklist
 }
 
 /**
@@ -12,7 +17,7 @@ export interface FieldValue {
  */
 export function isFieldValue(element: {}): element is FieldValue {
   return element
-    && (element as FieldValue).type !== undefined    
+    && (element as FieldValue).type !== undefined
     && typeof (element as FieldValue).type === "string";
 }
 
@@ -26,31 +31,31 @@ export function getFiletypeIcon(filename: string): string {
     return "file outline";
 
   let extension = filename.split(".").last().toLowerCase();
-  
+
   switch (extension) {
     case "pdf":
       return "file pdf outline";
     case "xls":
     case "xlsx":
-      return "file excel outline";  
+      return "file excel outline";
     case "doc":
-    case" docx":
+    case " docx":
       return "file word outline";
     case "ppt":
     case "pptx":
       return "file powerpoint outline";
-    case "zip": 
+    case "zip":
     case "tar.gz":
-      return "file archive outline";  
-    case "txt": 
-      return "file text outline"; 
-    case "jpg": 
-    case "png": 
-    case "psd": 
-    case "gif":     
-    case "tif":     
-      return "file image outline";        
+      return "file archive outline";
+    case "txt":
+      return "file text outline";
+    case "jpg":
+    case "png":
+    case "psd":
+    case "gif":
+    case "tif":
+      return "file image outline";
     default:
-      return "file outline";      
+      return "file outline";
   }
 }
