@@ -59,7 +59,7 @@ export class FrameActionHandler implements PH.IActionHandler {
   async requestExtras(environment: PH.CoreEnvironment, requestedExtras: PH.ExtrasRequest, forceReload?: boolean) {
   }
 
-  openInstancePopup(instanceId: string, todoId?: string) {
+  async openInstancePopup(instanceId: string, todoId?: string): Promise<void> {
   }
 }
 
