@@ -71,9 +71,9 @@ export function getPredefinedGroupName(groupId: string): string {
     case PredefinedGroups.Everybody:
       return PH.tl("Jeder (gestattet externe Teilnahme mit Mailadresse)");
     case PredefinedGroups.AllWorkspaceMembers:
-      return PH.tl("Alle Mitglieder des Arbeitsbereichs");
+      return PH.tl("Alle Mitglieder des Teams");
     case PredefinedGroups.AllParticipants:
-      return PH.tl("Nur Prozessbeteiligte Mitglieder des Arbeitsbereichs");
+      return PH.tl("Nur Prozessbeteiligte Mitglieder des Teams");
   }
 }
 
