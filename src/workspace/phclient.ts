@@ -5,7 +5,7 @@ export class WorkspaceState {
   currentWorkspace: PH.Workspace.WorkspaceDetails;
 
   // Workspace Cache
-  workspace: { 
+  workspaceCache: { 
     [workspaceId: string]: PH.Workspace.WorkspaceDetails
   };
 }

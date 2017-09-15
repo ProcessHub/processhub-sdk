@@ -7,7 +7,7 @@ export class InstanceState {
   currentInstance?: PH.Instance.InstanceDetails;
 
   // Instance Cache
-  instance: {
+  instanceCache: {
     [instanceId: string]: PH.Instance.InstanceDetails
   };  
 }

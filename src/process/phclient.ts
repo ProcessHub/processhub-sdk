@@ -7,7 +7,7 @@ export class ProcessState {
   currentProcess: PH.Process.ProcessDetails;
 
   // Process Cache
-  process: {
+  processCache: {
     [processId: string]: PH.Process.ProcessDetails
   };  
 }
