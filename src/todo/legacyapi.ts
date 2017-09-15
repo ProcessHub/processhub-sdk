@@ -4,12 +4,14 @@ import * as PH from "../";
 export const TodoRequestRoutes = {
   GetTodosForUser: "/api/todo/todosforuser",
   GetTodo: "/api/todo/gettodo",
-  UpdateTodo: "/api/todo/updatetodo"
+  UpdateTodo: "/api/todo/updatetodo",
+  GetSimulationTodos: "/api/todo/simulationtodos",
 };
 export type TodoRequestRoutes = keyof typeof TodoRequestRoutes;
 
 export const TodoMessages = {
-  TodoLoadedMessage: "TodoLoadedMessage"
+  TodoLoadedMessage: "TodoLoadedMessage",
+  TodoSimulationLoadedMessage: "TodoSimulationLoadedMessage",
 };
 export type TodoMessages = keyof typeof TodoMessages;
 
@@ -41,6 +43,12 @@ export interface GetTodoReply extends TodoReply {
 
 export interface UpdateTodoRequest {
   todo?: PH.Todo.TodoDetails;
+}
+
+export interface GetSimulationTodosRequest {
+}
+export interface GetSimulationTodosReply extends TodoReply {
+  todos?: Array<PH.Todo.TodoDetails>;
 }
 
 export interface UpdateTodoReply extends TodoReply {
