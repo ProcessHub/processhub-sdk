@@ -22,7 +22,7 @@ export interface CreateUserRequest extends PH.LegacyApi.BaseRequest {
 
 export interface LoginRequest extends PH.LegacyApi.BaseRequest {
   mail: string;
-  password: string;       // Kennworthash
+  password: string;
   accessToken: string;
   isGoogleAccessToken: boolean;
 }
@@ -32,6 +32,7 @@ export interface LoginReply extends PH.LegacyApi.BaseMessage {
 }
 
 export interface LoadUserRequest extends PH.LegacyApi.BaseRequest {
+  getExtras: PH.User.UserExtras;
 }
 export interface LoadUserReply extends PH.LegacyApi.BaseMessage {
   userDetails?: PH.User.UserDetails;
