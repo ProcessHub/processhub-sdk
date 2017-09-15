@@ -11,8 +11,9 @@ export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxL
 
     if (isFieldValue(value)) {
       let tmpValue = value.value;
-      if (tmpValue != null)
+      if (tmpValue != null && typeof tmpValue !== "object") {
         excerpt += tmpValue.toString() + " / ";
+      }
     } else {
       if (typeof (value) == "string"
         && (value as string).trim() != ""
