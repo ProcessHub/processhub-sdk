@@ -2,9 +2,8 @@
 import * as PH from "../";
 
 export class PathState {
-  currentPage?: PH.Path.Page;
-  currentView?: PH.Path.View;
+  currentPath: PH.Path.PathDetails;
+
   lastApiResult?: PH.LegacyApi.ApiResult;  // Ergebnis des letzten Api-Aufrufs
-  isMobile?: boolean;
 }
 

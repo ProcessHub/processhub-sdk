@@ -2,7 +2,7 @@ import { assert } from "chai";
 import * as ProcessValidation from "./processvalidation";
 import * as PH from "../";
 
-describe("common", function () {
+describe("sdk", function () {
   describe("process", function () {
     describe("validation", function () {
 

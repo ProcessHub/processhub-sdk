@@ -14,7 +14,7 @@ async function createTestBpmnProcess(): Promise<Process.BpmnProcess> {
   return bpmnProcess;
 }
 
-describe("common", function () {
+describe("sdk", function () {
   describe("process", function () {
     describe("bpmnprocess", function () {
 

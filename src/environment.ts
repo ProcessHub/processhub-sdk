@@ -1,6 +1,7 @@
 import * as PH from "./";
 
 export interface CoreEnvironment {
+  path: PH.Path.PathDetails;
   user: PH.User.UserDetails;
   todos: PH.Todo.TodoDetails[];
 }
