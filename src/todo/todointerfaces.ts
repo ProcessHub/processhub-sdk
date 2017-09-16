@@ -18,6 +18,7 @@ export interface TodoDetails {
   todoType?: TodoType;
   userId?: string;
   workspaceId?: string;  
+  processId?: string;
   status?: TodoStatus;
   urlName?: string; // = todoId.toLowerCase()
   fullUrl?: string; // = /i/instanceid/todoid
@@ -31,14 +32,12 @@ export interface TodoDetails {
   canClaimTodo?: boolean;
   
   instance?: InstanceDetails;
-  process?: ProcessDetails;
   user?: UserDetails;
   potentialOwners?: PotentialRoleOwners;
   
 /*  extras: {
     // New Extras must be added to cache-handling in todoactions -> loadTodo!
     instance?: InstanceDetails;
-    process?: ProcessDetails;
     user?: UserDetails;
     potentialOwners?: PotentialRoleOwners;
     canClaimTodo?: boolean;

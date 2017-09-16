@@ -7,7 +7,7 @@ export function filterTodosForProcess(todos: TodoDetails[], processId: string): 
   if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.process.processId == processId);  
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.processId == processId);  
   return filteredTodos;
 }
 
@@ -18,7 +18,7 @@ export function filterUserTodosForProcess(todos: TodoDetails[], user: PH.User.Us
     return [];
 
   let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.process.processId == processId 
+    todo => (todo.processId == processId 
     && (todo.userId == user.userId || (todo.userId == null && todo.canClaimTodo))));
 
   return filteredTodos;
