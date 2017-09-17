@@ -34,7 +34,7 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
   path.workspaceUrlName = part.substr(1);
 
   part = (split.length >= 2 ? split[1] : PH.Workspace.WorkspaceView.Processes);
-  if (PH.Workspace.requiredWorkspaceViewExtras(PH.Path.Page.WorkspacePage, <PH.Workspace.WorkspaceView>part) != null && split.length <= 2) {
+  if (PH.Workspace.isValidWorkspaceView(part) && split.length <= 2) {
     path.page = PH.Path.Page.WorkspacePage;
     path.view = <PH.Workspace.WorkspaceView>part;
     return path;
@@ -51,7 +51,7 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
   path.processUrlName = decodeURIComponent(split[2]);
 
   part = (split.length >= 4 ? split[3] : PH.Process.ProcessView.Show);
-  if (PH.Process.requiredProcessViewExtras(PH.Path.Page.ProcessPage, <PH.Process.ProcessView>part) != null && split.length <= 4) {
+  if (PH.Process.isValidProcessView(part) && split.length <= 4) {
     path.page = PH.Path.Page.ProcessPage;
     path.view = <PH.Process.ProcessView>part;
     return path;

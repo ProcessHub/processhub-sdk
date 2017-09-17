@@ -13,7 +13,7 @@ export class ProcessState {
 }
 
 export const ProcessView = {
-  // Enum wird für Url-Pfade genutzt, daher Elemente in Kleinschreibung
+  // will be used for urlSegments, so elements in lower case
   Show: "show",
   Edit: "edit",
   Dashboard: "dashboard",
@@ -22,25 +22,13 @@ export const ProcessView = {
 };
 export type ProcessView = keyof typeof ProcessView;
 
-// Extras, die für die angegebene Ansicht benötigt werden
-export function requiredProcessViewExtras(page: PH.Path.Page, view: ProcessView): PH.Process.ProcessExtras {
-  switch (page) {
-    case PH.Path.Page.ProcessPage:
-      switch (view) {
-        case ProcessView.Show:
-          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
-        case ProcessView.Edit:
-          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames | PH.Workspace.WorkspaceExtras.ExtrasMembers;
-        case ProcessView.Dashboard:
-          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames;
-        case ProcessView.Instances:
-          return PH.Process.ProcessExtras.ExtrasBpmnXml | PH.Process.ProcessExtras.ExtrasInstances | PH.Process.ProcessExtras.ExtrasProcessRolesWithMemberNames;
-        default:
-          return null;  // -> View ungültig
-      }
-    default:
-      return null;
+export function isValidProcessView(urlSegment: string) {
+  for (let view in ProcessView) {
+    if ((ProcessView as any)[view]  == urlSegment.toLowerCase())
+      return true;
   }
+
+  return false;
 }
 
 export interface RowDetails {

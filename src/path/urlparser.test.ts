@@ -33,6 +33,13 @@ describe("sdk", function () {
             view: PH.Workspace.WorkspaceView.Members,
             workspaceUrlName: "testworkspace" 
           });
+
+          path = PH.Path.parseUrl("/@testworkSpace/addprocess"); // ignore case and / at end
+          assert.deepEqual(path, <PH.Path.PathDetails>{
+            page: PH.Path.Page.WorkspacePage,
+            view: PH.Workspace.WorkspaceView.AddProcess,
+            workspaceUrlName: "testworkspace" 
+          });
         });
 
         it("soll Prozessseiten korrekt parsen", function () {
@@ -50,6 +57,13 @@ describe("sdk", function () {
             view: PH.Process.ProcessView.Edit,
             workspaceUrlName: "testworkspace",
             processUrlName: "process"
+          });
+
+          path = PH.Path.parseUrl("/@testworkSpace/newprocess"); // ignore case and / at end
+          assert.deepEqual(path, <PH.Path.PathDetails>{
+            page: PH.Path.Page.ProcessPage,
+            view: PH.Process.ProcessView.NewProcess,
+            workspaceUrlName: "testworkspace"
           });
         });
 

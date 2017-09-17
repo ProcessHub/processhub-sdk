@@ -18,11 +18,20 @@ export function getDefaultMailSignature() {
 export const WorkspaceView = {
   Processes: "processes",
   Members: "members",
-  NewProcess: "newprocess",
   AddProcess: "addprocess",
   Settings: "settings",
 };
 export type WorkspaceView = keyof typeof WorkspaceView;
+
+export function isValidWorkspaceView(urlSegment: string) {
+  for (let view in WorkspaceView) {
+    if ((WorkspaceView as any)[view]  == urlSegment.toLowerCase())
+      return true;
+  }
+
+  return false;
+}
+
 
 // WorkspaceMessages
 export const WorkspaceMessages = {
@@ -32,28 +41,3 @@ export const WorkspaceMessages = {
   WorkspaceDeletedMessage: "WorkspaceDeletedMessage",
 };
 export type WorkspaceMessages = keyof typeof WorkspaceMessages;
-
-// Extras, die für die angegebene Ansicht benötigt werden
-export function requiredWorkspaceViewExtras(page: PH.Path.Page, view: WorkspaceView): PH.Workspace.WorkspaceExtras {
-  switch (page) {
-    case PH.Path.Page.ProcessPage:
-    case PH.Path.Page.WorkspacePage:
-      switch (view) {
-        case WorkspaceView.Processes:
-          return PH.Workspace.WorkspaceExtras.ExtrasProcesses;
-        case WorkspaceView.Members:
-          return PH.Workspace.WorkspaceExtras.None;
-        case PH.Process.ProcessView.Dashboard:
-        case PH.Process.ProcessView.Show:
-        case PH.Process.ProcessView.Instances:
-          return PH.Workspace.WorkspaceExtras.ExtrasMembers;
-        case WorkspaceView.Settings:
-        case WorkspaceView.AddProcess:
-          return PH.Workspace.WorkspaceExtras.None;
-        default:
-          return null;  // -> View ungültig
-      }
-    default:
-      return null;
-  }
-}
