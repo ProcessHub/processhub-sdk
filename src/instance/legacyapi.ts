@@ -7,7 +7,6 @@ export const ProcessEngineApiRoutes = {
   updateInstance: "/api/processengine/updateInstance",
   abort: "/api/processengine/abort",
   jump: "/api/processengine/jump",
-  getInstances: "/api/processengine/getinstances",
   getInstanceDetails: "/api/processengine/getinstancedetails",
   uploadAttachment: "/api/processengine/uploadattachment",
   deleteAttachment: "/api/processengine/deleteattachment",
@@ -56,13 +55,6 @@ export interface JumpRequest extends InstanceRequest {
   toBpmnTaskId: string;
 }
 export interface JumpReply extends InstanceReply {
-}
-
-export interface GetInstancesRequest extends InstanceRequest {
-  processId: string;
-}
-export interface GetInstancesReply extends InstanceReply {
-  instances?: PH.Instance.InstanceDetails[];
 }
 
 export interface GetInstanceDetailsRequest extends InstanceRequest {
