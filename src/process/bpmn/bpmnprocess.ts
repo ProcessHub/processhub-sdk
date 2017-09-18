@@ -948,7 +948,7 @@ export class BpmnProcess {
     return null;
   }
 
-  public static getTaskDescription(task: Bpmn.Task): string {
+  public static getFlowNodeDescription(task: Bpmn.FlowNode): string {
     if (task.extensionElements && task.extensionElements.values) {
       const phInOut = task.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
       if (phInOut && phInOut.$children) {
