@@ -353,13 +353,13 @@ describe("sdk", function () {
         it("soll Description für SendTask setzen und wieder lesen", function () {
           const task = bpmnModdle.create("bpmn:SendTask", {});
           BpmnProcess.BpmnProcess.setTaskDescription(task, "description");
-          assert.equal(BpmnProcess.BpmnProcess.getTaskDescription(task), "description");
+          assert.equal(BpmnProcess.BpmnProcess.getFlowNodeDescription(task), "description");
         });
 
         it("soll Description für UserTask setzen und wieder lesen", function () {
           const task = bpmnModdle.create("bpmn:UserTask", {});
           BpmnProcess.BpmnProcess.setTaskDescription(task, "description");
-          assert.equal(BpmnProcess.BpmnProcess.getTaskDescription(task), "description");
+          assert.equal(BpmnProcess.BpmnProcess.getFlowNodeDescription(task), "description");
         });
 
       });
