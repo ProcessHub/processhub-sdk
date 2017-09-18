@@ -51,9 +51,8 @@ export function getFiletypeIcon(filename: string): string {
       return "file text outline";
     case "jpg":
     case "png":
-    case "psd":
     case "gif":
-    case "tif":
+    case "svg":
       return "file image outline";
     default:
       return "file outline";

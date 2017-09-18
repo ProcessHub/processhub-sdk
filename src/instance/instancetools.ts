@@ -7,18 +7,24 @@ export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxL
 
   let excerpt = "";
   for (const key in instance.extras.fieldContents) {
-    const value = instance.extras.fieldContents[key];
+    const field = instance.extras.fieldContents[key];
 
-    if (isFieldValue(value)) {
-      let tmpValue = value.value;
-      if (tmpValue != null && typeof tmpValue !== "object") {
-        excerpt += tmpValue.toString() + " / ";
+    if (isFieldValue(field)) {
+      let value = field.value;
+      if (typeof value == "string") {
+        if (field.type == "ProcessHubDate") {
+          // format date
+          const date: Date = new Date(value);
+          value = date.getDate() + "." + date.getMonth() + "." + date.getFullYear();
+        }
+        if (field.type != "ProcessHubTextArea")
+          excerpt += value.toString() + " / ";
       }
     } else {
-      if (typeof (value) == "string"
-        && (value as string).trim() != ""
-        && !(value as string).startsWith("http://")
-        && !(value as string).startsWith("https://")) {
+      if (typeof (field) == "string"
+        && (field as string).trim() != ""
+        && !(field as string).startsWith("http://")
+        && !(field as string).startsWith("https://")) {
         excerpt += instance.extras.fieldContents[key] + " / ";
       }
     }
