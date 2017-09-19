@@ -36,7 +36,7 @@ export interface ProcessDetails {
 export interface ProcessSettings {
   dashboard?: {
     title?: string;
-  }
+  };
 }
 
 export enum ProcessExtras {
