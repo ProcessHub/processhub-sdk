@@ -1,6 +1,4 @@
 // Mailadresse auf Gültigkeit prüfen
-import { FieldContentMap, isFieldValue, FieldValue } from "../data/datainterfaces";
-
 export function isValidMailAddress(mail: string): boolean {
   // fault tolerant - don't block too many
   let re = /\S+@\S+\.\S+/;
@@ -112,34 +110,4 @@ function shuffleArray(array: number[]) {
     array[j] = temp;
   }
   return array;
-}
-
-export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
-  if (inputString == null)
-    return null;
-
-  const regex = /([{]{2,}[\s]?field\.(.+?)(\s)*[}]{2,})/g;
-  const groupIndexForFieldPlaceholder = 0;
-  const groupIndexForFieldName = 2;
-
-  let match;
-  while ((match = regex.exec(inputString)) !== null) {
-    if (match.index === regex.lastIndex)
-      regex.lastIndex++;
-
-    let fieldPlaceholder = match[groupIndexForFieldPlaceholder];
-    let fieldName = match[groupIndexForFieldName];
-
-    if (fieldName != null) {
-      let valueObject = fieldContentMap[fieldName];      
-      if (isFieldValue(valueObject)) {
-        inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
-      } else {
-        inputString = inputString.replace(fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
-
-      }
-    }
-  }
-
-  return inputString;
 }
