@@ -12,7 +12,7 @@ export type WorkspaceType = keyof typeof WorkspaceType;
 export interface WorkspaceDetails {
   workspaceId: string;
   workspaceType: WorkspaceType;
-  urlName: string; // displayName converted to Uri segment
+  urlName?: string; // displayName converted to Uri segment
   fullUrl?: string; // @urlname
   displayName: string;
   description?: string;

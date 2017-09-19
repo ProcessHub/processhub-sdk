@@ -28,6 +28,10 @@ export interface WorkspaceLoadedMessage extends PH.LegacyApi.BaseMessage {
   type: PH.Workspace.WorkspaceMessages;
   workspace?: PH.Workspace.WorkspaceDetails;
 }
+export interface WorkspaceCreatedMessage extends PH.LegacyApi.BaseMessage {
+  type: PH.Workspace.WorkspaceMessages;
+  workspace?: PH.Workspace.WorkspaceDetails;
+}
 
 export interface CreateWorkspaceRequest extends PH.LegacyApi.BaseRequest {
   workspace: PH.Workspace.WorkspaceDetails;
