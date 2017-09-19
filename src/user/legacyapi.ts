@@ -32,6 +32,7 @@ export interface LoginReply extends PH.LegacyApi.BaseMessage {
 }
 
 export interface LoadUserRequest extends PH.LegacyApi.BaseRequest {
+  userId?: string; // if null userId will be determined by server from AccessToken cookie
   getExtras: PH.User.UserExtras;
 }
 export interface LoadUserReply extends PH.LegacyApi.BaseMessage {
