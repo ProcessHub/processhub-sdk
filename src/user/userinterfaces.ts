@@ -12,6 +12,7 @@ export class UserDetails {
     // New Extras must be added to cache-handling in useractions -> loadUser!
     workspaces?: WorkspaceDetails[];
     accessToken?: string;  // only used during login
+    todos?: PH.Todo.TodoDetails[];
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean;
@@ -20,7 +21,8 @@ export class UserDetails {
 export enum UserExtras {
   None = 0,
   ExtrasWorkspaces = 1 << 0, // get workspaces where user is a member
-  ExtrasWorkspacesWithMembersAndProcesses = 1 << 1  // the sidebar needs fully loaded workspaces to display
+  ExtrasWorkspacesWithMembersAndProcesses = 1 << 1,  // the sidebar needs fully loaded workspaces to display
+  ExtrasTodos = 1 << 2  // user todos
 }
 
 export const emptyUser: PH.User.UserDetails = {
