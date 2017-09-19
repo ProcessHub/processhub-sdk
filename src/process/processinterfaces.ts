@@ -29,7 +29,14 @@ export interface ProcessDetails {
     instances?: InstanceDetails[];
     processRoles?: ProcessRoles;
     svgString?: string; // only used to save preview to server
+    settings?: ProcessSettings;
   };
+}
+
+export interface ProcessSettings {
+  dashboard?: {
+    title?: string;
+  }
 }
 
 export enum ProcessExtras {
@@ -37,7 +44,8 @@ export enum ProcessExtras {
   ExtrasBpmnXml = 1 << 0,
   ExtrasInstances = 1 << 1,
   ExtrasProcessRoles = 1 << 4,
-  ExtrasProcessRolesWithMemberNames = 1 << 5 // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
+  ExtrasProcessRolesWithMemberNames = 1 << 5, // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
+  ExtrasSettings = 1 << 6
 }
 
 export interface TaskToLaneMapEntry {
