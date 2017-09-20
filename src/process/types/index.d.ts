@@ -15,6 +15,7 @@
 /// <reference path="./diagram-js/lib/draw/styles.d.ts" />
 /// <reference path="./diagram-js/lib/features/bendpoints/index.d.ts" />
 /// <reference path="./diagram-js/lib/features/change-support/index.d.ts" />
+/// <reference path="./diagram-js/lib/features/connect/connect.d.ts" />
 /// <reference path="./diagram-js/lib/features/context-pad/contextpad.d.ts" />
 /// <reference path="./diagram-js/lib/features/context-pad/index.d.ts" />
 /// <reference path="./diagram-js/lib/features/create/create.d.ts" />
