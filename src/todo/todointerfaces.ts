@@ -20,7 +20,6 @@ export interface TodoDetails {
   workspaceId?: string;  
   processId?: string;
   status?: TodoStatus;
-  urlName?: string; // = todoId.toLowerCase()
   fullUrl?: string; // = /i/instanceid/todoid
   displayName: string;
   description: string;
