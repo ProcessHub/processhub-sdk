@@ -76,6 +76,7 @@ export interface UploadAttachmentReply extends InstanceReply {
 }
 
 export interface DeleteAttachmentRequest extends InstanceRequest {
+  processId: string;
   instanceId: string;
   fileName: string;
 }
