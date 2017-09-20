@@ -941,7 +941,7 @@ export class BpmnProcess {
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {
     let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
     // fix for multiple outgoings at the moment or no outgoings
-    if (taskObj.outgoing == null || taskObj.outgoing.length > 1) {
+    if (taskObj == null || taskObj.outgoing == null || taskObj.outgoing.length > 1) {
       return null;
     }
     // sure that taskObj has only 1 outgoing
@@ -952,7 +952,7 @@ export class BpmnProcess {
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
     let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
     // fix for multiple outgoings at the moment or no outgoings
-    if (taskObj.incoming == null || taskObj.incoming.length > 1) {
+    if (taskObj == null || taskObj.incoming == null || taskObj.incoming.length > 1) {
       return null;
     }
     // sure that taskObj has only 1 outgoing
