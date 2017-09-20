@@ -363,6 +363,83 @@ describe("sdk", function () {
         });
 
       });
+
+      describe("getFollowingSequenceFlowName", async function () {
+
+        it("soll Following Sequence Flow Name zurückgeben", async function () {
+          let bpmnProcess: Process.BpmnProcess;
+          bpmnProcess = await createTestBpmnProcess();
+          let processes = bpmnProcess.getProcesses();
+          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+
+          let testLaneName: string = "Test Lane";
+          let testId: string = BpmnProcess.BpmnProcess.getBpmnId(BpmnProcess.BPMN_LANE);
+          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+
+          let testTaskName1: string = "Test Aufgabe A";
+          let rowDetails1: Process.RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null };
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+
+          let taskObj = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId1);
+          assert.isTrue(taskObj.outgoing.length == 1, "wrong outgoing");
+
+          let checkName = "Test Sequence Name 123";
+          taskObj.outgoing.last().name = checkName;
+
+          assert.equal(bpmnProcess.getFollowingSequenceFlowName(testTaskId1), checkName, "Sequence Flow Name wrong");
+        });
+
+        it("soll Null zurückgeben", async function () {
+          let bpmnProcess: Process.BpmnProcess;
+          bpmnProcess = await createTestBpmnProcess();
+          let processes = bpmnProcess.getProcesses();
+          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+
+          let testLaneName: string = "Test Lane";
+          let testId: string = BpmnProcess.BpmnProcess.getBpmnId(BpmnProcess.BPMN_LANE);
+          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+
+          let testTaskName1: string = "Test Aufgabe A";
+          let rowDetails1: Process.RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null };
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+
+          assert.equal(bpmnProcess.getFollowingSequenceFlowName(testTaskId1), null, "Sequence Flow Name wrong");
+        });
+
+        it("soll Null zurückgeben too much outgoings", async function () {
+          let bpmnProcess: Process.BpmnProcess;
+          bpmnProcess = await createTestBpmnProcess();
+          let processes = bpmnProcess.getProcesses();
+          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+
+          let testLaneName: string = "Test Lane";
+          let testId: string = BpmnProcess.BpmnProcess.getBpmnId(BpmnProcess.BPMN_LANE);
+          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+
+          let testTaskName1: string = "Test Aufgabe A";
+          let rowDetails1: Process.RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null };
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+
+          let testTaskName2: string = "Test Aufgabe B";
+          let rowDetails2: Process.RowDetails = { rowNumber: 1, selectedRole: testLaneId, task: testTaskName2, taskId: null };
+          let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
+
+          let taskObj = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId1);
+          assert.isTrue(taskObj.outgoing.length == 1, "wrong outgoing");
+
+          let taskObj2 = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId2);
+          assert.isTrue(taskObj2.outgoing.length == 1, "wrong outgoing");
+
+          taskObj.outgoing.push(taskObj2.outgoing.last());
+          taskObj2.outgoing.last().sourceRef = taskObj;
+          taskObj2.outgoing.pop();
+
+          let checkName = "Test Sequence Name 123";
+          taskObj.outgoing.last().name = checkName;
+
+          assert.equal(bpmnProcess.getFollowingSequenceFlowName(testTaskId1), null, "Sequence Flow Name wrong");
+        });
+      });
     });
   });
 });

@@ -938,6 +938,28 @@ export class BpmnProcess {
     return sequenceFlows;
   }
 
+  public getFollowingSequenceFlowName(bpmnTaskId: string): string {
+    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
+    // fix for multiple outgoings at the moment or no outgoings
+    if (taskObj.outgoing == null || taskObj.outgoing.length > 1) {
+      return null;
+    }
+    // sure that taskObj has only 1 outgoing
+    let seqFlow = taskObj.outgoing.last();
+    return seqFlow.name;
+  }
+
+  public getPreviousSequenceFlowName(bpmnTaskId: string): string {
+    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
+    // fix for multiple outgoings at the moment or no outgoings
+    if (taskObj.incoming == null || taskObj.incoming.length > 1) {
+      return null;
+    }
+    // sure that taskObj has only 1 outgoing
+    let seqFlow = taskObj.incoming.last();
+    return seqFlow.name;
+  }
+
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {
     for (let laneDictionary of laneDictionaries) {
       let index: number = laneDictionary.ObjectIdsInLane.indexOf(element.id);
