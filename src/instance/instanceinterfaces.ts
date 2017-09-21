@@ -2,7 +2,6 @@ import { RoleOwnerMap } from "../process";
 import { DecisionTask } from "../todo";
 import { FieldContentMap } from "../data";
 import * as PH from "../";
-import { InstanceAccessRights } from "./instancerights";
 
 export enum State {
   // DON'T CHANGE NUMBERS - used in database
@@ -20,7 +19,6 @@ export interface InstanceDetails {
   isSimulation?: boolean;
   sendSimulationMails?: boolean;
   state: State;
-  userRights?: InstanceAccessRights;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;
