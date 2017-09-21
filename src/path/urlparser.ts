@@ -55,9 +55,8 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
     path.page = PH.Path.Page.ProcessPage;
     path.view = <PH.Process.ProcessView>part;
     return path;
-  }
-
-  return path;
+  } else
+    return null;
 } 
 
 export function parseNotificationLink(fullUrl: string): PH.Path.NotificationLinkElements {
