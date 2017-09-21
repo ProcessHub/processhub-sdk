@@ -5,6 +5,9 @@ export class UserState {
   currentUser?: PH.User.UserDetails;
 
   lastApiResult?: PH.LegacyApi.ApiResult;  // result of the last Api call
+
+  // updated in reducers, helps React to detect state changes
+  cacheState?: string;
 }
 
 export const UserMessages = {

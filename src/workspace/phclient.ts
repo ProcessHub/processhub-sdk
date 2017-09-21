@@ -8,6 +8,9 @@ export class WorkspaceState {
   workspaceCache: { 
     [workspaceId: string]: PH.Workspace.WorkspaceDetails
   };
+
+  // updated in reducers, helps React to detect state changes
+  cacheState?: string;
 }
 
 export function getDefaultMailSignature() {

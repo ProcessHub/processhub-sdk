@@ -10,4 +10,7 @@ export class InstanceState {
   instanceCache: {
     [instanceId: string]: PH.Instance.InstanceDetails
   };  
+
+  // updated in reducers, helps React to detect state changes
+  cacheState?: string;
 }
