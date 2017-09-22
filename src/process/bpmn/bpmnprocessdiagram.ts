@@ -30,6 +30,9 @@ export interface LaneDictionary {
 
 export class BpmnProcessDiagram {
 
+  public static readonly SPACE_BETWEEN_TASKS: number = 62;
+  public static readonly TASK_WIDTH: number = 100;
+
   private bpmnProcess: BpmnProcess.BpmnProcess;
 
   constructor(process: BpmnProcess.BpmnProcess) {
@@ -40,7 +43,6 @@ export class BpmnProcessDiagram {
   private diagramLaneHeight: number = 125;
   private diagramXStartParam: number = 400;
   private diagramYStartParam: number = 0;
-  private spaceBetweenTasks: number = 30;
 
   // Gibt erstes Diagram Element aus XML zurück
   private getDiagramElement(): Bpmndi.BPMNDiagram {
@@ -79,7 +81,7 @@ export class BpmnProcessDiagram {
     let amountOfSequences = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_SEQUENCEFLOW).length;
 
     // Anzahl der Prozesse + anzahl der seuqenzen + feste werte für anfang und ende
-    let poolWidth: number = (amountOfProcesses * 110) + (amountOfSequences * 20) + 250;
+    let poolWidth: number = (amountOfProcesses * BpmnProcessDiagram.TASK_WIDTH) + (amountOfSequences * BpmnProcessDiagram.SPACE_BETWEEN_TASKS) + 250;
     // die lane ist genau 30 pixel kürzer wie der Pool wegen der Beschriftung!
     let laneWidth: number = poolWidth - 30;
     // Diagramm Elements entfernen bevor man sie erneut hinzufügt
@@ -147,8 +149,8 @@ export class BpmnProcessDiagram {
 
   private recursiveGenerateDiagramTasks(diagram: any, laneDictionaries: LaneDictionary[], workingObject: any, xParam: number) {
 
+    let iconWidth = BpmnProcessDiagram.TASK_WIDTH;
     let sizeStartAndEndEvent: number = 36;
-    let iconWidth: number = 100;
     let iconHeight: number = 80;
 
     // Jedes element MUSS in einer Lane sein! Wenn hier null returned wird, dann ist das ein FEHLER       
@@ -175,7 +177,7 @@ export class BpmnProcessDiagram {
 
     // Über den xParam wird gesteuert wie viel weiter rechts das der nächste Task Liegt
     // Sollte sich ergeben aus der Taskbreite + einem gewissen Raum für den Pfeil (optimal sind 30px)
-    xParam += iconWidth + this.spaceBetweenTasks;
+    xParam += iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
 
     if (workingObject.outgoing != null) {
       for (let outgoingSF of workingObject.outgoing) {
