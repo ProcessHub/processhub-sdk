@@ -190,6 +190,11 @@ export function canEditProcess(process: PH.Process.ProcessDetails): boolean {
   return isProcessOwner(process);
 }
 
+export function canSimulateProcess(process: PH.Process.ProcessDetails): boolean {
+  // Currently everybody is allowed to simulate
+  return process != null && !process.isNewProcess;
+}
+
 export function canStartProcess(process: PH.Process.ProcessDetails): boolean {
   if (process == null)
     return false;
@@ -209,5 +214,5 @@ export function canViewProcessInstances(process: PH.Process.ProcessDetails): boo
 }
 
 export function canDeleteProcess(process: PH.Process.ProcessDetails): boolean {
-  return isProcessOwner(process);
+  return isProcessOwner(process) && !process.isNewProcess;
 }
