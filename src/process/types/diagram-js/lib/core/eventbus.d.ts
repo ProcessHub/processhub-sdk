@@ -161,7 +161,7 @@ declare module "diagram-js/lib/core/EventBus" {
      * @param {Function} callback the callback to execute
      * @param {Object} [that] Pass context (`this`) to the callback
      */
-    public once(event: string, priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that: Object): void;
+    public once(event: "element.click", priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that?: Object): void;
 
     /**
      * Removes event listeners by event and callback.
