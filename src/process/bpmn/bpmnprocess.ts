@@ -9,6 +9,7 @@ import { Bpmn } from "../bpmn";
 
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
+import { RunningTaskLane } from "../processinterfaces";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
@@ -239,10 +240,10 @@ export class BpmnProcess {
       let tmpRes = null;
       // let tmpRouteStack = routeStack == null ? [] : _.cloneDeep(routeStack);
       if (processObject.targetRef.$type == BPMN_EXCLUSIVEGATEWAY && processObject.targetRef.outgoing.length == 1) {
-      // if (processObject.targetRef.outgoing.length == 1)
+        // if (processObject.targetRef.outgoing.length == 1)
         tmpRes = this.getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, processObject.targetRef.id);
-      //   tmpRouteStack.push(processObject.targetRef.id);
-      //   tmpRes = getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, tmpRouteStack);
+        //   tmpRouteStack.push(processObject.targetRef.id);
+        //   tmpRes = getDecisionTasksAfterGateway(processObject.targetRef as Bpmn.ExclusiveGateway, tmpRouteStack);
       }
 
       // wenn es kein gateway ist dann füge zusammen
@@ -939,7 +940,7 @@ export class BpmnProcess {
   }
 
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {
-    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
+    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);
     // fix for multiple outgoings at the moment or no outgoings
     if (taskObj == null || taskObj.outgoing == null || taskObj.outgoing.length > 1) {
       return null;
@@ -950,7 +951,7 @@ export class BpmnProcess {
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
-    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);    
+    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);
     // fix for multiple outgoings at the moment or no outgoings
     if (taskObj == null || taskObj.incoming == null || taskObj.incoming.length > 1) {
       return null;
@@ -1004,4 +1005,68 @@ export class BpmnProcess {
     else
       descriptionElement.$body = "";
   }
+
+  public async checkCompatibilityOfChangedProcess(runningInstances: PH.Instance.InstanceDetails[], userTodos: PH.Todo.TodoDetails[]) {
+
+    let actualRunningTasks: RunningTaskLane[] = [];
+    for (let runInstance of runningInstances) {
+      let todos = userTodos.filter(t => t.instance.instanceId == runInstance.instanceId);
+      let value = todos.map((t): RunningTaskLane => {
+        return { bpmnLaneId: t.bpmnLaneId, bpmnTaskId: t.bpmnTaskId } as RunningTaskLane;
+      });
+      actualRunningTasks = actualRunningTasks.concat(value);
+    }
+
+    let allTasksAndLanesAreThere: boolean = true;
+
+    for (let runningTask of actualRunningTasks) {
+      let tmpTaskObj = this.getExistingTask(this.processId(), runningTask.bpmnTaskId);
+      let tmpLaneObj = this.getLaneOfFlowNode(runningTask.bpmnTaskId);
+      if (tmpTaskObj == null || tmpLaneObj == null || runningTask.bpmnLaneId != tmpLaneObj.id) {
+        allTasksAndLanesAreThere = false;
+        break;
+      }
+    }
+
+    return allTasksAndLanesAreThere;
+  }
+
+
+  public getDecisionTasksForTask(bpmnTaskId: string): PH.Todo.DecisionTask[] {
+    let decisionTasks: PH.Todo.DecisionTask[] = [];
+
+    if (this.isOneOfNextActivityOfType(bpmnTaskId, PH.Process.BPMN_EXCLUSIVEGATEWAY)) {
+      // taskTitle = todo != null ? todo.displayName : PH.Tools.tl("Entscheidung");
+      let nextActivites = this.getNextActivities(bpmnTaskId);
+      for (let tmp of nextActivites) {
+        if (tmp.$type == PH.Process.BPMN_EXCLUSIVEGATEWAY) {
+          let list = this.getTaskIdsAfterGateway(tmp.id);
+          decisionTasks = decisionTasks.concat(list);
+        }
+      }
+    }
+
+    return decisionTasks;
+  }
+
+  public getBoundaryDecisionTasksForTask(bpmnTaskId: string): PH.Todo.DecisionTask {
+    let boundaryDecisionTask: PH.Todo.DecisionTask = null;
+
+    let taskObject = this.getExistingActivityObject(bpmnTaskId);
+
+    if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
+      let tmpBoundary = taskObject.boundaryEventRefs.last();
+      PH.Assert.equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
+
+      let boundaryDecisionTask: PH.Todo.DecisionTask = {
+        bpmnTaskId: tmpBoundary.id,
+        name: tmpBoundary.name,
+        isBoundaryEvent: true,
+        type: PH.Todo.DecisionTaskTypes.Boundary,
+        boundaryEventType: tmpBoundary.eventDefinitions.last().$type.toString()
+      } as PH.Todo.DecisionTask;
+    }
+    return boundaryDecisionTask;
+  }
+
 }

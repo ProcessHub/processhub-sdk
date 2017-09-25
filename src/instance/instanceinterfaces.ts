@@ -2,6 +2,7 @@ import { RoleOwnerMap } from "../process";
 import { DecisionTask } from "../todo";
 import { FieldContentMap } from "../data";
 import * as PH from "../";
+import { Bpmn } from "modeler/bpmn/bpmn";
 
 export enum State {
   // DON'T CHANGE NUMBERS - used in database
@@ -45,4 +46,41 @@ export interface ResumeInstanceDetails {
   // Sollte nächste Activity Exclusive Gateway sein, wird hier die Entscheidung über den SF mitgeteilt
   choosenTask?: DecisionTask;
   fieldContents?: FieldContentMap;
+}
+
+export interface EngineState {
+  name: string;
+  state: string;
+  engineVersion: string;
+  definitions: EngineStateDefinition[];
+}
+
+export interface EngineStateDefinition {
+  id: string;
+  state: string;
+  moddleContext: any;
+  stopped: boolean;
+  processes: EngineStateDefinitionProcess;
+}
+
+export interface EngineStateDefinitionProcess {
+  [id: string]: EngineStateDefinitionProcessDetails;
+}
+
+export interface EngineStateDefinitionProcessDetails {
+  id: string;
+  type: Bpmn.bpmnType;
+  entered: boolean;
+  variables: any;
+  services: any;
+  children: EngineStateDefinitionChild[];
+}
+
+export interface EngineStateDefinitionChild {
+  id: string;
+  type: Bpmn.bpmnType;
+  entered: boolean;
+  canceled?: boolean;
+  waiting?: boolean;
+  taken?: boolean;
 }
