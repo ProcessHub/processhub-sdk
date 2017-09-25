@@ -61,5 +61,7 @@ export class FrameActionHandler implements PH.IActionHandler {
 
   async openInstancePopup(instanceId: string, todoId?: string): Promise<void> {
   }
+  closeInstancePopup() {}
+  
 }
 
