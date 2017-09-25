@@ -947,7 +947,10 @@ export class BpmnProcess {
     }
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.outgoing.last();
-    return seqFlow.name;
+    if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
+      return seqFlow.name;  
+    else
+      return null;      
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
@@ -958,7 +961,10 @@ export class BpmnProcess {
     }
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.incoming.last();
-    return seqFlow.name;
+    if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
+      return seqFlow.name;  
+    else
+      return null;  
   }
 
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {
