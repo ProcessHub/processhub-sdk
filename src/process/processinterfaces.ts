@@ -89,5 +89,9 @@ export interface TaskExtensions {
   sendTaskSubject: string;
 }
 
+export interface RunningTaskLane {
+  bpmnTaskId: string;
+  bpmnLaneId: string;
+}
 
 

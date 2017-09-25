@@ -26,7 +26,7 @@ export interface TodoDetails {
   bpmnTaskId: string;
   bpmnLaneId: string;  
   createdAt?: Date;
-  decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
+  // decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
 
   canClaimTodo?: boolean;
   
