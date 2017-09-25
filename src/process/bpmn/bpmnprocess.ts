@@ -211,11 +211,18 @@ export class BpmnProcess {
 
   public getNextActivities(currentTaskId: string): Bpmn.FlowNode[] {
     let currentTask = this.getExistingActivityObject(currentTaskId);
-    PH.Assert.isTrue(currentTask != null, "An dieser Stelle darf currentTask nicht null sein!");
-    PH.Assert.isTrue(currentTask != null, "An dieser Stelle darf currentTask nicht null sein!");
-    PH.Assert.isTrue(currentTask.outgoing != null, "An dieser Stelle darf outgoing nicht null sein!");
 
-    let tmpList = [];
+    let tmpList: Bpmn.FlowNode[] = [];
+
+    if (currentTask == null) {
+      console.error("getNextActivities: currentTask may not be null");
+      return tmpList;
+    }
+    if (currentTask.outgoing == null) {
+      console.warn("getNextActivities: currentTask.outgoing should not be null");
+      return tmpList;
+    }
+
     for (let task of currentTask.outgoing) {
       tmpList.push(task.targetRef);
     }
