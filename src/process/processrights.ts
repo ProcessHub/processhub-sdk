@@ -115,11 +115,7 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
 
   let allOwners: { [roleId: string]: PH.Process.PotentialRoleOwners } = {};
 
-  // Die Teilnehmerliste ist nur für ProzessManager sichtbar
-  PH.Assert.isTrue(isProcessManager(processDetails), "Must be process manager");
-
   PH.Assert.isTrue(workspaceDetails != null, "WorkspaceDetails dürfen nicht null sein!");
-
   PH.Assert.isTrue(workspaceDetails.extras.members != null, "Es müssen Workspace Details geliefert werden, die WorkspaceMembers beinhalten!");
 
   // todo überprüfen ob jeder user einen Namen hat der über die processDetails kommt (außer gruppen)
