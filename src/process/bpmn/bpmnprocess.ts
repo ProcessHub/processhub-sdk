@@ -873,19 +873,24 @@ export class BpmnProcess {
 
   public getSortedTasks(processId: string): Bpmn.Task[] {
     let startEventObject: Bpmn.StartEvent = this.getStartEvents(processId)[0];
+    if (startEventObject == null || startEventObject.outgoing == null || startEventObject.outgoing.length == 0)
+      return [];  // process definition is not correct, but function should be fault tolerant
 
     let taskObject = startEventObject.outgoing[0].targetRef;
 
     let sortedTasks: Bpmn.Task[] = [];
 
     // taskObject wird zuerst auf Start event gesetzt!
-    while (taskObject.$type !== BPMN_ENDEVENT) {
+    while (taskObject != null && taskObject.$type !== BPMN_ENDEVENT) {
       if ((taskObject.$type === "bpmn:UserTask" || taskObject.$type === "bpmn:SendTask") && sortedTasks.find(e => e.id == taskObject.id) == null) {
         sortedTasks.push(taskObject as Bpmn.Task);
       } else if (sortedTasks.find(e => e.id == taskObject.id) != null) {
         break; // Vermeidung Endlosschleife
       }
-      taskObject = taskObject.outgoing[0].targetRef;
+      if (taskObject.outgoing != null && taskObject.outgoing[0] != null)
+        taskObject = taskObject.outgoing[0].targetRef;
+      else 
+        taskObject = null;
     }
 
     // Liste enthält nur einen Pfad nach Gateways und ist daher nicht unbedingt vollständig
