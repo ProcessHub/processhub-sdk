@@ -56,6 +56,6 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      *
      * @return {Object}
      */
-    public calculateAdjustments(elements: Shape[], axis: 'y' | 'x', offset: number, spacePos: number): Object;
+    public calculateAdjustments(elements: Shape[], axis: "y" | "x", offset: number, spacePos: number): Object;
   }
 }
