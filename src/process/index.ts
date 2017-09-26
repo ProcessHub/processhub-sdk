@@ -1,6 +1,7 @@
 export * from "./processinterfaces";
 export * from "./processrights";
 export * from "./processvalidation";
+export * from "./processtools";
 export * from "./phclient";
 export * from "./legacyapi";
 export * from "./bpmn/bpmnmoddlehelper";
