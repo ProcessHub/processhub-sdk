@@ -4,9 +4,12 @@ export enum ProcessAccessRights {
   None = 0,
   EditProcess = 1 << 0,
   ManageProcess = 1 << 1,
-  StartProcess = 1 << 2, // User darf Prozess starten
+  StartProcess = 1 << 2,
   ViewProcess = 1 << 3,
-  ViewProcessInstances = 1 << 4
+  ViewInstances = 1 << 4,  // access to instances tab, user sees instances with own roles
+  ViewAllInstances = 1 << 5,  // user can see all instances
+  ViewTodos = 1 << 6,
+  ViewAllTodos = 1 << 7
 }
 
 export interface ProcessRoles {
@@ -199,14 +202,30 @@ export function canStartProcess(process: PH.Process.ProcessDetails): boolean {
   return ((process.userRights & PH.Process.ProcessAccessRights.StartProcess) != 0);
 }
 
-// Can user view any instances, dashboard and history?
-// Note: There are additional limitations that not all users can see all instances. This flag decides
-// if there is any access at all
-export function canViewProcessInstances(process: PH.Process.ProcessDetails): boolean {
+export function canViewTodos(process: PH.Process.ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return ((process.userRights & PH.Process.ProcessAccessRights.ViewProcessInstances) != 0);
+  return canViewAllTodos(process) || ((process.userRights & PH.Process.ProcessAccessRights.ViewTodos) != 0);
+}
+export function canViewAllTodos(process: PH.Process.ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  return ((process.userRights & PH.Process.ProcessAccessRights.ViewAllTodos) != 0);
+}
+
+export function canViewInstances(process: PH.Process.ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  return canViewAllInstances(process) || ((process.userRights & PH.Process.ProcessAccessRights.ViewInstances) != 0);
+}
+export function canViewAllInstances(process: PH.Process.ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  return ((process.userRights & PH.Process.ProcessAccessRights.ViewAllInstances) != 0);
 }
 
 export function canDeleteProcess(process: PH.Process.ProcessDetails): boolean {
