@@ -4,8 +4,7 @@ import { InstanceDetails } from "../instance";
 
 export enum TodoStatus {
   TodoOnTime = 0,
-  TodoWarning = 1,
-  TodoAlert = 2
+  TodoOverdue = 2
 }
 
 export enum TodoType {
