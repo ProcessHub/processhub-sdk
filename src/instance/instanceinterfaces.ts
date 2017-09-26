@@ -20,6 +20,7 @@ export interface InstanceDetails {
   isSimulation?: boolean;
   sendSimulationMails?: boolean;
   state: State;
+  latestCommentId: string;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;

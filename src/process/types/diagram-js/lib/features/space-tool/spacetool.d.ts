@@ -4,7 +4,7 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
   import Modeling = require("diagram-js/lib/features/modeling/Modeling");
   import Rules = require("diagram-js/lib/features/rules/Rules");
   import { IPoint } from "diagram-js";
-  import { Base } from "diagram-js/lib/model";
+  import { Base, Shape } from "diagram-js/lib/model";
 
   export = SpaceTool;
 
@@ -34,7 +34,7 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      * @param  {Point} delta
      * @param  {String} direction
      */
-    public makeSpace(movingShapes: Base[], resizingShapes: Base[], delta: IPoint, direction: string): void;
+    public makeSpace(movingShapes: Shape[], resizingShapes: Shape[], delta: IPoint, direction: string): void;
 
     /**
      * Initialize make space and return true if that was successful.
@@ -56,6 +56,6 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      *
      * @return {Object}
      */
-    public calculateAdjustments(elements: Base[], axis: string, offset: number, spacePos: number): Object;
+    public calculateAdjustments(elements: Shape[], axis: 'y' | 'x', offset: number, spacePos: number): Object;
   }
 }
