@@ -32,6 +32,7 @@ export interface TodoDetails {
   instance?: InstanceDetails;
   user?: UserDetails;
   potentialOwners?: PotentialRoleOwners;
+  priority?: number;
   
 /*  extras: {
     // New Extras must be added to cache-handling in todoactions -> loadTodo!
