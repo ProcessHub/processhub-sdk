@@ -74,3 +74,17 @@ export interface ConfirmMailRequest extends PH.LegacyApi.BaseMessage {
 export interface UploadProfilePictureRequest extends PH.LegacyApi.BaseMessage {
   data: string;
 }
+
+// nes websocket messages
+export interface TodoLoadedMessage extends PH.LegacyApi.BaseMessage {
+  type: PH.User.UserMessages;
+  todo: PH.Todo.TodoDetails;
+}
+export interface RemoveTodoMessage extends PH.LegacyApi.BaseMessage {
+  type: PH.User.UserMessages;
+  todoId: string;
+}
+export interface NewInstanceMessage extends PH.LegacyApi.BaseMessage {
+  type: PH.User.UserMessages;
+  instanceId: string;
+}
