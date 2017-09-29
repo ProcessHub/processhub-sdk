@@ -5,4 +5,5 @@ export * from "./types";
 export * from "./stringtools";
 export * from "./timing";
 export * from "./browser";
+export * from "./localwebstorage";
 import "./array";
