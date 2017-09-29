@@ -35,7 +35,8 @@ export interface ProcessDetails {
 
 export interface ProcessSettings {
   dashboard?: {
-    title?: string;
+    cardTitle?: string;  // title of the cards in the dashboard
+    cardDesc?: string;  // additional text on the card
     dashBoardAccess?: ProcessViewAccess;  // who can access todos?
   };
   archive?: {
