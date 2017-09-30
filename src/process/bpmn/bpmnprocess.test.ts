@@ -105,7 +105,7 @@ describe("sdk", function () {
           assert(startEvents[0].outgoing[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
           assert(startEvents[0].outgoing[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
 
-          let endEvent: Bpmn.EndEvent = bpmnProcess.getEndEvent(process.id);
+          let endEvent: Bpmn.EndEvent = bpmnProcess.getEndEvents(process.id)[0];
           assert(endEvent.incoming[0].sourceRef.$type === BpmnProcess.BPMN_STARTEVENT);
           assert(endEvent.incoming[0].targetRef.$type === BpmnProcess.BPMN_ENDEVENT);
         });
@@ -191,7 +191,7 @@ describe("sdk", function () {
 
           assert(testLane.flowNodeRef.length === 2);
           bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getStartEvents(process.id)[0]);
-          bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getEndEvent(process.id));
+          bpmnProcess.removeTaskObjectFromLanes(process.id, bpmnProcess.getEndEvents(process.id)[0]);
           assert(testLane.flowNodeRef.length === 0);
         });
 

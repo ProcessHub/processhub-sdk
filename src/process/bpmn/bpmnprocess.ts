@@ -340,10 +340,8 @@ export class BpmnProcess {
     return this.getEvents(processId, BPMN_STARTEVENT) as Bpmn.StartEvent[];
   }
 
-  public getEndEvent(processId: string): BpmnModdleHelper.BpmnModdleEndEvent {
-    let events = this.getEvents(processId, BPMN_ENDEVENT);
-    if (events != null && events.length >= 1)
-      return events[0] as BpmnModdleHelper.BpmnModdleEndEvent;
+  public getEndEvents(processId: string): BpmnModdleHelper.BpmnModdleEndEvent[] {
+    return this.getEvents(processId, BPMN_ENDEVENT) as BpmnModdleHelper.BpmnModdleEndEvent[];
   }
 
   private getEvents(processId: string, eventType: string): Bpmn.FlowElement[] {
@@ -694,7 +692,8 @@ export class BpmnProcess {
       // focusedTask.incoming.push(sequenceObject);
 
       // füge sequenz zum Endevent hinzu
-      let endEventObject = this.getEndEvent(processId);
+      // TR: getEndEvent changed to getEndEvents and [0] added in following line - does that make sense?
+      let endEventObject = this.getEndEvents(processId)[0];
 
       // zuerst alten sequenzFlow auf EndEvent löschen
       this.removeSequenceFlow(processId, endEventObject.incoming[0]);
@@ -778,7 +777,7 @@ export class BpmnProcess {
 
     // Start und Ende aus Lanes entfernen und dann neu hinzufügen
     this.removeTaskObjectFromLanes(processId, this.getStartEvents(processId)[0]);
-    this.removeTaskObjectFromLanes(processId, this.getEndEvent(processId));
+    this.removeTaskObjectFromLanes(processId, this.getEndEvents(processId)[0]);
 
     let laneOfStartEvent: Bpmn.Lane = null;
     let laneOfEndEvent: Bpmn.Lane = null;
@@ -796,7 +795,7 @@ export class BpmnProcess {
 
     if (laneOfStartEvent != null && laneOfEndEvent != null) {
       this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvents(processId)[0]);
-      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvent(processId));
+      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);
     }
 
     return sortedLaneElementsList;
