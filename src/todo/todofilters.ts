@@ -2,6 +2,15 @@
 import { TodoDetails } from "./todointerfaces";
 import * as PH from "../";
 
+// all todos for an instance
+export function filterTodosForInstance(todos: TodoDetails[], instanceId: string): TodoDetails[] {
+  if (!todos)
+    return [];
+
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.instance.instanceId == instanceId);  
+  return filteredTodos;
+}
+
 // all todos for a process
 export function filterTodosForProcess(todos: TodoDetails[], processId: string): TodoDetails[] {
   if (!todos)
