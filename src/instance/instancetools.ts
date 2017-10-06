@@ -1,6 +1,18 @@
 import * as PH from "../";
 import { isFieldValue } from "../data/datainterfaces";
 
+export function isRoleOwner(userId: string, roleId: string, instance: PH.Instance.InstanceDetails): boolean {
+  if (instance.extras.roleOwners == null || instance.extras.roleOwners[roleId] == null)
+    return false;
+
+  instance.extras.roleOwners[roleId].map(roleOwner => {
+    if (roleOwner.memberId == userId)
+      return true;
+  });
+
+  return false;
+}
+
 export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxLen: number): string {
   if (instance == null || instance.extras.fieldContents == null)
     return "";

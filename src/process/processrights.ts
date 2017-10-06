@@ -16,10 +16,11 @@ export interface ProcessRoles {
   [roleId: string]: ProcessRole; // roleId ist RollenId bzw. LaneId des Prozesses
 }
 export const DefaultRoles = {
-  Owner: "OWNER", // String in Datenbank - nicht ändern
-  Manager: "MANAGER", // String in Datenbank - nicht ändern
-  Viewer: "VIEWER", // String in Datenbank - nicht ändern
-  InstanceOwner: "IOWNER"
+  Owner: "OWNER", // DO NOT CHANGE - string used in database
+  Manager: "MANAGER", // DO NOT CHANGE - string used in database
+  Viewer: "VIEWER", // DO NOT CHANGE - string used in database
+  InstanceOwner: "IOWNER", // DO NOT CHANGE - string used in database
+  Follower: "FOLLOWER" // DO NOT CHANGE - string used in database
 };
 export type DefaultRoles = keyof typeof DefaultRoles;
 
@@ -31,17 +32,19 @@ export function getDefaultRoleName(roleId: string): string {
       return PH.tl("Prozessmanager");
     case DefaultRoles.Viewer:
       return PH.tl("Sichtbarkeit");
+    case DefaultRoles.Follower:
+      return PH.tl("Follower");      
   }
 }
 
 export interface ProcessRole {
-  // Objekt wird als Json in Datenbank gespeichert - Membernamen nicht ändern!
+  // DO NOT CHANGE MEMBER NAMES - object stored in Db in json-format 
   roleName?: string;
   potentialRoleOwners: RoleOwner[];
-  isStartingRole?: boolean; // Diese Rolle kann den Prozess starten
+  isStartingRole?: boolean;  // this role is allowed to start the process
+  allowMultipleOwners?: boolean;  // role can have multiple simultaneous role owners 
 }
 export interface PotentialRoleOwners {
-  allowGuests?: boolean; // Gäste sind für die Rolle ebenfalls zugelassen
   potentialRoleOwner: RoleOwner[];
 }
 export interface RoleOwnerMap {
@@ -61,9 +64,7 @@ export function isDefaultRole(roleId: string): boolean {
 }
 
 export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProcess: PH.Process.BpmnProcess, workspace: PH.Workspace.WorkspaceDetails): PH.Process.ProcessRoles {
-  // Fügt den CurrentRoles Einträge für alle vorhandenen Lanes hinzu
-  PH.Assert.isTrue(workspace != null, "workspace is null or undefined");
-
+  // add entries for all existing roles in the process
   let processRoles = currentRoles;
   if (processRoles == null)
     processRoles = {};
@@ -82,6 +83,9 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
   if (processRoles[PH.Process.DefaultRoles.Manager] == null && workspace.workspaceType != PH.Workspace.WorkspaceType.Demo && workspace.workspaceType != PH.Workspace.WorkspaceType.Free) {
     processRoles[PH.Process.DefaultRoles.Manager] = { potentialRoleOwners: [] };
   }
+
+  // Everybody can be added as a follower
+  processRoles[PH.Process.DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PH.User.PredefinedGroups.Everybody }], allowMultipleOwners: true };
 
   if (bpmnProcess != null) {
     // Alle Lanes mit Vorgabewerten belegen
@@ -143,9 +147,6 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
             });
           }
           addedWsMembers = true; // Merken, damit Member nicht mehrfach hinzugefügt werden, falls beide Gruppen genannt werden
-
-          if (potentialOwner.memberId == PH.User.PredefinedGroups.Everybody)
-            owners.allowGuests = true; // Auch externe Mitglieder sind erlaubt
         } else if (PH.Tools.isUserId(potentialOwner.memberId)) {
           owners.potentialRoleOwner.push({
             memberId: potentialOwner.memberId,
