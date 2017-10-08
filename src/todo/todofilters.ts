@@ -2,6 +2,17 @@
 import { TodoDetails } from "./todointerfaces";
 import * as PH from "../";
 
+// todos the user owns or can claim
+export function filterUserTodos(todos: TodoDetails[], user: PH.User.UserDetails): TodoDetails[] {
+  if (!user || !todos)
+  return [];
+
+  let filteredTodos: TodoDetails[] = todos.filter(
+    todo => (todo.userId == user.userId || (todo.userId == null && todo.canClaimTodo)));
+
+  return filteredTodos;
+}
+
 // all todos for an instance
 export function filterTodosForInstance(todos: TodoDetails[], instanceId: string): TodoDetails[] {
   if (!todos)
@@ -20,19 +31,6 @@ export function filterTodosForProcess(todos: TodoDetails[], processId: string): 
   return filteredTodos;
 }
 
-// users todos for a process
-// (call uses user instead of userId so caller does not have to check for existing user in environment)
-export function filterUserTodosForProcess(todos: TodoDetails[], user: PH.User.UserDetails, processId: string): TodoDetails[] {
-  if (!user || !todos)
-    return [];
-
-  let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.processId == processId 
-    && (todo.userId == user.userId || (todo.userId == null && todo.canClaimTodo))));
-
-  return filteredTodos;
-}
-
 // all todos for workspace
 export function filterTodosForWorkspace(todos: TodoDetails[], workspaceId: string): TodoDetails[] {
   if (!todos)
@@ -42,14 +40,22 @@ export function filterTodosForWorkspace(todos: TodoDetails[], workspaceId: strin
   return filteredTodos;
 }
 
-// users todos for a workspace
-export function filterUserTodosForWorkspace(todos: TodoDetails[], user: PH.User.UserDetails, workspaceId: string): TodoDetails[] {
-  if (!user || !todos)
+// todos for processes in workspace that user can not see
+export function filterRemainingTodosForWorkspace(todos: TodoDetails[], workspace: PH.Workspace.WorkspaceDetails): TodoDetails[] {
+  if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.workspaceId == workspaceId 
-    && (todo.userId == user.userId || (todo.userId == null && todo.canClaimTodo))));
+  let workspaceTodos = filterTodosForWorkspace(todos, workspace.workspaceId);
 
-  return filteredTodos;
+  if (PH.Workspace.isWorkspaceMember(workspace)) {
+    // getOtherItems lists the todos for processes without read access - filter the others
+    let filteredTodos: PH.Todo.TodoDetails[] = [];
+    workspaceTodos.map(todo => {
+      if (workspace.extras.processes.find(process => process.processId == todo.instance.processId) == null)
+      filteredTodos.push(todo);
+    });
+    workspaceTodos = filteredTodos;
+  }
+
+  return workspaceTodos;
 }

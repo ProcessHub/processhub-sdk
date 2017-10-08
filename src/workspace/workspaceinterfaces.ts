@@ -37,9 +37,9 @@ export interface WorkspaceSettings {
 }
 
 export enum WorkspaceRole {
-  None = 0,
+  None = 0, // used to list todos from workspaces where user is not a member
   WorkspaceAdmin = 1 << 0,     
-  WorkspaceMember = 1 << 2,    // regular member
+  WorkspaceMember = 1 << 2, // regular member
 }
 
 export interface WorkspaceMember {
