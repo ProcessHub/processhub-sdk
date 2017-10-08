@@ -40,9 +40,6 @@ export interface UpdateInstanceReply extends InstanceReply {
 export interface ResumeRequest extends InstanceRequest {
   resumeDetails: PH.Instance.ResumeInstanceDetails;
 }
-// export interface ResumeReply extends InstanceReply {
-//   instanceId?: string;
-// }
 
 export interface AbortRequest extends InstanceRequest {
   instanceId: string;
@@ -90,41 +87,6 @@ export interface CommentRequest extends InstanceRequest {
 }
 export interface DeleteCommentRequest extends InstanceRequest {
   trailId: string;
-}
-
-export enum AuditTrailAction {
-  instanceStarted = 1,
-  completedTodo = 2,
-  comment = 3,
-  incomingMail = 4,
-}
-export interface AuditTrailEntryDetails {
-  // must be set for AuditTrailAction.completedTodo
-  todoDisplayName: string;
-  // must be set for AuditTrailAction.comment
-  comment: string;  
-
-  // must be set for AuditTrailAction.incomingMail
-  mailText: string;
-  mailSubject: string;
-  // may be set for AuditTrailAction.incomingMail, if there was html content in the email - link to the HTML document. undefined if there was no HTML content.  
-  mailHtmlLink: string;
-  // may be set for AuditTrailAction.incomingMail, if there were attachments in the mail - links to all attachment files. Empty array if there were no attachments.
-  mailAttachments: string[];
-}
-export type Partial<T> = {
-  [P in keyof T]?: T[P];
-};
-export interface AuditTrailEntry { 
-  instanceId: string;
-  trailId: string;
-  action: AuditTrailAction;
-  userDisplayName: string;
-  userMail: string;
-  userId: string;
-  // time of action in UTC
-  createdAt: Date;
-  details: Partial<AuditTrailEntryDetails>;
 }
 
 export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";
