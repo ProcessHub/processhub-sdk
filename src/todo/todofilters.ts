@@ -36,7 +36,7 @@ export function filterTodosForWorkspace(todos: TodoDetails[], workspaceId: strin
   if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);  
   return filteredTodos;
 }
 
@@ -47,7 +47,7 @@ export function filterRemainingTodosForWorkspace(todos: TodoDetails[], workspace
 
   let workspaceTodos = filterTodosForWorkspace(todos, workspace.workspaceId);
 
-  if (PH.Workspace.isWorkspaceMember(workspace)) {
+  if (workspace.extras.processes) {
     // getOtherItems lists the todos for processes without read access - filter the others
     let filteredTodos: PH.Todo.TodoDetails[] = [];
     workspaceTodos.map(todo => {
