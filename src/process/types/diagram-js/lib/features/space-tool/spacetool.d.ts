@@ -34,7 +34,7 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      * @param  {Point} delta
      * @param  {String} direction
      */
-    public makeSpace(movingShapes: Shape[], resizingShapes: Shape[], delta: IPoint, direction: string): void;
+    public makeSpace(movingShapes: Shape[], resizingShapes: Shape[], delta: IPoint, direction: "s" | "n" | "e" | "w"): void;
 
     /**
      * Initialize make space and return true if that was successful.
@@ -54,8 +54,15 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      * @param  {Number} offset
      * @param  {Number} spacePos
      *
-     * @return {Object}
+     * @return {ICalculateAdjustmentsResult}
      */
-    public calculateAdjustments(elements: Shape[], axis: "y" | "x", offset: number, spacePos: number): Object;
+    public calculateAdjustments(elements: Shape[], axis: "y" | "x", offset: number, spacePos: number): SpaceTool.ICalculateAdjustmentsResult;
+  }
+
+  namespace SpaceTool {
+    export interface ICalculateAdjustmentsResult {
+      movingShapes: Shape[];
+      resizingShapes: Shape[];
+    }
   }
 }
