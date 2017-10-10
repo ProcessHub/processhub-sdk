@@ -25,8 +25,6 @@ export interface TodoDetails {
   bpmnTaskId: string;
   bpmnLaneId: string;  
   createdAt?: Date;
-  canClaimTodo?: boolean;
-  
   instance?: InstanceDetails;
   user?: UserDetails;
   potentialOwners?: PotentialRoleOwners;
