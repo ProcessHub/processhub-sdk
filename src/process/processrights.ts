@@ -115,6 +115,48 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
   return processRoles;
 }
 
+export function isPotentialRoleOwner(userId: string, roleId: string, workspace: PH.Workspace.WorkspaceDetails, process: PH.Process.ProcessDetails, ignorePublic: boolean = false): boolean {
+  // userId == null -> check if guest is PotentialRoleOwner
+  let roles = process.extras.processRoles;
+
+  if (roles == null || roles[roleId] == null || roles[roleId].potentialRoleOwners == null)
+    return false;
+
+  for (let member of roles[roleId].potentialRoleOwners) {
+    if (userId && member.memberId == userId) {
+      // always accept current roleOwners (process might have been changed, we still want to accept existing owners)
+      return true;
+    }
+    if (!ignorePublic && (member.memberId == PH.User.PredefinedGroups.Public
+      || member.memberId == PH.User.PredefinedGroups.Everybody))
+      return true;
+    if (member.memberId == PH.User.PredefinedGroups.AllWorkspaceMembers ||
+      (ignorePublic && (member.memberId == PH.User.PredefinedGroups.Public || member.memberId == PH.User.PredefinedGroups.Everybody))) {
+      if (PH.Workspace.isWorkspaceMember(workspace))
+        return true;
+    }
+  }
+
+  if (roleId == PH.Process.DefaultRoles.Viewer) {
+    if (roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PH.User.PredefinedGroups.AllParticipants)
+      || roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PH.User.PredefinedGroups.Public)) {
+      // Bei Sichtbarkeit "AllParticipants" oder "Public" muss geprüft werden, ob User in einer der anderen Rollen eingetragen ist
+      // Der Fall Public ist nur bei ignorePublic relevant
+      for (let role in roles) {
+        if (role != PH.Process.DefaultRoles.Viewer
+          // AllParticipants soll allen Teilnehmern, die eine Rolle im Prozess haben, Lesezugriff gewähren. Allerdings 
+          // nur den explizit genannten Teilnehmern, nicht der Public-Gruppe, sonst wäre jeder Prozess,
+          // bei dem externe Personen teilnehmen dürfen, automatisch Public.
+          && isPotentialRoleOwner(userId, role, workspace, process, true)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+}
+
 export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceDetails, processDetails: PH.Process.ProcessDetails, roleId: string = null): { [roleId: string]: PH.Process.PotentialRoleOwners } {
   // Diese Funktion soll die User auflisten, die die angegebene Rolle ausfüllen dürfen. Das ist nur für
   // normale Rollen im Prozess sinnvoll, nicht für die vordefinierten Rollen, da zu diesen kein Inhaber ausgewählt werden muss.
