@@ -115,15 +115,29 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
   return processRoles;
 }
 
-export function isPotentialRoleOwner(userId: string, roleId: string, workspace: PH.Workspace.WorkspaceDetails, process: PH.Process.ProcessDetails, ignorePublic: boolean = false): boolean {
-  // userId == null -> check if guest is PotentialRoleOwner
+export function isPotentialRoleOwner(user: PH.User.UserDetails, roleId: string, workspace: PH.Workspace.WorkspaceDetails, process: PH.Process.ProcessDetails, ignorePublic: boolean = false): boolean {
+  // user == null -> check if guest is PotentialRoleOwner
+  // roleId == null -> check if user is PotentialRoleOwner of any role
   let roles = process.extras.processRoles;
+  if (roles == null) {
+    console.error("isPotentialRoleOwner called without valid process.extras.processRoles");  
+    return false;
+  }
 
-  if (roles == null || roles[roleId] == null || roles[roleId].potentialRoleOwners == null)
+  if (roleId == null) {
+    // check if user is PotentialRoleOwner of any role
+    for (let role in roles) {
+      if (isPotentialRoleOwner(user, role, workspace, process, ignorePublic) == true)
+        return true;
+    }
+    return false;
+  }
+
+  if (roles[roleId] == null || roles[roleId].potentialRoleOwners == null)
     return false;
 
   for (let member of roles[roleId].potentialRoleOwners) {
-    if (userId && member.memberId == userId) {
+    if (user && member.memberId == user.userId) {
       // always accept current roleOwners (process might have been changed, we still want to accept existing owners)
       return true;
     }
@@ -147,7 +161,7 @@ export function isPotentialRoleOwner(userId: string, roleId: string, workspace: 
           // AllParticipants soll allen Teilnehmern, die eine Rolle im Prozess haben, Lesezugriff gewähren. Allerdings 
           // nur den explizit genannten Teilnehmern, nicht der Public-Gruppe, sonst wäre jeder Prozess,
           // bei dem externe Personen teilnehmen dürfen, automatisch Public.
-          && isPotentialRoleOwner(userId, role, workspace, process, true)) {
+          && isPotentialRoleOwner(user, role, workspace, process, true)) {
           return true;
         }
       }
