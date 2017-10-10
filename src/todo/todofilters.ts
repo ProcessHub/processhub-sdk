@@ -8,7 +8,7 @@ export function filterUserTodos(todos: TodoDetails[], user: PH.User.UserDetails)
   return [];
 
   let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.userId == user.userId || (todo.userId == null && todo.canClaimTodo)));
+    todo => (todo.userId == user.userId));
 
   return filteredTodos;
 }

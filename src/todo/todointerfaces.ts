@@ -25,8 +25,6 @@ export interface TodoDetails {
   bpmnTaskId: string;
   bpmnLaneId: string;  
   createdAt?: Date;
-  // decisionTasks?: DecisionTask[]; // wird definiert, wenn der Task vor einem Exclusive Gateway ist und entschieden werden muss wohin er weiter geht
-
   canClaimTodo?: boolean;
   
   instance?: InstanceDetails;
@@ -48,8 +46,7 @@ export enum TodoExtras {
   ExtrasInstance = 1 << 0,
   ExtrasProcess = 1 << 1,
   ExtrasUser = 1 << 2, // UserDetails des zuständigen Benutzers
-  ExtrasPotentialOwners = 1 << 3, // Liste der zulässigen User für diese Aufgabe
-  ExtrasCanClaimTodo = 1 << 4, // Darf der angemeldete User diese Aufgabe übernehmen?
+  ExtrasPotentialOwners = 1 << 3 // Liste der zulässigen User für diese Aufgabe
 }
 
 export const DecisionTaskTypes = {
