@@ -63,6 +63,8 @@ export class BpmnProcess {
             body: "this.variables.taskInput." + exGat.id + ".userInput.choosenTaskId == '" + seqFlow.targetRef.id + "'", language: "JavaScript"
           });
         }
+      } else if (exGat.outgoing != null && exGat.outgoing.length == 1) {
+        exGat.outgoing.last().conditionExpression = null;
       }
     }
   }
