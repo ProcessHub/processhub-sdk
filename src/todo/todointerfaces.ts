@@ -19,7 +19,6 @@ export interface TodoDetails {
   workspaceId?: string;  
   processId?: string;
   status?: TodoStatus;
-  fullUrl?: string; // = /i/instanceid/todoid
   displayName: string;
   description: string;
   bpmnTaskId: string;

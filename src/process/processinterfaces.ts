@@ -10,8 +10,8 @@ export interface ProcessAttachment {
 }
 
 export interface ProcessDetails {
-  workspaceId: string;
   processId: string;
+  workspaceId: string;  
   displayName: string;
   urlName?: string; 
   fullUrl?: string; // @workspace/p/urlname

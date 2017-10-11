@@ -12,7 +12,7 @@ export interface MailContent {
 export interface MessageNotificationMailContent extends MailContent {
   todoUserId?: string;
   sender?: MailSender;
-  instanceLink?: string;  
+  instanceUrl?: string;  
   todoTitle: string;
   todoDescription: string;
   fieldContents?: PH.Data.FieldContentMap;

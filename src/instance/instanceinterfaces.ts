@@ -13,9 +13,10 @@ export enum State {
 
 export interface InstanceDetails {
   instanceId: string;
+  workspaceId: string;
   processId: string;
   displayName: string;
-  fullUrl?: string; // = /i/instanceid
+  fullUrl?: string; // = /i/@workspace/instanceid
   createdAt?: Date;
   isSimulation?: boolean;
   sendSimulationMails?: boolean;

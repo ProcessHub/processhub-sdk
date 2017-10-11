@@ -72,20 +72,19 @@ export function parseNotificationLink(fullUrl: string): PH.Path.NotificationLink
   if (split[0] != "i" || split.length < 2)
     return elements;
 
-  let instanceId = split[1].toUpperCase();
-  if (!PH.Tools.isId(instanceId))
+  let nextPart = split[1];
+  if (nextPart.substr(0, 1) == "@") {
+    // workspaceUrl
+    elements.workspaceUrlName = nextPart.substr(1).toLowerCase();
+    if (split.length == 2)
+      return elements;
+
+    nextPart = split[2];
+  }
+  if (!PH.Tools.isId(nextPart.toUpperCase()))
     return elements;
   else
-    elements.instanceId = instanceId;
+    elements.instanceId = nextPart.toUpperCase();
 
-  if (split.length < 3)
-    return elements;
-
-  let todoId = split[2].toUpperCase();
-  if (!PH.Tools.isId(todoId))
-    return elements;
-  else
-    elements.todoId = todoId;
-  
   return elements;
 }

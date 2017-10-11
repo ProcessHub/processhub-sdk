@@ -71,27 +71,31 @@ describe("sdk", function () {
 
       describe("parseNotificationLink", function () {
         
-        it("should parse instance links", function () {
-          let elements = PH.Path.parseNotificationLink("/I/E8B278368B1002D7/"); // ignore case and / at end
-          assert.deepEqual(elements, {
-            instanceId: "E8B278368B1002D7"
-          });
-
-          elements = PH.Path.parseNotificationLink("/i/invalidid"); // ignore case and / at end
+        it("should parse invalid instance links", function () {
+          let elements = PH.Path.parseNotificationLink("/i/invalidid"); // ignore case and / at end
           assert.deepEqual(elements, {});          
         });
 
-        it("should parse todo links", function () {
-          let elements = PH.Path.parseNotificationLink("/I/E8B278368B1002D7/a7b178368b1002d5"); // ignore case and / at end
+        it("should parse current instance links", function () {
+          let elements = PH.Path.parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7",
-            todoId: "A7B178368B1002D5"
+            workspaceUrlName: "testworkspace"
           });
+        });
 
-          elements = PH.Path.parseNotificationLink("/i/E8B278368B1002D7/invalidid"); // ignore case and / at end
+       
+        it("should parse old instance/todo links", function () {
+          // in previous versions workspace was not present in link, todoIds were sometimes added
+          let elements = PH.Path.parseNotificationLink("/i/e8B278368B1002D7/000278368B1002d7"); // ignore case and todoId at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7"
-          });       
+          }); 
+          
+          elements = PH.Path.parseNotificationLink("/i/e8B278368B1002D7"); // ignore case and todoId at end
+          assert.deepEqual(elements, {
+            instanceId: "E8B278368B1002D7"
+          });           
         });        
       });
     });
