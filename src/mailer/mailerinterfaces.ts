@@ -6,11 +6,11 @@ export enum MailSender {
 }
 
 export interface MailContent {
+  recipientId?: string;
   signature?: string;
 }
 
 export interface MessageNotificationMailContent extends MailContent {
-  todoUserId?: string;
   sender?: MailSender;
   instanceUrl?: string;  
   todoTitle: string;

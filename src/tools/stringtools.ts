@@ -54,12 +54,18 @@ export function stringExcerpt(source: string, maxLen: number) {
   }
 }
 
-export function getQueryParameter(parameter: string, url: string = window.location.href) {
+export function getQueryParameter(parameter: string, location?: string) {
+  if (location == null && typeof window != "undefined") {
+    location = window.location.href;
+  }
+
   parameter = parameter.replace(/[\[\]]/g, "\\$&");
   let regex = new RegExp("[?&]" + parameter + "(=([^&#]*)|&|#|$)"),
-    results = regex.exec(url);
-  if (!results) return null;
-  if (!results[2]) return "";
+    results = regex.exec(location);
+  if (!results) 
+    return null;
+  if (!results[2]) 
+    return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
