@@ -49,6 +49,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
      * @param  {Object} attrs   a number of attributes to initialize the model instance with
      * @return {Object}         model instance
      */
+    public create(descriptor: "bpmn:DataOutputAssociation", attrs: Partial<Bpmn.DataOutputAssociation>): Bpmn.DataOutputAssociation;
     public create(descriptor: "bpmn:DataInputAssociation", attrs: Partial<Bpmn.DataInputAssociation>): Bpmn.DataInputAssociation;
     public create(descriptor: "bpmn:DataObjectReference", attrs: Partial<Bpmn.DataObjectReference>): Bpmn.DataObjectReference;
     public create(descriptor: "bpmn:DataStoreReference", attrs: Partial<Bpmn.DataStoreReference>): Bpmn.DataStoreReference;
@@ -82,7 +83,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
 
     public create(descriptor: "dc:Bounds", attrs: Partial<Dc.Bounds>): Dc.Bounds;
     public create(descriptor: "dc:Point", attrs: Partial<Dc.Point>): Dc.Point;
-
+    
     /**
      * Creates an any-element type to be used within model instances.
      *
