@@ -13,6 +13,6 @@ export interface IActionHandler {
 
   requestExtras(environment: PH.CoreEnvironment, requestedExtras: ExtrasRequest, forceReload?: boolean): void;
 
-  openInstancePopup(instanceId: string, todoId?: string): Promise<void>;
+  openInstancePopup(instanceId: string): Promise<void>;
   closeInstancePopup(): void;
 }
