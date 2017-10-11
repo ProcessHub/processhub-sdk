@@ -26,6 +26,19 @@ describe("sdk", function () {
         });
       });
 
+      describe("parseInstanceMailAddress", function () {
+        it("should return 0 if not an instance mail address", function () {
+          assert.equal(PH.Instance.parseInstanceMailAddress("test@processhub.com"), null);          
+        });
+
+        it("should parse instanceId from mail address", function () {
+          let id = PH.Tools.createId();
+          assert.equal(PH.Instance.parseInstanceMailAddress(PH.Instance.getInstanceMailAddress(id).toUpperCase()), id); // ignore case
+
+          // null on invalid ids
+          assert.equal(PH.Instance.parseInstanceMailAddress(PH.Instance.getInstanceMailAddress(id + "0").toUpperCase()), null);           
+        });
+      });
     });
   });
 });

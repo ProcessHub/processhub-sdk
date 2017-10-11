@@ -2,7 +2,7 @@ import * as PH from "../";
 
 export enum MailSender {
   FromProcessHub,   // noreply@processhub.com
-  FromRoleOwner     // use the mail address of the current RoleOwner as ReplyTo-destination     
+  FromInstance,     // use the mail address of the current instance as reply-to   
 }
 
 export interface MailContent {
@@ -21,6 +21,7 @@ export interface MessageNotificationMailContent extends MailContent {
 
 export interface SendMailTemplateRequest extends MessageNotificationMailContent, PH.LegacyApi.BaseRequest {
   receiverIdOrMails: string[];
+  instanceId?: string;
 }
 
 export interface SendMailTemplateReply extends PH.LegacyApi.BaseReply {

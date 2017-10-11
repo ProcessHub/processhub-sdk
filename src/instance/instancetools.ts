@@ -1,6 +1,21 @@
 import * as PH from "../";
 import { isFieldValue } from "../data/datainterfaces";
 
+export function getInstanceMailAddress(instanceId: string): string {
+  return "i-" + instanceId.toLowerCase() + "@processhub.net";
+}
+export function parseInstanceMailAddress(mail: string): string {
+  mail = mail.toLowerCase();
+  if (!PH.Tools.isValidMailAddress(mail) || !mail.startsWith("i-"))
+    return null;
+
+  let instanceId = mail.split("@")[0].substr(2).toUpperCase();
+  if (PH.Tools.isId(instanceId))
+    return instanceId;
+  else
+    return null;
+}
+
 export function isRoleOwner(userId: string, roleId: string, instance: PH.Instance.InstanceDetails): boolean {
   if (instance.extras.roleOwners == null || instance.extras.roleOwners[roleId] == null)
     return false;
