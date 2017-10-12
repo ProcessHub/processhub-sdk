@@ -11,7 +11,9 @@ export function initSettings(process: PH.Process.ProcessDetails): void {
     settings.dashboard = {};
   if (!settings.dashboard.dashBoardAccess)
     settings.dashboard.dashBoardAccess = PH.Process.ProcessViewAccess.ParticipantsSeeTheirs;
-
+  if (!settings.dashboard.showComments)
+    settings.dashboard.showComments = 0;
+    
   if (!settings.archive)
     settings.archive = {};
   if (!settings.archive.archiveAccess)
