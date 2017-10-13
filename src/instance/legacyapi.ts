@@ -12,6 +12,7 @@ export const ProcessEngineApiRoutes = {
   deleteAttachment: "/api/processengine/deleteattachment",
   comment: "/api/processengine/comment",
   deleteComment: "/api/processengine/deletecomment",
+  deleteMail: "/api/processengine/deletemail",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -86,6 +87,10 @@ export interface CommentRequest extends InstanceRequest {
   trailId: string;
 }
 export interface DeleteCommentRequest extends InstanceRequest {
+  trailId: string;
+}
+
+export interface DeleteMailRequest extends InstanceRequest {
   trailId: string;
 }
 
