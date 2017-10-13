@@ -16,8 +16,21 @@ export function parseInstanceMailAddress(mail: string): string {
     return null;
 }
 
+// roleID == null -> check for any role membership
 export function isRoleOwner(userId: string, roleId: string, instance: PH.Instance.InstanceDetails): boolean {
-  if (instance.extras.roleOwners == null || instance.extras.roleOwners[roleId] == null)
+  if (instance.extras.roleOwners == null)
+    return false;
+
+  if (roleId == null || roleId == "") {
+    // check if user is owner of any role
+    for (let role in instance.extras.roleOwners) {
+      if (isRoleOwner(userId, role, instance))
+        return true;
+    }
+    return false;
+  }
+
+  if (instance.extras.roleOwners[roleId] == null)
     return false;
 
   instance.extras.roleOwners[roleId].map(roleOwner => {

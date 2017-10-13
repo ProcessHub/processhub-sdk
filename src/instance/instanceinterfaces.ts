@@ -21,7 +21,7 @@ export interface InstanceDetails {
   isSimulation?: boolean;
   sendSimulationMails?: boolean;
   state: State;
-  latestCommentId: string;
+  latestCommentAt: Date; // datetime of the latest comment or incoming mail
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;
