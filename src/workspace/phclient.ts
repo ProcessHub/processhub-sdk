@@ -23,6 +23,7 @@ export const WorkspaceView = {
   Members: "members",
   AddProcess: "addprocess",
   Settings: "settings",
+  Todos: "todos"
 };
 export type WorkspaceView = keyof typeof WorkspaceView;
 
