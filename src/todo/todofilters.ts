@@ -1,14 +1,14 @@
 // helper functions to filter and/or sort todos
-import { TodoDetails } from "./todointerfaces";
+import { TodoDetails, TodoType } from "./todointerfaces";
 import * as PH from "../";
 
 // todos the user owns or can claim
 export function filterUserTodos(todos: TodoDetails[], user: PH.User.UserDetails): TodoDetails[] {
   if (!user || !todos)
-  return [];
+    return [];
 
   let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.userId == user.userId));
+    todo => (todo.todoType !== TodoType.Simulation) && (todo.userId === user.userId));
 
   return filteredTodos;
 }
@@ -18,7 +18,7 @@ export function filterTodosForInstance(todos: TodoDetails[], instanceId: string)
   if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.instance.instanceId == instanceId);  
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.instance.instanceId == instanceId);
   return filteredTodos;
 }
 
@@ -27,7 +27,7 @@ export function filterTodosForProcess(todos: TodoDetails[], processId: string): 
   if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.processId == processId);  
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.processId == processId);
   return filteredTodos;
 }
 
@@ -36,7 +36,7 @@ export function filterTodosForWorkspace(todos: TodoDetails[], workspaceId: strin
   if (!todos)
     return [];
 
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);  
+  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);
   return filteredTodos;
 }
 
@@ -51,8 +51,10 @@ export function filterRemainingTodosForWorkspace(todos: TodoDetails[], workspace
     // getOtherItems lists the todos for processes without read access - filter the others
     let filteredTodos: PH.Todo.TodoDetails[] = [];
     workspaceTodos.map(todo => {
-      if (workspace.extras.processes.find(process => process.processId == todo.instance.processId) == null)
-      filteredTodos.push(todo);
+      if (todo.todoType !== TodoType.Simulation
+        && (workspace.extras.processes.find(process => process.processId == todo.instance.processId) == null)) {
+        filteredTodos.push(todo);
+      }
     });
     workspaceTodos = filteredTodos;
   }
