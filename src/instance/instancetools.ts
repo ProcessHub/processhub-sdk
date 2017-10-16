@@ -23,7 +23,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
 
   if (instance.extras.todos) {
     instance.extras.todos.map(todo => { 
-      if (todo.createdAt > latestAt)
+      if (latestAt == null || todo.createdAt > latestAt)
         latestAt = todo.createdAt; 
     });
   }
