@@ -17,7 +17,6 @@ export interface TodoDetails {
   todoType?: TodoType;
   userId?: string;
   workspaceId: string;  
-  processId: string;
   instanceId: string;
   status?: TodoStatus;
   displayName: string;
@@ -26,7 +25,6 @@ export interface TodoDetails {
   bpmnLaneId: string;  
   createdAt?: Date;
   user?: UserDetails;
-  potentialOwners?: PotentialRoleOwners;
   priority?: number;
 }
 

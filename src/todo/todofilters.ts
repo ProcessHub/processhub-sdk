@@ -42,9 +42,9 @@ export function filterTodosForProcess(instances: PH.Instance.InstanceDetails[], 
   if (!instances)
     return [];
 
-  let todos = getTodosFromInstances(instances);
+  let filteredInstances = PH.Instance.filterInstancesForProcess(instances, processId);
     
-  let filteredTodos: TodoDetails[] = todos.filter(todo => todo.processId == processId);
+  let filteredTodos = getTodosFromInstances(filteredInstances);
   return filteredTodos;
 }
 
@@ -52,7 +52,7 @@ export function filterTodosForProcess(instances: PH.Instance.InstanceDetails[], 
 export function filterTodosForWorkspace(instances: PH.Instance.InstanceDetails[], workspaceId: string): TodoDetails[] {
   if (!instances)
     return [];
-
+    
   let todos = getTodosFromInstances(instances);
   
   let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);
@@ -64,19 +64,8 @@ export function filterRemainingTodosForWorkspace(instances: PH.Instance.Instance
   if (!instances)
     return [];
 
-  let workspaceTodos = filterTodosForWorkspace(instances, workspace.workspaceId);
+  let filteredInstances = PH.Instance.filterRemainingInstancesForWorkspace(instances, workspace);
 
-  if (workspace.extras.processes) {
-    // getOtherItems lists the todos for processes without read access - filter the others
-    let filteredTodos: PH.Todo.TodoDetails[] = [];
-    workspaceTodos.map(todo => {
-      if (todo.todoType !== TodoType.Simulation
-        && (workspace.extras.processes.find(process => process.processId == todo.processId) == null)) {
-        filteredTodos.push(todo);
-      }
-    });
-    workspaceTodos = filteredTodos;
-  }
-
+  let workspaceTodos = getTodosFromInstances(filteredInstances);
   return workspaceTodos;
 }
