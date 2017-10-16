@@ -1025,11 +1025,11 @@ export class BpmnProcess {
       descriptionElement.$body = "";
   }
 
-  public async checkCompatibilityOfChangedProcess(runningInstances: PH.Instance.InstanceDetails[], userTodos: PH.Todo.TodoDetails[]) {
+  public async checkCompatibilityOfChangedProcess(runningInstances: PH.Instance.InstanceDetails[], userInstances: PH.Instance.InstanceDetails[]) {
 
     let actualRunningTasks: RunningTaskLane[] = [];
     for (let runInstance of runningInstances) {
-      let todos = userTodos.filter(t => t.instance.instanceId == runInstance.instanceId);
+      let todos = PH.Todo.filterTodosForInstance(userInstances, runInstance.instanceId);
       let value = todos.map((t): RunningTaskLane => {
         return { bpmnLaneId: t.bpmnLaneId, bpmnTaskId: t.bpmnTaskId } as RunningTaskLane;
       });

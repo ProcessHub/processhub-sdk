@@ -12,8 +12,8 @@ export class UserState {
 
 export const UserMessages = {
   UserLoadedMessage: "UserLoadedMessage",
-  TodoLoadedMessage: "TodoLoadedMessage",
-  RemoveTodoMessage: "RemoveTodoMessage",
+  InstanceLoadedMessage: "InstanceLoadedMessage",
+  RemoveInstanceMessage: "RemoveInstanceMessage",
   NewInstanceMessage: "NewInstanceMessage",
 
   Failed: "FAILED"

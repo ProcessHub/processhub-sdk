@@ -16,6 +16,21 @@ export function parseInstanceMailAddress(mail: string): string {
     return null;
 }
 
+export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
+  let latestAt = instance.latestCommentAt;
+  if (latestAt == null)
+    latestAt = instance.createdAt;
+
+  if (instance.extras.todos) {
+    instance.extras.todos.map(todo => { 
+      if (todo.createdAt > latestAt)
+        latestAt = todo.createdAt; 
+    });
+  }
+
+  return latestAt;
+}
+
 // roleID == null -> check for any role membership
 export function isRoleOwner(userId: string, roleId: string, instance: PH.Instance.InstanceDetails): boolean {
   if (instance.extras.roleOwners == null)

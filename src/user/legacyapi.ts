@@ -76,13 +76,9 @@ export interface UploadProfilePictureRequest extends PH.LegacyApi.BaseMessage {
 }
 
 // nes websocket messages
-export interface TodoLoadedMessage extends PH.LegacyApi.BaseMessage {
+export interface RemoveInstanceMessage extends PH.LegacyApi.BaseMessage {
   type: PH.User.UserMessages;
-  todo: PH.Todo.TodoDetails;
-}
-export interface RemoveTodoMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.User.UserMessages;
-  todoId: string;
+  instanceId: string;
 }
 export interface NewInstanceMessage extends PH.LegacyApi.BaseMessage {
   type: PH.User.UserMessages;
