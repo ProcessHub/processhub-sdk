@@ -11,6 +11,6 @@ export class InstanceState {
     [instanceId: string]: PH.Instance.InstanceDetails
   };  
 
-  // updated in reducers, helps React to detect state changes
-  cacheState?: string;
+  cacheState?: string;  // updated in reducers, helps React to detect state changes
+  lastDispatchedInstance: PH.Instance.InstanceDetails; // used in reducer to detect changes
 }

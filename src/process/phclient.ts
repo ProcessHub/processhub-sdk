@@ -11,8 +11,8 @@ export class ProcessState {
     [processId: string]: PH.Process.ProcessDetails
   };  
 
-  // updated in reducers, helps React to detect state changes
-  cacheState?: string;  
+  cacheState?: string;  // updated in reducers, helps React to detect state changes
+  lastDispatchedProcess: PH.Process.ProcessDetails; // used in reducer to detect changes
 }
 
 export const ProcessView = {
