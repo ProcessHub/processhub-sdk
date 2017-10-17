@@ -38,6 +38,7 @@ export interface UpdateInstanceRequest extends InstanceRequest {
   instanceDetails: InstanceDetails;
 }
 export interface UpdateInstanceReply extends InstanceReply {
+  instance?: PH.Instance.InstanceDetails;
 }
 
 export interface ResumeRequest extends InstanceRequest {
