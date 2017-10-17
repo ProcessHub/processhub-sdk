@@ -1,5 +1,8 @@
 import { assert } from "chai";
-import * as PH from "../";
+import { parseUrl, parseNotificationLink } from "./urlparser";
+import { PathDetails, Page } from "./pathinterfaces";
+import { WorkspaceView } from "../workspace/phclient";
+import { ProcessView } from "../process/phclient";
 
 describe("sdk", function () {
   describe("path", function () {
@@ -8,61 +11,61 @@ describe("sdk", function () {
       describe("parseUrl", function () {
 
         it("soll ungültige Seiten erkennen", function () {
-          assert.isNull(PH.Path.parseUrl("/@testworkSpace/xx")); // ignore case and / at end
-          assert.isNull(PH.Path.parseUrl("/xx")); // ignore case and / at end
+          assert.isNull(parseUrl("/@testworkSpace/xx")); // ignore case and / at end
+          assert.isNull(parseUrl("/xx")); // ignore case and / at end
         });
 
         it("soll übergeordnete Seiten korrekt parsen", function () {
-          let path = PH.Path.parseUrl("/"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.StartPage
+          let path = parseUrl("/"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.StartPage
           });
         });
 
         it("soll Workspaceseiten korrekt parsen", function () {
-          let path = PH.Path.parseUrl("/@testworkSpace/"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.WorkspacePage,
-            view: PH.Workspace.WorkspaceView.Processes,
+          let path = parseUrl("/@testworkSpace/"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.WorkspacePage,
+            view: WorkspaceView.Processes,
             workspaceUrlName: "testworkspace" 
           });
 
-          path = PH.Path.parseUrl("/@testworkSpace/members"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.WorkspacePage,
-            view: PH.Workspace.WorkspaceView.Members,
+          path = parseUrl("/@testworkSpace/members"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.WorkspacePage,
+            view: WorkspaceView.Members,
             workspaceUrlName: "testworkspace" 
           });
 
-          path = PH.Path.parseUrl("/@testworkSpace/addprocess"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.WorkspacePage,
-            view: PH.Workspace.WorkspaceView.AddProcess,
+          path = parseUrl("/@testworkSpace/addprocess"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.WorkspacePage,
+            view: WorkspaceView.AddProcess,
             workspaceUrlName: "testworkspace" 
           });
         });
 
         it("soll Prozessseiten korrekt parsen", function () {
-          let path = PH.Path.parseUrl("/@testworkSpace/p/process"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.ProcessPage,
-            view: PH.Process.ProcessView.Show,
+          let path = parseUrl("/@testworkSpace/p/process"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.ProcessPage,
+            view: ProcessView.Show,
             workspaceUrlName: "testworkspace",
             processUrlName: "process"
           });
 
-          path = PH.Path.parseUrl("/@testworkSpace/p/process/edit"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.ProcessPage,
-            view: PH.Process.ProcessView.Edit,
+          path = parseUrl("/@testworkSpace/p/process/edit"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.ProcessPage,
+            view: ProcessView.Edit,
             workspaceUrlName: "testworkspace",
             processUrlName: "process"
           });
 
-          path = PH.Path.parseUrl("/@testworkSpace/newprocess"); // ignore case and / at end
-          assert.deepEqual(path, <PH.Path.PathDetails>{
-            page: PH.Path.Page.ProcessPage,
-            view: PH.Process.ProcessView.NewProcess,
+          path = parseUrl("/@testworkSpace/newprocess"); // ignore case and / at end
+          assert.deepEqual(path, <PathDetails>{
+            page: Page.ProcessPage,
+            view: ProcessView.NewProcess,
             workspaceUrlName: "testworkspace"
           });
         });
@@ -72,12 +75,12 @@ describe("sdk", function () {
       describe("parseNotificationLink", function () {
         
         it("should parse invalid instance links", function () {
-          let elements = PH.Path.parseNotificationLink("/i/invalidid"); // ignore case and / at end
+          let elements = parseNotificationLink("/i/invalidid"); // ignore case and / at end
           assert.deepEqual(elements, {});          
         });
 
         it("should parse current instance links", function () {
-          let elements = PH.Path.parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
+          let elements = parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7",
             workspaceUrlName: "testworkspace"
@@ -87,12 +90,12 @@ describe("sdk", function () {
        
         it("should parse old instance/todo links", function () {
           // in previous versions workspace was not present in link, todoIds were sometimes added
-          let elements = PH.Path.parseNotificationLink("/i/e8B278368B1002D7/000278368B1002d7"); // ignore case and todoId at end
+          let elements = parseNotificationLink("/i/e8B278368B1002D7/000278368B1002d7"); // ignore case and todoId at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7"
           }); 
           
-          elements = PH.Path.parseNotificationLink("/i/e8B278368B1002D7"); // ignore case and todoId at end
+          elements = parseNotificationLink("/i/e8B278368B1002D7"); // ignore case and todoId at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7"
           });           

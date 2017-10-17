@@ -1,4 +1,6 @@
-import * as PH from "../";
+import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
+import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
+import { WorkspaceMessages } from "./phclient";
 
 // WorkspaceRequestRoutes
 export const WorkspaceRequestRoutes = {
@@ -13,51 +15,51 @@ export const WorkspaceRequestRoutes = {
 export type WorkspaceRequestRoutes = keyof typeof WorkspaceRequestRoutes;
 
 
-export interface LoadWorkspaceRequest extends PH.LegacyApi.BaseRequest {
+export interface LoadWorkspaceRequest extends BaseRequest {
   workspaceId: string;
-  getExtras: PH.Workspace.WorkspaceExtras;
+  getExtras: WorkspaceExtras;
 }
-export interface LoadWorkspaceReply extends PH.LegacyApi.BaseMessage {
-  type: PH.Workspace.WorkspaceMessages;
-  workspace?: PH.Workspace.WorkspaceDetails;
-}
-
-
-export interface WorkspaceLoadedMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.Workspace.WorkspaceMessages;
-  workspace?: PH.Workspace.WorkspaceDetails;
-}
-export interface WorkspaceCreatedMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.Workspace.WorkspaceMessages;
-  workspace?: PH.Workspace.WorkspaceDetails;
+export interface LoadWorkspaceReply extends BaseMessage {
+  type: WorkspaceMessages;
+  workspace?: WorkspaceDetails;
 }
 
-export interface CreateWorkspaceRequest extends PH.LegacyApi.BaseRequest {
-  workspace: PH.Workspace.WorkspaceDetails;
+
+export interface WorkspaceLoadedMessage extends BaseMessage {
+  type: WorkspaceMessages;
+  workspace?: WorkspaceDetails;
+}
+export interface WorkspaceCreatedMessage extends BaseMessage {
+  type: WorkspaceMessages;
+  workspace?: WorkspaceDetails;
 }
 
-export interface UpdateWorkspaceRequest extends PH.LegacyApi.BaseRequest {
-  workspace: PH.Workspace.WorkspaceDetails;
+export interface CreateWorkspaceRequest extends BaseRequest {
+  workspace: WorkspaceDetails;
 }
 
-export interface DeleteWorkspaceRequest extends PH.LegacyApi.BaseRequest {
+export interface UpdateWorkspaceRequest extends BaseRequest {
+  workspace: WorkspaceDetails;
+}
+
+export interface DeleteWorkspaceRequest extends BaseRequest {
   workspaceId: string;
 }
 
-export interface InviteWorkspaceMemberRequest extends PH.LegacyApi.BaseRequest {
+export interface InviteWorkspaceMemberRequest extends BaseRequest {
   workspaceId: string;
   userIdOrUserMail: string[];
-  memberRole: PH.Workspace.WorkspaceRole;
+  memberRole: WorkspaceRole;
   invitationMessage: string; // Nachricht im Markdown-Format
 }
 
-export interface RemoveWorkspaceMemberRequest extends PH.LegacyApi.BaseRequest {
+export interface RemoveWorkspaceMemberRequest extends BaseRequest {
   workspaceId: string;
   userId: string;
 }
 
-export interface SetMemberRoleRequest extends PH.LegacyApi.BaseRequest {
+export interface SetMemberRoleRequest extends BaseRequest {
   workspaceId: string;
   userId: string;
-  memberRole: PH.Workspace.WorkspaceRole;
+  memberRole: WorkspaceRole;
 }

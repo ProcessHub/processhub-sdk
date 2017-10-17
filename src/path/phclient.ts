@@ -1,9 +1,11 @@
+import { PathDetails } from "./pathinterfaces";
+import { ApiResult } from "../legacyapi/apirequests";
+
 // Internal objects used by ProcessHub client and server
-import * as PH from "../";
 
 export class PathState {
-  currentPath: PH.Path.PathDetails;
+  currentPath: PathDetails;
 
-  lastApiResult?: PH.LegacyApi.ApiResult;  // Ergebnis des letzten Api-Aufrufs
+  lastApiResult?: ApiResult;  // Ergebnis des letzten Api-Aufrufs
 }
 

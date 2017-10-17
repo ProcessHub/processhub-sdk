@@ -1,6 +1,4 @@
 import * as BpmnModdleHelper from "./bpmnmoddlehelper";
-import * as PH from "../../";
-import * as Process from "../../process";
 import * as Todo from "../../todo";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
@@ -9,7 +7,14 @@ import { Bpmn } from "../bpmn";
 
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
-import { RunningTaskLane } from "../processinterfaces";
+import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType } from "../processinterfaces";
+import { isTrue, equal } from "../../tools/assert";
+import { tl } from "../../tl";
+import { createId } from "../../tools/guid";
+import { InstanceDetails } from "../../instance/instanceinterfaces";
+import { DecisionTask, DecisionTaskTypes, filterTodosForInstance } from "../../todo";
+import { LoadTemplateReply } from "../legacyapi";
+import { RowDetails } from "../phclient";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
@@ -64,13 +69,13 @@ export class BpmnProcess {
           });
         }
       } else if (exGat.outgoing != null && exGat.outgoing.length == 1) {
-        exGat.outgoing.last().conditionExpression = null;
+        exGat.outgoing[exGat.outgoing.length - 1].conditionExpression = null;
       }
     }
   }
 
-  public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): Process.TaskExtensions {
-    let returnValue: Process.TaskExtensions = {
+  public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
+    let returnValue: TaskExtensions = {
       description: null,
       customFormSchemaString: null,
       sendTaskReceiver: null,
@@ -90,19 +95,19 @@ export class BpmnProcess {
             // case Process.TASKSETTINGS_ASSIGNEE:
             //   returnValue.assigneeId = child.$body;
             //   break;
-            case Process.TaskSettings.Description:
+            case TaskSettings.Description:
               returnValue.description = child.$body;
               break;
-            case Process.TaskSettings.SendTaskSubject:
+            case TaskSettings.SendTaskSubject:
               returnValue.sendTaskSubject = child.$body;
               break;
-            case Process.TaskSettings.SendTaskInstanceLink:
+            case TaskSettings.SendTaskInstanceLink:
               returnValue.sendTaskInstanceLink = child.$body == "true";
               break;
-            case Process.TaskSettings.SendTaskWithFieldContents:
+            case TaskSettings.SendTaskWithFieldContents:
               returnValue.sendTaskWithFieldContents = child.$body == "true";
               break;
-            case Process.TaskSettings.SendTaskReceiver: {
+            case TaskSettings.SendTaskReceiver: {
               try {
                 returnValue.sendTaskReceiver = JSON.parse(child.$body);
               } catch (ex) {
@@ -124,7 +129,7 @@ export class BpmnProcess {
             //   returnValue.jumpValues = list;
             // }
             // break;
-            case Process.TaskSettings.UserForm:
+            case TaskSettings.UserForm:
               returnValue.customFormSchemaString = child.$body;
               break;
             default:
@@ -195,7 +200,7 @@ export class BpmnProcess {
         console.log("PRINTING CALL STACK");
         console.log(stack);
 
-        PH.Assert.isTrue(processXmlStr != null, "XML string of process should not be null/undefined!");
+        isTrue(processXmlStr != null, "XML string of process should not be null/undefined!");
         reject();
       }
     });
@@ -267,10 +272,10 @@ export class BpmnProcess {
         if (nameValue == null) {
           switch (processObject.targetRef.$type) {
             case BPMN_ENDEVENT:
-              nameValue = PH.tl("Ende");
+              nameValue = tl("Ende");
               break;
             case BPMN_EXCLUSIVEGATEWAY:
-              nameValue = PH.tl("Gateway");
+              nameValue = tl("Gateway");
               break;
             default:
               nameValue = processObject.targetRef.$type;
@@ -289,8 +294,8 @@ export class BpmnProcess {
     return decisionTasks;
   }
 
-  public async loadFromTemplate(): Promise<Process.LoadTemplateReply> {
-    let result: Process.LoadTemplateReply = await BpmnModdleHelper.createBpmnTemplate(this.moddle);
+  public async loadFromTemplate(): Promise<LoadTemplateReply> {
+    let result: LoadTemplateReply = await BpmnModdleHelper.createBpmnTemplate(this.moddle);
 
     this.bpmnXml = result.bpmnXml;
 
@@ -321,7 +326,7 @@ export class BpmnProcess {
       return newId;
     }
 
-    newId += PH.Tools.createId();
+    newId += createId();
     return newId;
   }
 
@@ -399,8 +404,8 @@ export class BpmnProcess {
     return processContext.laneSets[0].lanes;
   }
 
-  public getTaskToLaneMap(): PH.Process.TaskToLaneMapEntry[] {
-    let resultMap: PH.Process.TaskToLaneMapEntry[] = [];
+  public getTaskToLaneMap(): TaskToLaneMapEntry[] {
+    let resultMap: TaskToLaneMapEntry[] = [];
     let lanes = this.getProcessLanes(this.processId());
 
     for (let lane of lanes) {
@@ -439,7 +444,7 @@ export class BpmnProcess {
     }
   }
 
-  public static addOrUpdateExtension(task: Bpmn.Task | Bpmn.Activity, key: Process.TaskSettings, value: any, extensionValueType: Process.TaskSettingsValueType): void {
+  public static addOrUpdateExtension(task: Bpmn.Task | Bpmn.Activity, key: TaskSettings, value: any, extensionValueType: TaskSettingsValueType): void {
 
     if (extensionValueType === "List") {
       value = JSON.stringify(value);
@@ -532,7 +537,7 @@ export class BpmnProcess {
   }
 
   // löscht einen Task aus dem XML und dem Diagramm
-  public deleteTask(processId: string, rowDetails: Process.RowDetails): void {
+  public deleteTask(processId: string, rowDetails: RowDetails): void {
     let processContext = this.getProcess(processId);
 
     // Auch hier wird nach folgendem Beispiel vorgegangen
@@ -544,10 +549,10 @@ export class BpmnProcess {
     // 3. [BC] bekommt als sourceRef A
     // 4. A bekommt als outgoing [BC]
     let objectToDelete_B = this.getExistingTask(processId, rowDetails.taskId);
-    PH.Assert.isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+    isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
     let sequenceFlow_AB: Bpmn.SequenceFlow = objectToDelete_B.incoming[0];
     let object_A: Bpmn.FlowNode = sequenceFlow_AB.sourceRef;
-    PH.Assert.isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+    isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
     let sequenceFlow_BC: Bpmn.SequenceFlow = objectToDelete_B.outgoing[0];
 
     // 1. & 2. Elemente aus flowElements löschen
@@ -560,7 +565,7 @@ export class BpmnProcess {
     }
 
     // 3.
-    PH.Assert.isTrue(object_A != null);
+    isTrue(object_A != null);
     sequenceFlow_BC.sourceRef = object_A;
 
     // 4.
@@ -568,7 +573,7 @@ export class BpmnProcess {
     object_A.outgoing = [];
     object_A.outgoing.push(sequenceFlow_BC);
 
-    PH.Assert.isTrue(object_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
+    isTrue(object_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
 
     // Task aus lane entfernen
     let processLanes: Bpmn.Lane[] = this.getProcessLanes(processId);
@@ -598,7 +603,7 @@ export class BpmnProcess {
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
   // TODO PP check method and test
-  public switchTaskWithNextTask(processId: string, rowDetails: Process.RowDetails): void {
+  public switchTaskWithNextTask(processId: string, rowDetails: RowDetails): void {
 
     // LESEN:
     // Komplexität wird durch einfaches Beispiel versucht zu erklären und umzusetzen
@@ -614,11 +619,11 @@ export class BpmnProcess {
 
     let objectToSwitch_A: Bpmn.UserTask = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.UserTask;
     // über die Referenzen auf den SequenceFlow wird der Ziel Task geholt
-    PH.Assert.isTrue(objectToSwitch_A.outgoing.length === 1, "A darf vor dem Start nur 1 outgoing haben!");
+    isTrue(objectToSwitch_A.outgoing.length === 1, "A darf vor dem Start nur 1 outgoing haben!");
     let objectToSwitch_B: Bpmn.FlowNode = objectToSwitch_A.outgoing[0].targetRef;
 
-    PH.Assert.isTrue(objectToSwitch_A.incoming.length === 1, "A darf vor dem Start nur 1 incoming haben!");
-    PH.Assert.isTrue(objectToSwitch_B.outgoing.length === 1, "B darf vor dem Start nur 1 outgoing haben!");
+    isTrue(objectToSwitch_A.incoming.length === 1, "A darf vor dem Start nur 1 incoming haben!");
+    isTrue(objectToSwitch_B.outgoing.length === 1, "B darf vor dem Start nur 1 outgoing haben!");
     let sequenceFlow_RA: Bpmn.SequenceFlow = objectToSwitch_A.incoming[0];
     let sequenceFlow_AB: Bpmn.SequenceFlow = objectToSwitch_A.outgoing[0];
     let sequenceFlow_BS: Bpmn.SequenceFlow = objectToSwitch_B.outgoing[0];
@@ -629,12 +634,12 @@ export class BpmnProcess {
     // muss geleert werden, da sonst mehrere incomings
     objectToSwitch_A.incoming = [];
     objectToSwitch_A.incoming.push(sequenceFlow_AB);
-    PH.Assert.isTrue(objectToSwitch_A.incoming.length === 1, "A darf nur 1 incoming haben!");
+    isTrue(objectToSwitch_A.incoming.length === 1, "A darf nur 1 incoming haben!");
     // 3.
     // muss geleert werden, da sonst mehrere outgoings
     objectToSwitch_A.outgoing = [];
     objectToSwitch_A.outgoing.push(sequenceFlow_BS);
-    PH.Assert.isTrue(objectToSwitch_A.outgoing.length === 1, "A darf nur 1 outgoing haben!");
+    isTrue(objectToSwitch_A.outgoing.length === 1, "A darf nur 1 outgoing haben!");
     // 4.
     sequenceFlow_AB.sourceRef = objectToSwitch_B;
     sequenceFlow_AB.targetRef = objectToSwitch_A;
@@ -644,18 +649,18 @@ export class BpmnProcess {
     // muss geleert werden, da sonst mehrere incomings
     objectToSwitch_B.incoming = [];
     objectToSwitch_B.incoming.push(sequenceFlow_RA);
-    PH.Assert.isTrue(objectToSwitch_B.incoming.length === 1, "B darf nur 1 incoming haben!");
+    isTrue(objectToSwitch_B.incoming.length === 1, "B darf nur 1 incoming haben!");
     // 7.
     // muss geleert werden, da sonst mehrere outgoings
     objectToSwitch_B.outgoing = [];
     objectToSwitch_B.outgoing.push(sequenceFlow_AB);
-    PH.Assert.isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
+    isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
 
     this.processDiagram.generateBPMNDiagram(processId);
   }
 
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
-  public addOrModifyTask(processId: string, rowDetails: Process.RowDetails): string {
+  public addOrModifyTask(processId: string, rowDetails: RowDetails): string {
     // Weiteren Prozess einfügen
     let id: string;
     if (rowDetails.taskId == null) {
@@ -718,11 +723,11 @@ export class BpmnProcess {
     processContext.flowElements.push(sequenceFlow);
 
     if (sourceReference.$type === BPMN_STARTEVENT) {
-      PH.Assert.isTrue(sourceReference.outgoing.length == 1, "Das Start EVENT darf nur 1 Verbindung (outgoing) haben!" + sourceReference.outgoing.length);
+      isTrue(sourceReference.outgoing.length == 1, "Das Start EVENT darf nur 1 Verbindung (outgoing) haben!" + sourceReference.outgoing.length);
     }
     sourceReference.outgoing.splice(0, 1);
     if (targetReference.$type === BPMN_ENDEVENT) {
-      PH.Assert.isTrue(targetReference.incoming.length == 1, "Das End EVENT darf nur 1 Verbindung (incoming) haben! " + targetReference.incoming.length);
+      isTrue(targetReference.incoming.length == 1, "Das End EVENT darf nur 1 Verbindung (incoming) haben! " + targetReference.incoming.length);
     }
     targetReference.incoming.splice(0, 1);
 
@@ -959,7 +964,7 @@ export class BpmnProcess {
       return null;
     }
     // sure that taskObj has only 1 outgoing
-    let seqFlow = taskObj.outgoing.last();
+    let seqFlow = taskObj.outgoing[taskObj.outgoing.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
       return seqFlow.name;  
     else
@@ -973,7 +978,7 @@ export class BpmnProcess {
       return null;
     }
     // sure that taskObj has only 1 outgoing
-    let seqFlow = taskObj.incoming.last();
+    let seqFlow = taskObj.incoming[taskObj.incoming.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
       return seqFlow.name;  
     else
@@ -994,7 +999,7 @@ export class BpmnProcess {
     if (task.extensionElements && task.extensionElements.values) {
       const phInOut = task.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
       if (phInOut && phInOut.$children) {
-        const descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === Process.TaskSettings.Description);
+        const descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === TaskSettings.Description);
         if (descriptionElement && descriptionElement.$body) {
           return descriptionElement.$body;
         }
@@ -1013,9 +1018,9 @@ export class BpmnProcess {
       phInOut = bpmnModdle.createAny("processhub:inputOutput", "http://processhub.com/schema/1.0/bpmn", { $children: [] });
       task.extensionElements.values.push(phInOut);
     }
-    let descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === Process.TaskSettings.Description);
+    let descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === TaskSettings.Description);
     if (!descriptionElement) {
-      descriptionElement = bpmnModdle.createAny("processhub:inputParameter", "http://processhub.com/schema/1.0/bpmn", { name: Process.TaskSettings.Description });
+      descriptionElement = bpmnModdle.createAny("processhub:inputParameter", "http://processhub.com/schema/1.0/bpmn", { name: TaskSettings.Description });
       phInOut.$children.push(descriptionElement);
     }
 
@@ -1025,11 +1030,11 @@ export class BpmnProcess {
       descriptionElement.$body = "";
   }
 
-  public async checkCompatibilityOfChangedProcess(runningInstances: PH.Instance.InstanceDetails[], userInstances: PH.Instance.InstanceDetails[]) {
+  public async checkCompatibilityOfChangedProcess(runningInstances: InstanceDetails[], userInstances: InstanceDetails[]) {
 
     let actualRunningTasks: RunningTaskLane[] = [];
     for (let runInstance of runningInstances) {
-      let todos = PH.Todo.filterTodosForInstance(userInstances, runInstance.instanceId);
+      let todos = filterTodosForInstance(userInstances, runInstance.instanceId);
       let value = todos.map((t): RunningTaskLane => {
         return { bpmnLaneId: t.bpmnLaneId, bpmnTaskId: t.bpmnTaskId } as RunningTaskLane;
       });
@@ -1051,14 +1056,14 @@ export class BpmnProcess {
   }
 
 
-  public getDecisionTasksForTask(bpmnTaskId: string): PH.Todo.DecisionTask[] {
-    let decisionTasks: PH.Todo.DecisionTask[] = [];
+  public getDecisionTasksForTask(bpmnTaskId: string): DecisionTask[] {
+    let decisionTasks: DecisionTask[] = [];
 
-    if (this.isOneOfNextActivityOfType(bpmnTaskId, PH.Process.BPMN_EXCLUSIVEGATEWAY)) {
-      // taskTitle = todo != null ? todo.displayName : PH.Tools.tl("Entscheidung");
+    if (this.isOneOfNextActivityOfType(bpmnTaskId, BPMN_EXCLUSIVEGATEWAY)) {
+      // taskTitle = todo != null ? todo.displayName : tl("Entscheidung");
       let nextActivites = this.getNextActivities(bpmnTaskId);
       for (let tmp of nextActivites) {
-        if (tmp.$type == PH.Process.BPMN_EXCLUSIVEGATEWAY) {
+        if (tmp.$type == BPMN_EXCLUSIVEGATEWAY) {
           let list = this.getTaskIdsAfterGateway(tmp.id);
           decisionTasks = decisionTasks.concat(list);
         }
@@ -1068,22 +1073,22 @@ export class BpmnProcess {
     return decisionTasks;
   }
 
-  public getBoundaryDecisionTasksForTask(bpmnTaskId: string): PH.Todo.DecisionTask {
-    let boundaryDecisionTask: PH.Todo.DecisionTask = null;
+  public getBoundaryDecisionTasksForTask(bpmnTaskId: string): DecisionTask {
+    let boundaryDecisionTask: DecisionTask = null;
 
     let taskObject = this.getExistingActivityObject(bpmnTaskId);
 
     if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
-      let tmpBoundary = taskObject.boundaryEventRefs.last();
-      PH.Assert.equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
+      let tmpBoundary = taskObject.boundaryEventRefs[taskObject.boundaryEventRefs.length - 1];
+      equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
 
-      let boundaryDecisionTask: PH.Todo.DecisionTask = {
+      let boundaryDecisionTask: DecisionTask = {
         bpmnTaskId: tmpBoundary.id,
         name: tmpBoundary.name,
         isBoundaryEvent: true,
-        type: PH.Todo.DecisionTaskTypes.Boundary,
-        boundaryEventType: tmpBoundary.eventDefinitions.last().$type.toString()
-      } as PH.Todo.DecisionTask;
+        type: DecisionTaskTypes.Boundary,
+        boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
+      } as DecisionTask;
     }
     return boundaryDecisionTask;
   }

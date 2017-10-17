@@ -1,9 +1,11 @@
 import BpmnModdle = require("bpmn-moddle");
-import * as PH from "../../";
 import { BpmnProcess } from "./bpmnprocess";
 import * as BpmnProcessDiagramFile from "./bpmnprocessdiagram";
 import * as BpmnProcessFile from "./bpmnprocess";
 import { Processhub, Bpmn, Dc } from "../bpmn";
+import { TaskSettings, ProcessResult } from "../processinterfaces";
+import { LoadTemplateReply } from "../legacyapi";
+import { createId } from "../../tools/guid";
 
 export type ModdleElementType = Bpmn.bpmnType;
 
@@ -41,7 +43,7 @@ export function createTaskExtensionTemplate(): BpmnModdleExtensionElements {
   return extensionElements;
 }
 
-export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElements, key: PH.Process.TaskSettings, value: string) {
+export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElements, key: TaskSettings, value: string) {
   let moddle = new BpmnModdle();
 
   let inputParameter: Processhub.InputParameter = moddle.createAny("processhub:inputParameter", processhubNs, {
@@ -56,13 +58,13 @@ export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElement
 }
 
 // Basis-Bpmn-Prozess erzeugen
-export async function createBpmnTemplate(moddle: any): Promise<PH.Process.LoadTemplateReply> {
+export async function createBpmnTemplate(moddle: any): Promise<LoadTemplateReply> {
   let xmlStr =
     "<?xml version='1.0' encoding='UTF-8'?>" +
-    "<bpmn:definition xmlns:bpmn='http://www.omg.org/spec/BPMN/20100524/MODEL' id='Definition_" + PH.Tools.createId() + "'>" +
+    "<bpmn:definition xmlns:bpmn='http://www.omg.org/spec/BPMN/20100524/MODEL' id='Definition_" + createId() + "'>" +
     "</bpmn:definition>";
 
-  let promise = new Promise<PH.Process.LoadTemplateReply>(function (resolve, reject) {
+  let promise = new Promise<LoadTemplateReply>(function (resolve, reject) {
     moddle.fromXML(xmlStr, (err: any, bpmnXml: any, bpmnContext: any): void => {
       // Basisknoten anlegen - gleichzeitig ein gutes Beispiel für den Umgang mit moddle
 
@@ -135,10 +137,10 @@ export async function createBpmnTemplate(moddle: any): Promise<PH.Process.LoadTe
 
       resolve(
         {
-          result: PH.Process.ProcessResult.Ok,
+          result: ProcessResult.Ok,
           bpmnContext: bpmnContext,
           bpmnXml: bpmnXml
-        } as PH.Process.LoadTemplateReply
+        } as LoadTemplateReply
       );
     });
     // callback(err, bpmnXml, bpmnContext);

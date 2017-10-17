@@ -1,20 +1,22 @@
+import { WorkspaceDetails } from "./workspaceinterfaces";
+import { tl } from "../tl";
+
 // Internal objects used by ProcessHub client and server
-import * as PH from "../";
 
 export class WorkspaceState {
-  currentWorkspace: PH.Workspace.WorkspaceDetails;
+  currentWorkspace: WorkspaceDetails;
 
   // Workspace Cache
   workspaceCache: { 
-    [workspaceId: string]: PH.Workspace.WorkspaceDetails
+    [workspaceId: string]: WorkspaceDetails
   };
 
   cacheState?: string;  // updated in reducers, helps React to detect state changes
-  lastDispatchedWorkspace: PH.Workspace.WorkspaceDetails; // used in reducer to detect changes
+  lastDispatchedWorkspace: WorkspaceDetails; // used in reducer to detect changes
 }
 
 export function getDefaultMailSignature() {
-  return PH.tl("Wir verwenden [ProcessHub](https://www.processhub.com) für die Steuerung unserer Geschäftsprozesse.");  
+  return tl("Wir verwenden [ProcessHub](https://www.processhub.com) für die Steuerung unserer Geschäftsprozesse.");  
 }
 
 // WorkspaceView

@@ -1,4 +1,5 @@
-import * as PH from "../";
+import { BaseReply, BaseMessage } from "../legacyapi/apirequests";
+import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
 
 // API routes
 export const ProcessEngineApiRoutes = {
@@ -20,27 +21,27 @@ export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 // API request/reply objects
 export interface InstanceRequest {
 }
-export interface InstanceReply extends PH.LegacyApi.BaseReply {
+export interface InstanceReply extends BaseReply {
   errorMessage?: string;
 }
 
 export interface ExecuteRequest extends InstanceRequest {
   processId: string;
   displayName: string;
-  instanceDetails?: PH.Instance.InstanceDetails;
+  instanceDetails?: InstanceDetails;
 }
 export interface ExecuteReply extends InstanceReply { // ExecuteReply ist das selbe wie ResumeReply
   instanceId?: string;
 }
 
 export interface UpdateInstanceRequest extends InstanceRequest {
-  instanceDetails: PH.Instance.InstanceDetails;
+  instanceDetails: InstanceDetails;
 }
 export interface UpdateInstanceReply extends InstanceReply {
 }
 
 export interface ResumeRequest extends InstanceRequest {
-  resumeDetails: PH.Instance.ResumeInstanceDetails;
+  resumeDetails: ResumeInstanceDetails;
 }
 
 export interface AbortRequest extends InstanceRequest {
@@ -58,10 +59,10 @@ export interface JumpReply extends InstanceReply {
 
 export interface GetInstanceDetailsRequest extends InstanceRequest {
   instanceId: string;
-  getExtras: PH.Instance.InstanceExtras;
+  getExtras: InstanceExtras;
 }
 export interface GetInstanceDetailsReply extends InstanceReply {
-  instanceDetails?: PH.Instance.InstanceDetails;
+  instanceDetails?: InstanceDetails;
 }
 
 export interface UploadAttachmentRequest extends InstanceRequest {
@@ -100,7 +101,7 @@ export interface DeleteInstancesRequest extends InstanceRequest {
 }
 
 export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";
-export interface InstanceLoadedMessage extends PH.LegacyApi.BaseMessage {
+export interface InstanceLoadedMessage extends BaseMessage {
   type: "InstanceLoadedMessage";
-  instance?: PH.Instance.InstanceDetails;
+  instance?: InstanceDetails;
 }

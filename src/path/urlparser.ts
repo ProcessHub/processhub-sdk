@@ -1,10 +1,14 @@
-import * as PH from "../";
+import { PathDetails, Page, NotificationLinkElements } from "./pathinterfaces";
+import { isTrue } from "../tools/assert";
+import { ProcessView, isValidProcessView } from "../process/phclient";
+import { WorkspaceView, isValidWorkspaceView } from "../workspace/phclient";
+import { isId } from "../tools/guid";
 
-export function parseUrl(fullUrl: string): PH.Path.PathDetails {
-  let path: PH.Path.PathDetails = {};
+export function parseUrl(fullUrl: string): PathDetails {
+  let path: PathDetails = {};
 
   // split path
-  PH.Assert.isTrue(fullUrl.substr(0, 1) == "/", "Url doesn't start with /");
+  isTrue(fullUrl.substr(0, 1) == "/", "Url doesn't start with /");
   let url = fullUrl.toLowerCase().substr(1);
   if (url.endsWith("/"))  // ignore "/" on end
     url = url.substr(0, url.length - 1);
@@ -14,16 +18,16 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
   let part = split[0];
   if ((part == "" && split.length == 1)
     || (part == "i" && split.length >= 2)) {   // Instance and Todo-links are handled on StartPage
-    path.page = PH.Path.Page.StartPage;
+    path.page = Page.StartPage;
     return path;
   } else if (part == "signin" && split.length == 1) {
-    path.page = PH.Path.Page.SigninPage;
+    path.page = Page.SigninPage;
     return path;
   } else if (part == "signup" && split.length == 1) {
-    path.page = PH.Path.Page.SignupPage;
+    path.page = Page.SignupPage;
     return path;
   } else if (part == "library" && split.length == 1) {
-    path.page = PH.Path.Page.LibraryPage;
+    path.page = Page.LibraryPage;
     return path;
   } else if (!part.startsWith("@")) {
     // ...otherwise workspace must follow
@@ -33,14 +37,14 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
   // -> Workspace  
   path.workspaceUrlName = part.substr(1);
 
-  part = (split.length >= 2 ? split[1] : PH.Workspace.WorkspaceView.Processes);
-  if (PH.Workspace.isValidWorkspaceView(part) && split.length <= 2) {
-    path.page = PH.Path.Page.WorkspacePage;
-    path.view = <PH.Workspace.WorkspaceView>part;
+  part = (split.length >= 2 ? split[1] : WorkspaceView.Processes);
+  if (isValidWorkspaceView(part) && split.length <= 2) {
+    path.page = Page.WorkspacePage;
+    path.view = <WorkspaceView>part;
     return path;
-  } else if (part == PH.Process.ProcessView.NewProcess) {
-    path.page = PH.Path.Page.ProcessPage;
-    path.view = <PH.Process.ProcessView>part;
+  } else if (part == ProcessView.NewProcess) {
+    path.page = Page.ProcessPage;
+    path.view = <ProcessView>part;
     return path;
   } else if (part != "p" || split.length < 3) {
     // ...otherwise process must follow
@@ -50,20 +54,20 @@ export function parseUrl(fullUrl: string): PH.Path.PathDetails {
   // -> Process
   path.processUrlName = decodeURIComponent(split[2]);
 
-  part = (split.length >= 4 ? split[3] : PH.Process.ProcessView.Show);
-  if (PH.Process.isValidProcessView(part) && split.length <= 4) {
-    path.page = PH.Path.Page.ProcessPage;
-    path.view = <PH.Process.ProcessView>part;
+  part = (split.length >= 4 ? split[3] : ProcessView.Show);
+  if (isValidProcessView(part) && split.length <= 4) {
+    path.page = Page.ProcessPage;
+    path.view = <ProcessView>part;
     return path;
   } else
     return null;
 } 
 
-export function parseNotificationLink(fullUrl: string): PH.Path.NotificationLinkElements {
-  let elements: PH.Path.NotificationLinkElements = {};
+export function parseNotificationLink(fullUrl: string): NotificationLinkElements {
+  let elements: NotificationLinkElements = {};
   
   // split path
-  PH.Assert.isTrue(fullUrl.substr(0, 1) == "/", "Url doesn't start with /");
+  isTrue(fullUrl.substr(0, 1) == "/", "Url doesn't start with /");
   let url = fullUrl.toLowerCase().substr(1);
   if (url.endsWith("/"))  // ignore "/" on end
     url = url.substr(0, url.length - 1);
@@ -81,7 +85,7 @@ export function parseNotificationLink(fullUrl: string): PH.Path.NotificationLink
 
     nextPart = split[2];
   }
-  if (!PH.Tools.isId(nextPart.toUpperCase()))
+  if (!isId(nextPart.toUpperCase()))
     return elements;
   else
     elements.instanceId = nextPart.toUpperCase();

@@ -1,6 +1,9 @@
 import { WorkspaceDetails } from "../workspace";
 import { TodoDetails } from "../todo";
-import * as PH from "../";
+import { InstanceDetails } from "../instance/instanceinterfaces";
+import { nullId } from "../tools/guid";
+import { isTrue } from "../tools/assert";
+import { tl } from "../tl";
 
 export class UserDetails {
   userId: string;
@@ -12,7 +15,7 @@ export class UserDetails {
     // New Extras must be added to cache-handling in useractions -> loadUser!
     workspaces?: WorkspaceDetails[];
     accessToken?: string;  // only used during login
-    instances?: PH.Instance.InstanceDetails[];
+    instances?: InstanceDetails[];
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean;
@@ -25,19 +28,19 @@ export enum UserExtras {
   ExtrasInstances = 1 << 2  // instances visible to user
 }
 
-export const emptyUser: PH.User.UserDetails = {
-  userId: PH.Tools.nullId(),
+export const emptyUser: UserDetails = {
+  userId: nullId(),
   mail: null,
   realName: null,
   extras: {},
 };
 
-export function getUserWorkspace(user: PH.User.UserDetails, workspaceId: string): PH.Workspace.WorkspaceDetails {
+export function getUserWorkspace(user: UserDetails, workspaceId: string): WorkspaceDetails {
   if (user == null)
     return null; 
 
   // ExtrasWorkspaces required
-  PH.Assert.isTrue(user.extras.workspaces != null, "getUserWorkspace: user.extras.workspaces == null");
+  isTrue(user.extras.workspaces != null, "getUserWorkspace: user.extras.workspaces == null");
 
   return user.extras.workspaces.find((workspace) => workspace.workspaceId == workspaceId);
 }
@@ -69,13 +72,13 @@ export function isPredefinedGroup(groupId: string): boolean {
 export function getPredefinedGroupName(groupId: string): string {
   switch (groupId) {
     case PredefinedGroups.Public:
-      return PH.tl("ProcessHub Community (öffentlich)");
+      return tl("ProcessHub Community (öffentlich)");
     case PredefinedGroups.Everybody:
-      return PH.tl("Jeder (gestattet externe Teilnahme mit Mailadresse)");
+      return tl("Jeder (gestattet externe Teilnahme mit Mailadresse)");
     case PredefinedGroups.AllWorkspaceMembers:
-      return PH.tl("Alle Mitglieder des Teams");
+      return tl("Alle Mitglieder des Teams");
     case PredefinedGroups.AllParticipants:
-      return PH.tl("Nur Prozessbeteiligte Mitglieder des Teams");
+      return tl("Nur Prozessbeteiligte Mitglieder des Teams");
   }
 }
 

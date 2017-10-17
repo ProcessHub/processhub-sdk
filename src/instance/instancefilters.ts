@@ -1,12 +1,15 @@
+import { InstanceDetails } from "./instanceinterfaces";
+import { UserDetails } from "../user/userinterfaces";
+import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
+
 // helper functions to filter and/or sort instances
-import * as PH from "../";
 
 // instance where the user owns at least one todo
-export function filterUserInstances(instances: PH.Instance.InstanceDetails[], user: PH.User.UserDetails): PH.Instance.InstanceDetails[] {
+export function filterUserInstances(instances: InstanceDetails[], user: UserDetails): InstanceDetails[] {
   if (!user || !instances)
     return [];
 
-  let filteredInstances: PH.Instance.InstanceDetails[] = [];
+  let filteredInstances: InstanceDetails[] = [];
 
   instances.map(instance => {
     let instanceAdded = false;
@@ -21,7 +24,7 @@ export function filterUserInstances(instances: PH.Instance.InstanceDetails[], us
   return filteredInstances;
 }
 
-export function filterSingleInstance(instances: PH.Instance.InstanceDetails[], instanceId: string): PH.Instance.InstanceDetails {
+export function filterSingleInstance(instances: InstanceDetails[], instanceId: string): InstanceDetails {
   if (!instances)
     return null;
 
@@ -29,25 +32,25 @@ export function filterSingleInstance(instances: PH.Instance.InstanceDetails[], i
 }
 
 // all instance for a process
-export function filterInstancesForProcess(instances: PH.Instance.InstanceDetails[], processId: string): PH.Instance.InstanceDetails[] {
+export function filterInstancesForProcess(instances: InstanceDetails[], processId: string): InstanceDetails[] {
   if (!instances)
     return [];
 
-  let filteredInstances: PH.Instance.InstanceDetails[] = instances.filter(instance => instance.processId == processId && !instance.isSimulation);
+  let filteredInstances: InstanceDetails[] = instances.filter(instance => instance.processId == processId && !instance.isSimulation);
   return filteredInstances;
 }
 
 // all instance for workspace
-export function filterInstancesForWorkspace(instances: PH.Instance.InstanceDetails[], workspaceId: string): PH.Instance.InstanceDetails[] {
+export function filterInstancesForWorkspace(instances: InstanceDetails[], workspaceId: string): InstanceDetails[] {
   if (!instances)
     return [];
 
-    let filteredInstances: PH.Instance.InstanceDetails[] = instances.filter(instance => instance.workspaceId == workspaceId && !instance.isSimulation);
+    let filteredInstances: InstanceDetails[] = instances.filter(instance => instance.workspaceId == workspaceId && !instance.isSimulation);
     return filteredInstances;
 }
 
 // instances for processes in workspace that user can not see
-export function filterRemainingInstancesForWorkspace(instances: PH.Instance.InstanceDetails[], workspace: PH.Workspace.WorkspaceDetails): PH.Instance.InstanceDetails[] {
+export function filterRemainingInstancesForWorkspace(instances: InstanceDetails[], workspace: WorkspaceDetails): InstanceDetails[] {
   if (!instances)
     return [];
 
@@ -55,7 +58,7 @@ export function filterRemainingInstancesForWorkspace(instances: PH.Instance.Inst
 
   if (workspace.extras.processes) {
     // getOtherItems lists the todos for processes without read access - filter the others
-    let filteredInstances: PH.Instance.InstanceDetails[] = []; 
+    let filteredInstances: InstanceDetails[] = []; 
     workspaceInstances.map(instance => {
       if (workspace.extras.processes.find(process => process.processId == instance.processId) == null) {
         filteredInstances.push(instance);

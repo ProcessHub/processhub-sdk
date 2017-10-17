@@ -1,47 +1,47 @@
-import * as PH from "../";
+import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
 
-export function isFreeWorkspace(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function isFreeWorkspace(workspace: WorkspaceDetails): boolean {
   if (workspace == null)
     return false;
 
-  return (workspace != null && workspace.workspaceType == PH.Workspace.WorkspaceType.Free);
+  return (workspace != null && workspace.workspaceType == WorkspaceType.Free);
 }
 
-export function isDemoWorkspace(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function isDemoWorkspace(workspace: WorkspaceDetails): boolean {
   if (workspace == null)
     return false;
 
-  return (workspace != null && workspace.workspaceType == PH.Workspace.WorkspaceType.Demo);
+  return (workspace != null && workspace.workspaceType == WorkspaceType.Demo);
 }
 
-export function isWorkspaceMember(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function isWorkspaceMember(workspace: WorkspaceDetails): boolean {
   if (workspace == null)
     return false;
 
-  return (workspace.userRole != null && workspace.userRole != PH.Workspace.WorkspaceRole.None);
+  return (workspace.userRole != null && workspace.userRole != WorkspaceRole.None);
 }
 
-export function isWorkspaceAdmin(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function isWorkspaceAdmin(workspace: WorkspaceDetails): boolean {
   if (workspace == null)
     return false;
 
-  return ((workspace.userRole & PH.Workspace.WorkspaceRole.WorkspaceAdmin) != 0);
+  return ((workspace.userRole & WorkspaceRole.WorkspaceAdmin) != 0);
 }
 
 // Access control in code should NOT use the roles above but instead the following can...-checks
 
-export function canEditWorkspace(workspace: PH.Workspace.WorkspaceDetails): boolean {  
+export function canEditWorkspace(workspace: WorkspaceDetails): boolean {  
   return isWorkspaceAdmin(workspace);
 }
 
-export function canViewMembers(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function canViewMembers(workspace: WorkspaceDetails): boolean {
   return isWorkspaceMember(workspace);
 }
 
-export function canInviteMembers(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function canInviteMembers(workspace: WorkspaceDetails): boolean {
   return isWorkspaceAdmin(workspace);
 }
 
-export function canCreateProcess(workspace: PH.Workspace.WorkspaceDetails): boolean {
+export function canCreateProcess(workspace: WorkspaceDetails): boolean {
   return isWorkspaceAdmin(workspace);
 }

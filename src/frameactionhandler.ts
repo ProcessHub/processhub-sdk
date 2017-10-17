@@ -1,10 +1,12 @@
-import * as PH from "./";
+import { IActionHandler, ExtrasRequest } from "./iactionhandler";
+import { createId } from "./tools/guid";
+import { CoreEnvironment } from "./environment";
 
 let waitingCommands: { [key: string]: any } = {};
 let parenthost: string = "*";
 
 // Plugins are hosted in iFrames for security reasons. Communication with ProcessHub is handled by messaging.
-export class FrameActionHandler implements PH.IActionHandler {
+export class FrameActionHandler implements IActionHandler {
   plugin: string;
   component: string;
   parenthost: string;
@@ -16,18 +18,18 @@ export class FrameActionHandler implements PH.IActionHandler {
     if (typeof window !== "undefined") {
       window.addEventListener("message", this.actionReplyListener, false);
       // Send init to "*" (no security risk here)
-      window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":init" + ":" + PH.Tools.createId() + ":{}", "*");
+      window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":init" + ":" + createId() + ":{}", "*");
     }
   }
 
   private sendMessage(command: string, jsonData: any): void {
-    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + PH.Tools.createId() + ":" + JSON.stringify(jsonData), parenthost);    
+    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + createId() + ":" + JSON.stringify(jsonData), parenthost);    
   }
 
   // Command format: 
   // [PHActionHandler]Plugin_Component:command:commandId:{data}
   private sendCommand(command: string, jsonData: any): Promise<any> {
-    let commandId = PH.Tools.createId(); 
+    let commandId = createId(); 
     window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
 
     return new Promise<any>(function(resolve, reject) {
@@ -56,7 +58,7 @@ export class FrameActionHandler implements PH.IActionHandler {
   }
 
   
-  async requestExtras(environment: PH.CoreEnvironment, requestedExtras: PH.ExtrasRequest, forceReload?: boolean) {
+  async requestExtras(environment: CoreEnvironment, requestedExtras: ExtrasRequest, forceReload?: boolean) {
   }
 
   async openInstancePopup(instanceId: string): Promise<void> {

@@ -1,5 +1,5 @@
-import * as PH from "../";
-import { BaseReply } from "../legacyapi/apirequests";
+import { BaseReply, BaseMessage } from "../legacyapi/apirequests";
+import { TodoDetails } from "./todointerfaces";
 
 // API routes
 export const TodoRequestRoutes = {
@@ -14,14 +14,14 @@ export const TodoMessages = {
 export type TodoMessages = keyof typeof TodoMessages;
 
 // API request/reply objects
-export interface TodoReply extends PH.LegacyApi.BaseMessage {
+export interface TodoReply extends BaseMessage {
   errorMessage?: string;
 }
 
 export interface GetSimulationTodosRequest {
 }
 export interface GetSimulationTodosReply extends TodoReply {
-  todos?: Array<PH.Todo.TodoDetails>;
+  todos?: Array<TodoDetails>;
 }
 
 export interface SetTodoPriorityRequest {

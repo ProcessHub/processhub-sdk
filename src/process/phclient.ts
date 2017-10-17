@@ -1,18 +1,19 @@
+import { ProcessDetails } from "./processinterfaces";
+
 // Internal objects used by ProcessHub client and server
-import * as PH from "../";
 
 export class ProcessState {
   errorMessage: string;
 
-  currentProcess: PH.Process.ProcessDetails;
+  currentProcess: ProcessDetails;
 
   // Process Cache
   processCache: {
-    [processId: string]: PH.Process.ProcessDetails
+    [processId: string]: ProcessDetails
   };  
 
   cacheState?: string;  // updated in reducers, helps React to detect state changes
-  lastDispatchedProcess: PH.Process.ProcessDetails; // used in reducer to detect changes
+  lastDispatchedProcess: ProcessDetails; // used in reducer to detect changes
 }
 
 export const ProcessView = {

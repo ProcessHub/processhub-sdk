@@ -1,8 +1,8 @@
 import { RoleOwnerMap } from "../process";
-import { DecisionTask } from "../todo";
+import { DecisionTask, TodoDetails } from "../todo";
 import { FieldContentMap } from "../data";
-import * as PH from "../";
 import { Bpmn } from "modeler/bpmn/bpmn";
+import { UserDetails } from "../user/userinterfaces";
 
 export enum State {
   // DON'T CHANGE NUMBERS - used in database
@@ -27,8 +27,8 @@ export interface InstanceDetails {
     instanceState?: any;
     fieldContents?: FieldContentMap;
     roleOwners?: RoleOwnerMap;
-    todos?: PH.Todo.TodoDetails[];
-    auditTrail?: PH.Instance.AuditTrailEntry[];
+    todos?: TodoDetails[];
+    auditTrail?: AuditTrailEntry[];
   };
 }
 
@@ -114,7 +114,7 @@ export interface AuditTrailEntry {
   instanceId: string;
   trailId: string;
   action: AuditTrailAction;
-  user: PH.User.UserDetails;  
+  user: UserDetails;  
   createdAt: Date;  // time of action in UTC
   details: Partial<AuditTrailEntryDetails>;
 }

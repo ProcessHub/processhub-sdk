@@ -1,6 +1,7 @@
-import * as PH from "../";
+import { tl } from "../tl";
+import { ProcessDetails } from "./processinterfaces";
 
-export function isProcessDetailsValid(details: PH.Process.ProcessDetails): boolean {
+export function isProcessDetailsValid(details: ProcessDetails): boolean {
   if (details.displayName.length < 6 || details.displayName.length > 50)
     return false;
 
@@ -14,9 +15,9 @@ export function isProcessDetailsValid(details: PH.Process.ProcessDetails): boole
  */
 export function isProcessDisplayNameValid(processname: string): string {
   if (processname.length < 6) {
-    return PH.tl("Minimum 6 Zeichen");
+    return tl("Minimum 6 Zeichen");
   } else if (processname.length > 50) {
-    return PH.tl("Maximum 50 Zeichen");
+    return tl("Maximum 50 Zeichen");
   } else {
     return "";
   }

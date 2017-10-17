@@ -1,7 +1,9 @@
-import * as PH from "../";
 import { ProcessAccessRights, ProcessRoles } from "./processrights";
 import { InstanceDetails } from "../instance";
 import { TodoDetails } from "../todo";
+import { BpmnProcess } from "./bpmn/bpmnprocess";
+import { strEnum } from "../tools/types";
+
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -25,7 +27,7 @@ export interface ProcessDetails {
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
-    bpmnProcess?: PH.Process.BpmnProcess; // available if bpmnXml is available
+    bpmnProcess?: BpmnProcess; // available if bpmnXml is available
     instances?: InstanceDetails[];
     processRoles?: ProcessRoles;
     svgString?: string; // only used to save preview to server
@@ -75,7 +77,7 @@ export interface ModelValidationResult {
   tooManyIncomings: string[];
 }
 
-export const ProcessResult = PH.Tools.strEnum([
+export const ProcessResult = strEnum([
   "Ok",
   "Error"
 ]);

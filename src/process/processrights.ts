@@ -1,4 +1,12 @@
-import * as PH from "../";
+import { tl } from "../tl";
+import { UserDetails } from "../user/userinterfaces";
+import { BpmnProcess } from "./bpmn/bpmnprocess";
+import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterfaces";
+import { PredefinedGroups } from "../user/index";
+import { ProcessDetails } from "./processinterfaces";
+import { isWorkspaceMember } from "../workspace/workspacerights";
+import { isFalse, isTrue, error } from "../tools/assert";
+import { isGroupId, isUserId } from "../tools/guid";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -27,13 +35,13 @@ export type DefaultRoles = keyof typeof DefaultRoles;
 export function getDefaultRoleName(roleId: string): string {
   switch (roleId) {
     case DefaultRoles.Owner:
-      return PH.tl("Prozesseigner");
+      return tl("Prozesseigner");
     case DefaultRoles.Manager:
-      return PH.tl("Prozessmanager");
+      return tl("Prozessmanager");
     case DefaultRoles.Viewer:
-      return PH.tl("Sichtbarkeit");
+      return tl("Sichtbarkeit");
     case DefaultRoles.Follower:
-      return PH.tl("Follower");      
+      return tl("Follower");      
   }
 }
 
@@ -54,7 +62,7 @@ export interface RoleOwnerMap {
 export interface RoleOwner {
   memberId: string; // UserId, GroupId oder Mailadresse
   displayName?: string;
-  user?: PH.User.UserDetails;
+  user?: UserDetails;
 }
 
 export function isDefaultRole(roleId: string): boolean {
@@ -63,36 +71,36 @@ export function isDefaultRole(roleId: string): boolean {
     || roleId == DefaultRoles.Viewer);
 }
 
-export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProcess: PH.Process.BpmnProcess, workspace: PH.Workspace.WorkspaceDetails): PH.Process.ProcessRoles {
+export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnProcess, workspace: WorkspaceDetails): ProcessRoles {
   // add entries for all existing roles in the process
   let processRoles = currentRoles;
   if (processRoles == null)
     processRoles = {};
 
-  if (processRoles[PH.Process.DefaultRoles.Viewer] == null) {
+  if (processRoles[DefaultRoles.Viewer] == null) {
     // Vorgabewert für Prozessansicht
-    if (workspace.workspaceType == PH.Workspace.WorkspaceType.Demo || workspace.workspaceType == PH.Workspace.WorkspaceType.Free)
-      processRoles[PH.Process.DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PH.User.PredefinedGroups.Public }] };
+    if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free)
+      processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
     else
-      processRoles[PH.Process.DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PH.User.PredefinedGroups.AllWorkspaceMembers }] };
+      processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
   }
 
-  if (processRoles[PH.Process.DefaultRoles.Owner] == null && workspace.workspaceType != PH.Workspace.WorkspaceType.Demo && workspace.workspaceType != PH.Workspace.WorkspaceType.Free) {
-    processRoles[PH.Process.DefaultRoles.Owner] = { potentialRoleOwners: [] };
+  if (processRoles[DefaultRoles.Owner] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
+    processRoles[DefaultRoles.Owner] = { potentialRoleOwners: [] };
   }
-  if (processRoles[PH.Process.DefaultRoles.Manager] == null && workspace.workspaceType != PH.Workspace.WorkspaceType.Demo && workspace.workspaceType != PH.Workspace.WorkspaceType.Free) {
-    processRoles[PH.Process.DefaultRoles.Manager] = { potentialRoleOwners: [] };
+  if (processRoles[DefaultRoles.Manager] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
+    processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
   }
 
   // Everybody can be added as a follower
-  processRoles[PH.Process.DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PH.User.PredefinedGroups.Everybody }], allowMultipleOwners: true };
+  processRoles[DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }], allowMultipleOwners: true };
 
   if (bpmnProcess != null) {
     // Alle Lanes mit Vorgabewerten belegen
     let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), true);
     lanes.map(lane => {
       if (processRoles[lane.id] == null) {
-        processRoles[lane.id] = { potentialRoleOwners: [{ memberId: PH.User.PredefinedGroups.Everybody }] };
+        processRoles[lane.id] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }] };
       }
       processRoles[lane.id].roleName = lane.name;
     });
@@ -105,7 +113,7 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
 
     // Im Prozess nicht mehr vorhandene Lanes entfernen
     for (let role in processRoles) {
-      if (role != PH.Process.DefaultRoles.Owner && role != PH.Process.DefaultRoles.Manager && role != PH.Process.DefaultRoles.Viewer) {
+      if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer) {
         if (lanes.find(lane => lane.id == role) == null)
           delete (processRoles[role]);
       }
@@ -115,7 +123,7 @@ export function getProcessRoles(currentRoles: PH.Process.ProcessRoles, bpmnProce
   return processRoles;
 }
 
-export function isPotentialRoleOwner(user: PH.User.UserDetails, roleId: string, workspace: PH.Workspace.WorkspaceDetails, process: PH.Process.ProcessDetails, ignorePublic: boolean = false): boolean {
+export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspace: WorkspaceDetails, process: ProcessDetails, ignorePublic: boolean = false): boolean {
   // user == null -> check if guest is PotentialRoleOwner
   // roleId == null -> check if user is PotentialRoleOwner of any role
   let roles = process.extras.processRoles;
@@ -141,23 +149,23 @@ export function isPotentialRoleOwner(user: PH.User.UserDetails, roleId: string, 
       // always accept current roleOwners (process might have been changed, we still want to accept existing owners)
       return true;
     }
-    if (!ignorePublic && (member.memberId == PH.User.PredefinedGroups.Public
-      || member.memberId == PH.User.PredefinedGroups.Everybody))
+    if (!ignorePublic && (member.memberId == PredefinedGroups.Public
+      || member.memberId == PredefinedGroups.Everybody))
       return true;
-    if (member.memberId == PH.User.PredefinedGroups.AllWorkspaceMembers ||
-      (ignorePublic && (member.memberId == PH.User.PredefinedGroups.Public || member.memberId == PH.User.PredefinedGroups.Everybody))) {
-      if (PH.Workspace.isWorkspaceMember(workspace))
+    if (member.memberId == PredefinedGroups.AllWorkspaceMembers ||
+      (ignorePublic && (member.memberId == PredefinedGroups.Public || member.memberId == PredefinedGroups.Everybody))) {
+      if (isWorkspaceMember(workspace))
         return true;
     }
   }
 
-  if (roleId == PH.Process.DefaultRoles.Viewer) {
-    if (roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PH.User.PredefinedGroups.AllParticipants)
-      || roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PH.User.PredefinedGroups.Public)) {
+  if (roleId == DefaultRoles.Viewer) {
+    if (roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PredefinedGroups.AllParticipants)
+      || roles[roleId].potentialRoleOwners.find(potentialRoleOwner => potentialRoleOwner.memberId == PredefinedGroups.Public)) {
       // Bei Sichtbarkeit "AllParticipants" oder "Public" muss geprüft werden, ob User in einer der anderen Rollen eingetragen ist
       // Der Fall Public ist nur bei ignorePublic relevant
       for (let role in roles) {
-        if (role != PH.Process.DefaultRoles.Viewer
+        if (role != DefaultRoles.Viewer
           // AllParticipants soll allen Teilnehmern, die eine Rolle im Prozess haben, Lesezugriff gewähren. Allerdings 
           // nur den explizit genannten Teilnehmern, nicht der Public-Gruppe, sonst wäre jeder Prozess,
           // bei dem externe Personen teilnehmen dürfen, automatisch Public.
@@ -171,15 +179,15 @@ export function isPotentialRoleOwner(user: PH.User.UserDetails, roleId: string, 
   return false;
 }
 
-export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceDetails, processDetails: PH.Process.ProcessDetails, roleId: string = null): { [roleId: string]: PH.Process.PotentialRoleOwners } {
+export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, processDetails: ProcessDetails, roleId: string = null): { [roleId: string]: PotentialRoleOwners } {
   // Diese Funktion soll die User auflisten, die die angegebene Rolle ausfüllen dürfen. Das ist nur für
   // normale Rollen im Prozess sinnvoll, nicht für die vordefinierten Rollen, da zu diesen kein Inhaber ausgewählt werden muss.
-  PH.Assert.isFalse(PH.Process.isDefaultRole(roleId));
+  isFalse(isDefaultRole(roleId));
 
-  let allOwners: { [roleId: string]: PH.Process.PotentialRoleOwners } = {};
+  let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
-  PH.Assert.isTrue(workspaceDetails != null, "WorkspaceDetails dürfen nicht null sein!");
-  PH.Assert.isTrue(workspaceDetails.extras.members != null, "Es müssen Workspace Details geliefert werden, die WorkspaceMembers beinhalten!");
+  isTrue(workspaceDetails != null, "WorkspaceDetails dürfen nicht null sein!");
+  isTrue(workspaceDetails.extras.members != null, "Es müssen Workspace Details geliefert werden, die WorkspaceMembers beinhalten!");
 
   // todo überprüfen ob jeder user einen Namen hat der über die processDetails kommt (außer gruppen)
   if (processDetails.extras.processRoles == null)
@@ -187,13 +195,13 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
   
   for (let role in processDetails.extras.processRoles) {
     if ((roleId == null || role == roleId) && processDetails.extras.processRoles[role]) {
-      let owners: PH.Process.PotentialRoleOwners = {
+      let owners: PotentialRoleOwners = {
         potentialRoleOwner: []
       };
       let addedWsMembers = false;
       for (let potentialOwner of processDetails.extras.processRoles[role].potentialRoleOwners) {
-        if ((potentialOwner.memberId == PH.User.PredefinedGroups.AllWorkspaceMembers
-          || potentialOwner.memberId == PH.User.PredefinedGroups.Everybody)
+        if ((potentialOwner.memberId == PredefinedGroups.AllWorkspaceMembers
+          || potentialOwner.memberId == PredefinedGroups.Everybody)
           && !addedWsMembers) {
           // Alle WorkspaceMember kommen als potentielle Rolleninhaber in Frage
           for (let member of workspaceDetails.extras.members) {
@@ -203,15 +211,15 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
             });
           }
           addedWsMembers = true; // Merken, damit Member nicht mehrfach hinzugefügt werden, falls beide Gruppen genannt werden
-        } else if (PH.Tools.isUserId(potentialOwner.memberId)) {
+        } else if (isUserId(potentialOwner.memberId)) {
           owners.potentialRoleOwner.push({
             memberId: potentialOwner.memberId,
             displayName: potentialOwner.displayName
           });
-        } else if (PH.Tools.isGroupId(potentialOwner.memberId)) {
-          PH.Assert.error("nicht implementiert");
+        } else if (isGroupId(potentialOwner.memberId)) {
+          error("nicht implementiert");
         } else
-          PH.Assert.error("ungültiger Aufruf?!");
+          error("ungültiger Aufruf?!");
       }
       allOwners[role] = owners;
     }
@@ -220,71 +228,71 @@ export function getPotentialRoleOwners(workspaceDetails: PH.Workspace.WorkspaceD
   return allOwners;
 }
 
-export function isProcessOwner(process: PH.Process.ProcessDetails): boolean {
+export function isProcessOwner(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return ((process.userRights & PH.Process.ProcessAccessRights.EditProcess) != 0);
+  return ((process.userRights & ProcessAccessRights.EditProcess) != 0);
 }
 
-export function isProcessManager(process: PH.Process.ProcessDetails): boolean {
+export function isProcessManager(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
   // owner are managers
-  return isProcessOwner(process) || ((process.userRights & PH.Process.ProcessAccessRights.ManageProcess) != 0);
+  return isProcessOwner(process) || ((process.userRights & ProcessAccessRights.ManageProcess) != 0);
 }
 
-export function canViewProcess(process: PH.Process.ProcessDetails): boolean {
+export function canViewProcess(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return ((process.userRights & PH.Process.ProcessAccessRights.ViewProcess) != 0);
+  return ((process.userRights & ProcessAccessRights.ViewProcess) != 0);
 }
 
-export function canEditProcess(process: PH.Process.ProcessDetails): boolean {
+export function canEditProcess(process: ProcessDetails): boolean {
   return isProcessOwner(process);
 }
 
-export function canSimulateProcess(process: PH.Process.ProcessDetails): boolean {
+export function canSimulateProcess(process: ProcessDetails): boolean {
   // Currently everybody is allowed to simulate
   return process != null && !process.isNewProcess;
 }
 
-export function canStartProcess(process: PH.Process.ProcessDetails): boolean {
+export function canStartProcess(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
   // Only users in the start lane may start the process - even administrators don't inherit that right!
-  return ((process.userRights & PH.Process.ProcessAccessRights.StartProcess) != 0);
+  return ((process.userRights & ProcessAccessRights.StartProcess) != 0);
 }
 
-export function canViewTodos(process: PH.Process.ProcessDetails): boolean {
+export function canViewTodos(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return canViewAllTodos(process) || ((process.userRights & PH.Process.ProcessAccessRights.ViewTodos) != 0);
+  return canViewAllTodos(process) || ((process.userRights & ProcessAccessRights.ViewTodos) != 0);
 }
-export function canViewAllTodos(process: PH.Process.ProcessDetails): boolean {
+export function canViewAllTodos(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return ((process.userRights & PH.Process.ProcessAccessRights.ViewAllTodos) != 0);
+  return ((process.userRights & ProcessAccessRights.ViewAllTodos) != 0);
 }
 
-export function canViewInstances(process: PH.Process.ProcessDetails): boolean {
+export function canViewInstances(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return canViewAllInstances(process) || ((process.userRights & PH.Process.ProcessAccessRights.ViewInstances) != 0);
+  return canViewAllInstances(process) || ((process.userRights & ProcessAccessRights.ViewInstances) != 0);
 }
-export function canViewAllInstances(process: PH.Process.ProcessDetails): boolean {
+export function canViewAllInstances(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return ((process.userRights & PH.Process.ProcessAccessRights.ViewAllInstances) != 0);
+  return ((process.userRights & ProcessAccessRights.ViewAllInstances) != 0);
 }
 
-export function canDeleteProcess(process: PH.Process.ProcessDetails): boolean {
+export function canDeleteProcess(process: ProcessDetails): boolean {
   return isProcessOwner(process) && !process.isNewProcess;
 }

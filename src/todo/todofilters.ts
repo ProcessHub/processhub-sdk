@@ -1,9 +1,12 @@
 // helper functions to filter and/or sort todos
 import { TodoDetails, TodoType } from "./todointerfaces";
-import * as PH from "../";
+import { InstanceDetails } from "../instance/instanceinterfaces";
+import { UserDetails } from "../user/index";
+import { filterInstancesForProcess, filterRemainingInstancesForWorkspace } from "../instance/instancefilters";
+import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
 
 // temporary solution during switch from todo.instance -> instances.todos
-export function getTodosFromInstances(instances: PH.Instance.InstanceDetails[]): TodoDetails[] {
+export function getTodosFromInstances(instances: InstanceDetails[]): TodoDetails[] {
   let todos: TodoDetails[] = [];
 
   instances.map(instance => {
@@ -16,7 +19,7 @@ export function getTodosFromInstances(instances: PH.Instance.InstanceDetails[]):
 }
 
 // todos the user owns or can claim
-export function filterUserTodos(todos: PH.Todo.TodoDetails[], user: PH.User.UserDetails): TodoDetails[] {
+export function filterUserTodos(todos: TodoDetails[], user: UserDetails): TodoDetails[] {
   if (!user || !todos)
     return [];
 
@@ -27,7 +30,7 @@ export function filterUserTodos(todos: PH.Todo.TodoDetails[], user: PH.User.User
 }
 
 // all todos for an instance
-export function filterTodosForInstance(instances: PH.Instance.InstanceDetails[], instanceId: string): TodoDetails[] {
+export function filterTodosForInstance(instances: InstanceDetails[], instanceId: string): TodoDetails[] {
   if (!instances)
     return [];
 
@@ -38,18 +41,18 @@ export function filterTodosForInstance(instances: PH.Instance.InstanceDetails[],
 }
 
 // all todos for a process
-export function filterTodosForProcess(instances: PH.Instance.InstanceDetails[], processId: string): TodoDetails[] {
+export function filterTodosForProcess(instances: InstanceDetails[], processId: string): TodoDetails[] {
   if (!instances)
     return [];
 
-  let filteredInstances = PH.Instance.filterInstancesForProcess(instances, processId);
+  let filteredInstances = filterInstancesForProcess(instances, processId);
     
   let filteredTodos = getTodosFromInstances(filteredInstances);
   return filteredTodos;
 }
 
 // all todos for workspace
-export function filterTodosForWorkspace(instances: PH.Instance.InstanceDetails[], workspaceId: string): TodoDetails[] {
+export function filterTodosForWorkspace(instances: InstanceDetails[], workspaceId: string): TodoDetails[] {
   if (!instances)
     return [];
     
@@ -60,11 +63,11 @@ export function filterTodosForWorkspace(instances: PH.Instance.InstanceDetails[]
 }
 
 // todos for processes in workspace that user can not see
-export function filterRemainingTodosForWorkspace(instances: PH.Instance.InstanceDetails[], workspace: PH.Workspace.WorkspaceDetails): TodoDetails[] {
+export function filterRemainingTodosForWorkspace(instances: InstanceDetails[], workspace: WorkspaceDetails): TodoDetails[] {
   if (!instances)
     return [];
 
-  let filteredInstances = PH.Instance.filterRemainingInstancesForWorkspace(instances, workspace);
+  let filteredInstances = filterRemainingInstancesForWorkspace(instances, workspace);
 
   let workspaceTodos = getTodosFromInstances(filteredInstances);
   return workspaceTodos;

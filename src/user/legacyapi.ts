@@ -1,4 +1,6 @@
-import * as PH from "../";
+import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
+import { UserDetails, UserExtras } from "./userinterfaces";
+import { UserMessages } from "./phclient";
 
 export const UserRequestRoutes = {
   Login: "/api/user/login",
@@ -15,72 +17,72 @@ export const UserRequestRoutes = {
 };
 export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 
-export interface CreateUserRequest extends PH.LegacyApi.BaseRequest {
-  userDetails: PH.User.UserDetails;
+export interface CreateUserRequest extends BaseRequest {
+  userDetails: UserDetails;
   password: string;
 }
 
-export interface LoginRequest extends PH.LegacyApi.BaseRequest {
+export interface LoginRequest extends BaseRequest {
   mail: string;
   password: string;
   accessToken: string;
   isGoogleAccessToken: boolean;
 }
-export interface LoginReply extends PH.LegacyApi.BaseMessage {
-  userDetails?: PH.User.UserDetails;
+export interface LoginReply extends BaseMessage {
+  userDetails?: UserDetails;
   accessToken?: string;
 }
 
-export interface LoadUserRequest extends PH.LegacyApi.BaseRequest {
+export interface LoadUserRequest extends BaseRequest {
   userId?: string; // if null userId will be determined by server from AccessToken cookie
-  getExtras: PH.User.UserExtras;
+  getExtras: UserExtras;
 }
-export interface LoadUserReply extends PH.LegacyApi.BaseMessage {
-  userDetails?: PH.User.UserDetails;
-}
-
-export interface UpdateUserRequest extends PH.LegacyApi.BaseRequest {
-  userDetails: PH.User.UserDetails;
-}
-export interface UpdateUserReply extends PH.LegacyApi.BaseMessage {
+export interface LoadUserReply extends BaseMessage {
+  userDetails?: UserDetails;
 }
 
-export interface UpdatePasswordRequest extends PH.LegacyApi.BaseRequest {
+export interface UpdateUserRequest extends BaseRequest {
+  userDetails: UserDetails;
+}
+export interface UpdateUserReply extends BaseMessage {
+}
+
+export interface UpdatePasswordRequest extends BaseRequest {
   userId: string;
   oldPassword: string;
   newPassword: string;
 }
-export interface UpdatePasswordReply extends PH.LegacyApi.BaseMessage {
+export interface UpdatePasswordReply extends BaseMessage {
 }
 
-export interface UserLoadedMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.User.UserMessages;
-  user?: PH.User.UserDetails;
+export interface UserLoadedMessage extends BaseMessage {
+  type: UserMessages;
+  user?: UserDetails;
 }
 
-export interface SendPasswordResetLinkRequest extends PH.LegacyApi.BaseMessage {
+export interface SendPasswordResetLinkRequest extends BaseMessage {
   email: string;
 }
 
-export interface ResetPasswordRequest extends PH.LegacyApi.BaseMessage {
+export interface ResetPasswordRequest extends BaseMessage {
   secret: string;
   password: string;
 }
 
-export interface ConfirmMailRequest extends PH.LegacyApi.BaseMessage {
+export interface ConfirmMailRequest extends BaseMessage {
   token: string;
 }
 
-export interface UploadProfilePictureRequest extends PH.LegacyApi.BaseMessage {
+export interface UploadProfilePictureRequest extends BaseMessage {
   data: string;
 }
 
 // nes websocket messages
-export interface RemoveInstanceMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.User.UserMessages;
+export interface RemoveInstanceMessage extends BaseMessage {
+  type: UserMessages;
   instanceId: string;
 }
-export interface NewInstanceMessage extends PH.LegacyApi.BaseMessage {
-  type: PH.User.UserMessages;
+export interface NewInstanceMessage extends BaseMessage {
+  type: UserMessages;
   instanceId: string;
 }

@@ -1,4 +1,5 @@
-import * as PH from "../";
+import { ProcessDetails } from "../process/processinterfaces";
+import { UserDetails } from "../user/userinterfaces";
 
 // WorkspaceType
 export const WorkspaceType = {
@@ -20,7 +21,7 @@ export interface WorkspaceDetails {
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
-    processes?: PH.Process.ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
+    processes?: ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
     settings?: WorkspaceSettings;
   };
 }
@@ -43,6 +44,6 @@ export enum WorkspaceRole {
 }
 
 export interface WorkspaceMember {
-  userDetails: PH.User.UserDetails;
+  userDetails: UserDetails;
   memberRole: WorkspaceRole;
 }

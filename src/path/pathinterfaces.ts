@@ -1,6 +1,8 @@
-import * as PH from "../";
+import { strEnum } from "../tools/types";
+import { WorkspaceView } from "../workspace/phclient";
+import { ProcessView } from "../process/phclient";
 
-export const Page = PH.Tools.strEnum([
+export const Page = strEnum([
   "ErrorPage",
   "StartPage",
   "SigninPage",
@@ -11,7 +13,7 @@ export const Page = PH.Tools.strEnum([
 ]);
 export type Page = keyof typeof Page;
 
-export type View = PH.Workspace.WorkspaceView | PH.Process.ProcessView;
+export type View = WorkspaceView | ProcessView;
 
 export interface PathDetails {
   page?: Page;

@@ -1,5 +1,6 @@
 import { assert } from "chai";
-import * as PH from "../";
+import { fieldContentsExcerpt, parseInstanceMailAddress, getInstanceMailAddress } from "./instancetools";
+import { createId } from "../tools/guid";
 
 describe("sdk", function () {
   describe("instance", function () {
@@ -10,8 +11,8 @@ describe("sdk", function () {
           let instance: any = {
             extras: {}
           };
-          assert.equal(PH.Instance.fieldContentsExcerpt(null, 100), "");  // fault tolerant
-          assert.equal(PH.Instance.fieldContentsExcerpt(instance, 100), ""); 
+          assert.equal(fieldContentsExcerpt(null, 100), "");  // fault tolerant
+          assert.equal(fieldContentsExcerpt(instance, 100), ""); 
 
           instance.extras.fieldContents = {
             "feld1": "test",
@@ -20,23 +21,23 @@ describe("sdk", function () {
             "feld3": "http://link", // ignores links
             "feld4": "test2"
           };
-          assert.equal(PH.Instance.fieldContentsExcerpt(instance, 100), "test / test2"); 
+          assert.equal(fieldContentsExcerpt(instance, 100), "test / test2"); 
 
-          assert.equal(PH.Instance.fieldContentsExcerpt(instance, 8), "test /..."); 
+          assert.equal(fieldContentsExcerpt(instance, 8), "test /..."); 
         });
       });
 
       describe("parseInstanceMailAddress", function () {
         it("should return 0 if not an instance mail address", function () {
-          assert.equal(PH.Instance.parseInstanceMailAddress("test@processhub.com"), null);          
+          assert.equal(parseInstanceMailAddress("test@processhub.com"), null);          
         });
 
         it("should parse instanceId from mail address", function () {
-          let id = PH.Tools.createId();
-          assert.equal(PH.Instance.parseInstanceMailAddress(PH.Instance.getInstanceMailAddress(id).toUpperCase()), id); // ignore case
+          let id = createId();
+          assert.equal(parseInstanceMailAddress(getInstanceMailAddress(id).toUpperCase()), id); // ignore case
 
           // null on invalid ids
-          assert.equal(PH.Instance.parseInstanceMailAddress(PH.Instance.getInstanceMailAddress(id + "0").toUpperCase()), null);           
+          assert.equal(parseInstanceMailAddress(getInstanceMailAddress(id + "0").toUpperCase()), null);           
         });
       });
     });

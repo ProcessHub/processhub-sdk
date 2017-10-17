@@ -1,4 +1,4 @@
-import * as PH from "../";
+import { BaseRequest, BaseMessage, ApiResult } from "../legacyapi/apirequests";
 
 export const MailerRequestRoutes = {
   SendMailTemplate: "/api/mailer/send-mail-template"
@@ -6,13 +6,13 @@ export const MailerRequestRoutes = {
 export type MailerRequestRoutes = keyof typeof MailerRequestRoutes;
 
 // Reply: ApiReply
-export interface SendMailTemplateRerquestRequest extends PH.LegacyApi.BaseRequest {
+export interface SendMailTemplateRerquestRequest extends BaseRequest {
   
 }
 
 export const MAILERSENT_MESSAGE = "MailerSentMessage";
-export interface MailerSentMessage extends PH.LegacyApi.BaseMessage {
+export interface MailerSentMessage extends BaseMessage {
   type: "MailerSentMessage";
-  error?: PH.LegacyApi.ApiResult;  // Nur gesetzt, falls Seitenaufruf gescheitert
+  error?: ApiResult;  // Nur gesetzt, falls Seitenaufruf gescheitert
 }
 

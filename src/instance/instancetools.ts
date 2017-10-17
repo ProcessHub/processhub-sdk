@@ -1,22 +1,24 @@
-import * as PH from "../";
 import { isFieldValue } from "../data/datainterfaces";
+import { InstanceDetails } from "./instanceinterfaces";
+import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
+import { isId } from "../tools/guid";
 
 export function getInstanceMailAddress(instanceId: string): string {
   return "i-" + instanceId.toLowerCase() + "@processhub.net";
 }
 export function parseInstanceMailAddress(mail: string): string {
   mail = mail.toLowerCase();
-  if (!PH.Tools.isValidMailAddress(mail) || !mail.startsWith("i-"))
+  if (!isValidMailAddress(mail) || !mail.startsWith("i-"))
     return null;
 
   let instanceId = mail.split("@")[0].substr(2).toUpperCase();
-  if (PH.Tools.isId(instanceId))
+  if (isId(instanceId))
     return instanceId;
   else
     return null;
 }
 
-export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
+export function latestActivityAt(instance: InstanceDetails): Date {
   let latestAt = instance.latestCommentAt;
   if (latestAt == null)
     latestAt = instance.createdAt;
@@ -32,7 +34,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
 }
 
 // roleID == null -> check for any role membership
-export function isRoleOwner(userId: string, roleId: string, instance: PH.Instance.InstanceDetails): boolean {
+export function isRoleOwner(userId: string, roleId: string, instance: InstanceDetails): boolean {
   if (instance.extras.roleOwners == null)
     return false;
 
@@ -56,7 +58,7 @@ export function isRoleOwner(userId: string, roleId: string, instance: PH.Instanc
   return false;
 }
 
-export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxLen: number): string {
+export function fieldContentsExcerpt(instance: InstanceDetails, maxLen: number): string {
   if (instance == null || instance.extras.fieldContents == null)
     return "";
 
@@ -87,5 +89,5 @@ export function fieldContentsExcerpt(instance: PH.Instance.InstanceDetails, maxL
   if (excerpt.endsWith(" / "))
     excerpt = excerpt.substr(0, excerpt.length - 3);
 
-  return PH.Tools.stringExcerpt(excerpt, maxLen);
+  return stringExcerpt(excerpt, maxLen);
 }

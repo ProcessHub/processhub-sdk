@@ -1,28 +1,33 @@
-import * as PH from "./";
+import { PathDetails } from "./path/pathinterfaces";
+import { UserDetails } from "./user/userinterfaces";
+import { WorkspaceDetails } from "./workspace/workspaceinterfaces";
+import { ProcessDetails } from "./process/processinterfaces";
+import { InstanceDetails } from "./instance/instanceinterfaces";
+import { TodoDetails } from "./todo/todointerfaces";
 
 export interface CoreEnvironment {
-  path: PH.Path.PathDetails;
-  user: PH.User.UserDetails;
+  path: PathDetails;
+  user: UserDetails;
 }
 
 export interface WorkspaceEnvironment extends CoreEnvironment {
-  workspace: PH.Workspace.WorkspaceDetails;
+  workspace: WorkspaceDetails;
 }
 
 export interface ProcessEnvironment extends CoreEnvironment {
-  workspace: PH.Workspace.WorkspaceDetails;  
-  process: PH.Process.ProcessDetails;
+  workspace: WorkspaceDetails;  
+  process: ProcessDetails;
 }
 
 export interface InstanceEnvironment extends CoreEnvironment {
-  workspace: PH.Workspace.WorkspaceDetails;  
-  process: PH.Process.ProcessDetails;
-  instance: PH.Instance.InstanceDetails;
+  workspace: WorkspaceDetails;  
+  process: ProcessDetails;
+  instance: InstanceDetails;
 }
 
 export interface TodoEnvironment extends CoreEnvironment {
-  workspace: PH.Workspace.WorkspaceDetails;  
-  process: PH.Process.ProcessDetails;
-  instance: PH.Instance.InstanceDetails;
-  todo: PH.Todo.TodoDetails;
+  workspace: WorkspaceDetails;  
+  process: ProcessDetails;
+  instance: InstanceDetails;
+  todo: TodoDetails;
 }

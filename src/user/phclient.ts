@@ -1,10 +1,12 @@
+import { UserDetails } from "./userinterfaces";
+import { ApiResult } from "../legacyapi/apirequests";
+
 // Internal objects used by ProcessHub client and server
-import * as PH from "../";
 
 export class UserState {
-  currentUser?: PH.User.UserDetails;
+  currentUser?: UserDetails;
 
-  lastApiResult?: PH.LegacyApi.ApiResult;  // result of the last Api call
+  lastApiResult?: ApiResult;  // result of the last Api call
 
   // updated in reducers, helps React to detect state changes
   cacheState?: string;

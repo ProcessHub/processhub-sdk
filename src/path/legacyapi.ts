@@ -1,4 +1,7 @@
-import * as PH from "../";
+import { BaseRequest, BaseReply, BaseMessage, ApiResult } from "../legacyapi/apirequests";
+import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
+import { ProcessDetails } from "../process/processinterfaces";
+import { PathDetails } from "./pathinterfaces";
 
 export const PathRequestRoutes = {
   Load: "/api/path/load"
@@ -6,21 +9,21 @@ export const PathRequestRoutes = {
 export type PathRequestRoutes = keyof typeof PathRequestRoutes;
 
 // Reply: ApiReply
-export interface GetPathRequest extends PH.LegacyApi.BaseRequest {
+export interface GetPathRequest extends BaseRequest {
   path: string;
 }
 
-export interface GetPathReply extends PH.LegacyApi.BaseReply {
-  workspace?: PH.Workspace.WorkspaceDetails;
-  process?: PH.Process.ProcessDetails;
+export interface GetPathReply extends BaseReply {
+  workspace?: WorkspaceDetails;
+  process?: ProcessDetails;
 
-  pathDetails?: PH.Path.PathDetails; // Falls ein nicht vorhandener Path angefragt wird, sind pathStack und pathDetails = null
+  pathDetails?: PathDetails; // Falls ein nicht vorhandener Path angefragt wird, sind pathStack und pathDetails = null
 }
 
 export const PATHLOADED_MESSAGE = "PathLoadedMessage";
-export interface PathLoadedMessage extends PH.LegacyApi.BaseMessage {
+export interface PathLoadedMessage extends BaseMessage {
   type: "PathLoadedMessage";
-  pathDetails?: PH.Path.PathDetails;
-  error?: PH.LegacyApi.ApiResult;  // Nur gesetzt, falls Seitenaufruf gescheitert
+  pathDetails?: PathDetails;
+  error?: ApiResult;  // Nur gesetzt, falls Seitenaufruf gescheitert
 }
 

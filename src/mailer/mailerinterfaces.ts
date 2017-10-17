@@ -1,4 +1,5 @@
-import * as PH from "../";
+import { FieldContentMap } from "../data/datainterfaces";
+import { BaseRequest, BaseReply } from "../legacyapi/apirequests";
 
 export enum MailSender {
   FromProcessHub,   // noreply@processhub.com
@@ -15,15 +16,15 @@ export interface MessageNotificationMailContent extends MailContent {
   instanceUrl?: string;  
   todoTitle: string;
   todoDescription: string;
-  fieldContents?: PH.Data.FieldContentMap;
+  fieldContents?: FieldContentMap;
   subject: string;
 }
 
-export interface SendMailTemplateRequest extends MessageNotificationMailContent, PH.LegacyApi.BaseRequest {
+export interface SendMailTemplateRequest extends MessageNotificationMailContent, BaseRequest {
   receiverIdOrMails: string[];
   instanceId?: string;
 }
 
-export interface SendMailTemplateReply extends PH.LegacyApi.BaseReply {
+export interface SendMailTemplateReply extends BaseReply {
   errorMessage?: string;
 }

@@ -1,4 +1,5 @@
-import * as PH from "../";
+import { BaseMessage, BaseRequest } from "../legacyapi/apirequests";
+import { ProcessDetails, ProcessExtras, ProcessResult } from "./processinterfaces";
 
 // API routes
 export const ProcessRequestRoutes = {
@@ -16,68 +17,68 @@ export const ProcessRequestRoutes = {
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
 // API request/reply objects
-export interface ProcessReply extends PH.LegacyApi.BaseMessage {
+export interface ProcessReply extends BaseMessage {
   errorMessage?: string;
 }
 
-export interface CreateProcessRequest extends PH.LegacyApi.BaseRequest {
-  processDetails: PH.Process.ProcessDetails;
+export interface CreateProcessRequest extends BaseRequest {
+  processDetails: ProcessDetails;
 }
 
-export interface DeleteProcessRequest extends PH.LegacyApi.BaseRequest {
+export interface DeleteProcessRequest extends BaseRequest {
   processId: string;
 }
 
-export interface GetProcessDetailsRequest extends PH.LegacyApi.BaseRequest {
+export interface GetProcessDetailsRequest extends BaseRequest {
   processId: string;
   instanceId?: string;
-  getExtras?: PH.Process.ProcessExtras;
+  getExtras?: ProcessExtras;
 }
-export interface GetProcessDetailsFromUrlRequest extends PH.LegacyApi.BaseRequest {
+export interface GetProcessDetailsFromUrlRequest extends BaseRequest {
   processUrl: string;
 }
 export interface GetProcessDetailsReply extends ProcessReply {
-  processDetails?: PH.Process.ProcessDetails;
+  processDetails?: ProcessDetails;
 }
 
 export interface GetPublicProcessesReply extends ProcessReply {
-  processes?: PH.Process.ProcessDetails[];
+  processes?: ProcessDetails[];
 }
 
-export interface UpdateProcessDetailsRequest extends PH.LegacyApi.BaseRequest {
-  processDetails: PH.Process.ProcessDetails;
+export interface UpdateProcessDetailsRequest extends BaseRequest {
+  processDetails: ProcessDetails;
 }
 
-export interface CopyProcessRequest extends PH.LegacyApi.BaseRequest {
+export interface CopyProcessRequest extends BaseRequest {
   processId: string;
   targetWorkspaceId: string;
   displayName: string;
 }
 
-export interface RateProcessRequest extends PH.LegacyApi.BaseRequest {
+export interface RateProcessRequest extends BaseRequest {
   processId: string;
   ratingDiff: number;
 }
 
-export interface UploadFileRequest extends PH.LegacyApi.BaseRequest {
+export interface UploadFileRequest extends BaseRequest {
   processId: string;
   fileName: string;
   data: string;
 }
 
-export interface DeleteFileRequest extends PH.LegacyApi.BaseRequest {
+export interface DeleteFileRequest extends BaseRequest {
   processId: string;
   attachmentId: string;
 }
 
 export const PROCESSLOADED_MESSAGE = "ProcessLoadedMessage";
-export interface ProcessLoadedMessage extends PH.LegacyApi.BaseMessage {
+export interface ProcessLoadedMessage extends BaseMessage {
   type: "ProcessLoadedMessage";
-  processDetails?: PH.Process.ProcessDetails;
+  processDetails?: ProcessDetails;
 }
 
 export interface LoadTemplateReply {
-  result: PH.Process.ProcessResult;
+  result: ProcessResult;
   bpmnXml: any;
   bpmnContext: any;
 }

@@ -1,7 +1,7 @@
-import * as PH from "../";
+import { ProcessDetails, ProcessViewAccess } from "./processinterfaces";
 
 // Init settings that don't exist with default values
-export function initSettings(process: PH.Process.ProcessDetails): void {
+export function initSettings(process: ProcessDetails): void {
   if (!process.extras.settings)
     process.extras.settings = {};
 
@@ -10,12 +10,12 @@ export function initSettings(process: PH.Process.ProcessDetails): void {
   if (!settings.dashboard)
     settings.dashboard = {};
   if (!settings.dashboard.dashBoardAccess)
-    settings.dashboard.dashBoardAccess = PH.Process.ProcessViewAccess.ParticipantsSeeTheirs;
+    settings.dashboard.dashBoardAccess = ProcessViewAccess.ParticipantsSeeTheirs;
   if (!settings.dashboard.showComments)
     settings.dashboard.showComments = 0;
     
   if (!settings.archive)
     settings.archive = {};
   if (!settings.archive.archiveAccess)
-    settings.archive.archiveAccess = PH.Process.ProcessViewAccess.ParticipantsSeeTheirs;
+    settings.archive.archiveAccess = ProcessViewAccess.ParticipantsSeeTheirs;
 }
