@@ -1,5 +1,4 @@
 import { combineReducers } from "redux";
-import { rootStore, configureStore } from "./rootstore";
 import { userReducer } from "../user/userreducer";
 import { pathReducer } from "../path/pathreducer";
 import { processReducer } from "../process/processreducer";
@@ -22,18 +21,13 @@ export class RootState {
 
 // Aus irgendwelchen Gründen dürfen die Reducer hier nicht mit User.userReducer angesprochen werden,
 // sondern müssen separat importiert werden!
-const rootReducer = combineReducers({
+export const rootReducer = combineReducers({
   workspaceState: workspaceReducer,
   userState: userReducer,
   processState: processReducer,
   pathState: pathReducer,
   instanceState: instanceReducer
 });
-
-export const ResetStore = "RESETSTORE";
-export function resetStore(): void {
-  rootStore.dispatch({ type: ResetStore });
-}
 
 export function initState(): RootState {
   return {
@@ -45,6 +39,3 @@ export function initState(): RootState {
   };
 }
 
-export function getRootReducer(): Reducer<{}> {
-  return rootReducer;
-}

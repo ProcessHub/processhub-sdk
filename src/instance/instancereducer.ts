@@ -8,15 +8,16 @@ import { createId } from "../tools/guid";
 import { RemoveInstanceMessage, NewInstanceMessage } from "../user/legacyapi";
 import { UserMessages } from "../user/phclient";
 import { InstanceActionType } from "./instanceactions";
+import { ResetStore } from "../statehandler/actions";
 
 export function instanceReducer(instanceState: InstanceState, action: any): InstanceState {
 
-  if (instanceState == null || action && action.type == StateHandler.ResetStore) {
+  if (instanceState == null || action && action.type == ResetStore) {
     // init state
     instanceState = new InstanceState();
     instanceState.instanceCache = {};    
   }
-  if (action == null || action.type == StateHandler.ResetStore)
+  if (action == null || action.type == ResetStore)
     return instanceState;
 
   switch (action.type) {

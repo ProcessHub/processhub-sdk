@@ -1,14 +1,19 @@
 import { Store, createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
 import { routerMiddleware } from "react-router-redux";
-import { RootState, getRootReducer, initState } from "./rootreducer";
+import { RootState, initState, rootReducer } from "./rootreducer";
+import { ResetStore } from "./actions";
+
+export function resetStore(): void {
+  rootStore.dispatch({ type: ResetStore });
+}
 
 export function configureStore(initialState: any): Store<any> {
   const history: History = null;
   const reduxRouterMiddleware = routerMiddleware(<any>history);
 
   const store = createStore(
-    getRootReducer(),
+    rootReducer,
     initialState,
     applyMiddleware(
       thunk,

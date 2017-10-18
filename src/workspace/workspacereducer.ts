@@ -5,15 +5,16 @@ import * as StateHandler from "../statehandler";
 import { WorkspaceState, WorkspaceMessages } from "./phclient";
 import { WorkspaceLoadedMessage } from "./legacyapi";
 import { createId } from "../tools/guid";
+import { ResetStore } from "../statehandler/actions";
 
 export function workspaceReducer(workspaceState: WorkspaceState, action: any): WorkspaceState {
 
-  if (workspaceState == null || action && action.type == StateHandler.ResetStore) {
+  if (workspaceState == null || action && action.type == ResetStore) {
     // init state
     workspaceState = new WorkspaceState();
     workspaceState.workspaceCache = {};
   }
-  if (action == null || action.type == StateHandler.ResetStore)
+  if (action == null || action.type == ResetStore)
     return workspaceState;
 
   switch (action.type) {

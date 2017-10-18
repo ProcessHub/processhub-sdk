@@ -8,14 +8,15 @@ import { UserLoadedMessage } from "./legacyapi";
 import { createId } from "../tools/guid";
 import { UserActionsType } from "./userinterfaces";
 import { isTrue } from "../tools/assert";
+import { ResetStore } from "../statehandler/actions";
 
 export function userReducer(userState: UserState, action: any): UserState {
 
-  if (userState == null || action && action.type == StateHandler.ResetStore) {
+  if (userState == null || action && action.type == ResetStore) {
     // init state
     userState = new UserState();
   }
-  if (action == null || action.type == StateHandler.ResetStore)
+  if (action == null || action.type == ResetStore)
     return userState;
 
   switch (action.type) {

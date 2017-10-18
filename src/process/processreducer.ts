@@ -6,15 +6,16 @@ import * as update from "immutability-helper";
 import { isTrue } from "../tools/assert";
 import { PROCESSLOADED_MESSAGE, ProcessLoadedMessage } from "./legacyapi";
 import { createId } from "../tools/guid";
+import { ResetStore } from "../statehandler/actions";
 
 export function processReducer(processState: Process.ProcessState, action: any): Process.ProcessState {
 
-  if (processState == null || action && action.type == StateHandler.ResetStore) {
+  if (processState == null || action && action.type == ResetStore) {
     // init state
     processState = new Process.ProcessState();
     processState.processCache = {};
   }
-  if (action == null || action.type == StateHandler.ResetStore)
+  if (action == null || action.type == ResetStore)
     return processState;
 
   isTrue(action.type != null, "processReducer: action.type is undefined");
