@@ -21,7 +21,7 @@ const testProcess: ProcessDetails = {
   extras: {}
 };
 
-describe("common", function () {
+describe("sdk", function () {
   describe("process", function () {
     describe("processReducer", function () {
 
