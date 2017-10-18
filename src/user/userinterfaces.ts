@@ -16,6 +16,7 @@ export class UserDetails {
     workspaces?: WorkspaceDetails[];
     accessToken?: string;  // only used during login
     instances?: InstanceDetails[];
+    viewStates?: ViewStates;
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean;
@@ -25,7 +26,8 @@ export enum UserExtras {
   None = 0,
   ExtrasWorkspaces = 1 << 0, // get workspaces where user is a member
   ExtrasWorkspacesWithMembersAndProcesses = 1 << 1,  // the sidebar needs fully loaded workspaces to display
-  ExtrasInstances = 1 << 2  // instances visible to user
+  ExtrasInstances = 1 << 2,  // instances visible to user
+  ExtrasViewStates = 1 << 3  // user-specific last opening-dates of instances, used to sync notifications on all user devices
 }
 
 export const emptyUser: UserDetails = {
@@ -89,3 +91,13 @@ export const UserActionsType = {
   Failed: "USERACTION_FAILED" // Allgemeiner Api-Aufruffehler
 };
 export type UserActionsType = keyof typeof UserActionsType;
+
+// tracks last view datetimes of instances and/or processes
+// used to sync notification states across devices
+export interface ViewState {
+  lastViewedAt?: Date;  // last time instancePopup for this instance was opened
+  pinned?: boolean;  // instance/process pinned to sidebar?
+}
+export interface ViewStates {
+  [objectId: string]: ViewState;
+}

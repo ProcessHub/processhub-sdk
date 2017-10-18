@@ -18,21 +18,6 @@ export function parseInstanceMailAddress(mail: string): string {
     return null;
 }
 
-export function latestActivityAt(instance: InstanceDetails): Date {
-  let latestAt = instance.latestCommentAt;
-  if (latestAt == null)
-    latestAt = instance.createdAt;
-
-  if (instance.extras.todos) {
-    instance.extras.todos.map(todo => { 
-      if (latestAt == null || todo.createdAt > latestAt)
-        latestAt = todo.createdAt; 
-    });
-  }
-
-  return latestAt;
-}
-
 // roleID == null -> check for any role membership
 export function isRoleOwner(userId: string, roleId: string, instance: InstanceDetails): boolean {
   if (instance.extras.roleOwners == null)
@@ -50,10 +35,10 @@ export function isRoleOwner(userId: string, roleId: string, instance: InstanceDe
   if (instance.extras.roleOwners[roleId] == null)
     return false;
 
-  instance.extras.roleOwners[roleId].map(roleOwner => {
+  for (let roleOwner of instance.extras.roleOwners[roleId]) {
     if (roleOwner.memberId == userId)
       return true;
-  });
+  }
 
   return false;
 }

@@ -70,9 +70,15 @@ export function updateInstanceAction(instanceDetails: InstanceDetails): <S>(disp
       instanceDetails: instanceDetails
     });
 
-    dispatch<InstanceActionUpdateInstance>({
-      type: InstanceActionType.UpdateInstance as InstanceActionType
-    });
+    if (response.instance)
+      response.instance = mergeInstanceToCache(response.instance);
+
+    let message: InstanceLoadedMessage = {
+      type: INSTANCELOADED_MESSAGE,
+      instance: response.instance
+    };
+    dispatch(message);
+
     return response;
   };
 }
