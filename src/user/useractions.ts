@@ -194,9 +194,8 @@ export function createUserAction(mail: string, realName: string, password: strin
       dispatch(response);
       // Nur Weiterleiten, wenn erfolgreich
       if (response.result === Api.ApiResult.API_OK) {
-        // Steht in Unittests nicht zur Verfügung
-        if (browserHistory != null) {
-          browserHistory.push("/");
+        if (typeof window !== "undefined") { // window not available in unit tests
+          window.location.href = "/";
         }
       }
     }).catch((reason: any) => error(reason));
