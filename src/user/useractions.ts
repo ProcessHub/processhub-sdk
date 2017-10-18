@@ -86,7 +86,7 @@ export function loginUserAction(mail: string, password: string, accessToken: str
     dispatch(response);
     if (response.type == UserActionsType.LoggedIn && typeof window !== "undefined") { // window not available in unit tests
       // Reload on successful login to clean old cache
-      // window.location.href = "/";
+      window.location.href = "/";
     }
     return response;
   };
