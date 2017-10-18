@@ -30,3 +30,7 @@ import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
 export * from "./environment";
+import * as StateHandler from "./statehandler";
+export { StateHandler };
+import * as Notification from "./notification";
+export { Notification };
