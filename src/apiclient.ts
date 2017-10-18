@@ -28,17 +28,12 @@ export function getApiClient(host: string = "https://app.processhub.com", access
     }
     apiClient = new ApolloClient({
       dataIdFromObject: (object: any) => object.id,
-      networkInterface: createNetworkInterface({
-        uri: host + "/graphql",
-        opts: {   
-          credentials: "include",
-        }
-      }),
+      networkInterface: networkInterface,
       // http://dev.apollodata.com/react/cache-updates.html#cacheRedirect
       // (TypeScript) https://github.com/apollographql/apollo-client/blob/master/test/proxy.ts
       customResolvers: {
         Query: {
-          user: (_, args) => toIdValue(args.id),
+          user: (_, args) => toIdValue(args.userId),
         },
       },
       addTypename: true
