@@ -41,10 +41,5 @@ Moment.locale("de", {
 });
 
 export function momentFromUtcDate(dateInUtc: Date): string {
-  const offset = new Date().getTimezoneOffset();
-  const nowMs = Date.now();
-  const nowMsUtc = nowMs + (offset * 60 * 1000);
-  const nowUtc = new Date(nowMsUtc);
-
-  return Moment(dateInUtc).from(Moment(nowUtc));
+  return Moment(dateInUtc).from(Moment(new Date()));
 }
