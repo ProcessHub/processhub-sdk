@@ -2,7 +2,7 @@ import * as PH from "../";
 
 // helper functions to detect if notification symbols should be displayed in dashboard
 
-export async function processHasBeenViewed(processEnv: PH.ProcessEnvironment): Promise<void> {
+export async function processHasBeenViewed(processEnv: PH.ProcessEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
   if (processEnv.user == null)
     return;
     
@@ -20,9 +20,10 @@ export async function processHasBeenViewed(processEnv: PH.ProcessEnvironment): P
     processEnv.user.extras.viewStates[processEnv.process.processId] = {};
 
   processEnv.user.extras.viewStates[processEnv.process.processId].lastViewedAt = newDate;
+  await actionHandler.updateViewState(processEnv.process.processId, processEnv.user.extras.viewStates[processEnv.process.processId]);
 }
 
-export async function remainingInstancesHaveBeenViewed(workspaceEnv: PH.WorkspaceEnvironment): Promise<void> {
+export async function remainingInstancesHaveBeenViewed(workspaceEnv: PH.WorkspaceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
   if (workspaceEnv.user == null)
     return;
     
@@ -40,6 +41,7 @@ export async function remainingInstancesHaveBeenViewed(workspaceEnv: PH.Workspac
     workspaceEnv.user.extras.viewStates[workspaceEnv.workspace.workspaceId] = {};
 
   workspaceEnv.user.extras.viewStates[workspaceEnv.workspace.workspaceId].lastViewedAt = newDate;
+  await actionHandler.updateViewState(workspaceEnv.workspace.workspaceId, workspaceEnv.user.extras.viewStates[workspaceEnv.workspace.workspaceId]);
 }
 
 export function processLastViewedAt(processEnv: PH.ProcessEnvironment): Date {

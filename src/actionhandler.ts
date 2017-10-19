@@ -41,13 +41,15 @@ export class IActionHandler {
     return result;
   }  
 
-  async updateViewState(viewState: PH.User.ViewState): Promise<void> {
+  async updateViewState(objectId: string, viewState: PH.User.ViewState): Promise<void> {
     const mutation = gql`
-      mutation updateViewState($viewState: ViewState!) {
-        updateViewState(viewState: $viewState)
+      mutation updateViewState($objectId: ID!, $viewState: ViewState) {
+        updateViewState(objectId: $objectId, viewState: $viewState)
       }`;
 
-    await this.apiMutation(mutation, { viewState: viewState });
+    // don't wait for server response
+    // tslint:disable-next-line:no-floating-promises
+    this.apiMutation(mutation, { objectId: objectId, viewState: viewState });
   }
 
   // Load Page "/@workspace/..."

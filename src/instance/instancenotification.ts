@@ -25,7 +25,7 @@ export function latestNewActivityAt(instanceEnv: PH.InstanceEnvironment): Date {
   return latestActivityAt(instanceEnv.instance);
 }
 
-export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment): Promise<void> {
+export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
   if (instanceEnv.user == null)
     return;
     
@@ -43,6 +43,7 @@ export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment)
     instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId] = {};
 
   instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId].lastViewedAt = newDate;
+  await actionHandler.updateViewState(instanceEnv.instance.instanceId, instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId]);
 }
 
 export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date {
