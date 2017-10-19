@@ -95,8 +95,11 @@ export type UserActionsType = keyof typeof UserActionsType;
 // tracks last view datetimes of instances and/or processes
 // used to sync notification states across devices
 export interface ViewState {
+  instanceId?: string;  // usually only ONE id makes sense: a view states belongs to an instance OR a process
+  processId?: string;
+
   lastViewedAt?: Date;  // last time instancePopup for this instance was opened
-  pinned?: boolean;  // instance/process pinned to sidebar?
+  isPinned?: boolean;  // instance/process pinned to sidebar?
 }
 export interface ViewStates {
   [objectId: string]: ViewState;
