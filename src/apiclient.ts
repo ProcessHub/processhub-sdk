@@ -1,16 +1,17 @@
 import "fetch-everywhere";
-import { ApolloClient, createNetworkInterface, toIdValue } from "apollo-client";
+import { ApolloClient, createNetworkInterface, toIdValue, NetworkStatus } from "apollo-client";
 
 // All clients share the same backend client to optimize caching
-// -> The first instance defines the host, further host settings will be ignored.
-let apiClient: ApolloClient = null;
+// a new client is only created it the host changes (should only happen in tests)
+let _apiClient: ApolloClient = null;
+let _apiHost: string = null;
 
 export type ApiClient = ApolloClient;
 
-export function getApiClient(host: string = "https://app.processhub.com", accessToken: string = null): ApiClient {
-  if (!apiClient) {
+export function getApiClient(apiHost: string = "https://app.processhub.com", accessToken?: string): ApiClient {
+  if (!_apiClient || apiHost != _apiHost) {
     const networkInterface = createNetworkInterface({
-        uri: host + "/graphql",
+        uri: apiHost + "/graphql",
         opts: {   
           credentials: "include",
         }
@@ -26,7 +27,8 @@ export function getApiClient(host: string = "https://app.processhub.com", access
         }
       }]);
     }
-    apiClient = new ApolloClient({
+    _apiHost = apiHost;
+    _apiClient = new ApolloClient({
       dataIdFromObject: (object: any) => object.id,
       networkInterface: networkInterface,
       // http://dev.apollodata.com/react/cache-updates.html#cacheRedirect
@@ -39,5 +41,5 @@ export function getApiClient(host: string = "https://app.processhub.com", access
       addTypename: true
     });
   } 
-  return apiClient;
+  return _apiClient;
 }

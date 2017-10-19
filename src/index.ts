@@ -1,5 +1,5 @@
 /// <reference path="./process/types/index.d.ts" />
-export * from "./iactionhandler";
+export * from "./actionhandler";
 export * from "./frameactionhandler";
 export * from "./tl";
 import * as Tools from "./tools";

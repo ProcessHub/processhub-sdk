@@ -1,4 +1,4 @@
-import { IActionHandler, ExtrasRequest } from "./iactionhandler";
+import { IActionHandler, ExtrasRequest } from "./actionhandler";
 import { createId } from "./tools/guid";
 import { CoreEnvironment } from "./environment";
 
@@ -6,12 +6,13 @@ let waitingCommands: { [key: string]: any } = {};
 let parenthost: string = "*";
 
 // Plugins are hosted in iFrames for security reasons. Communication with ProcessHub is handled by messaging.
-export class FrameActionHandler implements IActionHandler {
+export class FrameActionHandler extends IActionHandler {
   plugin: string;
   component: string;
   parenthost: string;
 
   constructor(plugin: string, component: string) {
+    super();
     this.plugin = plugin;
     this.component = component;
 
@@ -54,16 +55,5 @@ export class FrameActionHandler implements IActionHandler {
     }
   }
 
-  gotoPage(path: string) {
-  }
-
-  
-  async requestExtras(environment: CoreEnvironment, requestedExtras: ExtrasRequest, forceReload?: boolean) {
-  }
-
-  async openInstancePopup(instanceId: string): Promise<void> {
-  }
-  closeInstancePopup() {}
-  
 }
 
