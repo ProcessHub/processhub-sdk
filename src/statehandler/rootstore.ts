@@ -4,8 +4,8 @@ import { routerMiddleware } from "react-router-redux";
 import { RootState, initState, rootReducer } from "./rootreducer";
 import { ResetStore } from "./actions";
 
-export function resetStore(): void {
-  rootStore.dispatch({ type: ResetStore });
+export async function resetStore(): Promise<void> {
+  await rootStore.dispatch({ type: ResetStore });
 }
 
 export function configureStore(initialState: any): Store<any> {
