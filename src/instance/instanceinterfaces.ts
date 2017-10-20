@@ -43,6 +43,7 @@ export enum InstanceExtras {
 }
 
 export interface ResumeInstanceDetails {
+  workspaceId: string;
   instanceId: string;
   completedTodoId: string;
   // Sollte nächste Activity Exclusive Gateway sein, wird hier die Entscheidung über den SF mitgeteilt

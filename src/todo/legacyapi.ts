@@ -25,6 +25,7 @@ export interface GetSimulationTodosReply extends TodoReply {
 }
 
 export interface SetTodoPriorityRequest {
+  workspaceId: string;
   todoId: string;
   priority: number;
 }
