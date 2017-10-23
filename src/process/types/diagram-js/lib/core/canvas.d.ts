@@ -3,6 +3,7 @@ declare module "diagram-js/lib/core/Canvas" {
 
   import EventBus = require("diagram-js/lib/core/EventBus");
   import GraphicsFactory = require("diagram-js/lib/core/GraphicsFactory");
+  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
   import { IBounds, IPoint } from "diagram-js";
   import { Base, Connection, Shape } from "diagram-js/lib/model";
 
@@ -29,7 +30,7 @@ declare module "diagram-js/lib/core/Canvas" {
      * @param {GraphicsFactory} graphicsFactory
      * @param {ElementRegistry} elementRegistry
      */
-    constructor(config: Canvas.IConfig, eventBus: EventBus, graphicsFactory: GraphicsFactory, elementRegistry: {});
+    constructor(config: Canvas.IConfig, eventBus: EventBus, graphicsFactory: GraphicsFactory, elementRegistry: ElementRegistry);
 
     /**
      * Returns the default layer on which
