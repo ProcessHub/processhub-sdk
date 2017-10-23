@@ -148,29 +148,12 @@ export async function logoutUser() {
 // Diese eigentliche Action wird für Mock-Store Tests genutzt
 export function logoutUserAction() {
   return function (dispatch: any) {
-    // rootState löschen, damit keine Daten mehr im Cache sind
-    let removeMsg: Workspace.WorkspaceLoadedMessage = {
-      type: Workspace.WorkspaceMessages.WorkspaceLoadedMessage as Workspace.WorkspaceMessages,
-      workspace: null
-    };
-    dispatch(removeMsg);
-    let removeMsg2: Process.ProcessLoadedMessage = {
-      type: Process.PROCESSLOADED_MESSAGE,
-      processDetails: null
-    };
-    dispatch(removeMsg2);
-    let removeMsg3: Instance.InstanceLoadedMessage = {
-      type: Instance.INSTANCELOADED_MESSAGE,
-      instance: null
-    };
-    dispatch(removeMsg3);
 
     return Api.postJson(UserRequestRoutes.Logout, null).then(() => {
-      dispatch(<UserActionFailed>{
-        type: UserActionsType.LoggedOut
-      });
-      if (browserHistory != null) // Steht in Unittests nicht zur Verfügung
-        browserHistory.push("/signin");
+      if (typeof window !== "undefined") { // window not available in unit tests
+        // Reload on successful login to clean old cache
+        window.location.href = "/signin";
+      }
     }).catch(reason => error(reason));
   };
 }

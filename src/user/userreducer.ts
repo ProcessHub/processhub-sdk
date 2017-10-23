@@ -43,12 +43,6 @@ export function userReducer(userState: UserState, action: any): UserState {
         lastApiResult: { $set: Api.ApiResult.API_OK }
       });
 
-    case UserActionsType.LoggedOut:
-      return update(userState, {
-        currentUser: { $set: null },
-        lastApiResult: { $set: Api.ApiResult.API_OK }
-      });
-
     case UserActionsType.Failed:
       let failedAction: UserActionFailed = action;
       isTrue(failedAction.result != null, "failedAction.result is null");

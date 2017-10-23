@@ -87,7 +87,6 @@ export function getPredefinedGroupName(groupId: string): string {
 // Sonderfall weil seltsamerweise undefined wenn es in den Actions ist
 export const UserActionsType = {
   LoggedIn: "USERACTION_LOGGEDIN", // Benutzer hat sich erfolgreich angemeldet
-  LoggedOut: "USERACTION_LOGGEDOUT",
   Failed: "USERACTION_FAILED" // Allgemeiner Api-Aufruffehler
 };
 export type UserActionsType = keyof typeof UserActionsType;
