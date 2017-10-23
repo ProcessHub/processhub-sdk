@@ -1,8 +1,9 @@
 import * as update from "immutability-helper";
 import * as _ from "lodash";
-import { ResetStore } from "../statehandler/actions";
-import { PATHLOADED_MESSAGE, PathLoadedMessage } from "./legacyapi";
 import { PathState } from "./phclient";
+import { PATHLOADED_MESSAGE, PathLoadedMessage } from "./legacyapi";
+import * as StateHandler from "../statehandler";
+import { ResetStore } from "../statehandler/actions";
 
 export function pathReducer(pathState: PathState, action: any): PathState {
 

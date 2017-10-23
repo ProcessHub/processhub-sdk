@@ -1,6 +1,6 @@
+import { InstanceDetails } from "./instanceinterfaces";
 import { UserDetails } from "../user/userinterfaces";
 import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
-import { InstanceDetails } from "./instanceinterfaces";
 
 // helper functions to filter and/or sort instances
 
@@ -17,7 +17,7 @@ export function filterUserInstances(instances: InstanceDetails[], user: UserDeta
       instance.extras.todos.map(todo => {
         if (!instanceAdded && (todo.userId === user.userId))
           filteredInstances.push(instance);
-      });
+      });    
     }
   });
 
@@ -45,8 +45,8 @@ export function filterInstancesForWorkspace(instances: InstanceDetails[], worksp
   if (!instances)
     return [];
 
-  let filteredInstances: InstanceDetails[] = instances.filter(instance => instance.workspaceId == workspaceId && !instance.isSimulation);
-  return filteredInstances;
+    let filteredInstances: InstanceDetails[] = instances.filter(instance => instance.workspaceId == workspaceId && !instance.isSimulation);
+    return filteredInstances;
 }
 
 // instances for processes in workspace that user can not see
@@ -58,7 +58,7 @@ export function filterRemainingInstancesForWorkspace(instances: InstanceDetails[
 
   if (workspace.extras.processes) {
     // getOtherItems lists the todos for processes without read access - filter the others
-    let filteredInstances: InstanceDetails[] = [];
+    let filteredInstances: InstanceDetails[] = []; 
     workspaceInstances.map(instance => {
       if (workspace.extras.processes.find(process => process.processId == instance.processId) == null) {
         filteredInstances.push(instance);

@@ -1,4 +1,6 @@
 // Internal objects used by ProcessHub client and server
+import { Page } from "../path";
+import { Tools } from "../";
 import { InstanceDetails } from "./instanceinterfaces";
 
 export class InstanceState {

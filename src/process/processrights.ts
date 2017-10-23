@@ -1,12 +1,12 @@
 import { tl } from "../tl";
-import { error, isFalse, isTrue } from "../tools/assert";
-import { isGroupId, isUserId } from "../tools/guid";
-import { PredefinedGroups } from "../user/index";
 import { UserDetails } from "../user/userinterfaces";
-import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterfaces";
-import { isWorkspaceMember } from "../workspace/workspacerights";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
+import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterfaces";
+import { PredefinedGroups } from "../user/index";
 import { ProcessDetails } from "./processinterfaces";
+import { isWorkspaceMember } from "../workspace/workspacerights";
+import { isFalse, isTrue, error } from "../tools/assert";
+import { isGroupId, isUserId } from "../tools/guid";
 
 export enum ProcessAccessRights {
   None = 0,

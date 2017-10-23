@@ -1,8 +1,8 @@
-import { Dispatch } from "redux";
 import * as Api from "../legacyapi";
-import { mergeInstanceToCache, rootStore } from "../statehandler";
-import { InstanceDetails, InstanceExtras, ResumeInstanceDetails } from "./instanceinterfaces";
-import { AbortReply, ExecuteReply, GetInstanceDetailsReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, ProcessEngineApiRoutes, UpdateInstanceReply } from "./legacyapi";
+import { rootStore, mergeInstanceToCache } from "../statehandler";
+import { Dispatch } from "redux";
+import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
+import { ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
 
 export const InstanceActionType = {
   Execute: "INSTANCEACTION_EXECUTE",
@@ -151,8 +151,8 @@ export async function loadInstance(instanceId: string, instanceExtras?: Instance
       instanceExtras -= InstanceExtras.ExtrasRoleOwners;
     if ((instanceExtras & InstanceExtras.ExtrasAuditTrail) && cachedInstance.extras.auditTrail)
       instanceExtras -= InstanceExtras.ExtrasAuditTrail;
-    if ((instanceExtras & InstanceExtras.ExtrasTodos) && cachedInstance.extras.todos)
-      instanceExtras -= InstanceExtras.ExtrasTodos;
+      if ((instanceExtras & InstanceExtras.ExtrasTodos) && cachedInstance.extras.todos)
+      instanceExtras -= InstanceExtras.ExtrasTodos;      
     if ((instanceExtras & InstanceExtras.ExtrasRoleOwnersWithNames) && cachedInstance.extras.roleOwners) {
       // names available?
       for (let roleId in cachedInstance.extras.roleOwners) {

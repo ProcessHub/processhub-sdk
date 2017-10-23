@@ -2,11 +2,11 @@ import BpmnModdle = require("bpmn-moddle");
 import { assert } from "chai";
 import { Bpmn } from "../../process/bpmn";
 import { isId } from "../../tools/guid";
+import { BpmnProcess, BPMN_USERTASK, BPMN_ENDEVENT, BPMN_STARTEVENT, BPMN_LANE } from "./bpmnprocess";
 import { LoadTemplateReply } from "../legacyapi";
+import { createBpmnTemplate } from "./bpmnmoddlehelper";
 import { RowDetails } from "../phclient";
 import { TaskSettings } from "../processinterfaces";
-import { createBpmnTemplate } from "./bpmnmoddlehelper";
-import { BPMN_ENDEVENT, BPMN_LANE, BPMN_STARTEVENT, BPMN_USERTASK, BpmnProcess } from "./bpmnprocess";
 
 async function createTestBpmnProcess(): Promise<BpmnProcess> {
   let bpmnProcess: BpmnProcess = new BpmnProcess();

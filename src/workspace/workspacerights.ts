@@ -1,4 +1,4 @@
-import { WorkspaceDetails, WorkspaceRole, WorkspaceType } from "./workspaceinterfaces";
+import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
 
 export function isFreeWorkspace(workspace: WorkspaceDetails): boolean {
   if (workspace == null)

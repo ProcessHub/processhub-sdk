@@ -1,7 +1,7 @@
 import { isFieldValue } from "../data/datainterfaces";
-import { isId } from "../tools/guid";
-import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { InstanceDetails } from "./instanceinterfaces";
+import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
+import { isId } from "../tools/guid";
 
 export function getInstanceMailAddress(instanceId: string): string {
   return "i-" + instanceId.toLowerCase() + "@processhub.net";

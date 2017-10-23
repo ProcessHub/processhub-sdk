@@ -1,8 +1,8 @@
-import { routerMiddleware } from "react-router-redux";
-import { applyMiddleware, createStore, Store } from "redux";
+import { Store, createStore, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
+import { routerMiddleware } from "react-router-redux";
+import { RootState, initState, rootReducer } from "./rootreducer";
 import { ResetStore } from "./actions";
-import { initState, rootReducer, RootState } from "./rootreducer";
 
 export async function resetStore(): Promise<void> {
   await rootStore.dispatch({ type: ResetStore });

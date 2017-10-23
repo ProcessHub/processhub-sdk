@@ -1,7 +1,7 @@
-import { Bpmn } from "modeler/bpmn/bpmn";
-import { FieldContentMap } from "../data";
 import { RoleOwnerMap } from "../process";
 import { DecisionTask, TodoDetails } from "../todo";
+import { FieldContentMap } from "../data";
+import { Bpmn } from "modeler/bpmn/bpmn";
 import { UserDetails } from "../user/userinterfaces";
 
 export enum State {

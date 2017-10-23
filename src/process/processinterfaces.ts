@@ -1,7 +1,8 @@
-import { InstanceDetails } from "../instance";
-import { strEnum } from "../tools/types";
-import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { ProcessAccessRights, ProcessRoles } from "./processrights";
+import { InstanceDetails } from "../instance";
+import { TodoDetails } from "../todo";
+import { BpmnProcess } from "./bpmn/bpmnprocess";
+import { strEnum } from "../tools/types";
 
 
 export interface ProcessAttachment {

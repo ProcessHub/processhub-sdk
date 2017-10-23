@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
-import { Reducer } from "redux";
-import { instanceReducer } from "../instance/instancereducer";
-import { InstanceState } from "../instance/phclient";
-import { pathReducer } from "../path/pathreducer";
-import { PathState } from "../path/phclient";
-import { ProcessState } from "../process/phclient";
-import { processReducer } from "../process/processreducer";
-import { UserState } from "../user/phclient";
 import { userReducer } from "../user/userreducer";
-import { WorkspaceState } from "../workspace/phclient";
+import { pathReducer } from "../path/pathreducer";
+import { processReducer } from "../process/processreducer";
+import { instanceReducer } from "../instance/instancereducer";
 import { workspaceReducer } from "../workspace/workspacereducer";
+import { WorkspaceState } from "../workspace/phclient";
+import { ProcessState } from "../process/phclient";
+import { UserState } from "../user/phclient";
+import { PathState } from "../path/phclient";
+import { InstanceState } from "../instance/phclient";
+import { Reducer } from "redux";
 
 export class RootState {
   workspaceState: WorkspaceState;

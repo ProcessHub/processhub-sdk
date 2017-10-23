@@ -1,5 +1,6 @@
-import { IActionHandler } from "./actionhandler";
+import { IActionHandler, ExtrasRequest } from "./actionhandler";
 import { createId } from "./tools/guid";
+import { CoreEnvironment } from "./environment";
 
 let waitingCommands: { [key: string]: any } = {};
 let parenthost: string = "*";
@@ -23,18 +24,18 @@ export class FrameActionHandler extends IActionHandler {
   }
 
   private sendMessage(command: string, jsonData: any): void {
-    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + createId() + ":" + JSON.stringify(jsonData), parenthost);
+    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + createId() + ":" + JSON.stringify(jsonData), parenthost);    
   }
 
   // Command format: 
   // [PHActionHandler]Plugin_Component:command:commandId:{data}
   private sendCommand(command: string, jsonData: any): Promise<any> {
-    let commandId = createId();
+    let commandId = createId(); 
     window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
 
-    return new Promise<any>(function (resolve, reject) {
+    return new Promise<any>(function(resolve, reject) {
       waitingCommands[commandId] = resolve;
-    });
+    });    
   }
 
   // Reply format:
@@ -43,7 +44,7 @@ export class FrameActionHandler extends IActionHandler {
     if (event && event.data && event.data.length >= 18 && event.data.substr(0, 18) == "[PHActionReceiver]") {
       let message = event.data.substr(18);
       let split = message.split(":");
-      let command = split[1];
+      let command = split[1];    
       let commandId = split[2];
       let data = JSON.parse(message.substr(split[0].length + split[1].length + split[2].length + 3));
       console.log("ActionReplyListener.Received: " + command + " " + commandId);

@@ -1,14 +1,14 @@
-import * as update from "immutability-helper";
 import * as _ from "lodash";
+import * as update from "immutability-helper";
 import * as Api from "../legacyapi";
+import { UserActionLoggedIn, UserActionFailed } from "./useractions";
 import * as StateHandler from "../statehandler";
-import { ResetStore } from "../statehandler/actions";
-import { isTrue } from "../tools/assert";
-import { createId } from "../tools/guid";
+import { UserState, UserMessages } from "./phclient";
 import { UserLoadedMessage } from "./legacyapi";
-import { UserMessages, UserState } from "./phclient";
-import { UserActionFailed, UserActionLoggedIn } from "./useractions";
+import { createId } from "../tools/guid";
 import { UserActionsType } from "./userinterfaces";
+import { isTrue } from "../tools/assert";
+import { ResetStore } from "../statehandler/actions";
 
 export function userReducer(userState: UserState, action: any): UserState {
 

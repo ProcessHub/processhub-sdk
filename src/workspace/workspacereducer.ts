@@ -1,10 +1,11 @@
-import * as update from "immutability-helper";
 import * as _ from "lodash";
+import * as update from "immutability-helper";
+import * as WorkspaceActions from "./workspaceactions";
 import * as StateHandler from "../statehandler";
-import { ResetStore } from "../statehandler/actions";
-import { createId } from "../tools/guid";
+import { WorkspaceState, WorkspaceMessages } from "./phclient";
 import { WorkspaceLoadedMessage } from "./legacyapi";
-import { WorkspaceMessages, WorkspaceState } from "./phclient";
+import { createId } from "../tools/guid";
+import { ResetStore } from "../statehandler/actions";
 
 export function workspaceReducer(workspaceState: WorkspaceState, action: any): WorkspaceState {
 

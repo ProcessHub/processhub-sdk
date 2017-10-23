@@ -1,6 +1,6 @@
-import { ProcessView } from "../process/phclient";
 import { strEnum } from "../tools/types";
 import { WorkspaceView } from "../workspace/phclient";
+import { ProcessView } from "../process/phclient";
 
 export const Page = strEnum([
   "ErrorPage",

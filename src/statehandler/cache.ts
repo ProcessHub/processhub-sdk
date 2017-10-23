@@ -1,8 +1,8 @@
-import { InstanceDetails } from "../instance/instanceinterfaces";
-import { ProcessDetails } from "../process/processinterfaces";
+import { rootStore } from "./rootstore";
 import { UserDetails } from "../user/userinterfaces";
 import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
-import { rootStore } from "./rootstore";
+import { ProcessDetails } from "../process/processinterfaces";
+import { InstanceDetails } from "../instance/instanceinterfaces";
 
 export function mergeUserToCache(user: UserDetails): UserDetails {
   if (user == null)

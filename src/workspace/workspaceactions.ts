@@ -1,10 +1,10 @@
 import * as _ from "lodash";
-import { Dispatch } from "redux";
-import * as Api from "../legacyapi";
 import * as StateHandler from "../statehandler";
-import { CreateWorkspaceRequest, DeleteWorkspaceRequest, InviteWorkspaceMemberRequest, LoadWorkspaceReply, LoadWorkspaceRequest, RemoveWorkspaceMemberRequest, SetMemberRoleRequest, UpdateWorkspaceRequest, WorkspaceLoadedMessage, WorkspaceRequestRoutes } from "./legacyapi";
+import * as Api from "../legacyapi";
+import { Dispatch } from "redux";
+import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
+import { LoadWorkspaceReply, LoadWorkspaceRequest, WorkspaceRequestRoutes, RemoveWorkspaceMemberRequest, WorkspaceLoadedMessage, InviteWorkspaceMemberRequest, CreateWorkspaceRequest, UpdateWorkspaceRequest, DeleteWorkspaceRequest, SetMemberRoleRequest } from "./legacyapi";
 import { WorkspaceMessages } from "./phclient";
-import { WorkspaceDetails, WorkspaceExtras, WorkspaceRole } from "./workspaceinterfaces";
 
 export async function requireWorkspaceMembers() {
   // Fordert die Workspace-Members an, falls diese in PathState.currentWorkspace noch nicht enthalten sind.

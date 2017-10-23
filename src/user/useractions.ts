@@ -1,13 +1,17 @@
-import { Dispatch } from "redux";
-import * as Api from "../legacyapi";
-import * as StateHandler from "../statehandler";
 import { rootStore } from "../statehandler";
+import { Dispatch } from "redux";
+import { browserHistory } from "react-router";
+import * as StateHandler from "../statehandler";
+import * as Workspace from "../workspace";
+import * as Process from "../process";
+import * as Instance from "../instance";
+import * as Api from "../legacyapi";
+import { LoadUserReply, UserActionsType } from "./index";
+import { UserDetails, UserExtras } from "./userinterfaces";
+import { UpdateUserReply, UserRequestRoutes, UpdateUserRequest, UpdatePasswordReply, UpdatePasswordRequest, UserLoadedMessage, LoginReply, LoginRequest, LoadUserRequest, UploadProfilePictureRequest, CreateUserRequest } from "./legacyapi";
+import { UserMessages } from "./phclient";
 import { error } from "../tools/assert";
 import { createUserId } from "../tools/guid";
-import { LoadUserReply, UserActionsType } from "./index";
-import { CreateUserRequest, LoadUserRequest, LoginReply, LoginRequest, UpdatePasswordReply, UpdatePasswordRequest, UpdateUserReply, UpdateUserRequest, UploadProfilePictureRequest, UserLoadedMessage, UserRequestRoutes } from "./legacyapi";
-import { UserMessages } from "./phclient";
-import { UserDetails, UserExtras } from "./userinterfaces";
 
 export interface UserActionLoggedIn {
   type: string; // USERACTION_LOGGEDIN

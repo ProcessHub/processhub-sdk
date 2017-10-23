@@ -1,4 +1,4 @@
-import { FieldContentMap, isFieldValue } from "./datainterfaces";
+import { FieldContentMap, isFieldValue, FieldValue } from "./datainterfaces";
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
     if (inputString == null)
@@ -11,7 +11,6 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     const groupIndexForFieldName = 2;
   
     let match;
-    // tslint:disable-next-line:no-conditional-assignment
     while ((match = regex.exec(inputString)) !== null) {
       if (match.index === regex.lastIndex)
         regex.lastIndex++;
