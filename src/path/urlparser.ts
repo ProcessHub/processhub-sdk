@@ -1,8 +1,8 @@
-import { PathDetails, Page, NotificationLinkElements } from "./pathinterfaces";
+import { isValidProcessView, ProcessView } from "../process/phclient";
 import { isTrue } from "../tools/assert";
-import { ProcessView, isValidProcessView } from "../process/phclient";
-import { WorkspaceView, isValidWorkspaceView } from "../workspace/phclient";
 import { isId } from "../tools/guid";
+import { isValidWorkspaceView, WorkspaceView } from "../workspace/phclient";
+import { NotificationLinkElements, Page, PathDetails } from "./pathinterfaces";
 
 export function parseUrl(fullUrl: string): PathDetails {
   let path: PathDetails = {};

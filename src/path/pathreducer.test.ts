@@ -1,11 +1,11 @@
 import { assert } from "chai";
-import { PathState } from "./phclient";
-import { PathLoadedMessage, PATHLOADED_MESSAGE } from "./legacyapi";
-import { parseUrl } from "./urlparser";
-import { pathReducer } from "./pathreducer";
-import { Page } from "./pathinterfaces";
-import { WorkspaceView } from "../workspace/phclient";
 import { ApiResult } from "../legacyapi/apirequests";
+import { WorkspaceView } from "../workspace/phclient";
+import { PATHLOADED_MESSAGE, PathLoadedMessage } from "./legacyapi";
+import { Page } from "./pathinterfaces";
+import { pathReducer } from "./pathreducer";
+import { PathState } from "./phclient";
+import { parseUrl } from "./urlparser";
 
 describe("sdk", function () {
   describe("path", function () {

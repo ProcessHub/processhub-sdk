@@ -1,11 +1,11 @@
 import { assert } from "chai";
-import { ProcessDetails } from "./processinterfaces";
-import { ProcessAccessRights } from "./processrights";
-import { ProcessState } from "./phclient";
-import { processReducer } from "./processreducer";
+import { createId, createWorkspaceId } from "../tools/guid";
 import { PROCESSLOADED_MESSAGE } from "./legacyapi";
-import { createWorkspaceId, createId } from "../tools/guid";
+import { ProcessState } from "./phclient";
 import { ProcessActionType } from "./processactions";
+import { ProcessDetails } from "./processinterfaces";
+import { processReducer } from "./processreducer";
+import { ProcessAccessRights } from "./processrights";
 
 const testProcess: ProcessDetails = {
   workspaceId: "2000E70281B5ECD5",

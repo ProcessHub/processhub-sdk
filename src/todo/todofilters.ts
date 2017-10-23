@@ -1,9 +1,9 @@
 // helper functions to filter and/or sort todos
-import { TodoDetails, TodoType } from "./todointerfaces";
+import { filterInstancesForProcess, filterRemainingInstancesForWorkspace } from "../instance/instancefilters";
 import { InstanceDetails } from "../instance/instanceinterfaces";
 import { UserDetails } from "../user/index";
-import { filterInstancesForProcess, filterRemainingInstancesForWorkspace } from "../instance/instancefilters";
 import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
+import { TodoDetails, TodoType } from "./todointerfaces";
 
 // temporary solution during switch from todo.instance -> instances.todos
 export function getTodosFromInstances(instances: InstanceDetails[]): TodoDetails[] {
@@ -34,8 +34,8 @@ export function filterTodosForInstance(instances: InstanceDetails[], instanceId:
   if (!instances)
     return [];
 
-    let todos = getTodosFromInstances(instances);
-    
+  let todos = getTodosFromInstances(instances);
+
   let filteredTodos: TodoDetails[] = todos.filter(todo => todo.instanceId == instanceId);
   return filteredTodos;
 }
@@ -46,7 +46,7 @@ export function filterTodosForProcess(instances: InstanceDetails[], processId: s
     return [];
 
   let filteredInstances = filterInstancesForProcess(instances, processId);
-    
+
   let filteredTodos = getTodosFromInstances(filteredInstances);
   return filteredTodos;
 }
@@ -55,9 +55,9 @@ export function filterTodosForProcess(instances: InstanceDetails[], processId: s
 export function filterTodosForWorkspace(instances: InstanceDetails[], workspaceId: string): TodoDetails[] {
   if (!instances)
     return [];
-    
+
   let todos = getTodosFromInstances(instances);
-  
+
   let filteredTodos: TodoDetails[] = todos.filter(todo => todo.workspaceId == workspaceId);
   return filteredTodos;
 }

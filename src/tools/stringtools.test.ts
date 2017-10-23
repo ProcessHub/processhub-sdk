@@ -1,6 +1,5 @@
 import { assert } from "chai";
 import * as StringTools from "./stringtools";
-import { FieldContentMap } from "../data/datainterfaces";
 
 describe("sdk", function () {
   describe("tools", function () {
@@ -29,7 +28,7 @@ describe("sdk", function () {
           assert.isTrue(StringTools.isValidWorkspaceName("Thomas-Te-st"), "3");
           assert.isFalse(StringTools.isValidWorkspaceName(""), "4");
           assert.isFalse(StringTools.isValidWorkspaceName(null), "5");
-          assert.isFalse(StringTools.isValidWorkspaceName("thom")), "6";   // Mindestlänge 5 Zeichen
+          assert.isFalse(StringTools.isValidWorkspaceName("thom"), "6");   // Mindestlänge 5 Zeichen
           assert.isFalse(StringTools.isValidWorkspaceName("Thomas Test"), "7");
           assert.isFalse(StringTools.isValidWorkspaceName("Thomas@Test"), "8");
           assert.isFalse(StringTools.isValidWorkspaceName("32Thomas"), "9");  // Muss mit Buchstaben beginnen

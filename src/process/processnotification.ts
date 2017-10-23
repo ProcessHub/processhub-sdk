@@ -1,28 +1,32 @@
-import * as PH from "../";
+import { InstanceEnvironment, WorkspaceEnvironment } from "../environment";
+import { ProcessEnvironment } from "../index";
+import { filterInstancesForProcess, filterRemainingInstancesForWorkspace } from "../instance/instancefilters";
+import { notifyNewInstanceTodos } from "../instance/instancenotification";
+
 
 // helper functions to detect if notification symbols should be displayed in dashboard
 
-export function notifyNewInstanceComments(processEnv: PH.ProcessEnvironment): boolean {
-  let instances = PH.Instance.filterInstancesForProcess(processEnv.user.extras.instances, processEnv.process.processId);  
+export function notifyNewInstanceComments(processEnv: ProcessEnvironment): boolean {
+  let instances = filterInstancesForProcess(processEnv.user.extras.instances, processEnv.process.processId);  
   let notify = false;
 
   instances.map(instance => {
-    let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
-    if (PH.Instance.notifyNewInstanceComments(instanceEnv))
+    let instanceEnv: InstanceEnvironment = { instance: instance, ...processEnv};
+    if (notifyNewInstanceComments(instanceEnv))
       notify = true;
   });  
 
   return notify;
 }
 
-export function notifyNewProcessTodos(processEnv: PH.ProcessEnvironment): boolean {
+export function notifyNewProcessTodos(processEnv: ProcessEnvironment): boolean {
 
-  let instances = PH.Instance.filterInstancesForProcess(processEnv.user.extras.instances, processEnv.process.processId);  
+  let instances = filterInstancesForProcess(processEnv.user.extras.instances, processEnv.process.processId);  
   let notify = false;
   
   instances.map(instance => {
-    let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
-    if (PH.Instance.notifyNewInstanceTodos(instanceEnv))
+    let instanceEnv: InstanceEnvironment = { instance: instance, ...processEnv};
+    if (notifyNewInstanceTodos(instanceEnv))
       notify = true;
   });  
 
@@ -30,15 +34,14 @@ export function notifyNewProcessTodos(processEnv: PH.ProcessEnvironment): boolea
 }
 
 // notification for workspace-instances analog to filterRemainingInstancesForWorkspace
-export function notifyNewRemainingInstanceComments(workspaceEnv: PH.WorkspaceEnvironment): boolean {
-  let newestInstanceActivity: Date = null;
+export function notifyNewRemainingInstanceComments(workspaceEnv: WorkspaceEnvironment): boolean {
 
-  let instances = PH.Instance.filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);  
+  let instances = filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);  
   let notify = false;
 
   instances.map(instance => {
-    let instanceEnv: PH.InstanceEnvironment = { instance: instance, process: null, ...workspaceEnv};
-    if (PH.Instance.notifyNewInstanceComments(instanceEnv))
+    let instanceEnv: InstanceEnvironment = { instance: instance, process: null, ...workspaceEnv};
+    if (notifyNewInstanceComments(instanceEnv))
       notify = true;
   });  
 
@@ -46,15 +49,14 @@ export function notifyNewRemainingInstanceComments(workspaceEnv: PH.WorkspaceEnv
 }
 
 // notification for workspace-instances analog to filterRemainingInstancesForWorkspace
-export function notifyNewRemainingInstanceTodos(workspaceEnv: PH.WorkspaceEnvironment): boolean {
-  let newestInstanceActivity: Date = null;
+export function notifyNewRemainingInstanceTodos(workspaceEnv: WorkspaceEnvironment): boolean {
 
-  let instances = PH.Instance.filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);  
+  let instances = filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);  
   let notify = false;
 
   instances.map(instance => {
-    let instanceEnv: PH.InstanceEnvironment = { instance: instance, process: null, ...workspaceEnv};
-    if (PH.Instance.notifyNewInstanceTodos(instanceEnv))
+    let instanceEnv: InstanceEnvironment = { instance: instance, process: null, ...workspaceEnv};
+    if (notifyNewInstanceTodos(instanceEnv))
       notify = true;
   });  
 

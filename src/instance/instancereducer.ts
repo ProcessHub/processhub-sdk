@@ -1,14 +1,13 @@
-import * as _ from "lodash";
 import * as update from "immutability-helper";
-import * as StateHandler from "../statehandler";
+import * as _ from "lodash";
 import * as Notification from "../notification";
-import { InstanceState } from "./phclient";
-import { INSTANCELOADED_MESSAGE, InstanceLoadedMessage } from "./legacyapi";
-import { createId } from "../tools/guid";
-import { RemoveInstanceMessage, NewInstanceMessage } from "../user/legacyapi";
-import { UserMessages } from "../user/phclient";
-import { InstanceActionType } from "./instanceactions";
+import * as StateHandler from "../statehandler";
 import { ResetStore } from "../statehandler/actions";
+import { createId } from "../tools/guid";
+import { NewInstanceMessage, RemoveInstanceMessage } from "../user/legacyapi";
+import { UserMessages } from "../user/phclient";
+import { INSTANCELOADED_MESSAGE, InstanceLoadedMessage } from "./legacyapi";
+import { InstanceState } from "./phclient";
 
 export function instanceReducer(instanceState: InstanceState, action: any): InstanceState {
 

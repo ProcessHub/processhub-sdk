@@ -1,6 +1,6 @@
 const Nes = require("nes");
+import { BACKEND_URL, getJson } from "../legacyapi";
 import * as StateHandler from "../statehandler";
-import { BACKEND_URL, getJson, BaseMessage, ApiResult } from "../legacyapi";
 import { UserDetails } from "../user/userinterfaces";
 
 export interface PublishSubscribeRegisterObject {

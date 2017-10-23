@@ -1,8 +1,8 @@
 import { assert } from "chai";
-import { parseUrl, parseNotificationLink } from "./urlparser";
-import { PathDetails, Page } from "./pathinterfaces";
-import { WorkspaceView } from "../workspace/phclient";
 import { ProcessView } from "../process/phclient";
+import { WorkspaceView } from "../workspace/phclient";
+import { Page, PathDetails } from "./pathinterfaces";
+import { parseNotificationLink, parseUrl } from "./urlparser";
 
 describe("sdk", function () {
   describe("path", function () {

@@ -1,5 +1,5 @@
-import { UserDetails } from "./userinterfaces";
 import { ApiResult } from "../legacyapi/apirequests";
+import { UserDetails } from "./userinterfaces";
 
 // Internal objects used by ProcessHub client and server
 

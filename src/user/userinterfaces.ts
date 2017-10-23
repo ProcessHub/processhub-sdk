@@ -1,9 +1,8 @@
-import { WorkspaceDetails } from "../workspace";
-import { TodoDetails } from "../todo";
 import { InstanceDetails } from "../instance/instanceinterfaces";
-import { nullId } from "../tools/guid";
-import { isTrue } from "../tools/assert";
 import { tl } from "../tl";
+import { isTrue } from "../tools/assert";
+import { nullId } from "../tools/guid";
+import { WorkspaceDetails } from "../workspace";
 
 export class UserDetails {
   userId: string;

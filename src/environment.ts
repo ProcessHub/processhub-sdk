@@ -1,9 +1,9 @@
+import { InstanceDetails } from "./instance/instanceinterfaces";
 import { PathDetails } from "./path/pathinterfaces";
+import { ProcessDetails } from "./process/processinterfaces";
+import { TodoDetails } from "./todo/todointerfaces";
 import { UserDetails } from "./user/userinterfaces";
 import { WorkspaceDetails } from "./workspace/workspaceinterfaces";
-import { ProcessDetails } from "./process/processinterfaces";
-import { InstanceDetails } from "./instance/instanceinterfaces";
-import { TodoDetails } from "./todo/todointerfaces";
 
 export interface CoreEnvironment {
   path: PathDetails;

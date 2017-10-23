@@ -1,5 +1,5 @@
-import { WorkspaceDetails } from "./workspaceinterfaces";
 import { tl } from "../tl";
+import { WorkspaceDetails } from "./workspaceinterfaces";
 
 // Internal objects used by ProcessHub client and server
 

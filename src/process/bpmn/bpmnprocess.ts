@@ -1,20 +1,19 @@
-import * as BpmnModdleHelper from "./bpmnmoddlehelper";
-import * as Todo from "../../todo";
-import { LaneDictionary } from "./bpmnprocessdiagram";
-import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
 import BpmnModdle = require("bpmn-moddle");
-import { Bpmn } from "../bpmn";
-
 import { Processhub } from "modeler/bpmn/processhub";
-import { ModdleElementType } from "./bpmnmoddlehelper";
-import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType } from "../processinterfaces";
-import { isTrue, equal } from "../../tools/assert";
-import { tl } from "../../tl";
-import { createId } from "../../tools/guid";
 import { InstanceDetails } from "../../instance/instanceinterfaces";
+import { tl } from "../../tl";
+import * as Todo from "../../todo";
 import { DecisionTask, DecisionTaskTypes, filterTodosForInstance } from "../../todo";
+import { equal, isTrue } from "../../tools/assert";
+import { createId } from "../../tools/guid";
+import { Bpmn } from "../bpmn";
 import { LoadTemplateReply } from "../legacyapi";
 import { RowDetails } from "../phclient";
+import { RunningTaskLane, TaskExtensions, TaskSettings, TaskSettingsValueType, TaskToLaneMapEntry } from "../processinterfaces";
+import * as BpmnModdleHelper from "./bpmnmoddlehelper";
+import { ModdleElementType } from "./bpmnmoddlehelper";
+import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
+import { LaneDictionary } from "./bpmnprocessdiagram";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
@@ -107,15 +106,16 @@ export class BpmnProcess {
             case TaskSettings.SendTaskWithFieldContents:
               returnValue.sendTaskWithFieldContents = child.$body == "true";
               break;
-            case TaskSettings.SendTaskReceiver: {
-              try {
-                returnValue.sendTaskReceiver = JSON.parse(child.$body);
-              } catch (ex) {
-                console.log(ex);
+            case TaskSettings.SendTaskReceiver:
+              {
+                try {
+                  returnValue.sendTaskReceiver = JSON.parse(child.$body);
+                } catch (ex) {
+                  console.log(ex);
 
-                returnValue.sendTaskReceiver = [];
+                  returnValue.sendTaskReceiver = [];
+                }
               }
-            }
               break;
 
             // case Process.TASKSETTINGS_JUMPSETTING:
@@ -902,7 +902,7 @@ export class BpmnProcess {
       }
       if (taskObject.outgoing != null && taskObject.outgoing[0] != null)
         taskObject = taskObject.outgoing[0].targetRef;
-      else 
+      else
         taskObject = null;
     }
 
@@ -966,9 +966,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.outgoing[taskObj.outgoing.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;      
+      return null;
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
@@ -980,9 +980,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.incoming[taskObj.incoming.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;  
+      return null;
   }
 
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {

@@ -44,7 +44,6 @@ export function stringExcerpt(source: string, maxLen: number) {
     return source;
   else {
     let dest = source.substr(0, maxLen);
-    if (source.substr(maxLen, 1) != " ") { }
     // String bis zum letzten vollständigen Wort zurückgeben  
     let last = dest.lastIndexOf(" ");
     if (last != -1)

@@ -1,5 +1,5 @@
+import { ApolloClient, createNetworkInterface, toIdValue } from "apollo-client";
 import "fetch-everywhere";
-import { ApolloClient, createNetworkInterface, toIdValue, NetworkStatus } from "apollo-client";
 
 // All clients share the same backend client to optimize caching
 // a new client is only created it the host changes (should only happen in tests)

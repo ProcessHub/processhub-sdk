@@ -1,6 +1,6 @@
-import { BaseRequest, BaseReply, BaseMessage, ApiResult } from "../legacyapi/apirequests";
-import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
+import { ApiResult, BaseMessage, BaseReply, BaseRequest } from "../legacyapi/apirequests";
 import { ProcessDetails } from "../process/processinterfaces";
+import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
 import { PathDetails } from "./pathinterfaces";
 
 export const PathRequestRoutes = {

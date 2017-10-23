@@ -1,6 +1,4 @@
-import { ProcessDetails, PotentialRoleOwners } from "../process";
 import { UserDetails } from "../user";
-import { InstanceDetails } from "../instance";
 
 export enum TodoStatus {
   TodoOnTime = 0,

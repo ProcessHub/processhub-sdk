@@ -1,6 +1,6 @@
 import { assert } from "chai";
-import { fieldContentsExcerpt, parseInstanceMailAddress, getInstanceMailAddress } from "./instancetools";
 import { createId } from "../tools/guid";
+import { fieldContentsExcerpt, getInstanceMailAddress, parseInstanceMailAddress } from "./instancetools";
 
 describe("sdk", function () {
   describe("instance", function () {

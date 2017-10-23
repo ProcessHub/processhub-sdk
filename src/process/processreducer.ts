@@ -1,12 +1,12 @@
+import * as update from "immutability-helper";
 import * as _ from "lodash";
-import * as ProcessActions from "./processactions";
 import * as Process from "../process";
 import * as StateHandler from "../statehandler";
-import * as update from "immutability-helper";
-import { isTrue } from "../tools/assert";
-import { PROCESSLOADED_MESSAGE, ProcessLoadedMessage } from "./legacyapi";
-import { createId } from "../tools/guid";
 import { ResetStore } from "../statehandler/actions";
+import { isTrue } from "../tools/assert";
+import { createId } from "../tools/guid";
+import { PROCESSLOADED_MESSAGE, ProcessLoadedMessage } from "./legacyapi";
+import * as ProcessActions from "./processactions";
 
 export function processReducer(processState: Process.ProcessState, action: any): Process.ProcessState {
 

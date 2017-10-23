@@ -1,6 +1,6 @@
-import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
-import { UserDetails, UserExtras } from "./userinterfaces";
+import { BaseMessage, BaseRequest } from "../legacyapi/apirequests";
 import { UserMessages } from "./phclient";
+import { UserDetails, UserExtras } from "./userinterfaces";
 
 export const UserRequestRoutes = {
   Login: "/api/user/login",

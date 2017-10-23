@@ -1,6 +1,6 @@
 import { assert } from "chai";
-import * as DataTools from "./datatools";
 import { FieldContentMap } from "../data/datainterfaces";
+import * as DataTools from "./datatools";
 
 describe("sdk", function () {
   describe("data", function () {

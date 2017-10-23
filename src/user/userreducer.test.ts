@@ -1,10 +1,10 @@
 import { assert } from "chai";
-import { UserState } from "./phclient";
 import { ApiResult } from "../legacyapi/apirequests";
 import { createUserId } from "../tools/guid";
-import { userReducer } from "./userreducer";
-import { UserActionLoggedIn, UserActionFailed } from "./useractions";
+import { UserState } from "./phclient";
+import { UserActionFailed, UserActionLoggedIn } from "./useractions";
 import { UserActionsType } from "./userinterfaces";
+import { userReducer } from "./userreducer";
 
 describe("sdk", function () {
   describe("user", function () {

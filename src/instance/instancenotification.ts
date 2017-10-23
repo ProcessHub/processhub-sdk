@@ -1,10 +1,13 @@
-import * as PH from "../";
 import * as _ from "lodash";
+import { IActionHandler } from "../actionhandler";
+import { InstanceEnvironment } from "../environment";
+import { InstanceDetails } from "./instanceinterfaces";
+import { isRoleOwner } from "./instancetools";
 
 // helper functions to detect if notification symbols should be displayed in dashboard
 
 // latest activity (todo/comment created) - shown in dashboard cards
-export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
+export function latestActivityAt(instance: InstanceDetails): Date {
   let latestAt = instance.latestCommentAt;
   if (latestAt == null)
     latestAt = instance.createdAt;
@@ -19,7 +22,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
   return latestAt;
 }
 
-export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
+export async function instanceHasBeenViewed(instanceEnv: InstanceEnvironment, actionHandler: IActionHandler): Promise<void> {
   if (instanceEnv.user == null)
     return;
     
@@ -45,7 +48,7 @@ export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment,
     await actionHandler.updateViewState(instanceEnv.instance.instanceId, instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId]);
 }
 
-export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date {
+export function instanceLastViewedAt(instanceEnv: InstanceEnvironment): Date {
   if (instanceEnv.user == null || instanceEnv.user.extras.viewStates == null)
     return null;
 
@@ -55,14 +58,14 @@ export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date 
   return instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId].lastViewedAt;
 }
 
-export function hasInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
+export function hasInstanceComments(instanceEnv: InstanceEnvironment): boolean {
   return (instanceEnv.instance.latestCommentAt != null);
 }
 
 // true if there are a) new comments and b) user is a roleOwner - otherwise there should be no notification symbol
-export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
+export function notifyNewInstanceComments(instanceEnv: InstanceEnvironment): boolean {
   // is user RoleOwner?
-  if (!instanceEnv.user || !PH.Instance.isRoleOwner(instanceEnv.user.userId, null, instanceEnv.instance))
+  if (!instanceEnv.user || !isRoleOwner(instanceEnv.user.userId, null, instanceEnv.instance))
     return false;
 
   if (instanceEnv.instance.latestCommentAt == null)
@@ -76,7 +79,7 @@ export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): 
 }
 
 // true if a todo for the current user has been created since last viewing the instance
-export function notifyNewInstanceTodos(instanceEnv: PH.InstanceEnvironment): boolean {
+export function notifyNewInstanceTodos(instanceEnv: InstanceEnvironment): boolean {
   if (!instanceEnv.instance.extras.todos)
     return false;
 

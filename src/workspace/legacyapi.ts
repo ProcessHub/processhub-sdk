@@ -1,6 +1,6 @@
-import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
-import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
+import { BaseMessage, BaseRequest } from "../legacyapi/apirequests";
 import { WorkspaceMessages } from "./phclient";
+import { WorkspaceDetails, WorkspaceExtras, WorkspaceRole } from "./workspaceinterfaces";
 
 // WorkspaceRequestRoutes
 export const WorkspaceRequestRoutes = {

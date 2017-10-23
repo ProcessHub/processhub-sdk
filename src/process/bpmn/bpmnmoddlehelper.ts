@@ -1,11 +1,11 @@
 import BpmnModdle = require("bpmn-moddle");
-import { BpmnProcess } from "./bpmnprocess";
-import * as BpmnProcessDiagramFile from "./bpmnprocessdiagram";
-import * as BpmnProcessFile from "./bpmnprocess";
-import { Processhub, Bpmn, Dc } from "../bpmn";
-import { TaskSettings, ProcessResult } from "../processinterfaces";
-import { LoadTemplateReply } from "../legacyapi";
 import { createId } from "../../tools/guid";
+import { Bpmn, Dc, Processhub } from "../bpmn";
+import { LoadTemplateReply } from "../legacyapi";
+import { ProcessResult, TaskSettings } from "../processinterfaces";
+import { BpmnProcess } from "./bpmnprocess";
+import * as BpmnProcessFile from "./bpmnprocess";
+import * as BpmnProcessDiagramFile from "./bpmnprocessdiagram";
 
 export type ModdleElementType = Bpmn.bpmnType;
 

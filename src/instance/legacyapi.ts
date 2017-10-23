@@ -1,5 +1,5 @@
-import { BaseReply, BaseMessage } from "../legacyapi/apirequests";
-import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
+import { BaseMessage, BaseReply } from "../legacyapi/apirequests";
+import { InstanceDetails, InstanceExtras, ResumeInstanceDetails } from "./instanceinterfaces";
 
 // API routes
 export const ProcessEngineApiRoutes = {
