@@ -1,6 +1,6 @@
 const Nes = require("nes");
 import * as StateHandler from "../statehandler";
-import { BACKEND_URL } from "../legacyapi";
+import { BACKEND_URL, getJson, BaseMessage, ApiResult } from "../legacyapi";
 import { UserDetails } from "../user/userinterfaces";
 
 export interface PublishSubscribeRegisterObject {
@@ -14,8 +14,8 @@ export const resolveFunction = (obj: any, value: string): string => {
 };
 
 export const PublishSubscriptionObjects: { [Id: string]: PublishSubscribeRegisterObject } = {
-  newInstance: { wildcard: "{userId}", subscriptionPath: "/newInstance/{userId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
-  updateInstance: { wildcard: "{instanceId}", subscriptionPath: "/updateInstance/{instanceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
+  newInstance: { wildcard: "{userId}", subscriptionPath: "/ws/newInstance/{userId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
+  updateInstance: { wildcard: "{instanceId}", subscriptionPath: "/ws/updateInstance/{instanceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
 };
 
 let wsUrl = BACKEND_URL;
@@ -30,12 +30,19 @@ let notificationHandler = (update: any, flags: any) => {
 };
 
 export async function initNotificationClient(user: UserDetails) {
-  return new Promise<void>((resolve, reject) => {
-    notificationClient.connect((err: any) => {
-      if (err != null)
-        reject();
-      resolve();
-    });
+  return new Promise<void>(async (resolve, reject) => {
+
+    let authResult: any = await getJson("/nes/auth", { auth: user.extras.accessToken });
+    
+    if (authResult.status == "authenticated") {
+      notificationClient.connect({ auth: authResult.token }, (err: any) => {
+        if (err != null)
+          reject();
+        resolve();
+      });
+    } else {
+      reject();
+    }
   });
 }
 
