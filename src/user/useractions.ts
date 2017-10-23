@@ -136,7 +136,6 @@ export function uploadProfilePictureAction(data: string, accessToken: string = n
     } as UploadProfilePictureRequest);
 
     if (response.userDetails != null) {
-      console.log(response.userDetails);
       updateUserInState(response.userDetails);
     }
     return response;

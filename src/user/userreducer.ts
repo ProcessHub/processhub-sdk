@@ -25,9 +25,15 @@ export function userReducer(userState: UserState, action: any): UserState {
       let user = (<UserLoadedMessage>action).user;
       userState.currentUser = StateHandler.mergeUserToCache(user);
 
-      return update(userState, {
-        cacheState: { $set: createId() }
-      });
+      let userChanged = !_.isEqual(userState.currentUser, userState.lastDispatchedUser);
+      userState.lastDispatchedUser = _.cloneDeep(userState.currentUser);
+
+      if (userChanged) {
+        return update(userState, {
+          cacheState: { $set: createId() }
+        });
+      } else
+        return userState;
 
     case UserActionsType.LoggedIn:
       let loggedAction: UserActionLoggedIn = action;

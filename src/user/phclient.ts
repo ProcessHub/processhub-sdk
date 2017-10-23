@@ -10,6 +10,7 @@ export class UserState {
 
   // updated in reducers, helps React to detect state changes
   cacheState?: string;
+  lastDispatchedUser?: UserDetails; // used in reducer to detect changes
 }
 
 export const UserMessages = {
