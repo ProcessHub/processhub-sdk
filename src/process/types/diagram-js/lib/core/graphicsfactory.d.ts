@@ -1,6 +1,7 @@
 declare module "diagram-js/lib/core/GraphicsFactory" {
   export = GraphicsFactory;
   import EventBus = require("diagram-js/lib/core/EventBus");
+  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
 
   /**
    * A factory that creates graphical elements
@@ -12,7 +13,7 @@ declare module "diagram-js/lib/core/GraphicsFactory" {
      * @param {EventBus} eventBus
      * @param {ElementRegistry} elementRegistry
      */
-    constructor(eventBus: EventBus, elementRegistry: {});
+    constructor(eventBus: EventBus, elementRegistry: ElementRegistry);
 
     public _getChildren(element: {}): {};
 
