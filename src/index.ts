@@ -26,6 +26,8 @@ import * as Path from "./path";
 export { Path };
 import * as Types from "./types";
 export { Types };
+import * as Library from "./library";
+export { Library };
 import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";

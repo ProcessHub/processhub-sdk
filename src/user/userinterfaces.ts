@@ -11,6 +11,7 @@ export class UserDetails {
   realName?: string;     
   displayName?: string; // realName or mail if no name is defined
   photoUrl?: string;  
+  language?: string; // preferred User language (en, de, ...)
   extras: {
     // New Extras must be added to cache-handling in useractions -> loadUser!
     workspaces?: WorkspaceDetails[];
