@@ -3,7 +3,7 @@ import { InstanceDetails } from "../instance";
 import { TodoDetails } from "../todo";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
-
+import gql from "graphql-tag";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -34,6 +34,15 @@ export interface ProcessDetails {
     settings?: ProcessSettings;
   };
 }
+export const gqlProcessFragments = gql`
+  fragment ProcessDetailsFields on ProcessDetails {
+    processId
+    urlName
+    fullUrl
+    displayName
+    description
+  }
+`;
 
 export interface ProcessSettings {
   dashboard?: {

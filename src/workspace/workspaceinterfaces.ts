@@ -1,5 +1,6 @@
-import { ProcessDetails } from "../process/processinterfaces";
+import { ProcessDetails, gqlProcessFragments } from "../process/processinterfaces";
 import { UserDetails } from "../user/userinterfaces";
+import gql from "graphql-tag";
 
 // WorkspaceType
 export const WorkspaceType = {
@@ -11,6 +12,8 @@ export const WorkspaceType = {
 export type WorkspaceType = keyof typeof WorkspaceType;
 
 export interface WorkspaceDetails {
+  // Changes must also be reflected in gqlTypes and gqlFragments below!
+
   workspaceId: string;
   workspaceType: WorkspaceType;
   urlName?: string; // displayName converted to Uri segment
@@ -25,6 +28,50 @@ export interface WorkspaceDetails {
     settings?: WorkspaceSettings;
   };
 }
+export const gqlWorkspaceTypes = `     
+  type WorkspaceDetails {
+    workspaceId: String!
+    workspaceType: String
+    urlName: String
+    fullUrl: String
+    displayName: String
+    description: String
+    userRole: Int
+    extras: ExtrasWorkspace
+  }
+  type ExtrasWorkspace {
+    members: [WorkspaceMember]
+    processes: [ProcessDetails]
+  }
+
+  scalar WorkspaceMember
+`;
+
+export const gqlWorkspaceFragments = gql`
+  fragment WorkspaceDetailsFields on WorkspaceDetails {
+    workspaceId
+    workspaceType
+    urlName
+    fullUrl
+    displayName
+    description
+    userRole
+  }
+`;
+export const gqlQueryWorkspace = gql`
+  query queryWorkspace($workspaceId: ID, $urlName: String) {
+    workspace(workspaceId: $workspaceId, urlName: $urlName) {
+      ...WorkspaceDetailsFields
+      extras {
+        processes {
+          ...ProcessDetailsFields
+        }
+      }
+    }
+  }
+  ${gqlWorkspaceFragments}  
+  ${gqlProcessFragments}
+`;
 
 export enum WorkspaceExtras {
   None = 0,
