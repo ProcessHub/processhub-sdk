@@ -4,6 +4,7 @@ import { TodoDetails } from "../todo";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
+import { gqlLibraryTypes } from "./libraryinterfaces";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -12,6 +13,8 @@ export interface ProcessAttachment {
 }
 
 export interface ProcessDetails {
+  // Changes must also be reflected in gqlTypes and gqlFragments below!
+
   processId: string;
   workspaceId: string;  
   displayName: string;
@@ -34,6 +37,40 @@ export interface ProcessDetails {
     settings?: ProcessSettings;
   };
 }
+export const gqlProcessTypes = `     
+  # _NOTE: Querying extras requires additional database access and will slow down your api request. Please make sure to request only data that your application really needs._
+  type ExtrasProcess {
+    bpmnXml: String
+    instances: [InstanceDetails]
+    processRoles: ProcessRoles
+  }
+
+  type ProcessAttachment {
+    attachmentId: String
+    fileName: String
+    url: String
+  }
+
+  type ProcessDetails {
+    workspaceId: String
+    processId: String
+    displayName: String
+    urlName: String
+    fullUrl: String
+    previewUrl: String
+    description: String
+    useModeler: Boolean
+    userRights: Int
+    rating: Int
+    attachments: [ProcessAttachment]
+    extras: ExtrasProcess
+  }
+
+  scalar PotentialRoleOwners
+  scalar DecisionTask
+  scalar ProcessRoles
+`;
+
 export const gqlProcessFragments = gql`
   fragment ProcessDetailsFields on ProcessDetails {
     processId
