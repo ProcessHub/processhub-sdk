@@ -8,8 +8,7 @@ export const Page = strEnum([
   "SigninPage",
   "SignupPage",
   "WorkspacePage",
-  "ProcessPage",
-  "LibraryPage"
+  "ProcessPage"
 ]);
 export type Page = keyof typeof Page;
 
