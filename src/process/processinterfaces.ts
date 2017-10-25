@@ -19,13 +19,14 @@ export interface ProcessDetails {
   workspaceId: string;  
   displayName: string;
   urlName?: string; 
+  subTitle?: string; // optional subtitle
   fullUrl?: string; // @workspace/p/urlname
-  previewUrl?: string;
+  previewUrl?: string;  // full url of preview-svg (including https://)
   description: string;
+  longDesc?: string;  // optional long description / process story
   useModeler?: boolean;
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
-  rating?: number; // Currently only available in library
   attachments?: ProcessAttachment[];
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
@@ -38,7 +39,6 @@ export interface ProcessDetails {
   };
 }
 export const gqlProcessTypes = `     
-  # _NOTE: Querying extras requires additional database access and will slow down your api request. Please make sure to request only data that your application really needs._
   type ExtrasProcess {
     bpmnXml: String
     instances: [InstanceDetails]
@@ -56,12 +56,13 @@ export const gqlProcessTypes = `
     processId: String
     displayName: String
     urlName: String
+    subTitle: String
     fullUrl: String
     previewUrl: String
     description: String
+    longDesc: String
     useModeler: Boolean
     userRights: Int
-    rating: Int
     attachments: [ProcessAttachment]
     extras: ExtrasProcess
   }
@@ -90,6 +91,11 @@ export interface ProcessSettings {
   };
   archive?: {
     archiveAccess?: ProcessViewAccess;  // who can access instances?
+  };
+  library?: {  
+    rating?: number;  // process rating, used to sort processes in library
+    categories?: string[];  // categoryIds in library
+    copiedFromId?: string;  // processId of the original process    
   };
 }
 

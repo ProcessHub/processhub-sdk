@@ -18,4 +18,7 @@ export function initSettings(process: ProcessDetails): void {
     settings.archive = {};
   if (!settings.archive.archiveAccess)
     settings.archive.archiveAccess = ProcessViewAccess.ParticipantsSeeTheirs;
+
+  if (!settings.library)
+    settings.library = {};
 }
