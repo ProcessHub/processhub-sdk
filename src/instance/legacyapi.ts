@@ -52,8 +52,9 @@ export interface AbortReply extends InstanceReply {
 }
 
 export interface JumpRequest extends InstanceRequest {
-  fromTodoId: string;
-  toBpmnTaskId: string;
+  instanceId: string;
+  targetBpmnTaskId: string;
+  resumeDetails: ResumeInstanceDetails;
 }
 export interface JumpReply extends InstanceReply {
 }

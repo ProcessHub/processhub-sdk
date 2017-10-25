@@ -3,6 +3,7 @@ import { rootStore, mergeInstanceToCache } from "../statehandler";
 import { Dispatch } from "redux";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
 import { ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
+import { Instance } from "../index";
 
 export const InstanceActionType = {
   Execute: "INSTANCEACTION_EXECUTE",
@@ -117,24 +118,26 @@ export function abortInstanceAction(instanceId: string): <S>(dispatch: Dispatch<
   };
 }
 
-// export async function jump(fromTodoId: string, toTaskId: string): Promise<Instance.JumpReply> {
-//   PH.Assert.isTrue(fromTodoId.indexOf("Task_") === -1, "Die erste ID beim Jump muss die TodoId vom Todo in der Datenbank sein NICHT vom BPMNTASK wie die zweite!");
-//   return await rootStore.dispatch(jumpAction(fromTodoId, toTaskId));
-// }
 
-// export function jumpAction(fromTodoId: string, toTaskId: string): <S>(dispatch: Dispatch<S>) => Promise<Instance.JumpReply> {
-//   return async <S>(dispatch: Dispatch<S>): Promise<Instance.JumpReply> => {
-//     let response: Instance.JumpReply = await Api.postJson(Instance.ProcessEngineApiRoutes.jump, {
-//       fromTodoId: fromTodoId,
-//       toBpmnTaskId: toTaskId
-//     });
 
-//     dispatch<InstanceActionJump>({
-//       type: InstanceActionType.Jump as InstanceActionType
-//     });
-//     return response;
-//   };
-// }
+export async function jump(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): Promise<Instance.JumpReply> {
+  return await rootStore.dispatch(jumpAction(instanceId, targetBpmnTaskId, resumeDetails));
+}
+
+export function jumpAction(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<Instance.JumpReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<Instance.JumpReply> => {
+    let response: Instance.JumpReply = await Api.postJson(Instance.ProcessEngineApiRoutes.jump, {
+      instanceId: instanceId,
+      targetBpmnTaskId: targetBpmnTaskId,
+      resumeDetails: resumeDetails
+    });
+
+    dispatch<InstanceActionJump>({
+      type: InstanceActionType.Jump as InstanceActionType
+    });
+    return response;
+  };
+}
 
 export async function loadInstance(instanceId: string, instanceExtras?: InstanceExtras, forceReload: boolean = false): Promise<InstanceDetails> {
   let instanceState = rootStore.getState().instanceState;
@@ -151,8 +154,8 @@ export async function loadInstance(instanceId: string, instanceExtras?: Instance
       instanceExtras -= InstanceExtras.ExtrasRoleOwners;
     if ((instanceExtras & InstanceExtras.ExtrasAuditTrail) && cachedInstance.extras.auditTrail)
       instanceExtras -= InstanceExtras.ExtrasAuditTrail;
-      if ((instanceExtras & InstanceExtras.ExtrasTodos) && cachedInstance.extras.todos)
-      instanceExtras -= InstanceExtras.ExtrasTodos;      
+    if ((instanceExtras & InstanceExtras.ExtrasTodos) && cachedInstance.extras.todos)
+      instanceExtras -= InstanceExtras.ExtrasTodos;
     if ((instanceExtras & InstanceExtras.ExtrasRoleOwnersWithNames) && cachedInstance.extras.roleOwners) {
       // names available?
       for (let roleId in cachedInstance.extras.roleOwners) {

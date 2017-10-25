@@ -91,6 +91,8 @@ export interface ProcessSettings {
   archive?: {
     archiveAccess?: ProcessViewAccess;  // who can access instances?
   };
+  jumps?: ProcessJumpSettings;
+  restartProcess?: ProcessRestartSetting;
 }
 
 export enum ProcessViewAccess {
@@ -101,6 +103,20 @@ export enum ProcessViewAccess {
   ParticipantsSeeAll = 30,  // process participants see all todos/instances
   ParticipantsSeeTheirs = 40,  // process participants see their own todos/instances
   OnlyProcessOwners = 50  // only process managers can see todos/instances    
+}
+
+export enum ProcessJumpSettings {
+  // DO NOT CHANGE NUMBERS - used in database
+  JumpsNotAllowed = 10, // Standard
+  JumpsOnlyFromProcessManagers = 20,
+  JumpsAllowed = 30,
+}
+
+export enum ProcessRestartSetting {
+  // DO NOT CHANGE NUMBERS - used in database
+  RestartNotAllowed = 10, // Standard
+  RestartOnlyFromProcessManagers = 20,
+  RestartAllowed = 30,
 }
 
 export enum ProcessExtras {
