@@ -3,19 +3,22 @@ import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
 
-export function getInstanceMailAddress(instanceId: string): string {
-  return "i-" + instanceId.toLowerCase() + "@processhub.net";
-}
-export function parseInstanceMailAddress(mail: string): string {
+export function parseIdMailAddress(prefix: string, mail: string): string {
   mail = mail.toLowerCase();
-  if (!isValidMailAddress(mail) || !mail.startsWith("i-"))
+  if (!isValidMailAddress(mail) || !mail.startsWith(prefix))
     return null;
 
-  let instanceId = mail.split("@")[0].substr(2).toUpperCase();
+  let instanceId = mail.split("@")[0].substr(prefix.length).toUpperCase();
   if (isId(instanceId))
     return instanceId;
   else
     return null;
+}
+export function getInstanceMailAddress(instanceId: string): string {
+  return "i-" + instanceId.toLowerCase() + "@processhub.net";
+}
+export function parseInstanceMailAddress(mail: string): string {
+  return parseIdMailAddress("i-", mail);
 }
 
 // roleID == null -> check for any role membership
