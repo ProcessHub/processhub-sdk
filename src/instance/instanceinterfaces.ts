@@ -1,3 +1,4 @@
+import gql from "graphql-tag";
 import { RoleOwnerMap } from "../process";
 import { DecisionTask, TodoDetails } from "../todo";
 import { FieldContentMap } from "../data";
@@ -12,6 +13,8 @@ export enum State {
 }
 
 export interface InstanceDetails {
+  // Changes must also be reflected in gqlTypes and gqlFragments below!  
+
   instanceId: string;
   workspaceId: string;
   processId: string;
@@ -31,6 +34,47 @@ export interface InstanceDetails {
     auditTrail?: AuditTrailEntry[];
   };
 }
+
+export const gqlInstanceTypes = `
+  type ExtrasInstance {
+    instanceState: Json
+    fieldContents: FieldContents
+    roleOwners: RoleOwnerMap
+  }
+
+  type InstanceDetails {
+    instanceId: String!
+    workspaceId: String
+    processId: String
+    displayName: String
+    urlName: String
+    fullUrl: String
+    createdAt: Date
+    isSimulation: Boolean
+    sendSimulationMails: Boolean
+    state: Int
+    latestCommentAt: Date
+    extras: ExtrasInstance
+  }
+
+  scalar RoleOwnerMap
+  scalar FieldContents
+`;
+
+export const gqlProcessFragments = gql`
+fragment InstanceDetailsFields on InstanceDetails {
+  instanceId
+  workspaceId
+  processId
+  displayName
+  urlName
+  fullUrl
+  createdAt
+  isSimulation  
+  sendSimulationMails
+  state
+  latestCommentAt
+}`;
 
 export enum InstanceExtras {
   None = 0,
