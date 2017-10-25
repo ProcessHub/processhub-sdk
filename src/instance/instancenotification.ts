@@ -20,7 +20,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
 }
 
 export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
-  if (instanceEnv.user == null)
+  if (instanceEnv == null || instanceEnv.user == null)
     return;
     
   if (instanceEnv.user.extras.viewStates == null)

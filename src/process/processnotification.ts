@@ -7,9 +7,11 @@ export function notifyNewInstanceComments(processEnv: PH.ProcessEnvironment): bo
   let notify = false;
 
   instances.map(instance => {
-    let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
-    if (PH.Instance.notifyNewInstanceComments(instanceEnv))
-      notify = true;
+    if (instance.extras.todos && instance.extras.todos.length > 0) {  // no todos = no dashboard entry
+      let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
+      if (PH.Instance.notifyNewInstanceComments(instanceEnv))
+        notify = true;
+    }
   });  
 
   return notify;
