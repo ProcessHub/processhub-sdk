@@ -1,4 +1,9 @@
 import { ProcessDetails, ProcessViewAccess } from "./processinterfaces";
+import { parseIdMailAddress } from "../instance/instancetools";
+
+export function parseProcessMailAddress(mail: string): string {
+  return parseIdMailAddress("p-", mail);
+}
 
 // Init settings that don't exist with default values
 export function initSettings(process: ProcessDetails): void {
