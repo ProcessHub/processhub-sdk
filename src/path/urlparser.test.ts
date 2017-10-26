@@ -10,19 +10,19 @@ describe("sdk", function () {
 
       describe("parseUrl", function () {
 
-        it("soll ungültige Seiten erkennen", function () {
+        it("should detect valid pages", function () {
           assert.isNull(parseUrl("/@testworkSpace/xx")); // ignore case and / at end
           assert.isNull(parseUrl("/xx")); // ignore case and / at end
         });
 
-        it("soll übergeordnete Seiten korrekt parsen", function () {
+        it("should parse top page", function () {
           let path = parseUrl("/"); // ignore case and / at end
           assert.deepEqual(path, <PathDetails>{
             page: Page.StartPage
           });
         });
 
-        it("soll Workspaceseiten korrekt parsen", function () {
+        it("should parse workspace pages", function () {
           let path = parseUrl("/@testworkSpace/"); // ignore case and / at end
           assert.deepEqual(path, <PathDetails>{
             page: Page.WorkspacePage,
@@ -45,7 +45,7 @@ describe("sdk", function () {
           });
         });
 
-        it("soll Prozessseiten korrekt parsen", function () {
+        it("should parse process pages", function () {
           let path = parseUrl("/@testworkSpace/p/process"); // ignore case and / at end
           assert.deepEqual(path, <PathDetails>{
             page: Page.ProcessPage,

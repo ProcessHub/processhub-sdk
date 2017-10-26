@@ -26,9 +26,6 @@ export function parseUrl(fullUrl: string): PathDetails {
   } else if (part == "signup" && split.length == 1) {
     path.page = Page.SignupPage;
     return path;
-  } else if (part == "library" && split.length == 1) {
-    path.page = Page.LibraryPage;
-    return path;
   } else if (!part.startsWith("@")) {
     // ...otherwise workspace must follow
     return null;

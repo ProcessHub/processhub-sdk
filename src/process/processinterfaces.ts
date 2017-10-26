@@ -22,7 +22,6 @@ export interface ProcessDetails {
   useModeler?: boolean;
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
-  rating?: number; // Currently only available in library
   processXmlHash?: string;
   attachments?: ProcessAttachment[];
   extras: { 

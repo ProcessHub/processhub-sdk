@@ -1,4 +1,5 @@
 export * from "./processinterfaces";
+export * from "./libraryinterfaces";
 export * from "./processrights";
 export * from "./processvalidation";
 export * from "./processtools";

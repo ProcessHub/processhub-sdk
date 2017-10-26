@@ -228,6 +228,14 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
   return allOwners;
 }
 
+export function processIsPublic(process: ProcessDetails): boolean {
+  if (process.extras.processRoles)
+    return (process.extras.processRoles[DefaultRoles.Viewer].potentialRoleOwners[0].memberId == PredefinedGroups.Public);
+  
+  else 
+    return false;
+}
+
 export function isProcessOwner(process: ProcessDetails): boolean {
   if (process == null)
     return false;
