@@ -23,6 +23,7 @@ export interface ProcessDetails {
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
   rating?: number; // Currently only available in library
+  processXmlHash?: string;
   attachments?: ProcessAttachment[];
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
