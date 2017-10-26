@@ -3,7 +3,8 @@ import { InstanceDetails } from "../instance";
 import { TodoDetails } from "../todo";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
-
+import gql from "graphql-tag";
+import { gqlLibraryTypes } from "./libraryinterfaces";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -12,18 +13,22 @@ export interface ProcessAttachment {
 }
 
 export interface ProcessDetails {
+  // Changes must also be reflected in gqlTypes and gqlFragments below!
+
   processId: string;
   workspaceId: string;  
   displayName: string;
   urlName?: string; 
+  subTitle?: string; // optional subtitle
   fullUrl?: string; // @workspace/p/urlname
-  previewUrl?: string;
+  previewUrl?: string;  // full url of preview-svg (including https://)
   description: string;
+  longDesc?: string;  // optional long description / process story
   useModeler?: boolean;
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
-  processXmlHash?: string;
   attachments?: ProcessAttachment[];
+  processXmlHash?: string;
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
@@ -34,6 +39,49 @@ export interface ProcessDetails {
     settings?: ProcessSettings;
   };
 }
+export const gqlProcessTypes = `     
+  type ExtrasProcess {
+    bpmnXml: String
+    instances: [InstanceDetails]
+    processRoles: ProcessRoles
+  }
+
+  type ProcessAttachment {
+    attachmentId: String
+    fileName: String
+    url: String
+  }
+
+  type ProcessDetails {
+    workspaceId: String
+    processId: String
+    displayName: String
+    urlName: String
+    subTitle: String
+    fullUrl: String
+    previewUrl: String
+    description: String
+    longDesc: String
+    useModeler: Boolean
+    userRights: Int
+    attachments: [ProcessAttachment]
+    extras: ExtrasProcess
+  }
+
+  scalar PotentialRoleOwners
+  scalar DecisionTask
+  scalar ProcessRoles
+`;
+
+export const gqlProcessFragments = gql`
+  fragment ProcessDetailsFields on ProcessDetails {
+    processId
+    urlName
+    fullUrl
+    displayName
+    description
+  }
+`;
 
 export interface ProcessSettings {
   dashboard?: {
@@ -47,6 +95,11 @@ export interface ProcessSettings {
   };
   jumps?: ProcessJumpSettings;
   restartProcess?: ProcessRestartSetting;
+  library?: {  
+    rating?: number;  // process rating, used to sort processes in library
+    categories?: string[];  // categoryIds in library
+    copiedFromId?: string;  // processId of the original process    
+  };
 }
 
 export enum ProcessViewAccess {
