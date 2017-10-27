@@ -28,6 +28,7 @@ export interface ProcessDetails {
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
   attachments?: ProcessAttachment[];
+  processXmlHash?: string;
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
