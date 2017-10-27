@@ -89,6 +89,15 @@ export function mergeInstanceToCache(instance: InstanceDetails, ignoreUser: bool
     }
     userInstances.push(result);
   }
+
+  // merge back to process.extras.instances
+  // ONLY, if extras.instances have already been loaded for the process, otherwise load-request might be ignored in archive
+  let process = rootStore.getState().processState.processCache[instance.processId];
+  if (process && process.extras.instances
+    && process.extras.instances.find(instance2 => instance2.instanceId == instance.instanceId) == null) {
+      process.extras.instances.push(instance);
+  }
+
   return result;
 }
 
@@ -100,14 +109,26 @@ export function removeInstanceFromCache(instanceId: string): void {
     delete (instanceCache[instanceId]);
 
   if (rootStore.getState().instanceState.currentInstance && rootStore.getState().instanceState.currentInstance.instanceId == instanceId)
-  rootStore.getState().instanceState.currentInstance = null;
+    rootStore.getState().instanceState.currentInstance = null;
   
   // also remove from user.extras.instances
+  let processId: string;
   if (rootStore.getState().userState.currentUser && rootStore.getState().userState.currentUser.extras.instances) { 
     let userInstances = rootStore.getState().userState.currentUser.extras.instances;
     let element = userInstances.find(ui => ui.instanceId == instanceId);
     if (element) {
+      processId = element.processId;
       userInstances.splice(userInstances.indexOf(element), 1);
+    }
+  }
+
+  // also remove from process.extras.instances
+  if (processId) {
+    let process = rootStore.getState().processState.processCache[processId];
+
+    if (process && process.extras.instances) {
+      let instance = process.extras.instances.find(instance2 => instance2.instanceId == instanceId);
+      process.extras.instances.splice(process.extras.instances.indexOf(instance), 1);
     }
   }
 }

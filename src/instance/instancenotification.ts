@@ -5,6 +5,9 @@ import * as _ from "lodash";
 
 // latest activity (todo/comment created) - shown in dashboard cards
 export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
+  if (!instance)
+    return null;
+
   let latestAt = instance.latestCommentAt;
   if (latestAt == null)
     latestAt = instance.createdAt;
@@ -20,7 +23,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
 }
 
 export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
-  if (instanceEnv == null || instanceEnv.user == null)
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
     return;
     
   if (instanceEnv.user.extras.viewStates == null)
@@ -46,6 +49,9 @@ export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment,
 }
 
 export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date {
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
+    return null;
+
   if (instanceEnv.user == null || instanceEnv.user.extras.viewStates == null)
     return null;
 
@@ -56,11 +62,17 @@ export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date 
 }
 
 export function hasInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
+    return null;
+
   return (instanceEnv.instance.latestCommentAt != null);
 }
 
 // true if there are a) new comments and b) user is a roleOwner - otherwise there should be no notification symbol
 export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
+    return false;
+
   // is user RoleOwner?
   if (!instanceEnv.user || !PH.Instance.isRoleOwner(instanceEnv.user.userId, null, instanceEnv.instance))
     return false;
@@ -77,6 +89,9 @@ export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): 
 
 // true if a todo for the current user has been created since last viewing the instance
 export function notifyNewInstanceTodos(instanceEnv: PH.InstanceEnvironment): boolean {
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
+    return false;
+    
   if (!instanceEnv.instance.extras.todos)
     return false;
 
