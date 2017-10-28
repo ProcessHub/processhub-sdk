@@ -1,4 +1,4 @@
-import { BaseRequest, BaseReply, BaseMessage, ApiResult } from "../legacyapi/apirequests";
+import { BaseRequest, BaseReply, BaseMessage, ApiResult } from "../legacyapi/apiinterfaces";
 import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
 import { ProcessDetails } from "../process/processinterfaces";
 import { PathDetails } from "./pathinterfaces";

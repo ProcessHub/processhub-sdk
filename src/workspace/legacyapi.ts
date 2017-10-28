@@ -1,4 +1,4 @@
-import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
+import { BaseRequest, BaseMessage } from "../legacyapi/apiinterfaces";
 import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
 import { WorkspaceMessages } from "./phclient";
 

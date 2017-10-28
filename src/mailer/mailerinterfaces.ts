@@ -1,5 +1,5 @@
 import { FieldContentMap } from "../data/datainterfaces";
-import { BaseRequest, BaseReply } from "../legacyapi/apirequests";
+import { BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
 
 export enum MailSender {
   FromProcessHub,   // noreply@processhub.com

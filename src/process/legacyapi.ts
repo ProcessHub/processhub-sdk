@@ -1,4 +1,4 @@
-import { BaseMessage, BaseRequest } from "../legacyapi/apirequests";
+import { BaseMessage, BaseRequest } from "../legacyapi/apiinterfaces";
 import { ProcessDetails, ProcessExtras, ProcessResult } from "./processinterfaces";
 
 // API routes

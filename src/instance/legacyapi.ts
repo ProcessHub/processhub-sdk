@@ -1,4 +1,4 @@
-import { BaseReply, BaseMessage } from "../legacyapi/apirequests";
+import { BaseReply, BaseMessage } from "../legacyapi/apiinterfaces";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
 
 // API routes

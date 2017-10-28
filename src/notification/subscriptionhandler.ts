@@ -1,7 +1,8 @@
 const Nes = require("nes");
 import * as StateHandler from "../statehandler";
-import { BACKEND_URL, getJson, BaseMessage, ApiResult } from "../legacyapi";
+import { getJson, BaseMessage, ApiResult } from "../legacyapi";
 import { UserDetails } from "../user/userinterfaces";
+import { backendUrl } from "../config";
 
 export interface PublishSubscribeRegisterObject {
   wildcard: string;
@@ -18,7 +19,7 @@ export const PublishSubscriptionObjects: { [Id: string]: PublishSubscribeRegiste
   updateInstance: { wildcard: "{instanceId}", subscriptionPath: "/ws/updateInstance/{instanceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
 };
 
-let wsUrl = BACKEND_URL;
+let wsUrl = backendUrl;
 wsUrl = wsUrl.replace("https://", "wss://");
 wsUrl = wsUrl.replace("http://", "ws://");
 

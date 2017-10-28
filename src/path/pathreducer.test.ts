@@ -5,7 +5,7 @@ import { parseUrl } from "./urlparser";
 import { pathReducer } from "./pathreducer";
 import { Page } from "./pathinterfaces";
 import { WorkspaceView } from "../workspace/phclient";
-import { ApiResult } from "../legacyapi/apirequests";
+import { ApiResult } from "../legacyapi/apiinterfaces";
 
 describe("sdk", function () {
   describe("path", function () {

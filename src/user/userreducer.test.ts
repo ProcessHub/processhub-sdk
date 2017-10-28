@@ -1,6 +1,6 @@
 import { assert } from "chai";
 import { UserState } from "./phclient";
-import { ApiResult } from "../legacyapi/apirequests";
+import { ApiResult } from "../legacyapi/apiinterfaces";
 import { createUserId } from "../tools/guid";
 import { userReducer } from "./userreducer";
 import { UserActionLoggedIn, UserActionFailed } from "./useractions";

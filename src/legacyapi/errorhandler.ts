@@ -1,4 +1,4 @@
-import { BaseError } from "./apirequests";
+import { BaseError } from "./apiinterfaces";
 
 let errorHandlers: ErrorHandler[] = [];
 

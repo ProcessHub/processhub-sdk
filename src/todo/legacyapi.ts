@@ -1,4 +1,4 @@
-import { BaseReply, BaseMessage } from "../legacyapi/apirequests";
+import { BaseReply, BaseMessage } from "../legacyapi/apiinterfaces";
 import { TodoDetails } from "./todointerfaces";
 
 // API routes

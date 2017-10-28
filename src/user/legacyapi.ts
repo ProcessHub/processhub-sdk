@@ -1,4 +1,4 @@
-import { BaseRequest, BaseMessage } from "../legacyapi/apirequests";
+import { BaseRequest, BaseMessage } from "../legacyapi/apiinterfaces";
 import { UserDetails, UserExtras } from "./userinterfaces";
 import { UserMessages } from "./phclient";
 

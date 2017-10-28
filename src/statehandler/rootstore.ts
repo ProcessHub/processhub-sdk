@@ -39,5 +39,3 @@ if (initialState == null) {
 }
 
 export let rootStore: Store<RootState> = configureStore(initialState);
-
-
