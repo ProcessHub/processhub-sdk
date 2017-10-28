@@ -3,7 +3,8 @@ export enum ApiResult {
   API_OK = 200,
   API_INVALID = 400,
   API_DENIED = 401,
-  API_FORBIDDEN = 403,
+  API_FORBIDDEN = 403,  // is used instead of 401 if no user is authenticated but a function is called that requires authentication
+                        // -> will redirect client to signin page
   API_NOTFOUND = 404,
   API_DUPLICATE = 409,
   API_NOTEMPTY = 423,
@@ -35,6 +36,5 @@ export interface BaseMessage extends BaseReply {
 export const API_FAILED = "FAILED";
 export const API_SUCCESS = "OK";
 export interface BaseError extends BaseMessage {
-  errorCode: ApiError;
   request?: BaseRequest;  // Enthält den urprünglichen Aufruf
 }

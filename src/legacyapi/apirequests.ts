@@ -1,5 +1,4 @@
 import "fetch-everywhere";
-// import { rootStore } from "../statehandler/rootstore";
 import { getErrorHandlers } from "./errorhandler";
 import { backendUrl } from "../config";
 import { BaseRequest, ApiResult, BaseError, ApiError, BaseMessage, API_FAILED } from "./apiinterfaces";
@@ -46,15 +45,13 @@ export async function getJson<Request extends BaseRequest>(path: string, request
         console.log(json);
       }
       return json;
-    case 401:
-      // if (rootStore.getState().userState.currentUser == null) {
-      //   // access denied without authenticated user -> redirect to sign in
-      //   if (typeof window != "undefined") {
-      //     window.location.href = "/signin?redirect=" + encodeURIComponent(window.location.pathname);
-      //   }
-      // }
+    case 403:  // API_FORBIDDEN -> server requests redirect to signin
+      if (typeof window != "undefined"  //  not possible on server rendering
+        && !window.location.pathname.startsWith("/signin")) {
+          window.location.href = "/signin?redirect=" + encodeURIComponent(window.location.pathname);
+      }
     default:
-      const error: BaseError = { result: response.status as ApiResult, type: API_FAILED, errorCode: response.status as ApiError };
+      const error: BaseError = { result: response.status as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, path));
       return error;
   }
@@ -100,7 +97,7 @@ export async function postJson<Request extends BaseRequest>(path: string, reques
       }
       return json;
     default:
-      const error: BaseError = { result: response.status as ApiResult, type: API_FAILED, errorCode: response.status as ApiError };
+      const error: BaseError = { result: response.status as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, path));
       return error;
   }

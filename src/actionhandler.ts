@@ -34,7 +34,7 @@ export class IActionHandler {
         variables: variables
       });                                                          
     } catch (e) {
-      const error: BaseError = { result: 500 as ApiResult, type: API_FAILED, errorCode: 500 as ApiError };
+      const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
     }
     
@@ -50,7 +50,7 @@ export class IActionHandler {
         variables: variables
       });                                                          
     } catch (e) {
-      const error: BaseError = { result: 500 as ApiResult, type: API_FAILED, errorCode: 500 as ApiError };
+      const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
     }
     return result;
