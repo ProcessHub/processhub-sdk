@@ -17,7 +17,7 @@ export interface ExtrasRequest {
   userExtras?: UserExtras;
 }
 
-export class IActionHandler { 
+export class ActionHandler { 
 
   public graphQLClient: ApiClient;
 

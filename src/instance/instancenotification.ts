@@ -22,7 +22,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
   return latestAt;
 }
 
-export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.IActionHandler): Promise<void> {
+export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.ActionHandler): Promise<void> {
   if (!PH.isValidInstanceEnvironment(instanceEnv))
     return;
     
