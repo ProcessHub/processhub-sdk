@@ -1,6 +1,6 @@
 import * as _ from "lodash";
 import * as update from "immutability-helper";
-import * as Api from "../legacyapi";
+import { ApiResult } from "../legacyapi/apiinterfaces";
 import { UserActionLoggedIn, UserActionFailed } from "./useractions";
 import * as StateHandler from "../statehandler";
 import { UserState, UserMessages } from "./phclient";
@@ -40,7 +40,7 @@ export function userReducer(userState: UserState, action: any): UserState {
       isTrue(loggedAction.userDetails != null, "loggedAction.userDetails is null");
       return update(userState, {
         currentUser: { $set: loggedAction.userDetails },
-        lastApiResult: { $set: Api.ApiResult.API_OK }
+        lastApiResult: { $set: ApiResult.API_OK }
       });
 
     case UserActionsType.Failed:

@@ -23,7 +23,6 @@ export type ApiError = 400 | 401 | 409 | 404 | 423 | 500;
 export interface BaseReply {
   type?: string;
   result?: ApiResult;
-  errorCode?: ApiResult;
 }
 
 export interface BaseRequest {
