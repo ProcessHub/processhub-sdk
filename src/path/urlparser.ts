@@ -75,13 +75,14 @@ export function parseNotificationLink(fullUrl: string): NotificationLinkElements
 
   let nextPart = split[1];
   if (nextPart.substr(0, 1) == "@") {
-    // workspaceUrl
-    elements.workspaceUrlName = nextPart.substr(1).toLowerCase();
-    if (split.length == 2)
-      return elements;
+    // old links had workspaceUrl - ignore
+  } else if (isId(nextPart.toUpperCase()))
+    elements.workspaceId = nextPart.toUpperCase();
+  
+  if (split.length == 2)
+    return elements;
 
-    nextPart = split[2];
-  }
+  nextPart = split[2];  
   if (!isId(nextPart.toUpperCase()))
     return elements;
   else

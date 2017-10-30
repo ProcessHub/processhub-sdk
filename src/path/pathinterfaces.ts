@@ -27,6 +27,6 @@ export interface PathDetails {
 }
 
 export interface NotificationLinkElements {
-  workspaceUrlName?: string;
+  workspaceId?: string;
   instanceId?: string;
 }

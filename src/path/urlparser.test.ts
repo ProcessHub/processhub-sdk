@@ -80,25 +80,20 @@ describe("sdk", function () {
         });
 
         it("should parse current instance links", function () {
-          let elements = parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
+          let elements = parseNotificationLink("/I/ffB278368B1002d7/e8B278368B1002d7"); // ignore case and / at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7",
-            workspaceUrlName: "testworkspace"
+            workspaceId: "FFB278368B1002D7"
           });
         });
 
        
         it("should parse old instance/todo links", function () {
-          // in previous versions workspace was not present in link, todoIds were sometimes added
-          let elements = parseNotificationLink("/i/e8B278368B1002D7/000278368B1002d7"); // ignore case and todoId at end
+                   
+          let elements = parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7"
-          }); 
-          
-          elements = parseNotificationLink("/i/e8B278368B1002D7"); // ignore case and todoId at end
-          assert.deepEqual(elements, {
-            instanceId: "E8B278368B1002D7"
-          });           
+          });
         });        
       });
     });
