@@ -19,7 +19,6 @@ export interface ProcessDetails {
   workspaceId: string;  
   displayName: string;
   urlName?: string; 
-  subTitle?: string; // optional subtitle
   fullUrl?: string; // @workspace/p/urlname
   previewUrl?: string;  // full url of preview-svg (including https://)
   description: string;
@@ -57,7 +56,6 @@ export const gqlProcessTypes = `
     processId: String
     displayName: String
     urlName: String
-    subTitle: String
     fullUrl: String
     previewUrl: String
     description: String

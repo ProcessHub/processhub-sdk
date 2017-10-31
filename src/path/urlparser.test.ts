@@ -86,10 +86,8 @@ describe("sdk", function () {
             workspaceId: "FFB278368B1002D7"
           });
         });
-
-       
-        it("should parse old instance/todo links", function () {
-                   
+    
+        it("should parse old instance/todo links", function () {                   
           let elements = parseNotificationLink("/I/@TestWorkspace/e8B278368B1002d7"); // ignore case and / at end
           assert.deepEqual(elements, {
             instanceId: "E8B278368B1002D7"
