@@ -1,5 +1,6 @@
 import * as BpmnModdleHelper from "./bpmnmoddlehelper";
 import * as Todo from "../../todo";
+import { FieldDefinition } from "../../data/datainterfaces";
 import { updateLegacyFieldDefinitions } from "../../data/datatools";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
@@ -73,7 +74,30 @@ export class BpmnProcess {
       }
     }
   }
+  
+  public getFieldDefinitions(): FieldDefinition[] {
+    let fieldDefinitions: FieldDefinition[] = [];
 
+    let process: Bpmn.Process = this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS) as Bpmn.Process;
+    process.flowElements.map(flowElement => {
+      let taskFields = BpmnProcess.getExtensionValues(flowElement).fieldDefinitions;
+      if (taskFields && taskFields.length > 0) {
+        // currently all tasks have their own fieldDefinitions. It might happen that they have different configs
+        // -> add the first one we find to the result set
+        taskFields.map(taskField => {
+          if (fieldDefinitions.find(fieldDefinition => fieldDefinition.name == taskField.name) == null)
+            fieldDefinitions.push(taskField);
+        });
+      }
+    });
+
+    return fieldDefinitions;
+  }
+
+  public getFieldDefinitionsForTask(taskObject: Bpmn.Task | Bpmn.Activity): FieldDefinition[] {
+    return BpmnProcess.getExtensionValues(taskObject).fieldDefinitions;
+  }
+  
   public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
     let returnValue: TaskExtensions = {
       description: null,
