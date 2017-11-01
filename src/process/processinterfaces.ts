@@ -5,6 +5,7 @@ import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
 import { gqlLibraryTypes } from "./libraryinterfaces";
+import { FieldDefinition } from "../data";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -167,7 +168,7 @@ export interface TaskExtensions {
   description: string;
   // jumpMode: JumpModeType;
   // jumpValues: string[];
-  fieldDefinitionsString: string;
+  fieldDefinitions: FieldDefinition[];
   sendTaskReceiver: string[];
   sendTaskWithFieldContents: boolean;
   sendTaskInstanceLink: boolean;
@@ -178,5 +179,3 @@ export interface RunningTaskLane {
   bpmnTaskId: string;
   bpmnLaneId: string;
 }
-
-
