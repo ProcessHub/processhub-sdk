@@ -80,14 +80,17 @@ export class BpmnProcess {
 
     let process: Bpmn.Process = this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS) as Bpmn.Process;
     process.flowElements.map(flowElement => {
-      let taskFields = BpmnProcess.getExtensionValues(flowElement).fieldDefinitions;
-      if (taskFields && taskFields.length > 0) {
-        // currently all tasks have their own fieldDefinitions. It might happen that they have different configs
-        // -> add the first one we find to the result set
-        taskFields.map(taskField => {
-          if (fieldDefinitions.find(fieldDefinition => fieldDefinition.name == taskField.name) == null)
-            fieldDefinitions.push(taskField);
-        });
+      let extVals = BpmnProcess.getExtensionValues(flowElement);
+      if (extVals) {
+        let taskFields = BpmnProcess.getExtensionValues(flowElement).fieldDefinitions;
+        if (taskFields && taskFields.length > 0) {
+          // currently all tasks have their own fieldDefinitions. It might happen that they have different configs
+          // -> add the first one we find to the result set
+          taskFields.map(taskField => {
+            if (fieldDefinitions.find(fieldDefinition => fieldDefinition.name == taskField.name) == null)
+              fieldDefinitions.push(taskField);
+          });
+        }
       }
     });
 
@@ -95,7 +98,11 @@ export class BpmnProcess {
   }
 
   public getFieldDefinitionsForTask(taskObject: Bpmn.Task | Bpmn.Activity): FieldDefinition[] {
-    return BpmnProcess.getExtensionValues(taskObject).fieldDefinitions;
+    let extVals = BpmnProcess.getExtensionValues(taskObject);
+    if (extVals)
+      return extVals.fieldDefinitions;
+    else
+      return null;
   }
   
   public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
