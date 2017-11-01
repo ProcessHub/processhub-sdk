@@ -167,7 +167,7 @@ export interface TaskExtensions {
   description: string;
   // jumpMode: JumpModeType;
   // jumpValues: string[];
-  customFormSchemaString: string;
+  fieldDefinitionsString: string;
   sendTaskReceiver: string[];
   sendTaskWithFieldContents: boolean;
   sendTaskInstanceLink: boolean;

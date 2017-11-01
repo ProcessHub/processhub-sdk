@@ -77,7 +77,7 @@ export class BpmnProcess {
   public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
     let returnValue: TaskExtensions = {
       description: null,
-      customFormSchemaString: null,
+      fieldDefinitionsString: null,
       sendTaskReceiver: null,
       sendTaskInstanceLink: true,
       sendTaskSubject: null,
@@ -130,7 +130,7 @@ export class BpmnProcess {
             // }
             // break;
             case TaskSettings.UserForm:
-              returnValue.customFormSchemaString = child.$body;
+              returnValue.fieldDefinitionsString = child.$body;
               break;
             default:
               return;

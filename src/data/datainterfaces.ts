@@ -1,3 +1,14 @@
+import { InstanceEnvironment } from "../environment";
+import { BpmnProcess } from "../process";
+
+export interface FieldDefinition {
+  rowNumber: number;
+  name: string;
+  type: FieldType;
+  isRequired: boolean;
+  config: {};
+}
+
 export interface FieldValue {
   type: string;
   value:
@@ -7,6 +18,36 @@ export interface FieldValue {
     string[] | // FileUpload
     { [key: string]: boolean }; // Checklist
 }
+
+export type FieldType = "ProcessHubTextInput"
+  | "ProcessHubTextArea"
+  | "ProcessHubCheckbox"
+  | "ProcessHubFileUpload"
+  | "ProcessHubRoleOwner"
+  | "ProcessHubDate"
+  | "ProcessHubDropdown"
+  | "ProcessHubChecklist";
+
+export interface IFieldType {
+  getType(): FieldType;
+  getName(): string;
+  getInput(props: IFormElementProps, instanceEnv: InstanceEnvironment, bpmnProcess: BpmnProcess, onFieldValueChanged: () => void): JSX.Element;
+  renderValue(value: {}): JSX.Element;
+  renderValueForEmail(value: {}): JSX.Element;
+  getSettingsButton(config: {}, onConfigChanged: (config: {}) => void): JSX.Element;
+  isVisible(): boolean;
+}
+
+export interface IFormElementProps {
+  value: string | boolean | Date | string[] | {
+    [key: string]: boolean;
+  };
+  label: string;
+  required: boolean;
+  disabled: boolean;
+  config: {};
+}
+
 
 /**
  * Check if an element implements the FieldValue interface
