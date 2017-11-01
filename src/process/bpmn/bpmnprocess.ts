@@ -1,10 +1,10 @@
 import * as BpmnModdleHelper from "./bpmnmoddlehelper";
 import * as Todo from "../../todo";
+import { updateLegacyFieldDefinitions } from "../../data/datatools";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
 import BpmnModdle = require("bpmn-moddle");
 import { Bpmn } from "../bpmn";
-
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
 import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType } from "../processinterfaces";
@@ -130,7 +130,7 @@ export class BpmnProcess {
             // }
             // break;
             case TaskSettings.UserForm:
-              returnValue.fieldDefinitions = JSON.parse(child.$body);
+              returnValue.fieldDefinitions = updateLegacyFieldDefinitions(JSON.parse(child.$body));
               break;
             default:
               return;
