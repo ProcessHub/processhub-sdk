@@ -152,18 +152,6 @@ export class BpmnProcess {
               }
             }
               break;
-
-            // case Process.TASKSETTINGS_JUMPSETTING:
-            //   returnValue.jumpMode = child.$body as Process.JumpModeType;
-            //   break;
-            // case Process.TASKSETTINGS_JUMPVALUES: {
-            //   let list: string[] = [];
-            //   for (let possibleJumpId of child.$body.split(",")) {
-            //     list.push(possibleJumpId);
-            //   }
-            //   returnValue.jumpValues = list;
-            // }
-            // break;
             case TaskSettings.UserForm:
               returnValue.fieldDefinitions = updateLegacyFieldDefinitions(JSON.parse(child.$body));
               break;
