@@ -20,9 +20,9 @@ export function getApiClient(apiHost: string = "https://app.processhub.com", acc
       networkInterface.use([{
         applyMiddleware(req, next) {
           if (!req.options.headers) {
-            req.options.headers = {};
+            req.options.headers = {} as any;
           }
-          req.options.headers["x-accesstoken"] = accessToken;
+          (req.options.headers as any)["x-accesstoken"] = accessToken;
           next();
         }
       }]);

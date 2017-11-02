@@ -23,7 +23,7 @@ export async function getJson<Request extends BaseRequest>(path: string, request
     req = {
       headers: {
         "Accept": "application/json"
-      },
+      } as any,
       credentials: "include"
     };
   } else {
@@ -32,7 +32,7 @@ export async function getJson<Request extends BaseRequest>(path: string, request
       headers: {
         "Accept": "application/json",
         "x-accesstoken": accessToken   // x-accesstoken Kleinschreibung erforderlich
-      }
+      } as any
     };
   }
   let response = await fetch(url, req);
@@ -71,7 +71,7 @@ export async function postJson<Request extends BaseRequest>(path: string, reques
       headers: {
         "Accept": "application/json",
         "Content-Type": "application/json"
-      },
+      } as any,
       credentials: "include"
     };
   } else {
@@ -83,7 +83,7 @@ export async function postJson<Request extends BaseRequest>(path: string, reques
         "Accept": "application/json",
         "Content-Type": "application/json",
         "x-accesstoken": accessToken   // x-accesstoken Kleinschreibung erforderlich
-      }
+      } as any
     };
   }
   let response = await fetch(url, req);
