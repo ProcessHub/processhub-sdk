@@ -156,11 +156,12 @@ export type TaskSettingsValueType = "List" | "Text" | "Boolean";
 export const TaskSettings = {
   Description: "description",
   Jumps: "jumps",
-  UserForm: "processhub-userform",
+  UserForm: "processhub-userform", // json: FieldDefinition[]
   SendTaskReceiver: "send-task-receiver",
-  SendTaskWithFieldContents: "send-task-with-field-contents",
-  SendTaskInstanceLink: "send-task-instance-link",
-  SendTaskSubject: "send-task-subject"
+  SendTaskWithFieldContents: "send-task-with-field-contents", // boolean: include field contents in SendTask notification mail?
+  SendTaskInstanceLink: "send-task-instance-link", // boolean: include a link to the instance in SendTask notification mail?
+  SendTaskSubject: "send-task-subject", // string: mail subject of SendTask notification mail
+  AllFieldsEditable: "all-fields-editable" // boolean: all existing fields in task can be edited in current task
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -173,6 +174,7 @@ export interface TaskExtensions {
   sendTaskWithFieldContents: boolean;
   sendTaskInstanceLink: boolean;
   sendTaskSubject: string;
+  allFieldsEditable: boolean;
 }
 
 export interface RunningTaskLane {

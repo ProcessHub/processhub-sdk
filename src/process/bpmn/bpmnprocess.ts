@@ -112,7 +112,8 @@ export class BpmnProcess {
       sendTaskReceiver: null,
       sendTaskInstanceLink: true,
       sendTaskSubject: null,
-      sendTaskWithFieldContents: true
+      sendTaskWithFieldContents: true,
+      allFieldsEditable: true
     };
 
     if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
@@ -136,7 +137,10 @@ export class BpmnProcess {
               returnValue.sendTaskInstanceLink = child.$body == "true";
               break;
             case TaskSettings.SendTaskWithFieldContents:
-              returnValue.sendTaskWithFieldContents = child.$body == "true";
+              returnValue.sendTaskWithFieldContents = child.$body != "false";
+              break;
+            case TaskSettings.AllFieldsEditable:
+              returnValue.allFieldsEditable = child.$body != "false";
               break;
             case TaskSettings.SendTaskReceiver: {
               try {
