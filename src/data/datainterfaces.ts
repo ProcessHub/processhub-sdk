@@ -21,6 +21,7 @@ export interface FieldValue {
 
 export type FieldType = "ProcessHubTextInput"
   | "ProcessHubTextArea"
+  | "ProcessHubInstanceTitle"  
   | "ProcessHubCheckbox"
   | "ProcessHubFileUpload"
   | "ProcessHubRoleOwner"
