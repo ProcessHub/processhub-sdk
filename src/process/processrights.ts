@@ -78,7 +78,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     processRoles = {};
 
   if (processRoles[DefaultRoles.Viewer] == null) {
-    // Vorgabewert für Prozessansicht
+    // default value for visibility
     if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free)
       processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
     else
@@ -92,11 +92,11 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
   }
 
-  // Everybody can be added as a follower
+  // everybody can be added as a follower
   processRoles[DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }], allowMultipleOwners: true };
 
   if (bpmnProcess != null) {
-    // Alle Lanes mit Vorgabewerten belegen
+    // set default owners for all roles
     let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), true);
     lanes.map(lane => {
       if (processRoles[lane.id] == null) {
@@ -111,7 +111,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
       processRoles[role].isStartingRole = (startLanes && (undefined !== startLanes.find(s => s === role)));
     }
 
-    // Im Prozess nicht mehr vorhandene Lanes entfernen
+    // remove roles that are not used any more
     for (let role in processRoles) {
       if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer) {
         if (lanes.find(lane => lane.id == role) == null)

@@ -404,7 +404,7 @@ export class BpmnProcess {
 
   public getExistingTask(processId: string, taskId: string): Bpmn.Task {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
-    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_USERTASK || e.$type === BPMN_SENDTASK));
+    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_STARTEVENT || e.$type === BPMN_ENDEVENT || e.$type === BPMN_USERTASK || e.$type === BPMN_SENDTASK));
     let task = flowElements.find(element => element.id == taskId);
 
     return task as Bpmn.Task;
@@ -782,10 +782,11 @@ export class BpmnProcess {
   public getSortedLanesWithTasks(processId: string): Bpmn.Lane[] {
     let laneElementsList: Bpmn.Lane[] = this.getLanes(processId, true);
 
-    // Testweise sortiert
     let sortedLaneElementsList = [];
 
-    let sortedTaskIds: string[] = this.getSortedTasks(processId).map(t => t.id);
+    // include start element
+    let sortedTaskIds: string[] = [this.getStartEvents(processId)[0].id];
+    this.getSortedTasks(processId).map(t => sortedTaskIds.push(t.id));
 
     let laneOfLastTask: any;
 
@@ -823,10 +824,10 @@ export class BpmnProcess {
       laneOfEndEvent = laneOfLastTask;
     }
 
-    if (laneOfStartEvent != null && laneOfEndEvent != null) {
+    if (laneOfStartEvent != null) 
       this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvents(processId)[0]);
-      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);
-    }
+    if (laneOfEndEvent != null) 
+      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);   
 
     return sortedLaneElementsList;
   }
