@@ -17,12 +17,12 @@ export function createId(): string {
 }
 
 export function createUserId(): string {
-  // UserIds beginnen mit 0
+  // UserIds start with 0
   return "0" + createId().substr(1);
 }
 
 export function createGroupId(): string {
-  // GroupIds beginnen mit 0
+  // GroupIds start with 1
   return "1" + createId().substr(1);
 }
 
@@ -58,7 +58,7 @@ export function isTempUserId(id: string): boolean {
   return (id.substr(0, prefixLength) == TEMP_USERID_PREFIX);
 }
 
-// Nummer im Format 123.4567.890
+// number format 123.4567.890
 export function createInstanceNumber(): string {
   return Math.floor(1000 + Math.random() * 1000).toString().substr(1, 3) + "." + Math.floor(10000 + Math.random() * 10000).toString().substr(1, 4) + "." + Math.floor(1000 + Math.random() * 1000).toString().substr(1, 3);
 }

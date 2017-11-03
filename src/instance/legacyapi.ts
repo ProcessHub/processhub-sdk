@@ -27,15 +27,14 @@ export interface InstanceReply extends BaseReply {
 
 export interface ExecuteRequest extends InstanceRequest {
   processId: string;
-  displayName: string;
-  instanceDetails?: InstanceDetails;
+  instance?: InstanceDetails;
 }
 export interface ExecuteReply extends InstanceReply { // ExecuteReply ist das selbe wie ResumeReply
   instanceId?: string;
 }
 
 export interface UpdateInstanceRequest extends InstanceRequest {
-  instanceDetails: InstanceDetails;
+  instance: InstanceDetails;
 }
 export interface UpdateInstanceReply extends InstanceReply {
   instance?: InstanceDetails;

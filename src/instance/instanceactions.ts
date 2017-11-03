@@ -40,17 +40,16 @@ export interface InstanceActionJump extends InstanceAction {
   readonly type: InstanceActionType; // "INSTANCEACTION_JUMP";
 }
 
-export async function executeInstance(processId: string, displayName: string, instanceDetails: InstanceDetails): Promise<ExecuteReply> {
-  return await rootStore.dispatch(executeInstanceAction(processId, displayName, instanceDetails));
+export async function executeInstance(processId: string, instanceDetails: InstanceDetails): Promise<ExecuteReply> {
+  return await rootStore.dispatch(executeInstanceAction(processId, instanceDetails));
 }
 
-export function executeInstanceAction(processId: string, displayName: string, instanceDetails: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
+export function executeInstanceAction(processId: string, instanceDetails: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
 
   return async <S>(dispatch: Dispatch<S>): Promise<ExecuteReply> => {
     let response: ExecuteReply = await Api.postJson(ProcessEngineApiRoutes.execute, {
       processId: processId,
-      displayName: displayName,
-      instanceDetails: instanceDetails
+      instance: instanceDetails
     });
 
     dispatch<InstanceActionExecute>({
@@ -61,14 +60,14 @@ export function executeInstanceAction(processId: string, displayName: string, in
   };
 }
 
-export async function updateInstance(instanceDetails: InstanceDetails): Promise<UpdateInstanceReply> {
-  return await rootStore.dispatch(updateInstanceAction(instanceDetails));
+export async function updateInstance(instance: InstanceDetails): Promise<UpdateInstanceReply> {
+  return await rootStore.dispatch(updateInstanceAction(instance));
 }
 
-export function updateInstanceAction(instanceDetails: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<UpdateInstanceReply> {
+export function updateInstanceAction(instance: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<UpdateInstanceReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<UpdateInstanceReply> => {
     let response: UpdateInstanceReply = await Api.postJson(ProcessEngineApiRoutes.updateInstance, {
-      instanceDetails: instanceDetails
+      instance: instance
     });
 
     if (response.instance)
