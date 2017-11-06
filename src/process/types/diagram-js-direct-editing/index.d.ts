@@ -2,12 +2,12 @@
 declare module "diagram-js-direct-editing" {
   import Diagram = require("diagram-js");
 
-  interface diagramJsDirectEditingExport {
+  interface IDiagramJsDirectEditingExport {
     __init__: string[];
     __depends__: Diagram.IPlugin[];
   }
 
-  var _default: diagramJsDirectEditingExport;
+  const _default: IDiagramJsDirectEditingExport;
 
   export = _default;
 }

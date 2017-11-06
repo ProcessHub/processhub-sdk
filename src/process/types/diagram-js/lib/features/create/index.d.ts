@@ -2,12 +2,12 @@
 declare module "diagram-js/lib/features/create" {
   import Diagram = require("diagram-js");
 
-  interface createExport {
+  interface ICreateExport {
     __init__: string[];
     __depends__: Diagram.IPlugin[];
   }
 
-  var _default: createExport;
+  const _default: ICreateExport;
 
   export = _default;
 }
