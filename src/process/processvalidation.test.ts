@@ -16,9 +16,9 @@ describe("sdk", function () {
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
         assert.isTrue(res, "error: " + obj.displayName + " - " + obj.description);
 
-        obj = { displayName: "test1", description: "hallo test" };
+        obj = { displayName: "te", description: "hallo test" };
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
-        assert.isTrue(!res, "error: " + obj.displayName + " - " + obj.description);
+        assert.isFalse(res, "error: " + obj.displayName + " - " + obj.description);
 
         obj = { displayName: "test 1234", description: "hallo test" };
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
@@ -30,7 +30,7 @@ describe("sdk", function () {
 
         obj = { displayName: "123456789012345678901234567890123456789012345678901", description: "hallo test" };
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
-        assert.isTrue(!res, "error: " + obj.displayName + " - " + obj.description);
+        assert.isFalse(res, "error: " + obj.displayName + " - " + obj.description);
 
         obj = { displayName: "12345678901234567890123456789012345678901234567890", description: "hallo test" };
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
@@ -46,7 +46,7 @@ describe("sdk", function () {
 
         obj = { displayName: "012345678901234567890123456789012345678901234567891", description: "hallo test" };
         res = ProcessValidation.isProcessDetailsValid(obj as ProcessDetails);
-        assert.isTrue(!res, "error: " + obj.displayName + " - " + obj.description);
+        assert.isFalse(res, "error: " + obj.displayName + " - " + obj.description);
 
         obj = {
           workspaceId: createWorkspaceId(),
