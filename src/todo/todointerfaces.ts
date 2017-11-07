@@ -16,7 +16,8 @@ export interface TodoDetails {
   todoId: string;
   todoType?: TodoType;
   userId?: string;
-  workspaceId: string;  
+  workspaceId: string;
+  processId: string;  
   instanceId: string;
   status?: TodoStatus;
   displayName: string;
