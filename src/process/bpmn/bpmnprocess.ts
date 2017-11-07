@@ -506,11 +506,10 @@ export class BpmnProcess {
   }
 
   public addLane(processId: string, id: string, name: string): string {
-    // Weitere Lane (=Rolle) anlegen
+    // add an additional lane (=role)
     let lane = this.moddle.create(BPMN_LANE, { id: id, name: name, flowNodeRef: [] });
 
     let processContext: Bpmn.Process = this.getProcess(processId);
-    // Check für undefined
     if (processContext.laneSets[0].lanes == null) {
       processContext.laneSets[0].lanes = [];
     }
@@ -612,16 +611,25 @@ export class BpmnProcess {
           }
         }
       }
-
-      // Lane ist komplett leer --> aus laneset entfernen
-      // lane soll auch entfernt werden, wenn nur noch start oder endevent in der lane ist. (kommt vom diagram und wird beim nächsten "zeichen" automatisch wieder hinzugefügt!)
-      if (processLane.flowNodeRef == null || processLane.flowNodeRef.length === 0 || (processLane.flowNodeRef.length === 1 && (processLane.flowNodeRef[0].$type === BPMN_ENDEVENT || processLane.flowNodeRef[0].$type === BPMN_STARTEVENT))) {
-        processLanes.splice(laneIndex, 1);
-        laneIndex--; // Wegen splicen
-      }
     }
-
+    this.cleanupLanes();
+    
     this.processDiagram.generateBPMNDiagram(processId);
+  }
+
+  // remove empty lanes
+  public cleanupLanes() {
+    let processLanes: Bpmn.Lane[] = this.getProcessLanes(this.processId());
+    
+    for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
+      let processLane: Bpmn.Lane = processLanes[laneIndex];
+
+      if (processLane.flowNodeRef == null || processLane.flowNodeRef.length == 0) {
+        // lane is empty -> remove
+        processLanes.splice(laneIndex, 1);
+        laneIndex--; // because of splice
+      }
+    }  
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
@@ -761,6 +769,8 @@ export class BpmnProcess {
   }
 
   public async toXmlString(): Promise<string> {
+    this.cleanupLanes();
+
     return await new Promise<string>((resolve, reject) => {
       this.moddle.toXML(this.bpmnXml, { format: true }, function (err: any, xmlStr: string) {
         if (err) reject(err);
