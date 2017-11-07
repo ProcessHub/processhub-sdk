@@ -74,7 +74,7 @@ export class BpmnProcess {
       }
     }
   }
-  
+
   public getFieldDefinitions(): FieldDefinition[] {
     let fieldDefinitions: FieldDefinition[] = [];
 
@@ -104,7 +104,7 @@ export class BpmnProcess {
     else
       return null;
   }
-  
+
   public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
     let returnValue: TaskExtensions = {
       description: null,
@@ -249,7 +249,9 @@ export class BpmnProcess {
       return tmpList;
     }
     if (currentTask.outgoing == null) {
-      console.warn("getNextActivities: currentTask.outgoing should not be null");
+      if (currentTask.$type !== "bpmn:EndEvent") {
+        console.warn("getNextActivities: currentTask.outgoing should not be null");
+      }
       return tmpList;
     }
 
@@ -834,10 +836,10 @@ export class BpmnProcess {
       laneOfEndEvent = laneOfLastTask;
     }
 
-    if (laneOfStartEvent != null) 
+    if (laneOfStartEvent != null)
       this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvents(processId)[0]);
-    if (laneOfEndEvent != null) 
-      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);   
+    if (laneOfEndEvent != null)
+      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);
 
     return sortedLaneElementsList;
   }
@@ -936,7 +938,7 @@ export class BpmnProcess {
       }
       if (taskObject.outgoing != null && taskObject.outgoing[0] != null)
         taskObject = taskObject.outgoing[0].targetRef;
-      else 
+      else
         taskObject = null;
     }
 
@@ -1000,9 +1002,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.outgoing[taskObj.outgoing.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;      
+      return null;
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
@@ -1014,9 +1016,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.incoming[taskObj.incoming.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;  
+      return null;
   }
 
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {

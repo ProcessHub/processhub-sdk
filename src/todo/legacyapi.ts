@@ -5,6 +5,7 @@ import { TodoDetails } from "./todointerfaces";
 export const TodoRequestRoutes = {
   GetSimulationTodos: "/api/todo/simulationtodos",
   SetPriority: "/api/todo/setpriority",
+  DeleteNotificationTodo: "/api/todo/deletenotificationtodo",
 };
 export type TodoRequestRoutes = keyof typeof TodoRequestRoutes;
 
@@ -30,4 +31,11 @@ export interface SetTodoPriorityRequest {
   priority: number;
 }
 export interface SetTodoPriorityReply extends BaseReply  {
+}
+
+export interface DeleteNotificationTodoRequest {
+  workspaceId: string;
+  todoId: string;
+}
+export interface DeleteNotificationTodoReply extends BaseReply  {
 }
