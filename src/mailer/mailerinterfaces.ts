@@ -14,8 +14,8 @@ export interface MailContent {
 export interface MessageNotificationMailContent extends MailContent {
   sender?: MailSender;
   instanceUrl?: string;  
-  todoTitle: string;
-  todoDescription: string;
+  todoTitle?: string;
+  todoDescription?: string;
   fieldContents?: FieldContentMap;
   subject: string;
 }
@@ -26,5 +26,17 @@ export interface SendMailTemplateRequest extends MessageNotificationMailContent,
 }
 
 export interface SendMailTemplateReply extends BaseReply {
+  errorMessage?: string;
+}
+
+export interface ReplyToMailRequest extends MessageNotificationMailContent, BaseRequest {
+  choosenFieldContents: string[];
+  receiverMails: string[];
+  addReceiverAsFollower: boolean;
+  mailText: string;
+  instanceId: string;  
+}
+
+export interface ReplyToMailReply extends BaseReply {
   errorMessage?: string;
 }
