@@ -139,13 +139,14 @@ export enum AuditTrailAction {
   completedTodo = 2,
   comment = 3,
   incomingMail = 4,
-  jumpPerformed = 5
+  jumpPerformed = 5,
+  outgoingMail = 6
 }
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
   todoDisplayName: string;
   // must be set for AuditTrailAction.comment
-  comment: string;  
+  comment: string;
 
   // must be set for AuditTrailAction.incomingMail
   mailText: string;
@@ -154,6 +155,8 @@ export interface AuditTrailEntryDetails {
   mailHtmlLink: string;
   // may be set for AuditTrailAction.incomingMail, if there were attachments in the mail - links to all attachment files. Empty array if there were no attachments.
   mailAttachments: string[];
+  // may be set for AuditTrailAction.outgoingMail
+  mailReceiverList: string[];
   // must be set for AuditTrailAction.jumpPerformed
   jumpFromTodoDisplayName: string;
   jumpToTodoDisplayName: string;
@@ -167,7 +170,7 @@ export interface AuditTrailEntry {
   processId?: string;  // may be null for entries on workspace-level
   instanceId?: string;  // may be null for entries on workspace- or process-level
   action: AuditTrailAction;
-  user: UserDetails;  
+  user: UserDetails;
   createdAt: Date;  // time of action in UTC
   details: Partial<AuditTrailEntryDetails>;
 }

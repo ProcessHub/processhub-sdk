@@ -1,14 +1,10 @@
 import { BaseRequest, BaseMessage, ApiResult } from "../legacyapi/apiinterfaces";
 
 export const MailerRequestRoutes = {
-  SendMailTemplate: "/api/mailer/send-mail-template"
+  SendMailTemplate: "/api/mailer/send-mail-template",
+  ReplyToMail: "/api/mailer/send-reply-to-mail"
 };
 export type MailerRequestRoutes = keyof typeof MailerRequestRoutes;
-
-// Reply: ApiReply
-export interface SendMailTemplateRerquestRequest extends BaseRequest {
-  
-}
 
 export const MAILERSENT_MESSAGE = "MailerSentMessage";
 export interface MailerSentMessage extends BaseMessage {
