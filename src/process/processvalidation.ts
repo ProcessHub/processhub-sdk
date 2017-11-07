@@ -2,7 +2,7 @@ import { tl } from "../tl";
 import { ProcessDetails } from "./processinterfaces";
 
 export function isProcessDetailsValid(details: ProcessDetails): boolean {
-  if (details.displayName.length < 6 || details.displayName.length > 50)
+  if (details.displayName.length < 3 || details.displayName.length > 50)
     return false;
 
   return true;
@@ -14,8 +14,8 @@ export function isProcessDetailsValid(details: ProcessDetails): boolean {
  * @return {string} an empty string if the name is valid, an error message otherwise
  */
 export function isProcessDisplayNameValid(processname: string): string {
-  if (processname.length < 6) {
-    return tl("Minimum 6 Zeichen");
+  if (processname.length < 3) {
+    return tl("Minimum 3 Zeichen");
   } else if (processname.length > 50) {
     return tl("Maximum 50 Zeichen");
   } else {

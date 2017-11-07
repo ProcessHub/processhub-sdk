@@ -2,9 +2,13 @@
 declare module "diagram-js/lib/features/snapping" {
   import Diagram = require("diagram-js");
 
-  const __init__: string[];
-  const __depends__: Diagram.IPlugin[];
-  const snapping: Diagram.IType;
+  interface ISnappingExport {
+    __init__: string[];
+    __depends__: Diagram.IPlugin[];
+    snapping: Diagram.IType;
+  }
 
-  export = { __init__, __depends__, snapping };
+  const _default: ISnappingExport;
+
+  export = _default;
 }

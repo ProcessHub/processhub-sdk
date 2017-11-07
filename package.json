@@ -103,7 +103,7 @@
     "ts-loader": "2.3.0",
     "tslint": "^5.8.0",
     "tslint-loader": "^3.5.3",
-    "typescript": "2.5.3"
+    "typescript": "^2.6.1"
   },
   "files": [
     "index.js",

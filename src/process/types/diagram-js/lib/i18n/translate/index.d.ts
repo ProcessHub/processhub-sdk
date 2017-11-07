@@ -2,8 +2,7 @@
 declare module "diagram-js/lib/i18n/translate" {
   import Diagram = require("diagram-js");
 
-  const __init__: string[];
-  const __depends__: Diagram.IPlugin[];
+  const _default: Diagram.IPlugin;
 
-  export = { __init__, __depends__ };
+  export = _default;
 }
