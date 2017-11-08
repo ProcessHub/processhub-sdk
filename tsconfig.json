@@ -17,6 +17,7 @@
     "lib",
     "tsc_out",
     "node_modules",
-    "./src/**/*.test.ts"
+    "./src/**/*.test.ts",
+    "../src/**"
   ]
 }
