@@ -74,7 +74,7 @@ export class BpmnProcess {
       }
     }
   }
-  
+
   public getFieldDefinitions(): FieldDefinition[] {
     let fieldDefinitions: FieldDefinition[] = [];
 
@@ -104,7 +104,7 @@ export class BpmnProcess {
     else
       return null;
   }
-  
+
   public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
     let returnValue: TaskExtensions = {
       description: null,
@@ -249,7 +249,9 @@ export class BpmnProcess {
       return tmpList;
     }
     if (currentTask.outgoing == null) {
-      console.warn("getNextActivities: currentTask.outgoing should not be null");
+      if (currentTask.$type !== "bpmn:EndEvent") {
+        console.warn("getNextActivities: currentTask.outgoing should not be null");
+      }
       return tmpList;
     }
 
@@ -506,11 +508,10 @@ export class BpmnProcess {
   }
 
   public addLane(processId: string, id: string, name: string): string {
-    // Weitere Lane (=Rolle) anlegen
+    // add an additional lane (=role)
     let lane = this.moddle.create(BPMN_LANE, { id: id, name: name, flowNodeRef: [] });
 
     let processContext: Bpmn.Process = this.getProcess(processId);
-    // Check für undefined
     if (processContext.laneSets[0].lanes == null) {
       processContext.laneSets[0].lanes = [];
     }
@@ -612,16 +613,25 @@ export class BpmnProcess {
           }
         }
       }
-
-      // Lane ist komplett leer --> aus laneset entfernen
-      // lane soll auch entfernt werden, wenn nur noch start oder endevent in der lane ist. (kommt vom diagram und wird beim nächsten "zeichen" automatisch wieder hinzugefügt!)
-      if (processLane.flowNodeRef == null || processLane.flowNodeRef.length === 0 || (processLane.flowNodeRef.length === 1 && (processLane.flowNodeRef[0].$type === BPMN_ENDEVENT || processLane.flowNodeRef[0].$type === BPMN_STARTEVENT))) {
-        processLanes.splice(laneIndex, 1);
-        laneIndex--; // Wegen splicen
-      }
     }
-
+    this.cleanupLanes();
+    
     this.processDiagram.generateBPMNDiagram(processId);
+  }
+
+  // remove empty lanes
+  public cleanupLanes() {
+    let processLanes: Bpmn.Lane[] = this.getProcessLanes(this.processId());
+    
+    for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
+      let processLane: Bpmn.Lane = processLanes[laneIndex];
+
+      if (processLane.flowNodeRef == null || processLane.flowNodeRef.length == 0) {
+        // lane is empty -> remove
+        processLanes.splice(laneIndex, 1);
+        laneIndex--; // because of splice
+      }
+    }  
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
@@ -761,6 +771,8 @@ export class BpmnProcess {
   }
 
   public async toXmlString(): Promise<string> {
+    this.cleanupLanes();
+
     return await new Promise<string>((resolve, reject) => {
       this.moddle.toXML(this.bpmnXml, { format: true }, function (err: any, xmlStr: string) {
         if (err) reject(err);
@@ -824,10 +836,10 @@ export class BpmnProcess {
       laneOfEndEvent = laneOfLastTask;
     }
 
-    if (laneOfStartEvent != null) 
+    if (laneOfStartEvent != null)
       this.addTaskToLane(processId, laneOfStartEvent.id, this.getStartEvents(processId)[0]);
-    if (laneOfEndEvent != null) 
-      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);   
+    if (laneOfEndEvent != null)
+      this.addTaskToLane(processId, laneOfEndEvent.id, this.getEndEvents(processId)[0]);
 
     return sortedLaneElementsList;
   }
@@ -926,7 +938,7 @@ export class BpmnProcess {
       }
       if (taskObject.outgoing != null && taskObject.outgoing[0] != null)
         taskObject = taskObject.outgoing[0].targetRef;
-      else 
+      else
         taskObject = null;
     }
 
@@ -990,9 +1002,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.outgoing[taskObj.outgoing.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;      
+      return null;
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string): string {
@@ -1004,9 +1016,9 @@ export class BpmnProcess {
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.incoming[taskObj.incoming.length - 1];
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
-      return seqFlow.name;  
+      return seqFlow.name;
     else
-      return null;  
+      return null;
   }
 
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {

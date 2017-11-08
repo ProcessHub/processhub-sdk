@@ -164,9 +164,11 @@ export interface AuditTrailEntryDetails {
 export type Partial<T> = {
   [P in keyof T]?: T[P];
 };
-export interface AuditTrailEntry {
-  instanceId: string;
+export interface AuditTrailEntry { 
   trailId: string;
+  workspaceId: string;
+  processId?: string;  // may be null for entries on workspace-level
+  instanceId?: string;  // may be null for entries on workspace- or process-level
   action: AuditTrailAction;
   user: UserDetails;
   createdAt: Date;  // time of action in UTC
