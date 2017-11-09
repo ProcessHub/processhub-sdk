@@ -113,7 +113,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
 
     // remove roles that are not used any more
     for (let role in processRoles) {
-      if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer) {
+      if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer && role != DefaultRoles.Follower) {
         if (lanes.find(lane => lane.id == role) == null)
           delete (processRoles[role]);
       }
@@ -217,9 +217,9 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
             displayName: potentialOwner.displayName
           });
         } else if (isGroupId(potentialOwner.memberId)) {
-          error("nicht implementiert");
+          error("not implemented");
         } else
-          error("ungültiger Aufruf?!");
+          error("invalid call");
       }
       allOwners[role] = owners;
     }
