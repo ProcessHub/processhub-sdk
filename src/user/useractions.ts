@@ -145,11 +145,7 @@ export async function logoutUser() {
 export function logoutUserAction() {
   return function (dispatch: any) {
 
-    return Api.postJson(UserRequestRoutes.Logout, null).then(() => {
-      if (typeof window !== "undefined") { // window not available in unit tests
-        // Reload on successful login to clean old cache
-        window.location.href = "/signin";
-      }
+    return Api.postJson(UserRequestRoutes.Logout, null).then(() => {      
     }).catch(reason => error(reason));
   };
 }
