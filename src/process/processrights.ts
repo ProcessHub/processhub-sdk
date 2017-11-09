@@ -27,7 +27,6 @@ export const DefaultRoles = {
   Owner: "OWNER", // DO NOT CHANGE - string used in database
   Manager: "MANAGER", // DO NOT CHANGE - string used in database
   Viewer: "VIEWER", // DO NOT CHANGE - string used in database
-  InstanceOwner: "IOWNER", // DO NOT CHANGE - string used in database
   Follower: "FOLLOWER" // DO NOT CHANGE - string used in database
 };
 export type DefaultRoles = keyof typeof DefaultRoles;
@@ -90,6 +89,11 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   }
   if (processRoles[DefaultRoles.Manager] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
     processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
+  }
+  // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
+  if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free) {
+    delete (processRoles[DefaultRoles.Owner]);
+    delete (processRoles[DefaultRoles.Manager]);
   }
 
   // everybody can be added as a follower
