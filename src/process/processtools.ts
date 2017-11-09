@@ -4,6 +4,9 @@ import { parseIdMailAddress } from "../instance/instancetools";
 export function parseProcessMailAddress(mail: string): string {
   return parseIdMailAddress("p-", mail);
 }
+export function getProcessMailAddress(processId: string): string {
+  return "p-" + processId.toLowerCase() + "@processhub.net";
+}
 
 // Init settings that don't exist with default values
 export function initSettings(process: ProcessDetails): void {

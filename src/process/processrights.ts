@@ -17,7 +17,8 @@ export enum ProcessAccessRights {
   ViewInstances = 1 << 4,  // access to instances tab, user sees instances with own roles
   ViewAllInstances = 1 << 5,  // user can see all instances
   ViewTodos = 1 << 6,
-  ViewAllTodos = 1 << 7
+  ViewAllTodos = 1 << 7,
+  StartProcessByMail = 1 << 8  // user can start this process by mail
 }
 
 export interface ProcessRoles {
@@ -49,6 +50,7 @@ export interface ProcessRole {
   roleName?: string;
   potentialRoleOwners: RoleOwner[];
   isStartingRole?: boolean;  // this role is allowed to start the process
+  isStartingByMailRole?: boolean;  // this role is allowed to start the process with an incoming mail
   allowMultipleOwners?: boolean;  // role can have multiple simultaneous role owners 
 }
 export interface PotentialRoleOwners {
@@ -110,11 +112,17 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     });
 
     // set starting roles
-    const startLanes: string[] = bpmnProcess.getStartLaneIds();
-    for (const role in processRoles) {
-      processRoles[role].isStartingRole = (startLanes && (undefined !== startLanes.find(s => s === role)));
-    }
-
+    const startEvents = bpmnProcess.getStartEvents(bpmnProcess.processId());
+    startEvents.map(startEvent => {
+      const isMessageStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === "bpmn:MessageEventDefinition") != null;
+      let roleId = bpmnProcess.getLaneOfFlowNode(startEvent.id).id;
+      if (isMessageStartEvent) {
+        processRoles[roleId].isStartingByMailRole = true;        
+      } else {
+        processRoles[roleId].isStartingRole = true;
+      }
+    });
+    
     // remove roles that are not used any more
     for (let role in processRoles) {
       if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer && role != DefaultRoles.Follower) {
@@ -276,7 +284,14 @@ export function canStartProcess(process: ProcessDetails): boolean {
     return false;
 
   // Only users in the start lane may start the process - even administrators don't inherit that right!
-  return ((process.userRights & ProcessAccessRights.StartProcess) != 0);
+  return canStartProcessByMail(process) || ((process.userRights & ProcessAccessRights.StartProcess) != 0);
+}
+export function canStartProcessByMail(process: ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  // Only users in the start lane may start the process - even administrators don't inherit that right!
+  return ((process.userRights & ProcessAccessRights.StartProcessByMail) != 0);
 }
 
 export function canViewTodos(process: ProcessDetails): boolean {
