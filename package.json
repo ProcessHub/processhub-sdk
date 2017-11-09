@@ -81,7 +81,7 @@
     "@types/mocha": "^2.2.41",
     "@types/nes": "^6.2.9",
     "@types/react": "^15.0.27",
-    "@types/react-router": "^2.0.47",
+    "@types/react-router": "^2.0.51",
     "@types/react-router-redux": "^5.0.8",
     "@types/redux": "^3.6.0",
     "@types/redux-thunk": "^2.1.0",
@@ -101,9 +101,9 @@
     "mocha": "^3.4.2",
     "nyc": "^11.2.1",
     "ts-loader": "2.3.0",
-    "tslint": "^5.5.0",
+    "tslint": "^5.8.0",
     "tslint-loader": "^3.5.3",
-    "typescript": "^2.4.2"
+    "typescript": "^2.6.1"
   },
   "files": [
     "index.js",
