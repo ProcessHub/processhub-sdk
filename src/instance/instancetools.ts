@@ -15,7 +15,7 @@ export function parseIdMailAddress(prefix: string, mail: string): string {
     return null;
 }
 export function getInstanceMailAddress(instanceId: string): string {
-  return "i-" + instanceId.toLowerCase() + "@processhub.net";
+  return "i-" + instanceId.toLowerCase() + "@mail.processhub.com";
 }
 export function parseInstanceMailAddress(mail: string): string {
   return parseIdMailAddress("i-", mail);

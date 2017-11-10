@@ -5,7 +5,7 @@ export function parseProcessMailAddress(mail: string): string {
   return parseIdMailAddress("p-", mail);
 }
 export function getProcessMailAddress(processId: string): string {
-  return "p-" + processId.toLowerCase() + "@processhub.net";
+  return "p-" + processId.toLowerCase() + "@mail.processhub.com";
 }
 
 // Init settings that don't exist with default values

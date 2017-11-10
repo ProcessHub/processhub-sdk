@@ -29,7 +29,7 @@ describe("sdk", function () {
 
       describe("parseInstanceMailAddress", function () {
         it("should return 0 if not an instance mail address", function () {
-          assert.equal(parseInstanceMailAddress("test@processhub.com"), null);          
+          assert.equal(parseInstanceMailAddress("test@mail.processhub.com"), null);          
         });
 
         it("should parse instanceId from mail address", function () {
