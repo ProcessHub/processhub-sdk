@@ -115,11 +115,13 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     const startEvents = bpmnProcess.getStartEvents(bpmnProcess.processId());
     startEvents.map(startEvent => {
       const isMessageStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === "bpmn:MessageEventDefinition") != null;
-      let roleId = bpmnProcess.getLaneOfFlowNode(startEvent.id).id;
-      if (isMessageStartEvent) {
-        processRoles[roleId].isStartingByMailRole = true;        
-      } else {
-        processRoles[roleId].isStartingRole = true;
+      let role = bpmnProcess.getLaneOfFlowNode(startEvent.id);
+      if (role) { // in new processes somehow the start element is not in a lane (yet)
+        if (isMessageStartEvent) {
+          processRoles[role.id].isStartingByMailRole = true;        
+        } else {
+          processRoles[role.id].isStartingRole = true;
+        }
       }
     });
     
