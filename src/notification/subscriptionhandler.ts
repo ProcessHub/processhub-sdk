@@ -37,8 +37,12 @@ export async function initNotificationClient(user: UserDetails) {
     
     if (authResult.status == "authenticated") {
       notificationClient.connect({ auth: authResult.token }, (err: any) => {
-        if (err != null)
+        if (err != null) {
+          console.log("Error on Websocket connect:");
+          console.log(err);
           reject();
+          
+        }
         resolve();
       });
     } else {
