@@ -47,6 +47,7 @@ export interface IFormElementProps {
   required: boolean;
   disabled: boolean;
   config: {};
+  key?: string;
 }
 
 
