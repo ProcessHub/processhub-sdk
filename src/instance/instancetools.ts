@@ -2,6 +2,7 @@ import { isFieldValue } from "../data/datainterfaces";
 import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
+import * as Config from "../config";
 
 export function parseIdMailAddress(prefix: string, mail: string): string {
   mail = mail.toLowerCase();
@@ -15,7 +16,10 @@ export function parseIdMailAddress(prefix: string, mail: string): string {
     return null;
 }
 export function getInstanceMailAddress(instanceId: string): string {
-  return "i-" + instanceId.toLowerCase() + "@processhub.net";
+  if (Config.backendUrl == "http://localhost:8080")
+    return "i-" + instanceId.toLowerCase() + "@testmail.processhub.com";
+  else
+    return "i-" + instanceId.toLowerCase() + "@mail.processhub.com";
 }
 export function parseInstanceMailAddress(mail: string): string {
   return parseIdMailAddress("i-", mail);

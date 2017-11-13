@@ -105,9 +105,7 @@ export function getShuffledNumberArray(amountOfElements: number, numberLenght: n
   return shuffleArray(array);
 }
 
-/**
- * Randomize array element order in-place.
- */
+// Randomize array element order in-place.
 function shuffleArray(array: number[]) {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
@@ -117,3 +115,4 @@ function shuffleArray(array: number[]) {
   }
   return array;
 }
+

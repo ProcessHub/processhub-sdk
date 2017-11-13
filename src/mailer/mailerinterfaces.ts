@@ -2,7 +2,7 @@ import { FieldContentMap } from "../data/datainterfaces";
 import { BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
 
 export enum MailSender {
-  FromProcessHub,   // noreply@processhub.com
+  FromProcessHub,   // noreply@mail.processhub.com
   FromInstance,     // use the mail address of the current instance as reply-to   
 }
 

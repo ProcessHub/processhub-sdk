@@ -17,7 +17,8 @@ export enum ProcessAccessRights {
   ViewInstances = 1 << 4,  // access to instances tab, user sees instances with own roles
   ViewAllInstances = 1 << 5,  // user can see all instances
   ViewTodos = 1 << 6,
-  ViewAllTodos = 1 << 7
+  ViewAllTodos = 1 << 7,
+  StartProcessByMail = 1 << 8  // user can start this process by mail
 }
 
 export interface ProcessRoles {
@@ -27,7 +28,6 @@ export const DefaultRoles = {
   Owner: "OWNER", // DO NOT CHANGE - string used in database
   Manager: "MANAGER", // DO NOT CHANGE - string used in database
   Viewer: "VIEWER", // DO NOT CHANGE - string used in database
-  InstanceOwner: "IOWNER", // DO NOT CHANGE - string used in database
   Follower: "FOLLOWER" // DO NOT CHANGE - string used in database
 };
 export type DefaultRoles = keyof typeof DefaultRoles;
@@ -50,6 +50,7 @@ export interface ProcessRole {
   roleName?: string;
   potentialRoleOwners: RoleOwner[];
   isStartingRole?: boolean;  // this role is allowed to start the process
+  isStartingByMailRole?: boolean;  // this role is allowed to start the process with an incoming mail
   allowMultipleOwners?: boolean;  // role can have multiple simultaneous role owners 
 }
 export interface PotentialRoleOwners {
@@ -91,6 +92,11 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   if (processRoles[DefaultRoles.Manager] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
     processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
   }
+  // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
+  if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free) {
+    delete (processRoles[DefaultRoles.Owner]);
+    delete (processRoles[DefaultRoles.Manager]);
+  }
 
   // everybody can be added as a follower
   processRoles[DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }], allowMultipleOwners: true };
@@ -106,14 +112,22 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     });
 
     // set starting roles
-    const startLanes: string[] = bpmnProcess.getStartLaneIds();
-    for (const role in processRoles) {
-      processRoles[role].isStartingRole = (startLanes && (undefined !== startLanes.find(s => s === role)));
-    }
-
+    const startEvents = bpmnProcess.getStartEvents(bpmnProcess.processId());
+    startEvents.map(startEvent => {
+      const isMessageStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === "bpmn:MessageEventDefinition") != null;
+      let role = bpmnProcess.getLaneOfFlowNode(startEvent.id);
+      if (role) { // in new processes somehow the start element is not in a lane (yet)
+        if (isMessageStartEvent) {
+          processRoles[role.id].isStartingByMailRole = true;        
+        } else {
+          processRoles[role.id].isStartingRole = true;
+        }
+      }
+    });
+    
     // remove roles that are not used any more
     for (let role in processRoles) {
-      if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer) {
+      if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer && role != DefaultRoles.Follower) {
         if (lanes.find(lane => lane.id == role) == null)
           delete (processRoles[role]);
       }
@@ -217,9 +231,9 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
             displayName: potentialOwner.displayName
           });
         } else if (isGroupId(potentialOwner.memberId)) {
-          error("nicht implementiert");
+          error("not implemented");
         } else
-          error("ungültiger Aufruf?!");
+          error("invalid call");
       }
       allOwners[role] = owners;
     }
@@ -272,7 +286,14 @@ export function canStartProcess(process: ProcessDetails): boolean {
     return false;
 
   // Only users in the start lane may start the process - even administrators don't inherit that right!
-  return ((process.userRights & ProcessAccessRights.StartProcess) != 0);
+  return canStartProcessByMail(process) || ((process.userRights & ProcessAccessRights.StartProcess) != 0);
+}
+export function canStartProcessByMail(process: ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  // Only users in the start lane may start the process - even administrators don't inherit that right!
+  return ((process.userRights & ProcessAccessRights.StartProcessByMail) != 0);
 }
 
 export function canViewTodos(process: ProcessDetails): boolean {
