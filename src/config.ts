@@ -1,10 +1,10 @@
 // from webpack config
 export let backendUrl = process.env.API_URL;
 // ist nur möglich aus der config zu laden für den Client nicht für den Server
-// TODO PP hier gibt es sicher noch eine elegantere Lösung
+// TODO PP hier gibt es sicher noch eine elegantere Lösung 
 if (process.env.API_URL == null) {
   if (process.argv != null && process.argv.length == 3 && process.argv[2] == "production") {
-    backendUrl = "http://localhost";
+    backendUrl = "http://localhost:8081";
   } else if (process.argv != null && process.argv.length == 3 && process.argv[2] == "stage-test") {
     backendUrl = "http://localhost:8084";
   } else if (typeof navigator !== "undefined") {
