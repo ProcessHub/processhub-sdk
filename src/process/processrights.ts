@@ -109,6 +109,10 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
         processRoles[lane.id] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }] };
       }
       processRoles[lane.id].roleName = lane.name;
+
+      // clean up starting role setting from all lanes, will be added again in next step
+      delete (processRoles[lane.id].isStartingRole);
+      delete (processRoles[lane.id].isStartingByMailRole);
     });
 
     // set starting roles
@@ -118,7 +122,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
       let role = bpmnProcess.getLaneOfFlowNode(startEvent.id);
       if (role) { // in new processes somehow the start element is not in a lane (yet)
         if (isMessageStartEvent) {
-          processRoles[role.id].isStartingByMailRole = true;        
+          processRoles[role.id].isStartingByMailRole = true;
         } else {
           processRoles[role.id].isStartingRole = true;
         }
@@ -286,7 +290,7 @@ export function canStartProcess(process: ProcessDetails): boolean {
     return false;
 
   // Only users in the start lane may start the process - even administrators don't inherit that right!
-  return canStartProcessByMail(process) || ((process.userRights & ProcessAccessRights.StartProcess) != 0);
+  return ((process.userRights & ProcessAccessRights.StartProcess) != 0);
 }
 export function canStartProcessByMail(process: ProcessDetails): boolean {
   if (process == null)
