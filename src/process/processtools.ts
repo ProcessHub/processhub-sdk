@@ -22,14 +22,14 @@ export function initSettings(process: ProcessDetails): void {
   if (!settings.dashboard)
     settings.dashboard = {};
   if (!settings.dashboard.dashBoardAccess)
-    settings.dashboard.dashBoardAccess = ProcessViewAccess.ParticipantsSeeTheirs;
+    settings.dashboard.dashBoardAccess = ProcessViewAccess.WorkspaceMembersSeeAll; // default
   if (!settings.dashboard.showComments)
     settings.dashboard.showComments = 0;
     
   if (!settings.archive)
     settings.archive = {};
   if (!settings.archive.archiveAccess)
-    settings.archive.archiveAccess = ProcessViewAccess.ParticipantsSeeTheirs;
+    settings.archive.archiveAccess = ProcessViewAccess.WorkspaceMembersSeeAll; // default
 
   if (!settings.library)
     settings.library = {};
