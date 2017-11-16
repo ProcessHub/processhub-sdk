@@ -204,11 +204,7 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
 
   let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
-  isTrue(workspaceDetails != null, "WorkspaceDetails dürfen nicht null sein!");
-  isTrue(workspaceDetails.extras.members != null, "Es müssen Workspace Details geliefert werden, die WorkspaceMembers beinhalten!");
-
-  // todo überprüfen ob jeder user einen Namen hat der über die processDetails kommt (außer gruppen)
-  if (processDetails.extras.processRoles == null)
+ if (processDetails.extras.processRoles == null)
     return allOwners;
   
   for (let role in processDetails.extras.processRoles) {
@@ -221,14 +217,17 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
         if ((potentialOwner.memberId == PredefinedGroups.AllWorkspaceMembers
           || potentialOwner.memberId == PredefinedGroups.Everybody)
           && !addedWsMembers) {
-          // Alle WorkspaceMember kommen als potentielle Rolleninhaber in Frage
-          for (let member of workspaceDetails.extras.members) {
-            owners.potentialRoleOwner.push({
-              memberId: member.userDetails.userId,
-              displayName: member.userDetails.realName
-            });
+          // all workspace members are potential owners
+          if (workspaceDetails.extras.members) {
+            // if someone is not a workspace member he does not have access to the member list, so this list is empty
+            for (let member of workspaceDetails.extras.members) {
+              owners.potentialRoleOwner.push({
+                memberId: member.userDetails.userId,
+                displayName: member.userDetails.realName
+              });
+            }
+            addedWsMembers = true; // Merken, damit Member nicht mehrfach hinzugefügt werden, falls beide Gruppen genannt werden
           }
-          addedWsMembers = true; // Merken, damit Member nicht mehrfach hinzugefügt werden, falls beide Gruppen genannt werden
         } else if (isUserId(potentialOwner.memberId)) {
           owners.potentialRoleOwner.push({
             memberId: potentialOwner.memberId,

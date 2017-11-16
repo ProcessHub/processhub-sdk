@@ -20,6 +20,8 @@ export interface TodoReply extends BaseMessage {
 }
 
 export interface GetSimulationTodosRequest {
+  workspaceId: string;
+  instanceId: string;
 }
 export interface GetSimulationTodosReply extends TodoReply {
   todos?: Array<TodoDetails>;
