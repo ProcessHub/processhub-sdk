@@ -23,8 +23,6 @@ export function initSettings(process: ProcessDetails): void {
     settings.dashboard = {};
   if (!settings.dashboard.dashBoardAccess)
     settings.dashboard.dashBoardAccess = ProcessViewAccess.WorkspaceMembersSeeAll; // default
-  if (!settings.dashboard.showComments)
-    settings.dashboard.showComments = 0;
     
   if (!settings.archive)
     settings.archive = {};

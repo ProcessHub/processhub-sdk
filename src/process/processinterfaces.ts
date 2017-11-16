@@ -87,7 +87,6 @@ export interface ProcessSettings {
     cardTitle?: string;  // title of the cards in the dashboard
     cardDesc?: string;  // additional text on the card
     dashBoardAccess?: ProcessViewAccess;  // who can access todos?
-    showComments?: number;  // max. number of comments that are displayed in the dashboard card
   };
   archive?: {
     archiveAccess?: ProcessViewAccess;  // who can access instances?
