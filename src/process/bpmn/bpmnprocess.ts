@@ -614,24 +614,8 @@ export class BpmnProcess {
         }
       }
     }
-    this.cleanupLanes();
-    
+
     this.processDiagram.generateBPMNDiagram(processId);
-  }
-
-  // remove empty lanes
-  public cleanupLanes() {
-    let processLanes: Bpmn.Lane[] = this.getProcessLanes(this.processId());
-    
-    for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
-      let processLane: Bpmn.Lane = processLanes[laneIndex];
-
-      if (processLane.flowNodeRef == null || processLane.flowNodeRef.length == 0) {
-        // lane is empty -> remove
-        processLanes.splice(laneIndex, 1);
-        laneIndex--; // because of splice
-      }
-    }  
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
@@ -771,7 +755,6 @@ export class BpmnProcess {
   }
 
   public async toXmlString(): Promise<string> {
-    this.cleanupLanes();
 
     return await new Promise<string>((resolve, reject) => {
       this.moddle.toXML(this.bpmnXml, { format: true }, function (err: any, xmlStr: string) {
@@ -961,13 +944,15 @@ export class BpmnProcess {
     let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter((e) => e.$type === BPMN_PROCESS) as Bpmn.Process[];
 
     for (let i = 0; i < processes.length; i++) {
-      let flowElements: Bpmn.FlowElement[] = processes[i].flowElements.filter((e) => {
-        return e.$type === type;
-      });
-      // Jeder SeqenceFlow soll direkt in der Liste sein
-      for (let i = 0; i < flowElements.length; i++) {
-        let element = flowElements[i] as T;
-        elements.push(element);
+      if (processes[i].flowElements) {
+        let flowElements: Bpmn.FlowElement[] = processes[i].flowElements.filter((e) => {
+          return e.$type === type;
+        });
+        // Jeder SeqenceFlow soll direkt in der Liste sein
+        for (let i = 0; i < flowElements.length; i++) {
+          let element = flowElements[i] as T;
+          elements.push(element);
+        }
       }
     }
 
@@ -975,22 +960,8 @@ export class BpmnProcess {
   }
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
-    let sequenceFlows = [];
-    let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter(e => e.$type === BPMN_PROCESS) as Bpmn.Process[];
-
-    for (let i = 0; i < processes.length; i++) {
-      let flowElements: Bpmn.FlowElement[] = processes[i].flowElements.filter((e) => {
-        return e.$type === BPMN_SEQUENCEFLOW;
-      });
-
-      // Jeder SeqenceFlow soll direkt in der Liste sein
-      for (let seqFlow of flowElements) {
-        let s = seqFlow as Bpmn.SequenceFlow;
-        sequenceFlows.push(s);
-      }
-    }
-
-    return sequenceFlows;
+    return this.getFlowElementsOfType<Bpmn.SequenceFlow>("bpmn:SequenceFlow");
+    
   }
 
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {

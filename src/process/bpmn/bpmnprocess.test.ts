@@ -1,5 +1,5 @@
 import BpmnModdle = require("bpmn-moddle");
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { Bpmn } from "../../process/bpmn";
 import { isId } from "../../tools/guid";
 import { BpmnProcess, BPMN_USERTASK, BPMN_ENDEVENT, BPMN_STARTEVENT, BPMN_LANE } from "./bpmnprocess";
@@ -7,6 +7,8 @@ import { LoadTemplateReply } from "../legacyapi";
 import { createBpmnTemplate } from "./bpmnmoddlehelper";
 import { RowDetails } from "../phclient";
 import { TaskSettings } from "../processinterfaces";
+import { readFileAsync } from "../../test/testtools";
+import { defineLocale } from "moment";
 
 async function createTestBpmnProcess(): Promise<BpmnProcess> {
   let bpmnProcess: BpmnProcess = new BpmnProcess();
@@ -20,6 +22,32 @@ async function createTestBpmnProcess(): Promise<BpmnProcess> {
 describe("sdk", function () {
   describe("process", function () {
     describe("bpmnprocess", function () {
+
+      describe("toXmlString", function () {
+        it("loads and exports a bpmn file with an empty lane", async function () {
+          const processXml: string = await readFileAsync("./src/test/testfiles/emptylane.bpmn");
+          const bpmnProcess: BpmnProcess = new BpmnProcess();
+          await bpmnProcess.loadXml(processXml);
+          const exportedXmlString: string = await bpmnProcess.toXmlString();
+
+          // load exported xml with moddle
+          const moddle: BpmnModdle = new BpmnModdle();          
+          const definitions = await new Promise<Bpmn.Definitions>((resolve, reject) => {
+            moddle.fromXML(exportedXmlString, (err, def) => {
+              if (err) {
+                reject(err);
+              }
+              resolve(def);
+            });
+          });
+
+          // check if empty lane is still there
+          const process: Bpmn.Process = definitions.rootElements.find(e => e.$type === "bpmn:Process") as Bpmn.Process;
+          const [ laneSet, ... laneSets ] = process.laneSets;
+          expect(laneSet.lanes).not.to.be.undefined;
+          expect(laneSet.lanes.length).to.equal(1);
+        });
+      });
 
       describe("getBpmnId", function () {
         it("soll nur eine ID zurückgeben", function () {
@@ -287,7 +315,7 @@ describe("sdk", function () {
             assert(tasksEnd.length === 2);
 
             lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
-            assert(lanes.length === 1);
+            assert(lanes.length === 2);
           });
         });
         it("soll Task Reihenfolge ändern/verschieben", async function () {
