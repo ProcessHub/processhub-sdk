@@ -5,7 +5,7 @@ import { updateLegacyFieldDefinitions } from "../../data/datatools";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
 import BpmnModdle = require("bpmn-moddle");
-import { Bpmn } from "../bpmn";
+import { Bpmn, Bpmndi } from "../bpmn";
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
 import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType } from "../processinterfaces";
@@ -756,6 +756,8 @@ export class BpmnProcess {
 
   public async toXmlString(): Promise<string> {
 
+    this.removeLanesWithoutShape();
+
     return await new Promise<string>((resolve, reject) => {
       this.moddle.toXML(this.bpmnXml, { format: true }, function (err: any, xmlStr: string) {
         if (err) reject(err);
@@ -961,7 +963,7 @@ export class BpmnProcess {
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
     return this.getFlowElementsOfType<Bpmn.SequenceFlow>("bpmn:SequenceFlow");
-    
+
   }
 
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {
@@ -1098,6 +1100,24 @@ export class BpmnProcess {
       } as DecisionTask;
     }
     return boundaryDecisionTask;
+  }
+
+  private removeLanesWithoutShape(): void {
+    const process: Bpmn.Process = this.getProcess(this.processId());
+    const diagram = this.bpmnXml.diagrams[0];
+    const laneSet = process.laneSets[0];
+
+    laneSet.lanes = laneSet.lanes.filter(lane => {
+      for (const planeElement of diagram.plane.planeElement) {
+        if (planeElement.$type === "bpmndi:BPMNShape") {
+          const bpmndiBPMNShape: Bpmndi.BPMNShape = planeElement as Bpmndi.BPMNShape;
+          if (bpmndiBPMNShape.bpmnElement && bpmndiBPMNShape.bpmnElement.id === lane.id) {
+            return true;
+          }
+        }
+      }
+      return false;
+    });
   }
 
 }
