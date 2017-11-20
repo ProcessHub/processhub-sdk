@@ -43,7 +43,7 @@ export const gqlTodoTypes = `
     bpmnTaskId: String
     bpmnLaneId: String  
     createdAt: Date
-    priority: Int
+    priority: Float
     isPinned: Boolean
   }
 
@@ -60,7 +60,7 @@ export const gqlTodoTypes = `
     bpmnTaskId: String
     bpmnLaneId: String  
     createdAt: Date
-    priority: Int
+    priority: Float
     isPinned: Boolean
   }
 `;
