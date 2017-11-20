@@ -24,7 +24,7 @@ export function notifyNewProcessTodos(processEnv: PH.ProcessEnvironment): boolea
   
   instances.map(instance => {
     let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
-    if (PH.Instance.notifyNewInstanceTodos(instanceEnv))
+    if (PH.Instance.notifyNewInstanceTodos(instanceEnv) || PH.Instance.notifyInstancePin(instanceEnv))
       notify = true;
   });  
 

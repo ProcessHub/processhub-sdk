@@ -27,7 +27,43 @@ export interface TodoDetails {
   createdAt?: Date;
   user?: UserDetails;
   priority?: number;
+  isPinned?: boolean;
 }
+export const gqlTodoTypes = `     
+  type TodoDetails {
+    todoId: String!
+    todoType: Int
+    userId: String
+    workspaceId: String!
+    processId: String  
+    instanceId: String
+    status: Int
+    displayName: String
+    description: String
+    bpmnTaskId: String
+    bpmnLaneId: String  
+    createdAt: Date
+    priority: Int
+    isPinned: Boolean
+  }
+
+  input TodoUpdateDetails {
+    todoId: String!
+    todoType: Int
+    userId: String
+    workspaceId: String!
+    processId: String  
+    instanceId: String
+    status: Int
+    displayName: String
+    description: String
+    bpmnTaskId: String
+    bpmnLaneId: String  
+    createdAt: Date
+    priority: Int
+    isPinned: Boolean
+  }
+`;
 
 export const DecisionTaskTypes = {
   Normal: "normal",

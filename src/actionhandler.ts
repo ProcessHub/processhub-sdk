@@ -9,6 +9,7 @@ import { UserExtras } from "./user/userinterfaces";
 import { CoreEnvironment } from "./environment";
 import { getErrorHandlers } from "./legacyapi/errorhandler";
 import { BaseError, API_FAILED, ApiResult, ApiError } from "./legacyapi";
+import * as _ from "lodash";
 
 export interface ExtrasRequest {
   workspaceExtras?: WorkspaceExtras;
@@ -34,6 +35,7 @@ export class ActionHandler {
         variables: variables
       });                                                          
     } catch (e) {
+      console.error(e);
       const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
     }
@@ -50,6 +52,7 @@ export class ActionHandler {
         variables: variables
       });                                                          
     } catch (e) {
+      console.error(e);
       const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
       getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
     }
@@ -65,6 +68,19 @@ export class ActionHandler {
     // don't wait for server response
     // tslint:disable-next-line:no-floating-promises
     this.apiMutation(mutation, { objectId: objectId, viewState: viewState });
+  }
+
+  async updateTodo(todo: PH.Todo.TodoDetails): Promise<void> {
+    const mutation = gql`
+      mutation updateTodo($todo: TodoUpdateDetails!) {
+        updateTodo(todo: $todo)
+      }`;
+
+    let todo2 = _.cloneDeep(todo);
+    // graphql does not accept invalid fields in mutation
+    delete (todo2.user);
+
+    await this.apiMutation(mutation, { todo: todo2 });
   }
 
   // Load Page "/@workspace/..."

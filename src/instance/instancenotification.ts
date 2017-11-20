@@ -110,3 +110,20 @@ export function notifyNewInstanceTodos(instanceEnv: PH.InstanceEnvironment): boo
 
   return (latestAt > lastViewedAt);
 }
+
+// true if user owns a todo that is pinned
+export function notifyInstancePin(instanceEnv: PH.InstanceEnvironment): boolean {
+  if (!PH.isValidInstanceEnvironment(instanceEnv))
+    return false;
+    
+  if (!instanceEnv.instance.extras.todos)
+    return false;
+
+  let pinned = false;
+  instanceEnv.instance.extras.todos.map(todo => { 
+    if (todo.userId == instanceEnv.user.userId && todo.isPinned)
+      pinned = true; 
+  });
+
+  return pinned;
+}

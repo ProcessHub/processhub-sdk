@@ -22,6 +22,33 @@ export class UserDetails {
   accountState?: AccountState;
   isLibraryAdmin?: boolean;
 }
+export const gqlUserTypes = `     
+  input ViewState {
+    lastViewedAt: Date
+    isPinned: Boolean
+  }
+
+  type UserExtras {
+    member: String
+  }
+
+  type UserDetails {
+    userId: ID!
+
+    # E-mail address 
+    mail: String!
+
+    realName: String
+
+    # RealName if available, otherwise mail address
+    displayName: String!
+
+    photoUrl: URI
+
+    #Extras are used to request additional user data
+    extras: UserExtras
+  }
+`;
 
 export enum UserExtras {
   None = 0,
