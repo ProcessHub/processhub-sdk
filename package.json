@@ -85,8 +85,6 @@
     "@types/react": "^15.0.27",
     "@types/react-router": "^2.0.51",
     "@types/react-router-redux": "^5.0.8",
-    "@types/redux": "^3.6.0",
-    "@types/redux-thunk": "^2.1.0",
     "@types/request": "0.0.44",
     "@types/webpack-env": "^1.13.2",
     "@types/webpack-hot-middleware": "^2.16.0",
