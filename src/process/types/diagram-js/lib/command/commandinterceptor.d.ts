@@ -201,7 +201,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
         oldParent: Shape,
         oldParentIndex: number,
         shape: Shape,
-      }
+      };
     }
   }
 }
