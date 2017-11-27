@@ -145,6 +145,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
      */
     public postExecute(events: string | string[], priority: number, handlerFn: Function, unwrap: boolean, that: Object): void;
     public postExecute(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void): void;
+    public postExecute(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeleteEvent) => void): void;
     public postExecute(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void, unwrap: boolean): void;
 
     /**
@@ -192,6 +193,15 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
       newBounds: IBounds;
       oldBounds: IBounds;
       shape: Shape;
+    }
+
+    export interface ShapeDeleteEvent {
+      context: {
+        hints: {},
+        oldParent: Shape,
+        oldParentIndex: number,
+        shape: Shape,
+      }
     }
   }
 }
