@@ -26,12 +26,12 @@ export function processReducer(processState: Process.ProcessState, action: any):
     // siehe https://github.com/kolodny/immutability-helper
 
     case PROCESSLOADED_MESSAGE:
-    
+
       processState.currentProcess = StateHandler.mergeProcessToCache((<ProcessLoadedMessage>action).processDetails);
 
       let processChanged = !_.isEqual(processState.currentProcess, processState.lastDispatchedProcess);
       processState.lastDispatchedProcess = _.cloneDeep(processState.currentProcess);
-      
+
       // React cannot detect state changes in objects. Updating cacheState triggers rendering
       // -> only render if data has changed
       if (processChanged) {
@@ -42,14 +42,18 @@ export function processReducer(processState: Process.ProcessState, action: any):
         return processState;
 
     case ProcessActions.ProcessActionType.Save:
-      return update(processState, {
-        currentProcess: {
-          extras: {
-            bpmnXml: { $set: <ProcessActions.ProcessActionSave><any>action.xmlStr },
-            bpmnProcess: { $set: <ProcessActions.ProcessActionSave><any>action.bpmnProcess }
+      if (processState.currentProcess) {
+        return update(processState, {
+          currentProcess: {
+            extras: {
+              bpmnXml: { $set: <ProcessActions.ProcessActionSave><any>action.xmlStr },
+              bpmnProcess: { $set: <ProcessActions.ProcessActionSave><any>action.bpmnProcess }
+            }
           }
-        }
-      });
+        });
+      } else {
+        return processState;
+      }
 
     case ProcessActions.ProcessActionType.CreateInDb:
       let createInDbAction = <ProcessActions.ProcessActionCreateInDb><any>action;
