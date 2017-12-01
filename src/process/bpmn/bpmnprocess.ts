@@ -1004,11 +1004,11 @@ export class BpmnProcess {
     return null;
   }
 
-  public static getFlowNodeDescription(task: Bpmn.FlowNode): string {
-    if (task.extensionElements && task.extensionElements.values) {
-      const phInOut = task.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
+  private static getExtensionBody(flowNode: Bpmn.FlowNode, settingsName: string): string {
+    if (flowNode.extensionElements && flowNode.extensionElements.values) {
+      const phInOut = flowNode.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
       if (phInOut && phInOut.$children) {
-        const descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === TaskSettings.Description);
+        const descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === settingsName);
         if (descriptionElement && descriptionElement.$body) {
           return descriptionElement.$body;
         }
@@ -1017,26 +1017,48 @@ export class BpmnProcess {
     return null;
   }
 
-  public static setTaskDescription(task: Bpmn.Task, description: string): void {
-    const bpmnModdle = new BpmnModdle([], {});
-    if (!task.extensionElements) {
-      task.extensionElements = bpmnModdle.create("bpmn:ExtensionElements", { values: [] });
+  public static getSetSenderAsRoleOwner(startEvent: Bpmn.StartEvent): boolean {
+    const valueAsString: string = BpmnProcess.getExtensionBody(startEvent, TaskSettings.SetSenderAsRoleOwner);
+    if (valueAsString) {
+      return valueAsString === "true";
+    } else {
+      // default value is true 
+      return true;
     }
-    let phInOut = task.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
+  }
+
+  public static getFlowNodeDescription(flowNode: Bpmn.FlowNode): string {
+    return BpmnProcess.getExtensionBody(flowNode, TaskSettings.Description);
+  }
+
+  private static setExtensionBody(flowNode: Bpmn.FlowNode, settingsName: string, value: string): void {
+    const bpmnModdle = new BpmnModdle([], {});
+    if (!flowNode.extensionElements) {
+      flowNode.extensionElements = bpmnModdle.create("bpmn:ExtensionElements", { values: [] });
+    }
+    let phInOut = flowNode.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
     if (!phInOut) {
       phInOut = bpmnModdle.createAny("processhub:inputOutput", "http://processhub.com/schema/1.0/bpmn", { $children: [] });
-      task.extensionElements.values.push(phInOut);
+      flowNode.extensionElements.values.push(phInOut);
     }
-    let descriptionElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === TaskSettings.Description);
-    if (!descriptionElement) {
-      descriptionElement = bpmnModdle.createAny("processhub:inputParameter", "http://processhub.com/schema/1.0/bpmn", { name: TaskSettings.Description });
-      phInOut.$children.push(descriptionElement);
+    let settingsElement = phInOut.$children.find(c => (c as Processhub.InputParameter).name === settingsName);
+    if (!settingsElement) {
+      settingsElement = bpmnModdle.createAny("processhub:inputParameter", "http://processhub.com/schema/1.0/bpmn", { name: settingsName });
+      phInOut.$children.push(settingsElement);
     }
 
-    if (description != null)
-      descriptionElement.$body = description;
+    if (value != null)
+      settingsElement.$body = value;
     else
-      descriptionElement.$body = "";
+      settingsElement.$body = "";
+  }
+
+  public static setTaskDescription(task: Bpmn.Task, description: string): void {
+    BpmnProcess.setExtensionBody(task, TaskSettings.Description, description);
+  }
+
+  public static setSetSenderAsRoleOwner(startEvent: Bpmn.StartEvent, setSetSenderAsRoleOwner: boolean): void {
+    BpmnProcess.setExtensionBody(startEvent, TaskSettings.SetSenderAsRoleOwner, setSetSenderAsRoleOwner.toString());
   }
 
   public async checkCompatibilityOfChangedProcess(runningInstances: InstanceDetails[], userInstances: InstanceDetails[]) {

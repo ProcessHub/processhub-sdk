@@ -143,7 +143,8 @@ export const TaskSettings = {
   SendTaskWithFieldContents: "send-task-with-field-contents", // boolean: include field contents in SendTask notification mail?
   SendTaskInstanceLink: "send-task-instance-link", // boolean: include a link to the instance in SendTask notification mail?
   SendTaskSubject: "send-task-subject", // string: mail subject of SendTask notification mail
-  AllFieldsEditable: "all-fields-editable" // boolean: all existing fields in task can be edited in current task
+  AllFieldsEditable: "all-fields-editable", // boolean: all existing fields in task can be edited in current task
+  SetSenderAsRoleOwner: "set-sender-as-role-owner", // boolean: set mail sender as role owner, default: true
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
