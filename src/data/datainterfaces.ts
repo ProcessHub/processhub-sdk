@@ -37,6 +37,7 @@ export interface IFieldType {
   renderValueForEmail(value: {}): JSX.Element;
   getSettingsButton(config: {}, onConfigChanged: (config: {}) => void): JSX.Element;
   isVisible(): boolean;
+  isValid(fieldDefinition: FieldDefinition, instanceEnv: InstanceEnvironment): boolean;
 }
 
 export interface IFormElementProps {
