@@ -22,6 +22,7 @@ export interface InstanceDetails {
   instanceNumber?: string;  // 123.4567.890, created on execution
   fullUrl?: string; // = /i/@workspace/instanceid
   createdAt?: Date;
+  completedAt?: Date;
   isSimulation?: boolean;
   sendSimulationMails?: boolean;
   state: State;
