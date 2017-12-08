@@ -27,6 +27,8 @@ export async function loadWorkspace(workspaceId: string, getExtras: WorkspaceExt
     // Ignore call if all data 
     if ((getExtras & WorkspaceExtras.ExtrasMembers) && cachedWorkspace.extras.members)
       getExtras -= WorkspaceExtras.ExtrasMembers;
+    if ((getExtras & WorkspaceExtras.ExtrasGuests) && cachedWorkspace.extras.guests)
+      getExtras -= WorkspaceExtras.ExtrasGuests;      
     if ((getExtras & WorkspaceExtras.ExtrasProcesses) && cachedWorkspace.extras.processes)
       getExtras -= WorkspaceExtras.ExtrasProcesses;
 

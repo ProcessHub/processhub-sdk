@@ -24,6 +24,7 @@ export interface WorkspaceDetails {
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
+    guests?: WorkspaceMember[];
     processes?: ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
     settings?: WorkspaceSettings;
   };
@@ -41,6 +42,7 @@ export const gqlWorkspaceTypes = `
   }
   type ExtrasWorkspace {
     members: [WorkspaceMember]
+    guests: [WorkspaceMember]
     processes: [ProcessDetails]
   }
 
@@ -75,9 +77,10 @@ export const gqlQueryWorkspace = gql`
 
 export enum WorkspaceExtras {
   None = 0,
-  ExtrasMembers = 1 << 0,
+  ExtrasMembers = 1 << 0,  // only contains full members, not guests
   ExtrasProcesses = 1 << 1,
-  ExtrasSettings = 1 << 2
+  ExtrasSettings = 1 << 2,
+  ExtrasGuests = 1 << 3
 }
 
 export interface WorkspaceSettings {
@@ -88,6 +91,7 @@ export enum WorkspaceRole {
   None = 0, // used to list todos from workspaces where user is not a member
   WorkspaceAdmin = 1 << 0,     
   WorkspaceMember = 1 << 2, // regular member
+  WorkspaceGuest = 1 << 3, // workspace guest
 }
 
 export interface WorkspaceMember {
