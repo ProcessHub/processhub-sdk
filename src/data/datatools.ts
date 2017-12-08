@@ -1,4 +1,5 @@
 import { FieldContentMap, isFieldValue, FieldValue, FieldDefinition, FieldType } from "./datainterfaces";
+import { Tools } from "../index";
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
   if (inputString == null)
@@ -20,8 +21,12 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
     if (fieldName != null) {
       let valueObject = fieldContentMap[fieldName];      
-      if (isFieldValue(valueObject)) {
-        inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
+      if (isFieldValue(valueObject) && valueObject.value != null) {
+        if (valueObject.type == "ProcessHubDate") {
+          let val = Tools.getFormattedDate(new Date(valueObject.value.toString()));
+          inputString = inputString.replace(fieldPlaceholder, val);
+        } else
+          inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
       } else {
         inputString = inputString.replace(fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
 
