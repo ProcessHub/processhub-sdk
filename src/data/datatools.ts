@@ -1,5 +1,5 @@
 import { FieldContentMap, isFieldValue, FieldValue, FieldDefinition, FieldType } from "./datainterfaces";
-import { Tools } from "../index";
+import { getFormattedDate } from "../tools/timing";
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
   if (inputString == null)
@@ -23,7 +23,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       let valueObject = fieldContentMap[fieldName];      
       if (isFieldValue(valueObject) && valueObject.value != null) {
         if (valueObject.type == "ProcessHubDate") {
-          let val = Tools.getFormattedDate(new Date(valueObject.value.toString()));
+          let val = getFormattedDate(new Date(valueObject.value.toString()));
           inputString = inputString.replace(fieldPlaceholder, val);
         } else
           inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
