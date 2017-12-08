@@ -24,11 +24,6 @@ export function initSettings(process: ProcessDetails): void {
   if (!settings.dashboard.dashBoardAccess)
     settings.dashboard.dashBoardAccess = ProcessViewAccess.WorkspaceMembersSeeAll; // default
     
-  if (!settings.archive)
-    settings.archive = {};
-  if (!settings.archive.archiveAccess)
-    settings.archive.archiveAccess = ProcessViewAccess.WorkspaceMembersSeeAll; // default
-
   if (!settings.library)
     settings.library = {};
 }

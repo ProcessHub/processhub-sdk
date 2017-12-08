@@ -14,10 +14,9 @@ export enum ProcessAccessRights {
   ManageProcess = 1 << 1,
   StartProcess = 1 << 2,
   ViewProcess = 1 << 3,
-  ViewInstances = 1 << 4,  // access to instances tab, user sees instances with own roles
-  ViewAllInstances = 1 << 5,  // user can see all instances
-  ViewTodos = 1 << 6,
-  ViewAllTodos = 1 << 7,
+  ViewArchive = 1 << 4,  // access to archive tab (available for all workspace members)
+  ViewTodos = 1 << 6,  // access to dashboard tab (available for all members and guests)
+  ViewAllTodos = 1 << 7,  // user can see all instances, not only instance with own role
   StartProcessByMail = 1 << 8  // user can start this process by mail
 }
 
@@ -312,17 +311,11 @@ export function canViewAllTodos(process: ProcessDetails): boolean {
   return ((process.userRights & ProcessAccessRights.ViewAllTodos) != 0);
 }
 
-export function canViewInstances(process: ProcessDetails): boolean {
+export function canViewArchive(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 
-  return canViewAllInstances(process) || ((process.userRights & ProcessAccessRights.ViewInstances) != 0);
-}
-export function canViewAllInstances(process: ProcessDetails): boolean {
-  if (process == null)
-    return false;
-
-  return ((process.userRights & ProcessAccessRights.ViewAllInstances) != 0);
+  return ((process.userRights & ProcessAccessRights.ViewArchive) != 0);
 }
 
 export function canDeleteProcess(process: ProcessDetails): boolean {

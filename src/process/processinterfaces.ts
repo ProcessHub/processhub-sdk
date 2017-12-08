@@ -88,9 +88,6 @@ export interface ProcessSettings {
     cardDesc?: string;  // additional text on the card
     dashBoardAccess?: ProcessViewAccess;  // who can access todos?
   };
-  archive?: {
-    archiveAccess?: ProcessViewAccess;  // who can access instances?
-  };
   library?: {  
     rating?: number;  // process rating, used to sort processes in library
     categories?: string[];  // categoryIds in library
