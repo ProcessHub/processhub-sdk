@@ -118,9 +118,9 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "canvas.init", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
 
+    public on(events: "create.canceled", callback: (event: EventBus.CreateCanceledEvent) => void): void;
+    
     public on(events: "create.ended", callback: (event: EventBus.CreateEndedEvent) => void): void;
-
-    public on(events: "create.rejected", callback: (event: EventBus.CreateRejectedEvent) => void): void;
 
     public on(events: "commandStack.changed", callback: () => void): void;
 
@@ -307,7 +307,7 @@ declare module "diagram-js/lib/core/EventBus" {
       public originalEvent: Event;
     }
 
-    export interface ICreateRejectedContext {
+    export interface ICreateCanceledContext {
       canExecute: boolean;
       shape: Shape;
       snapContext: SnapContext;
@@ -316,7 +316,7 @@ declare module "diagram-js/lib/core/EventBus" {
       visual: SVGGElement;
     }
 
-    export class CreateRejectedEvent extends EventBusEvent<ICreateRejectedContext> {
+    export class CreateCanceledEvent extends EventBusEvent<ICreateCanceledContext> {
       dx: number;
       dy: number;
       hover: Shape;
