@@ -1090,9 +1090,16 @@ export class BpmnProcess {
   public getDecisionTasksForTask(bpmnTaskId: string): DecisionTask[] {
     let decisionTasks: DecisionTask[] = [];
 
+    let processObject = this.getExistingActivityObject(bpmnTaskId);
+
+    if (processObject.$type === BPMN_EXCLUSIVEGATEWAY) {
+      return this.getTaskIdsAfterGateway(bpmnTaskId);
+    }
+
     if (this.isOneOfNextActivityOfType(bpmnTaskId, BPMN_EXCLUSIVEGATEWAY)) {
       // taskTitle = todo != null ? todo.displayName : tl("Entscheidung");
       let nextActivites = this.getNextActivities(bpmnTaskId);
+
       for (let tmp of nextActivites) {
         if (tmp.$type == BPMN_EXCLUSIVEGATEWAY) {
           let list = this.getTaskIdsAfterGateway(tmp.id);
@@ -1112,8 +1119,7 @@ export class BpmnProcess {
     if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
       let tmpBoundary = taskObject.boundaryEventRefs[taskObject.boundaryEventRefs.length - 1];
       equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
-
-      let boundaryDecisionTask: DecisionTask = {
+      boundaryDecisionTask = {
         bpmnTaskId: tmpBoundary.id,
         name: tmpBoundary.name,
         isBoundaryEvent: true,
@@ -1121,6 +1127,7 @@ export class BpmnProcess {
         boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
       } as DecisionTask;
     }
+
     return boundaryDecisionTask;
   }
 
