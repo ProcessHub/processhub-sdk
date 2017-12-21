@@ -3,25 +3,15 @@ export function sleep(ms = 0): Promise<any> {
 }
 
 export function getFormattedDate(date: Date): string {
-  // all dates are UTC -> convert to local time
-  const offset = new Date().getTimezoneOffset() / 60;
-  let localDT = date;
-  localDT.setHours(date.getHours() - offset);
+  const days: string = date.getDate() < 10 ? "0" + date.getDate().toString() : date.getDate().toString();
+  const months: string = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString();
 
-  const days: string = localDT.getDate() < 10 ? "0" + localDT.getDate().toString() : localDT.getDate().toString();
-  const months: string = localDT.getMonth() + 1 < 10 ? "0" + (localDT.getMonth() + 1).toString() : (localDT.getMonth() + 1).toString();
-
-  return days + "." + months + "." + localDT.getFullYear();
+  return days + "." + months + "." + date.getFullYear();
 }
 
 export function getFormattedDateTime(dateTime: Date): string {
-  // all dates are UTC -> convert to local time
-  const offset = new Date().getTimezoneOffset() / 60;
-  let localDT = dateTime;
-  localDT.setHours(dateTime.getHours() - offset);
+  const hours: string = dateTime.getHours() < 10 ? "0" + dateTime.getHours().toString() : dateTime.getHours().toString();
+  const minutes: string = dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes().toString() : dateTime.getMinutes().toString();
 
-  const hours: string = localDT.getHours() < 10 ? "0" + localDT.getHours().toString() : localDT.getHours().toString();
-  const minutes: string = localDT.getMinutes() < 10 ? "0" + localDT.getMinutes().toString() : localDT.getMinutes().toString();
-
-  return getFormattedDate(localDT) + " " + hours + ":" + minutes;
+  return getFormattedDate(dateTime) + " " + hours + ":" + minutes;
 }
