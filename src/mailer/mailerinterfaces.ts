@@ -1,5 +1,6 @@
 import { FieldContentMap } from "../data/datainterfaces";
 import { BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
+import { InstanceDetails } from "../instance/instanceinterfaces";
 
 export enum MailSender {
   FromProcessHub,   // noreply@mail.processhub.com
@@ -18,6 +19,7 @@ export interface MessageNotificationMailContent extends MailContent {
   todoDescription?: string;
   fieldContents?: FieldContentMap;
   subject: string;
+  instance: InstanceDetails;
 }
 
 export interface SendMailTemplateRequest extends MessageNotificationMailContent, BaseRequest {

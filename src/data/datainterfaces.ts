@@ -1,5 +1,6 @@
 import { InstanceEnvironment } from "../environment";
 import { BpmnProcess } from "../process";
+import { InstanceDetails } from "../instance/instanceinterfaces";
 
 export interface FieldDefinition {
   rowNumber: number;
@@ -33,8 +34,8 @@ export interface IFieldType {
   getType(): FieldType;
   getName(): string;
   getInput(props: IFormElementProps, instanceEnv: InstanceEnvironment, bpmnProcess: BpmnProcess, onFieldValueChanged: () => void): JSX.Element;
-  renderValue(value: {}): JSX.Element;
-  renderValueForEmail(value: {}): JSX.Element;
+  renderValue(value: {}, instance: InstanceDetails): JSX.Element;
+  renderValueForEmail(value: {}, instance: InstanceDetails): JSX.Element;
   getSettingsButton(config: {}, onConfigChanged: (config: {}) => void): JSX.Element;
   isVisible(): boolean;
   isValid(fieldDefinition: FieldDefinition, instanceEnv: InstanceEnvironment): boolean;
