@@ -6,6 +6,7 @@ import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
 import { gqlLibraryTypes } from "./libraryinterfaces";
 import { FieldDefinition } from "../data";
+import { UserDetails } from "../user/userinterfaces";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -34,6 +35,7 @@ export interface ProcessDetails {
     bpmnXml?: string;
     bpmnProcess?: BpmnProcess; // available if bpmnXml is available
     instances?: InstanceDetails[];
+    instancesUsers?: UserDetails[];
     processRoles?: ProcessRoles;
     svgString?: string; // only used to save preview to server
     settings?: ProcessSettings;
