@@ -11,7 +11,7 @@ declare module "tiny-svg/lib/create" {
    */
   function create(name: "defs"): SVGDefsElement;
   function create(name: "g"): SVGGElement;
-  function create(name: "g", attrs: create.ISVGGAttrib): SVGGElement;
+  function create(name: "g", attrs: create.ISVGGAttrib): SVGGElement;  
   function create(name: "svg"): SVGSVGElement;
   function create(name: "marker", attrs: create.ISVGMarkerAttrib): SVGMarkerElement;
   function create(name: "rect", attrs: create.ISVGRectAttrib): SVGRectElement;
@@ -147,7 +147,7 @@ declare module "tiny-svg/lib/create" {
     }
 
     // https://developer.mozilla.org/de/docs/Web/SVG/Element/g
-    export interface ISVGGAttrib extends ISVGPresentationAttrib {
+    export interface ISVGGAttrib {
       transform?: string;
     }
   }
