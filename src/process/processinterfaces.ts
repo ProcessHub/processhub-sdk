@@ -144,6 +144,9 @@ export const TaskSettings = {
   SendTaskSubject: "send-task-subject", // string: mail subject of SendTask notification mail
   AllFieldsEditable: "all-fields-editable", // boolean: all existing fields in task can be edited in current task
   SetSenderAsRoleOwner: "set-sender-as-role-owner", // boolean: set mail sender as role owner, default: true
+  ServiceTaskApiUrl: "service-task-api-url",
+  ServiceTaskRequestObjectString: "service-task-request-object",
+  ServiceTaskResponseObjectString: "service-task-response-object"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -157,6 +160,10 @@ export interface TaskExtensions {
   sendTaskInstanceLink: boolean;
   sendTaskSubject: string;
   allFieldsEditable: boolean;
+
+  serviceTaskApiUrl: string;
+  serviceTaskRequestObjectString: string;
+  serviceTaskResponseObjectString: string;
 }
 
 export interface RunningTaskLane {
