@@ -90,17 +90,17 @@ export function inviteWorkspaceMemberAction(workspaceId: string, userIdOrUserMai
   };
 }
 
-export async function createWorkspace(workspace: WorkspaceDetails, accessToken: string = null) {
-  await StateHandler.rootStore.dispatch(createWorkspaceAction(workspace, accessToken));
+export async function createWorkspace(workspace: WorkspaceDetails, accessToken: string = null): Promise<WorkspaceLoadedMessage> {
+  return await StateHandler.rootStore.dispatch(createWorkspaceAction(workspace, accessToken));
 }
-export function createWorkspaceAction(workspace: WorkspaceDetails, accessToken: string = null) {
-  return function (dispatch: any) {
+export function createWorkspaceAction(workspace: WorkspaceDetails, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<WorkspaceLoadedMessage> {
+  return async <S>(dispatch: Dispatch<S>): Promise<WorkspaceLoadedMessage> => {
     let request: CreateWorkspaceRequest = {
       workspace: workspace
     };
-    return Api.postJson(WorkspaceRequestRoutes.CreateWorkspace, request, accessToken).then((response: WorkspaceLoadedMessage) => {
-      dispatch(response);
-    });
+    const response = await Api.postJson(WorkspaceRequestRoutes.CreateWorkspace, request, accessToken) as WorkspaceLoadedMessage;
+    dispatch(response);
+    return response;
   };
 }
 
@@ -114,7 +114,7 @@ export function updateWorkspaceAction(workspace: WorkspaceDetails, accessToken: 
     delete (requestWorkspace.extras.members);
     delete (requestWorkspace.extras.processes);
     let request: UpdateWorkspaceRequest = {
-      workspace: requestWorkspace  
+      workspace: requestWorkspace
     };
     return Api.postJson(WorkspaceRequestRoutes.UpdateWorkspace, request, accessToken).then((response) => {
       dispatch(response);
