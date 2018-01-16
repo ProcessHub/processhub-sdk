@@ -122,6 +122,8 @@ declare module "diagram-js/lib/core/EventBus" {
     
     public on(events: "create.ended", callback: (event: EventBus.CreateEndedEvent) => void): void;
 
+    public on(events: "create.rejected", callback: (event: EventBus.CreateRejectedEvent) => void): void;
+
     public on(events: "commandStack.changed", callback: () => void): void;
 
     public on(events: "connection.added", callback: (event: EventBus.ConnectionAddedEvent) => void): void;
@@ -326,6 +328,9 @@ declare module "diagram-js/lib/core/EventBus" {
       shape: Shape;
       x: number;
       y: number;
+    }
+
+    export class CreateRejectedEvent extends CreateCanceledEvent {
     }
 
     export interface ISpaceToolEndedContext {
