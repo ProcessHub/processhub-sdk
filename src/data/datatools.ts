@@ -7,7 +7,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   if (fieldContentMap == null)
     return inputString;
     
-  const regex = /([{]{2,}[\s]?field\.(.+?)(\s)*[}]{2,})/g;
+  const regex = /([{]{2}[\s]?field\.(.+?)(\s)*[}]{2})/g;
   const groupIndexForFieldPlaceholder = 0;
   const groupIndexForFieldName = 2;
 
