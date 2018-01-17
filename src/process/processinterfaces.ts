@@ -146,7 +146,7 @@ export const TaskSettings = {
   SetSenderAsRoleOwner: "set-sender-as-role-owner", // boolean: set mail sender as role owner, default: true
   ServiceTaskApiUrl: "service-task-api-url",
   ServiceTaskRequestObjectString: "service-task-request-object",
-  ServiceTaskResponseObjectString: "service-task-response-object"
+  ServiceTaskResponseFieldName: "service-task-response-fieldname"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -163,7 +163,7 @@ export interface TaskExtensions {
 
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
-  serviceTaskResponseObjectString: string;
+  serviceTaskResponseFieldName: string;
 }
 
 export interface RunningTaskLane {

@@ -118,7 +118,7 @@ export class BpmnProcess {
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
-      serviceTaskResponseObjectString: null
+      serviceTaskResponseFieldName: null
     };
 
     if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
@@ -160,8 +160,19 @@ export class BpmnProcess {
             case TaskSettings.UserForm:
               returnValue.fieldDefinitions = updateLegacyFieldDefinitions(JSON.parse(child.$body));
               break;
+
+            case TaskSettings.ServiceTaskApiUrl:
+              returnValue.serviceTaskApiUrl = child.$body;
+              break;
+            case TaskSettings.ServiceTaskRequestObjectString:
+              returnValue.serviceTaskRequestObjectString = child.$body;
+              break;
+            case TaskSettings.ServiceTaskResponseFieldName:
+              returnValue.serviceTaskResponseFieldName = child.$body;
+              break;
+
             default:
-              return;
+              break;
           }
         }
       }
