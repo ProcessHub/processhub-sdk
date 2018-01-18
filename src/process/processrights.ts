@@ -7,6 +7,7 @@ import { ProcessDetails } from "./processinterfaces";
 import { isWorkspaceMember } from "../workspace/workspacerights";
 import { isFalse, isTrue, error } from "../tools/assert";
 import { isGroupId, isUserId } from "../tools/guid";
+import { Bpmn } from "./bpmn";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -40,7 +41,7 @@ export function getDefaultRoleName(roleId: string): string {
     case DefaultRoles.Viewer:
       return tl("Sichtbarkeit");
     case DefaultRoles.Follower:
-      return tl("Follower");      
+      return tl("Follower");
   }
 }
 
@@ -127,7 +128,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
         }
       }
     });
-    
+
     // remove roles that are not used any more
     for (let role in processRoles) {
       if (role != DefaultRoles.Owner && role != DefaultRoles.Manager && role != DefaultRoles.Viewer && role != DefaultRoles.Follower) {
@@ -145,7 +146,7 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
   // roleId == null -> check if user is PotentialRoleOwner of any role
   let roles = process.extras.processRoles;
   if (roles == null) {
-    console.error("isPotentialRoleOwner called without valid process.extras.processRoles");  
+    console.error("isPotentialRoleOwner called without valid process.extras.processRoles");
     return false;
   }
 
@@ -203,9 +204,9 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
 
   let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
- if (processDetails.extras.processRoles == null)
+  if (processDetails.extras.processRoles == null)
     return allOwners;
-  
+
   for (let role in processDetails.extras.processRoles) {
     if ((roleId == null || role == roleId) && processDetails.extras.processRoles[role]) {
       let owners: PotentialRoleOwners = {
@@ -247,8 +248,8 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
 export function processIsPublic(process: ProcessDetails): boolean {
   if (process.extras.processRoles)
     return (process.extras.processRoles[DefaultRoles.Viewer].potentialRoleOwners[0].memberId == PredefinedGroups.Public);
-  
-  else 
+
+  else
     return false;
 }
 
@@ -279,8 +280,14 @@ export function canEditProcess(process: ProcessDetails): boolean {
 }
 
 export function canSimulateProcess(process: ProcessDetails): boolean {
-  // Currently everybody is allowed to simulate
-  return process != null && !process.isNewProcess;
+  if (process != null && !process.isNewProcess) {
+    const bpmnProcess: BpmnProcess = process.extras.bpmnProcess;
+    const startEvents: Bpmn.StartEvent[] = bpmnProcess.getStartEvents(bpmnProcess.processId());
+    const startEventsWithoutDefinitions: Bpmn.StartEvent[] = startEvents.filter(e => e.eventDefinitions == null ||  e.eventDefinitions.length === 0);
+    return startEventsWithoutDefinitions.length > 0;
+  } else {
+    return false;
+  }
 }
 
 export function canStartProcess(process: ProcessDetails): boolean {
