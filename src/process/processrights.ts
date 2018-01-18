@@ -282,9 +282,13 @@ export function canEditProcess(process: ProcessDetails): boolean {
 export function canSimulateProcess(process: ProcessDetails): boolean {
   if (process != null && !process.isNewProcess) {
     const bpmnProcess: BpmnProcess = process.extras.bpmnProcess;
-    const startEvents: Bpmn.StartEvent[] = bpmnProcess.getStartEvents(bpmnProcess.processId());
-    const startEventsWithoutDefinitions: Bpmn.StartEvent[] = startEvents.filter(e => e.eventDefinitions == null ||  e.eventDefinitions.length === 0);
-    return startEventsWithoutDefinitions.length > 0;
+    if (bpmnProcess) {
+      const startEvents: Bpmn.StartEvent[] = bpmnProcess.getStartEvents(bpmnProcess.processId());
+      const startEventsWithoutDefinitions: Bpmn.StartEvent[] = startEvents.filter(e => e.eventDefinitions == null || e.eventDefinitions.length === 0);
+      return startEventsWithoutDefinitions.length > 0;
+    } else {
+      return false;
+    }
   } else {
     return false;
   }
