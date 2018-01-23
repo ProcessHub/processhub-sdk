@@ -1077,7 +1077,7 @@ export class BpmnProcess {
     BpmnProcess.setExtensionBody(startEvent, TaskSettings.SetSenderAsRoleOwner, setSetSenderAsRoleOwner.toString());
   }
 
-  public async checkCompatibilityOfChangedProcess(runningInstances: InstanceDetails[], userInstances: InstanceDetails[]) {
+  public checkCompatibilityOfChangedProcess(runningInstances: InstanceDetails[], userInstances: InstanceDetails[]): boolean {
 
     let actualRunningTasks: RunningTaskLane[] = [];
     for (let runInstance of runningInstances) {
@@ -1091,9 +1091,9 @@ export class BpmnProcess {
     let allTasksAndLanesAreThere: boolean = true;
 
     for (let runningTask of actualRunningTasks) {
-      let tmpTaskObj = this.getExistingTask(this.processId(), runningTask.bpmnTaskId);
+      const taskOrGateway = this.getExistingActivityObject(runningTask.bpmnTaskId);
       let tmpLaneObj = this.getLaneOfFlowNode(runningTask.bpmnTaskId);
-      if (tmpTaskObj == null || tmpLaneObj == null || runningTask.bpmnLaneId != tmpLaneObj.id) {
+      if (taskOrGateway == null || tmpLaneObj == null || runningTask.bpmnLaneId != tmpLaneObj.id) {
         allTasksAndLanesAreThere = false;
         break;
       }
