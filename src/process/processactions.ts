@@ -54,7 +54,7 @@ export interface ProcessActionCreateInDb extends ProcessAction {
   processId: string;
   processName: string;
   description: string;
-  longDesc?: string;
+  processIcon: string;
 }
 
 export interface ProcessActionCreateInDbDone extends ProcessAction {
@@ -89,7 +89,7 @@ export function createProcessInDbAction(processDetails: ProcessDetails, accessTo
       processId: processDetails.processId,
       description: processDetails.description,
       processName: processDetails.displayName,
-      longDesc: processDetails.longDesc
+      processIcon: processDetails.processIcon
     });
     let bpmnProcess = processDetails.extras.bpmnProcess;
     processDetails.extras.bpmnProcess = null;
