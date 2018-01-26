@@ -6,7 +6,6 @@ export interface LibraryCategory {
   language: string;
   displayName: string;
   urlName: string;
-  description?: string;
   icon?: string;
 }
 export const gqlLibraryTypes = `     
@@ -15,7 +14,6 @@ export const gqlLibraryTypes = `
     language: String!
     urlName: String!
     displayName: String!
-    description: String
     icon: String
   }
 `;
@@ -26,7 +24,6 @@ export const gqlLibraryFragments = gql`
     language
     urlName
     displayName
-    description
     icon
   }
 `;
