@@ -24,7 +24,6 @@ export interface ProcessDetails {
   fullUrl?: string; // @workspace/p/urlname
   previewUrl?: string;  // full url of preview-svg (including https://)
   description: string;
-  processIcon?: string; // Semantic UI icon name
   useModeler?: boolean;
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // Access rights of the current user
@@ -62,7 +61,6 @@ export const gqlProcessTypes = `
     fullUrl: String
     previewUrl: String
     description: String
-    processIcon: String
     useModeler: Boolean
     userRights: Int
     attachments: [ProcessAttachment]
