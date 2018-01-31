@@ -74,10 +74,9 @@ export class BpmnProcessDiagram {
 
   public generateBPMNDiagram(processId: string): void {
     let diagram = this.getDiagramElement();
-
     // für die Berechnung der gesamt Breite
     let process = this.bpmnProcess.getProcess(processId);
-    let amountOfProcesses = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_USERTASK).length;
+    let amountOfProcesses = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_USERTASK || e.$type === BpmnProcess.BPMN_SENDTASK).length;
     let amountOfSequences = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_SEQUENCEFLOW).length;
 
     // Anzahl der Prozesse + anzahl der seuqenzen + feste werte für anfang und ende
