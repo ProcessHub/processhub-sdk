@@ -90,7 +90,7 @@ export interface ProcessSettings {
   };
   library?: {  
     rating?: number;  // process rating, used to sort processes in library
-    categories?: string[];  // categoryIds in library
+    tags?: string[]; 
     copiedFromId?: string;  // processId of the original process    
   };
 }

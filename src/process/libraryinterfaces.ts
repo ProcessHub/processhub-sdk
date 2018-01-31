@@ -1,37 +1,33 @@
 import gql from "graphql-tag";
 
-export interface LibraryCategory {
+export interface LibraryTag {
   // Changes must also be reflected in gqlTypes and gqlFragments below!
-  categoryId: string;
-  language: string;
-  displayName: string;
-  urlName: string;
-  icon?: string;
+  tagName: string;
+  tagRelevance: number;  // increased every time a user clicks on a tag
 }
 export const gqlLibraryTypes = `     
-  type LibraryCategory {
-    categoryId: String!
-    language: String!
-    urlName: String!
-    displayName: String!
-    icon: String
+  type LibraryTag {
+    tagName: String!
+    tagRelevance: Int
   }
 `;
 
 export const gqlLibraryFragments = gql`
-  fragment LibraryCategoryFields on LibraryCategory {
-    categoryId
-    language
-    urlName
-    displayName
-    icon
+  fragment LibraryTagFields on LibraryTag {
+    tagName
+    tagRelevance
   }
 `;
-export const gqlQueryLibraryCategories = gql`
-  query queryLibraryCategories {
-    libraryCategories {
-      ...LibraryCategoryFields
+export const gqlQueryLibraryTags = gql`
+  query queryLibraryTags {
+    libraryTags {
+      ...LibraryTagFields
     }
   }
   ${gqlLibraryFragments}  
+`;
+export const gqlIncreaseTagRelevance = gql`
+  mutation increaseTagRelevance($tagName: String!) {
+    increaseTagRelevance(tagName: $tagName)
+  }
 `;
