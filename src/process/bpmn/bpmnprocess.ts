@@ -404,6 +404,7 @@ export class BpmnProcess {
     let flowElements: Bpmn.FlowElement[] = process.flowElements.filter(
       (e: Bpmn.FlowElement) =>
         e.$type === BPMN_USERTASK
+        || e.$type === BPMN_SENDTASK
         || e.$type === BPMN_STARTEVENT
       // || e.$type === BPMN_ENDEVENT
     );
@@ -692,6 +693,82 @@ export class BpmnProcess {
     this.processDiagram.generateBPMNDiagram(processId);
   }
 
+  public convertTaskType(rowDetails: RowDetails): string {
+
+    let oldTask: Bpmn.UserTask | Bpmn.SendTask = this.getExistingTask(this.processId(), rowDetails.taskId) as Bpmn.UserTask;
+    let savedIncoming = oldTask.incoming;
+    let savedOutgoing = oldTask.outgoing;
+
+
+    let processContext: Bpmn.Process = this.getProcess(this.processId());
+
+    // delete old task from flowelements
+    for (let index = 0; index < processContext.flowElements.length; index++) {
+      let element = processContext.flowElements[index];
+      if (element.id === oldTask.id) {
+        processContext.flowElements.splice(index, 1);
+        index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
+      }
+    }
+    // Task aus lane entfernen
+    let processLanes: Bpmn.Lane[] = this.getProcessLanes(this.processId());
+
+    for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
+      let processLane: Bpmn.Lane = processLanes[laneIndex];
+      if (processLane.flowNodeRef != null) {
+        for (let index = 0; index < processLane.flowNodeRef.length; index++) {
+          let flowNode: Bpmn.FlowNode = processLane.flowNodeRef[index];
+          if (flowNode.id === oldTask.id) {
+            processLane.flowNodeRef.splice(index, 1);
+            index--; // Wegen splicen
+          }
+        }
+      }
+    }
+
+
+
+    // standard convert to send task change on switch back
+    let convertToType: "bpmn:SendTask" | "bpmn:UserTask" = rowDetails.taskType as "bpmn:SendTask" | "bpmn:UserTask";
+
+    let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
+
+    let focusedTask = null;
+
+    rowDetails.taskId = BpmnProcess.getBpmnId(convertToType);
+
+    if (convertToType === "bpmn:SendTask") {
+      focusedTask = this.moddle.create("bpmn:SendTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+    } else if (convertToType === "bpmn:UserTask") {
+      focusedTask = this.moddle.create("bpmn:UserTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+    }
+
+    if (focusedTask == null) {
+      throw new Error("Error on converting task to different type.");
+    }
+
+
+    for (let inc of savedIncoming) {
+      inc.targetRef = focusedTask;
+    }
+    for (let out of savedOutgoing) {
+      out.sourceRef = focusedTask;
+    }
+
+
+    focusedTask.outgoing = savedOutgoing;
+    focusedTask.incoming = savedIncoming;
+
+    processContext.flowElements.push(focusedTask);
+
+    this.addTaskToLane(this.processId(), rowDetails.laneId, focusedTask);
+
+    // this.setRoleForTask(this.processId(), rowDetails.laneId, focusedTask);
+
+    this.processDiagram.generateBPMNDiagram(this.processId());
+    return rowDetails.taskId;
+  }
+
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
   public addOrModifyTask(processId: string, rowDetails: RowDetails): string {
     // Weiteren Prozess einfügen
@@ -703,14 +780,14 @@ export class BpmnProcess {
 
     let lastCreatedTask = this.getLastCreatedTask(processId);
 
-    let focusedTask: Bpmn.UserTask = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.UserTask;
+    let focusedTask: Bpmn.Task = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.Task;
     let processContext: Bpmn.Process = this.getProcess(processId);
 
     let isNewTask: boolean = false;
 
     if (focusedTask == null) {
       let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
-      focusedTask = this.moddle.create(BPMN_USERTASK, { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+      focusedTask = this.moddle.create(rowDetails.taskType as "bpmn:UserTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
       processContext.flowElements.push(focusedTask);
       isNewTask = true;
     } else {
@@ -954,6 +1031,15 @@ export class BpmnProcess {
       });
     }
 
+    tasks = this.getEvents(processId, BPMN_SENDTASK);
+    if (tasks != null) {
+      tasks.map(task => {
+        if (sortedTasks.find(e => e.id == task.id) == null) {
+          sortedTasks.push(task as Bpmn.Task);
+        }
+      });
+    }
+
     return sortedTasks;
   }
 
@@ -1053,7 +1139,7 @@ export class BpmnProcess {
       flowNode.extensionElements = bpmnModdle.create("bpmn:ExtensionElements", { values: [] });
     }
     let phInOut = flowNode.extensionElements.values.find(e => e.$type === "processhub:inputOutput") as Processhub.InputOutput;
-    if (!phInOut) {
+    if (!phInOut || phInOut.$children == null) {
       phInOut = bpmnModdle.createAny("processhub:inputOutput", "http://processhub.com/schema/1.0/bpmn", { $children: [] });
       flowNode.extensionElements.values.push(phInOut);
     }
