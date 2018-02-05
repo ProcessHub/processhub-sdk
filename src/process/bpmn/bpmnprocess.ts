@@ -399,24 +399,6 @@ export class BpmnProcess {
     return flowElements;
   }
 
-  private getLastCreatedTask(processId: string): Bpmn.Task {
-    let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
-    let flowElements: Bpmn.FlowElement[] = process.flowElements.filter(
-      (e: Bpmn.FlowElement) =>
-        e.$type === BPMN_USERTASK
-        || e.$type === BPMN_SENDTASK
-        || e.$type === BPMN_STARTEVENT
-      // || e.$type === BPMN_ENDEVENT
-    );
-
-    if (flowElements != null && flowElements.length > 0) {
-      let tmpObject: Bpmn.FlowElement = flowElements[flowElements.length - 1];
-
-      return tmpObject as Bpmn.Task;
-    }
-    return null;
-  }
-
   public getProcessDiagram() {
     return this.processDiagram;
   }
@@ -786,8 +768,26 @@ export class BpmnProcess {
 
   }
 
+  private getLastCreatedTask(processId: string): Bpmn.Task {
+    let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
+    let flowElements: Bpmn.FlowElement[] = process.flowElements.filter(
+      (e: Bpmn.FlowElement) =>
+        e.$type === BPMN_USERTASK
+        || e.$type === BPMN_SENDTASK
+        || e.$type === BPMN_STARTEVENT
+      // || e.$type === BPMN_ENDEVENT
+    );
+
+    if (flowElements != null && flowElements.length > 0) {
+      let tmpObject: Bpmn.FlowElement = flowElements[flowElements.length - 1];
+
+      return tmpObject as Bpmn.Task;
+    }
+    return null;
+  }
+
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
-  public addOrModifyTask(processId: string, rowDetails: RowDetails): string {
+  public addOrModifyTask(processId: string, rowDetails: RowDetails, nextToLastDetails: RowDetails): string {
     // Weiteren Prozess einfügen
     let id: string;
     if (rowDetails.taskId == null) {
@@ -795,7 +795,12 @@ export class BpmnProcess {
       rowDetails.taskId = id;
     }
 
-    let lastCreatedTask = this.getLastCreatedTask(processId);
+    let lastCreatedTask: Bpmn.Task = null;
+    if (nextToLastDetails != null) {
+      lastCreatedTask = this.getExistingTask(this.processId(), nextToLastDetails.taskId);
+    } else {
+      lastCreatedTask = this.getLastCreatedTask(this.processId());
+    }
 
     let focusedTask: Bpmn.Task = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.Task;
     let processContext: Bpmn.Process = this.getProcess(processId);

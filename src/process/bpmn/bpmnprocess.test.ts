@@ -171,7 +171,7 @@ describe("sdk", function () {
           let testTaskName: string = "Test Aufgabe";
           let rowDetails: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
 
-          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails);
+          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails, null);
 
           let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
@@ -180,7 +180,7 @@ describe("sdk", function () {
 
           testTaskName += " Test Edit";
           rowDetails.task = testTaskName;
-          testTaskId = bpmnProcess.addOrModifyTask(process.id, rowDetails);
+          testTaskId = bpmnProcess.addOrModifyTask(process.id, rowDetails, null);
 
           testTaskObject = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
@@ -211,7 +211,7 @@ describe("sdk", function () {
 
           let testTaskName: string = "Test Aufgabe";
           let rowDetails: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName, taskId: null, laneId: testLaneId, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails);
+          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails, null);
 
           // +2 hier wegen dem Start und End Event!!!!
           assert(testLane.flowNodeRef.length === (1 + 2));
@@ -240,7 +240,7 @@ describe("sdk", function () {
           let testTaskName: string = "Test Aufgabe";
           let rowDetails: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
 
-          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails);
+          let testTaskId: string = bpmnProcess.addOrModifyTask(process.id, rowDetails, null);
 
           let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
           assert(testTaskObject.name === testTaskName);
@@ -273,7 +273,7 @@ describe("sdk", function () {
 
             let testTaskName1: string = "Test Aufgabe A";
             let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-            let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+            let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1, null);
 
             let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
             assert(testTaskObject1.name === testTaskName1);
@@ -283,7 +283,7 @@ describe("sdk", function () {
 
             let testTaskName2: string = "Test Aufgabe B";
             let rowDetails2: RowDetails = { rowNumber: 1, selectedRole: testLaneId2, task: testTaskName2, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-            let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
+            let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2, rowDetails1);
 
             let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
             assert(testTaskObject2.name === testTaskName2);
@@ -293,7 +293,7 @@ describe("sdk", function () {
 
             let testTaskName3: string = "Test Aufgabe C";
             let rowDetails3: RowDetails = { rowNumber: 2, selectedRole: testLaneId, task: testTaskName3, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-            let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3);
+            let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3, rowDetails2);
 
             let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
             assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
@@ -332,7 +332,7 @@ describe("sdk", function () {
 
           let testTaskName1: string = "Test Aufgabe A";
           let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1, null);
 
           let testTaskObject1: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId1) as Bpmn.UserTask;
           assert(testTaskObject1.name === testTaskName1);
@@ -342,7 +342,7 @@ describe("sdk", function () {
 
           let testTaskName2: string = "Test Aufgabe B";
           let rowDetails2: RowDetails = { rowNumber: 1, selectedRole: testLaneId, task: testTaskName2, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
+          let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2, rowDetails1);
 
           let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
           assert(testTaskObject2.name === testTaskName2);
@@ -352,7 +352,7 @@ describe("sdk", function () {
 
           let testTaskName3: string = "Test Aufgabe C";
           let rowDetails3: RowDetails = { rowNumber: 2, selectedRole: testLaneId, task: testTaskName3, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3);
+          let testTaskId3: string = bpmnProcess.addOrModifyTask(process.id, rowDetails3, rowDetails2);
 
           let testTaskObject3: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId3) as Bpmn.UserTask;
           assert(testTaskObject3.name === testTaskName3, testTaskObject3.name + " === " + testTaskName3);
@@ -409,7 +409,7 @@ describe("sdk", function () {
 
           let testTaskName1: string = "Test Aufgabe A";
           let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1, null);
 
           let taskObj = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId1);
           assert.isTrue(taskObj.outgoing.length == 1, "wrong outgoing");
@@ -432,7 +432,7 @@ describe("sdk", function () {
 
           let testTaskName1: string = "Test Aufgabe A";
           let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1, null);
 
           assert.equal(bpmnProcess.getFollowingSequenceFlowName(testTaskId1), null, "Sequence Flow Name wrong");
         });
@@ -449,11 +449,11 @@ describe("sdk", function () {
 
           let testTaskName1: string = "Test Aufgabe A";
           let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1);
+          let testTaskId1: string = bpmnProcess.addOrModifyTask(process.id, rowDetails1, null);
 
           let testTaskName2: string = "Test Aufgabe B";
           let rowDetails2: RowDetails = { rowNumber: 1, selectedRole: testLaneId, task: testTaskName2, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2);
+          let testTaskId2: string = bpmnProcess.addOrModifyTask(process.id, rowDetails2, rowDetails1);
 
           let taskObj = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId1);
           assert.isTrue(taskObj.outgoing.length == 1, "wrong outgoing");
