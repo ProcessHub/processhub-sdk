@@ -52,9 +52,7 @@ export class BpmnProcessDiagram {
 
   public getShapeFromDiagram(shapeId: string): Bpmndi.BPMNShape {
     let diagram = this.getDiagramElement();
-    console.log("looking for " + shapeId);
     for (let planeElement of diagram.plane.planeElement) {
-      console.log("found:" + (planeElement as Bpmndi.BPMNShape).bpmnElement.id);
       if (planeElement.$type === DiagramShapeTypes.BPMNDI_SHAPE && (planeElement as Bpmndi.BPMNShape).bpmnElement.id === shapeId) {
         return planeElement as Bpmndi.BPMNShape;
       }
