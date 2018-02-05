@@ -44,4 +44,5 @@ export interface RowDetails {
   taskId: string;
   laneId?: string;
   taskType: "bpmn:UserTask" | "bpmn:SendTask";
+  jumpsTo: string[];
 }

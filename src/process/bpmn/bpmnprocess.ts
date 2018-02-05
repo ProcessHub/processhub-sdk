@@ -637,7 +637,7 @@ export class BpmnProcess {
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
   // TODO PP check method and test
-  public switchTaskWithNextTask(processId: string, rowDetails: RowDetails): void {
+  public switchTaskWithNextTask(processId: string, rowDetails: RowDetails, nextRowDetails: RowDetails): void {
 
     // LESEN:
     // Komplexität wird durch einfaches Beispiel versucht zu erklären und umzusetzen
@@ -769,6 +769,23 @@ export class BpmnProcess {
     return rowDetails.taskId;
   }
 
+  public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string) {
+
+    let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
+    let targetTask: Bpmn.Task = this.getExistingTask(this.processId(), targetBpmnTaskId) as Bpmn.Task;
+    this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
+    this.processDiagram.generateBPMNDiagram(this.processId());
+  }
+
+  public removeSequenceFlowFromJumpsTo(taskFromObject: RowDetails, targetBpmnTaskId: string) {
+    let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
+    let sfObj = focusedTask.outgoing.find(out => out.targetRef.id === targetBpmnTaskId);
+    isTrue(sfObj != null, "removing object is missing.");
+    this.removeSequenceFlow(this.processId(), sfObj);
+    this.processDiagram.generateBPMNDiagram(this.processId());
+
+  }
+
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
   public addOrModifyTask(processId: string, rowDetails: RowDetails): string {
     // Weiteren Prozess einfügen
@@ -824,7 +841,7 @@ export class BpmnProcess {
     return rowDetails.taskId;
   }
 
-  private addSequenceFlow(processId: string, sourceReference: Bpmn.FlowNode, targetReference: Bpmn.FlowNode): Bpmn.SequenceFlow {
+  private addSequenceFlow(processId: string, sourceReference: Bpmn.FlowNode, targetReference: Bpmn.FlowNode, deleteExistingRefs: boolean = true): Bpmn.SequenceFlow {
     let processContext = this.getProcess(processId);
     // Weiteren Sequenzfluss einfügen
     let id = BpmnProcess.getBpmnId(BPMN_SEQUENCEFLOW);
@@ -835,11 +852,13 @@ export class BpmnProcess {
     if (sourceReference.$type === BPMN_STARTEVENT) {
       isTrue(sourceReference.outgoing.length == 1, "Das Start EVENT darf nur 1 Verbindung (outgoing) haben!" + sourceReference.outgoing.length);
     }
-    sourceReference.outgoing.splice(0, 1);
+    if (deleteExistingRefs)
+      sourceReference.outgoing.splice(0, 1);
     if (targetReference.$type === BPMN_ENDEVENT) {
       isTrue(targetReference.incoming.length == 1, "Das End EVENT darf nur 1 Verbindung (incoming) haben! " + targetReference.incoming.length);
     }
-    targetReference.incoming.splice(0, 1);
+    if (deleteExistingRefs)
+      targetReference.incoming.splice(0, 1);
 
     targetReference.incoming.push(sequenceFlow);
     sourceReference.outgoing.push(sequenceFlow);

@@ -52,8 +52,9 @@ export class BpmnProcessDiagram {
 
   public getShapeFromDiagram(shapeId: string): Bpmndi.BPMNShape {
     let diagram = this.getDiagramElement();
-
+    console.log("looking for " + shapeId);
     for (let planeElement of diagram.plane.planeElement) {
+      console.log("found:" + (planeElement as Bpmndi.BPMNShape).bpmnElement.id);
       if (planeElement.$type === DiagramShapeTypes.BPMNDI_SHAPE && (planeElement as Bpmndi.BPMNShape).bpmnElement.id === shapeId) {
         return planeElement as Bpmndi.BPMNShape;
       }
@@ -133,16 +134,75 @@ export class BpmnProcessDiagram {
       let process = this.bpmnProcess.getProcess(processId);
 
       let flowElements = process.flowElements;
+      let drawObjectList: Bpmn.FlowNode[] = [];
       let startElementObject = flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_STARTEVENT);
+      drawObjectList = drawObjectList.concat(startElementObject);
+      let tasks: Bpmn.Task[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+      drawObjectList = drawObjectList.concat(tasks);
+      // this.recursiveGenerateDiagramTasks(diagram, laneDictionaries, startElementObject[0], (this.diagramXStartParam + 100));
+      let ends = this.bpmnProcess.getEndEvents(this.bpmnProcess.processId());
+      drawObjectList = drawObjectList.concat(ends);
 
-      this.recursiveGenerateDiagramTasks(diagram, laneDictionaries, startElementObject[0], (this.diagramXStartParam + 100));
+      this.drawAllTasks(diagram, laneDictionaries, drawObjectList, (this.diagramXStartParam + 100));
 
       // sequenceFlows vom Prozess ins Diagramm
-      let sequenceFlows = this.bpmnProcess.getSequenceFlowElements();
+      let sequenceFlows: Bpmn.SequenceFlow[] = this.bpmnProcess.getSequenceFlowElements();
 
-      for (let flowObject of sequenceFlows) {
-        this.generateSequenceFlow(diagram, flowObject);
+      // get all "normal" sf's
+      let normalSequenceFlows: Bpmn.SequenceFlow[] = [];
+      for (let i = 0; i < drawObjectList.length; i++) {
+        let thisObj = drawObjectList[i];
+        let nextObj = drawObjectList[(i + 1)];
+        let tmpSf = sequenceFlows.find(sf => sf.sourceRef.id === thisObj.id && sf.targetRef.id === nextObj.id);
+        if (tmpSf != null) {
+          normalSequenceFlows.push(tmpSf);
+        }
       }
+
+      let jumpSequenceFlows = sequenceFlows.filter(sf => normalSequenceFlows.indexOf(sf) === -1);
+
+      for (let flowObject of normalSequenceFlows) {
+        this.generateSequenceFlow(diagram, flowObject, false);
+      }
+
+      let numberOfJumpEdge: number = 0;
+      for (let flowObject of jumpSequenceFlows) {
+        this.generateSequenceFlow(diagram, flowObject, true, numberOfJumpEdge);
+        numberOfJumpEdge++;
+      }
+    }
+  }
+
+  private drawAllTasks(diagram: any, laneDictionaries: LaneDictionary[], taskList: Bpmn.FlowNode[], xParam: number) {
+    for (let workingObject of taskList) {
+      let iconWidth = BpmnProcessDiagram.TASK_WIDTH;
+      let sizeStartAndEndEvent: number = 36;
+      let iconHeight: number = 80;
+      // Jedes element MUSS in einer Lane sein! Wenn hier null returned wird, dann ist das ein FEHLER       
+      let laneNumber: number = this.bpmnProcess.getLaneNumberOfElement(workingObject, laneDictionaries);
+      if (laneNumber == null) {
+        console.log("Error: Element has no lane assignment.");
+      }
+
+      // Berechnung der Y-Koordinate für jedes Element (Task)
+      // 30 ist hier der optimal eingerückte wert für die LaneHöhe
+      let yParam = (this.diagramYStartParam + 23) + laneNumber * this.diagramLaneHeight;
+
+      // weil größe des icons anders
+      if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT) {
+        iconWidth = sizeStartAndEndEvent;
+        iconHeight = sizeStartAndEndEvent;
+
+        yParam = (this.diagramYStartParam + 45) + laneNumber * this.diagramLaneHeight;
+      }
+
+      let shape = this.createShape(workingObject, xParam, yParam, iconWidth, iconHeight);
+
+      diagram.plane.planeElement.push(shape);
+
+      // Über den xParam wird gesteuert wie viel weiter rechts das der nächste Task Liegt
+      // Sollte sich ergeben aus der Taskbreite + einem gewissen Raum für den Pfeil (optimal sind 30px)
+      xParam += iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
     }
   }
 
@@ -185,7 +245,7 @@ export class BpmnProcessDiagram {
     }
   }
 
-  private generateSequenceFlow(diagram: any, flowObject: Bpmn.SequenceFlow) {
+  private generateSequenceFlow(diagram: any, flowObject: Bpmn.SequenceFlow, drawJumpFlow: boolean, numberOfJumpEdge: number = 0) {
     let waypoints: Waypoint[] = [];
     // hole die beiden Diagramm Objekte von Quell und Ziel Objekt
     let sourceRef = flowObject.sourceRef;
@@ -193,7 +253,12 @@ export class BpmnProcessDiagram {
     let targetRef = flowObject.targetRef;
     let targetDiagramObject = this.getShapeFromDiagram(targetRef.id);
 
-    waypoints = this.getWaypointsBetweenObjects(sourceDiagramObject, targetDiagramObject);
+    if (drawJumpFlow) {
+      waypoints = this.getWaypointsBetweenObjectsUnderpass(sourceDiagramObject, targetDiagramObject, numberOfJumpEdge);
+    } else {
+      waypoints = this.getWaypointsBetweenObjects(sourceDiagramObject, targetDiagramObject);
+    }
+      
 
     let edgeObj = this.createEdge(flowObject, flowObject.sourceRef, flowObject.targetRef, waypoints);
     diagram.plane.planeElement.push(edgeObj);
@@ -252,6 +317,45 @@ export class BpmnProcessDiagram {
     result.push(upperWaypoint);
 
     let lowerWaypoint = new Waypoint(midBetweenObjects, targetY);
+    result.push(lowerWaypoint);
+
+    // Letzter Waypoint darf erst hier in die Liste eingefügt werden, da die Waypoints nacheinander gezeichnet werden!
+    result.push(targetWaypoint);
+
+    return result;
+  }
+
+  private getWaypointsBetweenObjectsUnderpass(sourceObject: Bpmndi.BPMNShape, targetObject: Bpmndi.BPMNShape, numberOfJumpEdge: number): Waypoint[] {
+
+    let result: Waypoint[] = [];
+
+    let sourceBounds = sourceObject.bounds;
+    let targetBounds = targetObject.bounds;
+
+    // Der erste Waypoint (Start) startet immer auf der RECHTEN SEITE und in der MITTE des Shapes
+    let sourceX: number = sourceBounds.x + sourceBounds.width / 2;
+    let sourceY: number = sourceBounds.y + sourceBounds.height;
+    let sourceWaypoint = new Waypoint(sourceX, sourceY);
+    result.push(sourceWaypoint);
+
+    // Der zweite Waypoint (Ziel) endet immer auf der LINKEN SEITE und in der MITTE des Shapes
+    let targetX: number = targetBounds.x + (targetBounds.width / 2);
+    let targetY: number = targetBounds.y + targetBounds.height;
+    let targetWaypoint = new Waypoint(targetX, targetY);
+
+    let lowEdge = targetY > sourceY ? targetY : sourceY;
+    lowEdge += 20;
+
+    lowEdge += 10 * numberOfJumpEdge;
+    // let midBetweenObjects: number = sourceX + ((targetX - sourceX) / 2);
+    // 2 mittlere Waypoints für S-artige Kurve
+    // let upperWaypoint = new Waypoint(midBetweenObjects, sourceY);
+    // result.push(upperWaypoint);
+
+    let lowerWaypoint2 = new Waypoint(sourceX, lowEdge);
+    result.push(lowerWaypoint2);
+
+    let lowerWaypoint = new Waypoint(targetX, lowEdge);
     result.push(lowerWaypoint);
 
     // Letzter Waypoint darf erst hier in die Liste eingefügt werden, da die Waypoints nacheinander gezeichnet werden!
