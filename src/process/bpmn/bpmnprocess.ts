@@ -16,6 +16,7 @@ import { InstanceDetails } from "../../instance/instanceinterfaces";
 import { DecisionTask, DecisionTaskTypes, filterTodosForInstance } from "../../todo";
 import { LoadTemplateReply } from "../legacyapi";
 import { RowDetails } from "../phclient";
+import { Tools } from "../../index";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
@@ -36,6 +37,11 @@ export const BPMN_LANESET = "bpmn:LaneSet";
 export const BPMN_EXCLUSIVEGATEWAY = "bpmn:ExclusiveGateway";
 export const BPMN_PARALLELGATEWAY = "bpmn:ParallelGateway";
 export const BPMN_FORMALEXPRESSION = "bpmn:FormalExpression";
+
+interface tmpSavedGateway {
+  sourceTaskRowDetails: RowDetails;
+  targetBpmnTaskIds: string[];
+}
 
 export class BpmnProcess {
 
@@ -461,7 +467,12 @@ export class BpmnProcess {
     let process: Bpmn.Process = this.getProcess(processId);
     let index: number = process.flowElements.indexOf(sequenceFlowObject);
 
+
+
     if (index > -1) {
+      let sf: Bpmn.SequenceFlow = process.flowElements.find(e => e.id === process.flowElements[index].id) as Bpmn.SequenceFlow;
+      sf.sourceRef.outgoing = sf.sourceRef.outgoing.filter(out => out.id !== sf.id);
+      sf.targetRef.incoming = sf.targetRef.incoming.filter(inc => inc.id !== sf.id);
       process.flowElements.splice(index, 1);
     } else {
       console.log("Error: cannot find SequenceFlow to remove.");
@@ -560,8 +571,9 @@ export class BpmnProcess {
   }
 
   // löscht einen Task aus dem XML und dem Diagramm
-  public deleteTask(processId: string, rowDetails: RowDetails): void {
+  public deleteTask(processId: string, rowDetails: RowDetails[], rowNumber: number): void {
     let processContext = this.getProcess(processId);
+    let allgateways = this.removeAllGateways(rowDetails, true);
 
     // Auch hier wird nach folgendem Beispiel vorgegangen
     // A -[AB]-> B -[BC]-> C
@@ -571,55 +583,79 @@ export class BpmnProcess {
     // 2. B löschen
     // 3. [BC] bekommt als sourceRef A
     // 4. A bekommt als outgoing [BC]
-    let objectToDelete_B = this.getExistingTask(processId, rowDetails.taskId);
-    isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
-    let sequenceFlow_AB: Bpmn.SequenceFlow = objectToDelete_B.incoming[0];
-    let object_A: Bpmn.FlowNode = sequenceFlow_AB.sourceRef;
-    isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
-    let sequenceFlow_BC: Bpmn.SequenceFlow = objectToDelete_B.outgoing[0];
+    let objectToDelete_A: Bpmn.FlowNode = null;
+    if (rowNumber > 0) {
+      objectToDelete_A = this.getExistingTask(processId, rowDetails[(rowNumber - 1)].taskId);
+    } else {
+      objectToDelete_A = this.getStartEvents(processId)[0];
+    }
+
+    let objectToDelete_C: Bpmn.FlowNode = null;
+    if (rowDetails.length > (rowNumber + 1)) {
+      objectToDelete_C = this.getExistingTask(processId, rowDetails[(rowNumber + 1)].taskId);
+    } else {
+      objectToDelete_C = this.getEndEvents(processId)[0];
+    }
+
+    let objectToDelete_B = this.getExistingTask(processId, rowDetails[rowNumber].taskId);
+    // isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+    let sequenceFlows_AB: Bpmn.SequenceFlow[] = objectToDelete_B.incoming; // .find(inc => inc.sourceRef.id === objectToDelete_A.id && inc.targetRef.id === objectToDelete_B.id); // [0];
+    // isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+    let sequenceFlow_BC: Bpmn.SequenceFlow = objectToDelete_B.outgoing.find(out => out.sourceRef.id === objectToDelete_B.id && out.targetRef.id === objectToDelete_C.id); // [0];
+
+    let sequenceFlows_BC_to_delete: Bpmn.SequenceFlow[] = objectToDelete_B.outgoing.filter(out => out.targetRef.id !== objectToDelete_C.id); // [0];
+
+    objectToDelete_B.outgoing.forEach(out => {
+      if (out.targetRef.id !== objectToDelete_C.id) {
+        out.targetRef.incoming = out.targetRef.incoming.filter(inc => inc.sourceRef.id !== objectToDelete_B.id);
+      }
+    });
+    objectToDelete_B.incoming.forEach(inc => inc.sourceRef.outgoing = inc.sourceRef.outgoing.filter(out => out.targetRef.id !== objectToDelete_B.id));
 
     // 1. & 2. Elemente aus flowElements löschen
     for (let index = 0; index < processContext.flowElements.length; index++) {
       let element = processContext.flowElements[index];
-      if (element.id === sequenceFlow_AB.id || element.id === objectToDelete_B.id) {
+      if (sequenceFlows_AB.find(sf => sf.id === element.id) != null
+        || sequenceFlows_BC_to_delete.find(sf => sf.id === element.id) != null
+        || element.id === objectToDelete_B.id) {
         processContext.flowElements.splice(index, 1);
         index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
       }
     }
-
     // 3.
-    isTrue(object_A != null);
-    sequenceFlow_BC.sourceRef = object_A;
+    isTrue(objectToDelete_A != null);
+    sequenceFlow_BC.sourceRef = objectToDelete_A;
 
     // 4.
     // Array zuerst leeren! Da hier nur ein Element im Array sein darf!
-    object_A.outgoing = [];
-    object_A.outgoing.push(sequenceFlow_BC);
+    // objectToDelete_A.outgoing = [];
+    objectToDelete_A.outgoing = objectToDelete_A.outgoing.filter(out => out.sourceRef.id !== objectToDelete_A.id && out.targetRef.id !== objectToDelete_B.id);
+    objectToDelete_A.outgoing.push(sequenceFlow_BC);
 
-    isTrue(object_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
+    // isTrue(objectToDelete_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
 
     // Task aus lane entfernen
     let processLanes: Bpmn.Lane[] = this.getProcessLanes(processId);
-
     for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
       let processLane: Bpmn.Lane = processLanes[laneIndex];
       if (processLane.flowNodeRef != null) {
         for (let index = 0; index < processLane.flowNodeRef.length; index++) {
           let flowNode: Bpmn.FlowNode = processLane.flowNodeRef[index];
-          if (flowNode.id === rowDetails.taskId) {
+          if (flowNode.id === rowDetails[rowNumber].taskId) {
             processLane.flowNodeRef.splice(index, 1);
             index--; // Wegen splicen
           }
         }
       }
     }
+    this.putGatewaysBack(allgateways);
 
     this.processDiagram.generateBPMNDiagram(processId);
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
   // TODO PP check method and test
-  public switchTaskWithNextTask(processId: string, rowDetails: RowDetails, nextRowDetails: RowDetails): void {
+  public switchTaskWithNextTask(processId: string, rowDetails: RowDetails[], selectedRowIndex: number): void {
 
     // LESEN:
     // Komplexität wird durch einfaches Beispiel versucht zu erklären und umzusetzen
@@ -632,30 +668,61 @@ export class BpmnProcess {
     // 5. SequenceFlow Objekt [BS] bekommt als sourceRef A
     // 6. B bekommt als Incoming SeqenceFlow [RA]
     // 7. B bekommt als Outgoing SeqenceFlow [AB]
+    let allgateways = this.removeAllGateways(rowDetails, true);
 
-    let objectToSwitch_A: Bpmn.UserTask = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.UserTask;
+    for (let s of this.getSortedTasks(this.processId())) {
+      console.log(s);
+      console.log(s.id + ": " + s.incoming.length + " -- " + s.outgoing.length);
+    }
+
+    // if selectedRowIndex is 0 the previous object is the start element
+    let objectToSwitch_R: Bpmn.FlowNode = null;
+    if (selectedRowIndex > 0) {
+      objectToSwitch_R = this.getExistingTask(processId, rowDetails[selectedRowIndex - 1].taskId) as Bpmn.FlowNode;
+    } else {
+      objectToSwitch_R = this.getStartEvents(processId)[0];
+    }
+
+    let objectToSwitch_S: Bpmn.FlowNode = null;
+    if ((rowDetails.length - 2) > selectedRowIndex) {
+      objectToSwitch_S = this.getExistingTask(processId, rowDetails[selectedRowIndex + 2].taskId) as Bpmn.FlowNode;
+    } else {
+      objectToSwitch_S = this.getEndEvents(processId)[0];
+    }
+
+    let objectToSwitch_A: Bpmn.UserTask = this.getExistingTask(processId, rowDetails[selectedRowIndex].taskId) as Bpmn.UserTask;
     // über die Referenzen auf den SequenceFlow wird der Ziel Task geholt
-    isTrue(objectToSwitch_A.outgoing.length === 1, "A darf vor dem Start nur 1 outgoing haben!");
-    let objectToSwitch_B: Bpmn.FlowNode = objectToSwitch_A.outgoing[0].targetRef;
+    // isTrue(objectToSwitch_A.outgoing.length === 1, "A darf vor dem Start nur 1 outgoing haben!");
+    let objectToSwitch_B: Bpmn.FlowNode = this.getExistingTask(processId, rowDetails[(selectedRowIndex + 1)].taskId) as Bpmn.UserTask; // objectToSwitch_A.outgoing[0].targetRef;
 
-    isTrue(objectToSwitch_A.incoming.length === 1, "A darf vor dem Start nur 1 incoming haben!");
-    isTrue(objectToSwitch_B.outgoing.length === 1, "B darf vor dem Start nur 1 outgoing haben!");
-    let sequenceFlow_RA: Bpmn.SequenceFlow = objectToSwitch_A.incoming[0];
-    let sequenceFlow_AB: Bpmn.SequenceFlow = objectToSwitch_A.outgoing[0];
-    let sequenceFlow_BS: Bpmn.SequenceFlow = objectToSwitch_B.outgoing[0];
+    // isTrue(objectToSwitch_A.incoming.length === 1, "A darf vor dem Start nur 1 incoming haben!");
+    // isTrue(objectToSwitch_B.outgoing.length === 1, "B darf vor dem Start nur 1 outgoing haben!");
+    let sequenceFlow_RA: Bpmn.SequenceFlow = objectToSwitch_R.outgoing.find(out => out.sourceRef.id === objectToSwitch_R.id && out.targetRef.id === objectToSwitch_A.id); // objectToSwitch_A.incoming[0];
+    objectToSwitch_R.outgoing = objectToSwitch_R.outgoing.filter(out => out.id !== sequenceFlow_RA.id);
+    objectToSwitch_A.incoming = objectToSwitch_A.incoming.filter(inc => inc.id !== sequenceFlow_RA.id);
+
+    let sequenceFlow_AB: Bpmn.SequenceFlow = objectToSwitch_A.outgoing.find(out => out.sourceRef.id === objectToSwitch_A.id && out.targetRef.id === objectToSwitch_B.id); // [0];
+    objectToSwitch_A.outgoing = objectToSwitch_A.outgoing.filter(out => out.id !== sequenceFlow_AB.id);
+    objectToSwitch_B.incoming = objectToSwitch_B.incoming.filter(inc => inc.id !== sequenceFlow_AB.id);
+
+    let sequenceFlow_BS: Bpmn.SequenceFlow = objectToSwitch_B.outgoing.find(out => out.sourceRef.id === objectToSwitch_B.id && out.targetRef.id === objectToSwitch_S.id); // outgoing[0];
+    objectToSwitch_B.outgoing = objectToSwitch_B.outgoing.filter(out => out.id !== sequenceFlow_BS.id);
+    objectToSwitch_S.incoming = objectToSwitch_S.incoming.filter(inc => inc.id !== sequenceFlow_BS.id);
+
 
     // 1.
     sequenceFlow_RA.targetRef = objectToSwitch_B;
     // 2.
     // muss geleert werden, da sonst mehrere incomings
-    objectToSwitch_A.incoming = [];
+    // objectToSwitch_A.incoming = [];
     objectToSwitch_A.incoming.push(sequenceFlow_AB);
-    isTrue(objectToSwitch_A.incoming.length === 1, "A darf nur 1 incoming haben!");
+    // isTrue(objectToSwitch_A.incoming.length === 1, "A darf nur 1 incoming haben!");
     // 3.
     // muss geleert werden, da sonst mehrere outgoings
-    objectToSwitch_A.outgoing = [];
+    // objectToSwitch_A.outgoing = [];
     objectToSwitch_A.outgoing.push(sequenceFlow_BS);
-    isTrue(objectToSwitch_A.outgoing.length === 1, "A darf nur 1 outgoing haben!");
+    objectToSwitch_S.incoming.push(sequenceFlow_BS);
+    // isTrue(objectToSwitch_A.outgoing.length === 1, "A darf nur 1 outgoing haben!");
     // 4.
     sequenceFlow_AB.sourceRef = objectToSwitch_B;
     sequenceFlow_AB.targetRef = objectToSwitch_A;
@@ -663,14 +730,16 @@ export class BpmnProcess {
     sequenceFlow_BS.sourceRef = objectToSwitch_A;
     // 6.
     // muss geleert werden, da sonst mehrere incomings
-    objectToSwitch_B.incoming = [];
+    // objectToSwitch_B.incoming = [];
     objectToSwitch_B.incoming.push(sequenceFlow_RA);
-    isTrue(objectToSwitch_B.incoming.length === 1, "B darf nur 1 incoming haben!");
+    objectToSwitch_R.outgoing.push(sequenceFlow_RA);
+    // isTrue(objectToSwitch_B.incoming.length === 1, "B darf nur 1 incoming haben!");
     // 7.
     // muss geleert werden, da sonst mehrere outgoings
-    objectToSwitch_B.outgoing = [];
+    // objectToSwitch_B.outgoing = [];
     objectToSwitch_B.outgoing.push(sequenceFlow_AB);
-    isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
+    // isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
+    this.putGatewaysBack(allgateways);
 
     this.processDiagram.generateBPMNDiagram(processId);
   }
@@ -680,7 +749,6 @@ export class BpmnProcess {
     let oldTask: Bpmn.UserTask | Bpmn.SendTask = this.getExistingTask(this.processId(), rowDetails.taskId) as Bpmn.UserTask;
     let savedIncoming = oldTask.incoming;
     let savedOutgoing = oldTask.outgoing;
-
 
     let processContext: Bpmn.Process = this.getProcess(this.processId());
 
@@ -755,17 +823,67 @@ export class BpmnProcess {
 
     let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
     let targetTask: Bpmn.Task = this.getExistingTask(this.processId(), targetBpmnTaskId) as Bpmn.Task;
-    this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
+
+    // add gateway
+    if (focusedTask.outgoing.length > 0) {
+      let existingOutgoings = focusedTask.outgoing;
+      if (existingOutgoings.length === 1 && existingOutgoings.last().targetRef.$type === BPMN_EXCLUSIVEGATEWAY) {
+        this.addSequenceFlow(this.processId(), existingOutgoings.last().targetRef, targetTask, false);
+
+      } else {
+        focusedTask.outgoing = [];
+        let processContext: Bpmn.Process = this.getProcess(this.processId());
+        let newGateway = this.moddle.create("bpmn:ExclusiveGateway", { id: Tools.createId(), name: "", incoming: [], outgoing: [] });
+        processContext.flowElements.push(newGateway);
+
+        this.addSequenceFlow(this.processId(), focusedTask, newGateway, false);
+
+        for (let out of existingOutgoings) {
+          this.addSequenceFlow(this.processId(), newGateway, out.targetRef, false);
+          this.removeSequenceFlow(this.processId(), out);
+        }
+        if (newGateway.outgoing.find(out => out.targetRef.id === targetTask.id) == null) {
+          this.addSequenceFlow(this.processId(), newGateway, targetTask, false);
+        }
+
+        this.setRoleForTask(this.processId(), taskFromObject.laneId, newGateway);
+      }
+
+    } else {
+      this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
+    }
     this.processDiagram.generateBPMNDiagram(this.processId());
   }
 
-  public removeSequenceFlowFromJumpsTo(taskFromObject: RowDetails, targetBpmnTaskId: string) {
-    let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
-    let sfObj = focusedTask.outgoing.find(out => out.targetRef.id === targetBpmnTaskId);
+  public removeSequenceFlowFromJumpsTo(rowDetails: RowDetails[], rowNumber: number, targetBpmnTaskId: string) {
+    let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), rowDetails[rowNumber].taskId) as Bpmn.Task;
+
+    let sfObj = focusedTask.outgoing.find(out => out.targetRef.id === targetBpmnTaskId || out.targetRef.$type === BPMN_EXCLUSIVEGATEWAY);
+    if (sfObj.targetRef.$type === BPMN_EXCLUSIVEGATEWAY) {
+      const process: Bpmn.Process = this.getProcess(this.processId());
+      let gateway = sfObj.targetRef;
+
+      let gatSequenceFlows: Bpmn.FlowElement[] = process.flowElements.filter(el => gateway.outgoing.find(e => e.id === el.id) != null);
+
+      let allSequenceFlows = this.getSequenceFlowElements();
+      gatSequenceFlows.forEach(sf => {
+        let sfElem = allSequenceFlows.find(s => s.id === sf.id);
+        sfElem.targetRef.incoming = sfElem.targetRef.incoming.filter(fil => fil.id !== gateway.id);
+      });
+      focusedTask.outgoing = focusedTask.outgoing.filter(out => out.targetRef.id !== gateway.id);
+      // process.flowElements = process.flowElements.filter(el =>  .find(e => e.id === el.id) == null);
+
+      // del gate from flowElements
+      process.flowElements = process.flowElements.filter(el => el.id !== gateway.id);
+      process.flowElements = process.flowElements.filter(el => gateway.outgoing.find(e => e.id === el.id) == null);
+
+      let nextTask: Bpmn.FlowNode = (rowNumber + 1) == rowDetails.length ? this.getEndEvents(this.processId())[0] : this.getExistingTask(this.processId(), rowDetails[rowNumber + 1].taskId) as Bpmn.Task;
+      this.addSequenceFlow(this.processId(), focusedTask, nextTask, false);
+    }
     isTrue(sfObj != null, "removing object is missing.");
     this.removeSequenceFlow(this.processId(), sfObj);
-    this.processDiagram.generateBPMNDiagram(this.processId());
 
+    this.processDiagram.generateBPMNDiagram(this.processId());
   }
 
   private getLastCreatedTask(processId: string): Bpmn.Task {
@@ -786,13 +904,92 @@ export class BpmnProcess {
     return null;
   }
 
+
+
+  private removeAllGateways(rowDetails: RowDetails[], addAfterDelete: boolean = false): tmpSavedGateway[] {
+    let process = this.getProcess(this.processId());
+    let allGateways: tmpSavedGateway[] = []; // { sourceTask: null, bpmnTaskIds: [] };
+    // remove all outgoing and incoming
+    if (this.getAllExclusiveGateways().length > 0) {
+      for (let gate of this.getAllExclusiveGateways()) {
+
+        isTrue(gate.incoming.length === 1);
+        let targets = gate.outgoing.map(out => out.targetRef.id);
+        let source = rowDetails.find(det => det.taskId === gate.incoming.last().sourceRef.id)
+
+        // get next element in table... if last, take endevent
+        let targetId = source.rowNumber + 1 === rowDetails.length ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId;
+
+        if (!addAfterDelete) {
+          targets = targets.filter(t => t !== this.getEndEvents(this.processId())[0].id );
+        } else {
+        // only target with no standard path
+        targets = targets.filter(t => t !== targetId);
+        }
+
+        // let takeEndEvent = addAfterDelete ? source.rowNumber + 1 == rowDetails.length : source.rowNumber + 2 == rowDetails.length;
+
+        // let tmp = rowDetails[source.rowNumber + 1] == null ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId
+        
+        // let nextElementId = takeEndEvent ? this.getEndEvents(this.processId())[0].id : tmp;
+
+        // targets = targets.filter(t => t != nextElementId);
+
+        allGateways.push({ sourceTaskRowDetails: source, targetBpmnTaskIds: targets });
+
+        gate.incoming.forEach(inc => {
+          this.removeSequenceFlow(this.processId(), inc);
+        });
+        // inc.sourceRef.outgoing = inc.sourceRef.outgoing.filter(out => out.targetRef.id !== gate.id));
+        gate.outgoing.forEach(out => {
+          this.removeSequenceFlow(this.processId(), out);
+          // out.targetRef.incoming = out.targetRef.incoming.filter(inc => inc.sourceRef.id !== gate.id);
+        });
+
+        process.flowElements = process.flowElements.filter(e => e.id != gate.id);
+      }
+
+      if (addAfterDelete) {
+        for (let task of this.getSortedTasks(this.processId())) {
+          if (task.outgoing.length == 0) {
+            let row = rowDetails.find(r => r.taskId === task.id);
+            let targetTask: Bpmn.FlowNode = null;
+            if (row.rowNumber + 1 === rowDetails.length) {
+              targetTask = this.getEndEvents(this.processId())[0];
+
+            } else {
+              targetTask = this.getExistingTask(this.processId(), rowDetails[row.rowNumber + 1].taskId);
+            }
+            this.addSequenceFlow(this.processId(), task, targetTask, false);
+          }
+        }
+      }
+    }
+
+    return allGateways;
+
+  }
+
+  private putGatewaysBack(allGateways: tmpSavedGateway[]) {
+    for (let gate of allGateways) {
+      for (let targetBpmnTaskId of gate.targetBpmnTaskIds) {
+        if (this.getExistingTask(this.processId(), gate.sourceTaskRowDetails.taskId) != null && this.getExistingTask(this.processId(), targetBpmnTaskId) != null) {
+          this.addFlowToNode(gate.sourceTaskRowDetails, targetBpmnTaskId);
+        }
+      }
+    }
+  }
+
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
-  public addOrModifyTask(processId: string, rowDetails: RowDetails, nextToLastDetails: RowDetails): string {
+  public addOrModifyTask(processId: string, rowDetails: RowDetails[], rowNumber: number): string {
     // Weiteren Prozess einfügen
+    let newTaskRowDetails = rowDetails[rowNumber];
+    let nextToLastDetails = rowDetails[rowNumber - 1];
+
     let id: string;
-    if (rowDetails.taskId == null) {
+    if (newTaskRowDetails.taskId == null) {
       id = BpmnProcess.getBpmnId(BPMN_USERTASK);
-      rowDetails.taskId = id;
+      newTaskRowDetails.taskId = id;
     }
 
     let lastCreatedTask: Bpmn.Task = null;
@@ -802,24 +999,27 @@ export class BpmnProcess {
       lastCreatedTask = this.getLastCreatedTask(this.processId());
     }
 
-    let focusedTask: Bpmn.Task = this.getExistingTask(processId, rowDetails.taskId) as Bpmn.Task;
+    let focusedTask: Bpmn.Task = this.getExistingTask(processId, newTaskRowDetails.taskId) as Bpmn.Task;
     let processContext: Bpmn.Process = this.getProcess(processId);
 
     let isNewTask: boolean = false;
 
     if (focusedTask == null) {
       let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
-      focusedTask = this.moddle.create(rowDetails.taskType as "bpmn:UserTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+      focusedTask = this.moddle.create(newTaskRowDetails.taskType as "bpmn:UserTask", { id: newTaskRowDetails.taskId, name: newTaskRowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
       processContext.flowElements.push(focusedTask);
       isNewTask = true;
     } else {
       id = focusedTask.id;
-      focusedTask.name = rowDetails.task;
+      focusedTask.name = newTaskRowDetails.task;
     }
+
+    let allgateways = this.removeAllGateways(rowDetails, !isNewTask);
+
 
     // entfernt den task aus einer lane und fügt ihn der neu angegebenen hinzu (fürs bearbeiten)
     // let laneId: string = BpmnProcess.getBpmnId(BPMN_LANE, rowDetails.selectedRole);    
-    this.setRoleForTask(processId, rowDetails.laneId, focusedTask);
+    this.setRoleForTask(processId, newTaskRowDetails.laneId, focusedTask);
 
     // MUSS nochmal überarbeitet werden, da die Code Komplexität extrem erhöht wird
     if (lastCreatedTask != null && lastCreatedTask.id !== focusedTask.id && isNewTask) {
@@ -835,15 +1035,22 @@ export class BpmnProcess {
       let endEventObject = this.getEndEvents(processId)[0];
 
       // zuerst alten sequenzFlow auf EndEvent löschen
-      this.removeSequenceFlow(processId, endEventObject.incoming[0]);
+      this.removeSequenceFlow(processId, endEventObject.incoming.find(inc => inc.sourceRef.id === lastCreatedTask.id));
+      // let tmpSf = lastCreatedTask.outgoing.find(out => out.targetRef.id == endEventObject.id);
+
+      // lastCreatedTask.outgoing = lastCreatedTask.outgoing.filter(out => out.targetRef.id !== endEventObject.id);
+      // endEventObject.incoming = endEventObject.incoming.filter(inc => inc.sourceRef.id !== lastCreatedTask.id);
+      // processContext.flowElements = processContext.flowElements.filter(el => el.id !== tmpSf.id);
 
       this.addSequenceFlow(processId, focusedTask, endEventObject);
       // endEventObject.incoming.push(sequenceEndObject);
       // focusedTask.outgoing.push(sequenceEndObject);
     }
 
+    this.putGatewaysBack(allgateways);
+
     this.processDiagram.generateBPMNDiagram(processId);
-    return rowDetails.taskId;
+    return newTaskRowDetails.taskId;
   }
 
   private addSequenceFlow(processId: string, sourceReference: Bpmn.FlowNode, targetReference: Bpmn.FlowNode, deleteExistingRefs: boolean = true): Bpmn.SequenceFlow {
@@ -855,12 +1062,12 @@ export class BpmnProcess {
     processContext.flowElements.push(sequenceFlow);
 
     if (sourceReference.$type === BPMN_STARTEVENT) {
-      isTrue(sourceReference.outgoing.length == 1, "Das Start EVENT darf nur 1 Verbindung (outgoing) haben!" + sourceReference.outgoing.length);
+      // isTrue(sourceReference.outgoing.length == 1, "Das Start EVENT darf nur 1 Verbindung (outgoing) haben!" + sourceReference.outgoing.length);
     }
     if (deleteExistingRefs)
       sourceReference.outgoing.splice(0, 1);
     if (targetReference.$type === BPMN_ENDEVENT) {
-      isTrue(targetReference.incoming.length == 1, "Das End EVENT darf nur 1 Verbindung (incoming) haben! " + targetReference.incoming.length);
+      // isTrue(targetReference.incoming.length == 1, "Das End EVENT darf nur 1 Verbindung (incoming) haben! " + targetReference.incoming.length);
     }
     if (deleteExistingRefs)
       targetReference.incoming.splice(0, 1);
