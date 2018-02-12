@@ -21,7 +21,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
     if (fieldName != null) {
       let valueObject = fieldContentMap[fieldName];      
-      if (isFieldValue(valueObject) && valueObject.value != null) {
+      if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
           inputString = inputString.replace(fieldPlaceholder, val);

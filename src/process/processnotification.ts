@@ -62,3 +62,20 @@ export function notifyNewRemainingInstanceTodos(workspaceEnv: PH.WorkspaceEnviro
 
   return notify;
 }
+
+// count the number of instances that are currently notifying new todos and/or new comments
+export function countNotifyingInstances(processEnv: PH.ProcessEnvironment): number {
+  let count: number = 0;
+
+  let instances = PH.Instance.filterInstancesForProcess(processEnv.user.extras.instances, processEnv.process.processId);  
+
+  instances.map(instance => {
+    if (instance.extras.todos && instance.extras.todos.length > 0) {  // no todos = no dashboard entry
+      let instanceEnv: PH.InstanceEnvironment = { instance: instance, ...processEnv};
+      if (PH.Instance.notifyNewInstanceComments(instanceEnv) || PH.Instance.notifyNewInstanceTodos(instanceEnv))
+        count++;
+    }
+  });
+  
+  return count;
+}
