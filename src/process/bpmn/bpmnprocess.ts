@@ -16,7 +16,6 @@ import { InstanceDetails } from "../../instance/instanceinterfaces";
 import { DecisionTask, DecisionTaskTypes, filterTodosForInstance } from "../../todo";
 import { LoadTemplateReply } from "../legacyapi";
 import { RowDetails } from "../phclient";
-import { Tools } from "../../index";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
@@ -833,7 +832,7 @@ export class BpmnProcess {
       } else {
         focusedTask.outgoing = [];
         let processContext: Bpmn.Process = this.getProcess(this.processId());
-        let newGateway = this.moddle.create("bpmn:ExclusiveGateway", { id: Tools.createId(), name: "", incoming: [], outgoing: [] });
+        let newGateway = this.moddle.create("bpmn:ExclusiveGateway", { id: createId(), name: "", incoming: [], outgoing: [] });
         processContext.flowElements.push(newGateway);
 
         this.addSequenceFlow(this.processId(), focusedTask, newGateway, false);

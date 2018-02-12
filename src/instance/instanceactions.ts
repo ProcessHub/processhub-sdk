@@ -2,8 +2,7 @@ import * as Api from "../legacyapi";
 import { rootStore, mergeInstanceToCache } from "../statehandler";
 import { Dispatch } from "redux";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
-import { ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
-import { Instance } from "../index";
+import { JumpReply, ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
 
 export const InstanceActionType = {
   Execute: "INSTANCEACTION_EXECUTE",
@@ -119,13 +118,13 @@ export function abortInstanceAction(instanceId: string): <S>(dispatch: Dispatch<
 
 
 
-export async function jump(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): Promise<Instance.JumpReply> {
+export async function jump(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): Promise<JumpReply> {
   return await rootStore.dispatch(jumpAction(instanceId, targetBpmnTaskId, resumeDetails));
 }
 
-export function jumpAction(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<Instance.JumpReply> {
-  return async <S>(dispatch: Dispatch<S>): Promise<Instance.JumpReply> => {
-    let response: Instance.JumpReply = await Api.postJson(Instance.ProcessEngineApiRoutes.jump, {
+export function jumpAction(instanceId: string, targetBpmnTaskId: string, resumeDetails: ResumeInstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<JumpReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<JumpReply> => {
+    let response: JumpReply = await Api.postJson(ProcessEngineApiRoutes.jump, {
       instanceId: instanceId,
       targetBpmnTaskId: targetBpmnTaskId,
       resumeDetails: resumeDetails
