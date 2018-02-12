@@ -43,6 +43,6 @@ export interface RowDetails {
   task: string;
   taskId: string;
   laneId?: string;
-  taskType: "bpmn:UserTask" | "bpmn:SendTask";
+  taskType: "bpmn:UserTask" | "bpmn:SendTask" | "bpmn:StartEvent" ;
   jumpsTo: string[];
 }
