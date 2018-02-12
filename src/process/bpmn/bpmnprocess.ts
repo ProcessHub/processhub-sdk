@@ -38,7 +38,7 @@ export const BPMN_EXCLUSIVEGATEWAY = "bpmn:ExclusiveGateway";
 export const BPMN_PARALLELGATEWAY = "bpmn:ParallelGateway";
 export const BPMN_FORMALEXPRESSION = "bpmn:FormalExpression";
 
-interface tmpSavedGateway {
+interface TmpSavedGateway {
   sourceTaskRowDetails: RowDetails;
   targetBpmnTaskIds: string[];
 }
@@ -906,16 +906,16 @@ export class BpmnProcess {
 
 
 
-  private removeAllGateways(rowDetails: RowDetails[], addAfterDelete: boolean = false): tmpSavedGateway[] {
+  private removeAllGateways(rowDetails: RowDetails[], addAfterDelete: boolean = false): TmpSavedGateway[] {
     let process = this.getProcess(this.processId());
-    let allGateways: tmpSavedGateway[] = []; // { sourceTask: null, bpmnTaskIds: [] };
+    let allGateways: TmpSavedGateway[] = []; // { sourceTask: null, bpmnTaskIds: [] };
     // remove all outgoing and incoming
     if (this.getAllExclusiveGateways().length > 0) {
       for (let gate of this.getAllExclusiveGateways()) {
 
         isTrue(gate.incoming.length === 1);
         let targets = gate.outgoing.map(out => out.targetRef.id);
-        let source = rowDetails.find(det => det.taskId === gate.incoming.last().sourceRef.id)
+        let source = rowDetails.find(det => det.taskId === gate.incoming.last().sourceRef.id);
 
         // get next element in table... if last, take endevent
         let targetId = source.rowNumber + 1 === rowDetails.length ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId;
@@ -970,7 +970,7 @@ export class BpmnProcess {
 
   }
 
-  private putGatewaysBack(allGateways: tmpSavedGateway[]) {
+  private putGatewaysBack(allGateways: TmpSavedGateway[]) {
     for (let gate of allGateways) {
       for (let targetBpmnTaskId of gate.targetBpmnTaskIds) {
         if (this.getExistingTask(this.processId(), gate.sourceTaskRowDetails.taskId) != null && this.getExistingTask(this.processId(), targetBpmnTaskId) != null) {
