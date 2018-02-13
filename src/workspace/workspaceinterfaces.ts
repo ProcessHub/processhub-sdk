@@ -3,13 +3,12 @@ import { UserDetails } from "../user/userinterfaces";
 import gql from "graphql-tag";
 
 // WorkspaceType
-export const WorkspaceType = {
-  Free: "Free",
-  Business: "Business",
-  Enterprise: "Enterprise",
-  Demo: "Demo"
-};
-export type WorkspaceType = keyof typeof WorkspaceType;
+export enum WorkspaceType {
+  Demo = 0,
+  Free = 100,
+  Team = 200,
+  Enterprise = 300
+}
 
 export interface WorkspaceDetails {
   // Changes must also be reflected in gqlTypes and gqlFragments below!
@@ -86,7 +85,8 @@ export interface WorkspaceSettings {
 
 export enum WorkspaceRole {
   None = 0, // used to list todos from workspaces where user is not a member
-  WorkspaceAdmin = 1 << 0,     
+  WorkspaceAdmin = 1 << 0,
+  WorkspaceProcessManager = 1 << 1,
   WorkspaceMember = 1 << 2, // regular member
 }
 

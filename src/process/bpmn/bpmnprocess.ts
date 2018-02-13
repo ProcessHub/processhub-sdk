@@ -904,8 +904,6 @@ export class BpmnProcess {
     return null;
   }
 
-
-
   private removeAllGateways(rowDetails: RowDetails[], addAfterDelete: boolean = false): TmpSavedGateway[] {
     let process = this.getProcess(this.processId());
     let allGateways: TmpSavedGateway[] = []; // { sourceTask: null, bpmnTaskIds: [] };

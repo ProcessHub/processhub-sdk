@@ -8,7 +8,7 @@ import * as Instance from "../instance";
 import * as Api from "../legacyapi";
 import { LoadUserReply, UserActionsType } from "./index";
 import { UserDetails, UserExtras } from "./userinterfaces";
-import { UpdateUserReply, UserRequestRoutes, UpdateUserRequest, UpdatePasswordReply, UpdatePasswordRequest, UserLoadedMessage, LoginReply, LoginRequest, LoadUserRequest, UploadProfilePictureRequest, CreateUserRequest } from "./legacyapi";
+import { UpdateUserReply, UserRequestRoutes, UpdateUserRequest, UpdatePasswordReply, UpdatePasswordRequest, UserLoadedMessage, LoginReply, LoginRequest, LoadUserRequest, UploadProfilePictureRequest, CreateUserRequest, LoginDemoUserReply, LoginDemoUserRequest } from "./legacyapi";
 import { UserMessages } from "./phclient";
 import { error } from "../tools/assert";
 import { createUserId } from "../tools/guid";
@@ -82,6 +82,19 @@ export function loginUserAction(mail: string, password: string, accessToken: str
       accessToken: accessToken,
       isGoogleAccessToken: isGoogleAccessToken
     });
+
+    dispatch(response);
+    return response;
+  };
+}
+
+export async function loginDemoUser(): Promise<LoginDemoUserReply> {
+  return await rootStore.dispatch(loginDemoUserAction());
+}
+export function loginDemoUserAction(): <S>(dispatch: Dispatch<S>) => Promise<LoginDemoUserReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<LoginDemoUserReply> => {
+    let response:
+    LoginDemoUserReply = await Api.postJson(UserRequestRoutes.LoginDemoUser, <LoginDemoUserRequest>{});
 
     dispatch(response);
     return response;

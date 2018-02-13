@@ -80,7 +80,8 @@ export enum AccountState {
   Preregistered = 0, // user invited, mail addres known but not yet registered
   Registered = 1, // user has registered but not yet confirmed mail address
   Confirmed = 2, // fully registered, mail address confirmed
-  Deleted
+  Deleted = 3,
+  Demo = 4 
 }
 
 // Erste Gruppendefinitionen - echtes Gruppenmanagement folgt später

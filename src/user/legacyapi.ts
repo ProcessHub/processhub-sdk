@@ -14,6 +14,7 @@ export const UserRequestRoutes = {
   UpdatePassword: "/api/user/passwordupdate",
   LoadUser: "/api/user/loaduser",
   UploadProfilePicture: "/api/user/uploadprofilepicture",
+  LoginDemoUser: "/api/user/logindemo",
 };
 export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 
@@ -39,6 +40,13 @@ export interface LoadUserRequest extends BaseRequest {
 }
 export interface LoadUserReply extends BaseMessage {
   userDetails?: UserDetails;
+}
+
+export interface LoginDemoUserRequest extends BaseRequest {
+}
+export interface LoginDemoUserReply extends BaseMessage {
+  userDetails?: UserDetails;
+  accessToken?: string;
 }
 
 export interface UpdateUserRequest extends BaseRequest {
