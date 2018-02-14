@@ -7,7 +7,8 @@ export enum WorkspaceType {
   Demo = 0,
   Free = 100,
   Team = 200,
-  Enterprise = 300
+  Business = 300,
+  Enterprise = 400
 }
 
 export interface WorkspaceDetails {
