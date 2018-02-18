@@ -1,6 +1,7 @@
 import { ProcessDetails, gqlProcessFragments } from "../process/processinterfaces";
 import { UserDetails } from "../user/userinterfaces";
 import gql from "graphql-tag";
+import { tl } from "../tl";
 
 // WorkspaceType
 export enum WorkspaceType {
@@ -9,6 +10,22 @@ export enum WorkspaceType {
   Team = 200,
   Business = 300,
   Enterprise = 400
+}
+export function getWorkspaceTypeName(workspaceType: WorkspaceType) {
+  switch (workspaceType) {
+    case WorkspaceType.Demo:
+      return tl("Demo");
+    case WorkspaceType.Free:
+      return tl("Free");      
+    case WorkspaceType.Team:
+      return tl("Team");
+    case WorkspaceType.Business:
+      return tl("Business");
+    case WorkspaceType.Enterprise:
+      return tl("Enterprise");
+    default:
+      return "???";            
+  }
 }
 
 export interface WorkspaceDetails {
