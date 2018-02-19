@@ -144,7 +144,8 @@ export const TaskSettings = {
   SetSenderAsRoleOwner: "set-sender-as-role-owner", // boolean: set mail sender as role owner, default: true
   ServiceTaskApiUrl: "service-task-api-url",
   ServiceTaskRequestObjectString: "service-task-request-object",
-  ServiceTaskResponseFieldName: "service-task-response-fieldname"
+  ServiceTaskResponseFieldName: "service-task-response-fieldname",
+  TimerStartConfiguration: "timer-start-configuration"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -162,6 +163,24 @@ export interface TaskExtensions {
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
   serviceTaskResponseFieldName: string;
+
+  timerStartConfiguration: TimerStartEventConfiguration[];
+}
+
+export interface TimerStartEventConfiguration {
+  rowNumber: number;
+  title: string;
+  date: Date;
+  time: string;
+  frequency: Frequency;
+  isTimeValid: boolean;
+}
+
+export enum Frequency {
+  Daily = 1,
+  Weekly = 2,
+  Monthly = 3,
+  Yearly = 4
 }
 
 export interface RunningTaskLane {
