@@ -825,7 +825,7 @@ export class BpmnProcess {
     return rowDetails.taskId;
   }
 
-  public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string) {
+  public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string, renderDiagram: boolean = true) {
 
     let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
     let targetTask: Bpmn.Task = this.getExistingTask(this.processId(), targetBpmnTaskId) as Bpmn.Task;
@@ -858,7 +858,9 @@ export class BpmnProcess {
     } else {
       this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
     }
-    this.processDiagram.generateBPMNDiagram(this.processId());
+    if (renderDiagram) {
+      this.processDiagram.generateBPMNDiagram(this.processId()); 
+    }
   }
 
   public removeSequenceFlowFromJumpsTo(rowDetails: RowDetails[], rowNumber: number, targetBpmnTaskId: string) {
@@ -893,12 +895,13 @@ export class BpmnProcess {
               this.addSequenceFlow(this.processId(), focusedTask, nextTask, false);
               firstProcess = false;
             } else {
-              this.addFlowToNode(rowDetails[rowNumber], jumpToId);
+              this.addFlowToNode(rowDetails[rowNumber], jumpToId, false);
             }
           }
         });
 
-
+        // console.log(process.flowElements);
+        // process.flowElements.forEach(el => console.log(el.id + " in " + (el as Bpmn.FlowNode).incoming.length + " ____  out " + (el as Bpmn.FlowNode).outgoing.length));
 
         // let nextTask: Bpmn.FlowNode = (rowNumber + 1) == rowDetails.length ? this.getEndEvents(this.processId())[0] : this.getExistingTask(this.processId(), rowDetails[rowNumber + 1].taskId) as Bpmn.Task;
 

@@ -1,5 +1,6 @@
 import * as BpmnProcess from "./bpmnprocess";
 import { Bpmn, Bpmndi } from "../bpmn";
+import { isTrue } from "../../tools";
 
 // bpmn Diagram
 export const DiagramShapeTypes = {
@@ -286,6 +287,11 @@ export class BpmnProcessDiagram {
     let sourceDiagramObject = this.getShapeFromDiagram(sourceRef.id);
     let targetRef = flowObject.targetRef;
     let targetDiagramObject = this.getShapeFromDiagram(targetRef.id);
+
+    isTrue(sourceRef != null, "Missing Ref Source: " + flowObject.sourceRef);
+    isTrue(sourceDiagramObject != null, "Missing Object Source with ID: " + sourceRef.id);
+    isTrue(targetRef != null, "Missing Target Source: " + flowObject.targetRef);
+    isTrue(targetDiagramObject != null, "Missing Object Target with ID: " + targetRef.id);
 
     if (drawJumpFlow) {
       waypoints = this.getWaypointsBetweenObjectsUnderpass(sourceDiagramObject, targetDiagramObject, numberOfJumpEdge, laneDictionaries);
