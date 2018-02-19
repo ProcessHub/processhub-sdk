@@ -839,7 +839,7 @@ export class BpmnProcess {
       } else {
         focusedTask.outgoing = [];
         let processContext: Bpmn.Process = this.getProcess(this.processId());
-        let newGateway = this.moddle.create("bpmn:ExclusiveGateway", { id: createId(), name: "", incoming: [], outgoing: [] });
+        let newGateway = this.moddle.create("bpmn:ExclusiveGateway", { id: "ExclusiveGateway_" + createId(), name: "", incoming: [], outgoing: [] });
         processContext.flowElements.push(newGateway);
 
         this.addSequenceFlow(this.processId(), focusedTask, newGateway, false);
