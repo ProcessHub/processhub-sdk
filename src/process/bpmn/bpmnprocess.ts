@@ -29,6 +29,7 @@ export const BPMN_SEQUENCEFLOW = "bpmn:SequenceFlow";
 export const BPMN_INTERMEDIATETHROWEVENT = "bpmn:IntermediateThrowEvent";
 export const BPMN_INTERMEDIATECATCHEVENT = "bpmn:IntermediateCatchEvent";
 export const BPMN_MESSAGEEVENTDEFINITION = "bpmn:MessageEventDefinition";
+export const BPMN_TIMEREVENTDEFINITION = "bpmn:TimerEventDefinition";
 export const BPMN_ERROREVENTDEFINITION = "bpmn:ErrorEventDefinition";
 export const BPMN_BOUNDARYEVENT = "bpmn:BoundaryEvent";
 export const BPMN_LANE = "bpmn:Lane";
@@ -123,7 +124,9 @@ export class BpmnProcess {
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
-      serviceTaskResponseFieldName: null
+      serviceTaskResponseFieldName: null,
+
+      timerStartConfiguration: null
     };
 
     if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
@@ -174,6 +177,10 @@ export class BpmnProcess {
               break;
             case TaskSettings.ServiceTaskResponseFieldName:
               returnValue.serviceTaskResponseFieldName = child.$body;
+              break;
+
+            case TaskSettings.TimerStartConfiguration:
+              returnValue.timerStartConfiguration = JSON.parse(child.$body);
               break;
 
             default:
@@ -876,8 +883,27 @@ export class BpmnProcess {
       process.flowElements = process.flowElements.filter(el => el.id !== gateway.id);
       process.flowElements = process.flowElements.filter(el => gateway.outgoing.find(e => e.id === el.id) == null);
 
-      let nextTask: Bpmn.FlowNode = (rowNumber + 1) == rowDetails.length ? this.getEndEvents(this.processId())[0] : this.getExistingTask(this.processId(), rowDetails[rowNumber + 1].taskId) as Bpmn.Task;
-      this.addSequenceFlow(this.processId(), focusedTask, nextTask, false);
+      if (rowDetails[rowNumber].jumpsTo.length > 0) {
+        let firstProcess = true;
+        rowDetails[rowNumber].jumpsTo.forEach(jumpToId => {
+          if (targetBpmnTaskId != jumpToId) {
+            let nextTask = this.getExistingActivityObject(jumpToId);
+
+            if (firstProcess) {
+              this.addSequenceFlow(this.processId(), focusedTask, nextTask, false);
+              firstProcess = false;
+            } else {
+              this.addFlowToNode(rowDetails[rowNumber], jumpToId);
+            }
+          }
+        });
+
+
+
+        // let nextTask: Bpmn.FlowNode = (rowNumber + 1) == rowDetails.length ? this.getEndEvents(this.processId())[0] : this.getExistingTask(this.processId(), rowDetails[rowNumber + 1].taskId) as Bpmn.Task;
+
+
+      }
     }
     isTrue(sfObj != null, "removing object is missing.");
     this.removeSequenceFlow(this.processId(), sfObj);
@@ -918,16 +944,16 @@ export class BpmnProcess {
         let targetId = source.rowNumber + 1 === rowDetails.length ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId;
 
         if (!addAfterDelete) {
-          targets = targets.filter(t => t !== this.getEndEvents(this.processId())[0].id );
+          targets = targets.filter(t => t !== this.getEndEvents(this.processId())[0].id);
         } else {
-        // only target with no standard path
-        targets = targets.filter(t => t !== targetId);
+          // only target with no standard path
+          targets = targets.filter(t => t !== targetId);
         }
 
         // let takeEndEvent = addAfterDelete ? source.rowNumber + 1 == rowDetails.length : source.rowNumber + 2 == rowDetails.length;
 
         // let tmp = rowDetails[source.rowNumber + 1] == null ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId
-        
+
         // let nextElementId = takeEndEvent ? this.getEndEvents(this.processId())[0].id : tmp;
 
         // targets = targets.filter(t => t != nextElementId);
@@ -1422,7 +1448,7 @@ export class BpmnProcess {
 
     let processObject = this.getExistingActivityObject(bpmnTaskId);
 
-    if (processObject.$type === BPMN_EXCLUSIVEGATEWAY) {
+    if (processObject != null && processObject.$type === BPMN_EXCLUSIVEGATEWAY) {
       return this.getTaskIdsAfterGateway(bpmnTaskId);
     }
 
