@@ -504,23 +504,19 @@ export class BpmnProcess {
       task.extensionElements = extensions;
     }
 
-    if (task.extensionElements.values.length === 0) {
-      BpmnModdleHelper.addTaskExtensionInputText(task.extensionElements, key, value);
-      task.extensionElements = task.extensionElements;
-    } else {
+    // remove second processhub:inputOutput
+    if (task.extensionElements.values.length > 1) {
+      task.extensionElements.values = [task.extensionElements.values[0]];
+    }
 
-      for (let extension of task.extensionElements.values) {
-        if (extension.$children != null) {
-          extensionElement = extension.$children.find(e => e.name === key);
-        }
-      }
-
-      if (!extensionElement) {
-        BpmnModdleHelper.addTaskExtensionInputText(task.extensionElements, key, value);
-      } else {
-        extensionElement.$body = value;
+    for (let extension of task.extensionElements.values) {
+      if (extension.$children != null) {
+        extension.$children = extension.$children.filter(child => child.name !== key);
+        // extensionElement = extension.$children.find(e => e.name === key);
       }
     }
+    
+    BpmnModdleHelper.addTaskExtensionInputText(task.extensionElements, key, value);
   }
 
   public addLane(processId: string, id: string, name: string): string {
@@ -859,7 +855,7 @@ export class BpmnProcess {
       this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
     }
     if (renderDiagram) {
-      this.processDiagram.generateBPMNDiagram(this.processId()); 
+      this.processDiagram.generateBPMNDiagram(this.processId());
     }
   }
 
