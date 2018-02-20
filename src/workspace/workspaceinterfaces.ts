@@ -5,8 +5,8 @@ import { tl } from "../tl";
 
 // WorkspaceType
 export enum WorkspaceType {
-  Demo = 0,
   Free = 100,
+  Demo = 120, // Demo has some features that Free does not have, e.g. graphical modeler
   Team = 200,
   Business = 300,
   Enterprise = 400

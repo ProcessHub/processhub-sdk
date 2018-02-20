@@ -8,6 +8,7 @@ import { isWorkspaceMember } from "../workspace/workspacerights";
 import { isFalse, isTrue, error } from "../tools/assert";
 import { isGroupId, isUserId } from "../tools/guid";
 import { Bpmn } from "./bpmn";
+import * as WorkspaceLicenses from "../workspace/workspacelicenses";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -78,22 +79,20 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   if (processRoles == null)
     processRoles = {};
 
-  if (processRoles[DefaultRoles.Viewer] == null) {
+  // public processes have been removed for now, does not seem to make sense with current version
+  // if (processRoles[DefaultRoles.Viewer] == null) {
     // default value for visibility
-    if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free)
-      processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
-    else
-      processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
-  }
+    processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
+  // }
 
-  if (processRoles[DefaultRoles.Owner] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
+  if (processRoles[DefaultRoles.Owner] == null && WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
     processRoles[DefaultRoles.Owner] = { potentialRoleOwners: [] };
   }
-  if (processRoles[DefaultRoles.Manager] == null && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free) {
+  if (processRoles[DefaultRoles.Manager] == null && WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
     processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
   }
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
-  if (workspace.workspaceType == WorkspaceType.Demo || workspace.workspaceType == WorkspaceType.Free) {
+  if (!WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
     delete (processRoles[DefaultRoles.Owner]);
     delete (processRoles[DefaultRoles.Manager]);
   }

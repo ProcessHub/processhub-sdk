@@ -1,18 +1,5 @@
 import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
-
-export function isFreeWorkspace(workspace: WorkspaceDetails): boolean {
-  if (workspace == null)
-    return false;
-
-  return (workspace != null && workspace.workspaceType == WorkspaceType.Free);
-}
-
-export function isDemoWorkspace(workspace: WorkspaceDetails): boolean {
-  if (workspace == null)
-    return false;
-
-  return (workspace != null && workspace.workspaceType == WorkspaceType.Demo);
-}
+import * as WorkspaceLicenses from "./workspacelicenses";
 
 export function isWorkspaceMember(workspace: WorkspaceDetails): boolean {
   if (workspace == null)
@@ -26,6 +13,14 @@ export function isWorkspaceAdmin(workspace: WorkspaceDetails): boolean {
     return false;
 
   return ((workspace.userRole & WorkspaceRole.WorkspaceAdmin) != 0);
+}
+
+// only true if flag is set AND licenseHasWorkspaceProcessManagers()
+export function isWorkspaceProcessManager(workspace: WorkspaceDetails): boolean {
+  if (workspace == null || !WorkspaceLicenses.licenseHasWorkspaceProcessManagers(workspace))
+    return false;
+
+  return ((workspace.userRole & (WorkspaceRole.WorkspaceAdmin | WorkspaceRole.WorkspaceProcessManager)) != 0);
 }
 
 // Access control in code should NOT use the roles above but instead the following can...-checks
