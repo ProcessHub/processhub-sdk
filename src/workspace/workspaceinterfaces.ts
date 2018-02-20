@@ -9,9 +9,10 @@ export enum WorkspaceType {
   Demo = 120, // Demo has some features that Free does not have, e.g. graphical modeler
   Team = 200,
   Business = 300,
+  Templates = 310, // used internally for templates. Processes in this workspace are always public
   Enterprise = 400
 }
-export function getWorkspaceTypeName(workspaceType: WorkspaceType) {
+export function getWorkspaceTypeName(workspaceType: WorkspaceType): string {
   switch (workspaceType) {
     case WorkspaceType.Demo:
       return tl("Demo");
@@ -24,7 +25,7 @@ export function getWorkspaceTypeName(workspaceType: WorkspaceType) {
     case WorkspaceType.Enterprise:
       return tl("Enterprise");
     default:
-      return "???";            
+      return workspaceType.toString();            
   }
 }
 

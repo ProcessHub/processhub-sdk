@@ -85,12 +85,6 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
   // }
 
-  if (processRoles[DefaultRoles.Owner] == null && WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
-    processRoles[DefaultRoles.Owner] = { potentialRoleOwners: [] };
-  }
-  if (processRoles[DefaultRoles.Manager] == null && WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
-    processRoles[DefaultRoles.Manager] = { potentialRoleOwners: [] };
-  }
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
   if (!WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
     delete (processRoles[DefaultRoles.Owner]);
