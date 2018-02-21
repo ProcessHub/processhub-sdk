@@ -120,7 +120,7 @@ export class BpmnProcess {
       sendTaskInstanceLink: true,
       sendTaskSubject: null,
       sendTaskWithFieldContents: true,
-      allFieldsEditable: true,
+      allFieldsEditable: false,
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
