@@ -87,7 +87,32 @@ export class BpmnProcessDiagram {
     let allGateways = this.bpmnProcess.getAllExclusiveGateways();
 
     let amountOfOutgoingsOnGateways: number = 0;
-    allGateways.forEach(ex => amountOfOutgoingsOnGateways += (ex.outgoing.length - 1));
+    let amountOfOutgoingsOnTasksUnderpass: number = 0;
+
+
+    let sortedTasks: Bpmn.FlowNode[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+    
+    sortedTasks.forEach(t => {
+      let found = sortedTasks.find(st => st.id === t.id);
+
+      let rowNumber: number = sortedTasks.indexOf(found);
+      let nextTask: Bpmn.FlowNode = sortedTasks[rowNumber + 1] != null ? sortedTasks[rowNumber + 1] : this.bpmnProcess.getEndEvents(this.bpmnProcess.processId())[0];
+
+      let tmpList = sortedTasks[rowNumber].outgoing.filter(out => out.targetRef.id != nextTask.id && out.targetRef.$type !== BpmnProcess.BPMN_EXCLUSIVEGATEWAY);
+      amountOfOutgoingsOnTasksUnderpass += tmpList.length;
+
+
+    });
+
+    allGateways.forEach(ex => {
+      let found = sortedTasks.find(st => st.id === ex.incoming.last().sourceRef.id);
+
+      let rowNumber: number = sortedTasks.indexOf(found);
+
+      let nextTask: Bpmn.FlowNode = sortedTasks[rowNumber + 1] != null ? sortedTasks[rowNumber + 1] : this.bpmnProcess.getEndEvents(this.bpmnProcess.processId())[0];
+      let tmpList = sortedTasks[rowNumber].outgoing.filter(out => out.targetRef.id != nextTask.id);
+      amountOfOutgoingsOnGateways += tmpList.length;
+    });
 
     let amountOfProcessesWithMultipleOutgoing = allGateways.length;
 
@@ -110,7 +135,7 @@ export class BpmnProcessDiagram {
 
     let laneDictionaries: LaneDictionary[] = [];
     // 20 => buffer and 10 is multiply factor for each extra flow
-    let extraFlowFactor: number = allGateways.length === 0 ? 0 : BpmnProcessDiagram.SPACE_TO_LOWER_JUMP_SF + (amountOfOutgoingsOnGateways * 10);
+    let extraFlowFactor: number = allGateways.length === 0 && amountOfOutgoingsOnTasksUnderpass === 0 ? 0 : BpmnProcessDiagram.SPACE_TO_LOWER_JUMP_SF + (amountOfOutgoingsOnGateways * 10) + (amountOfOutgoingsOnTasksUnderpass * 10);
     let lastLaneHeight: number = this.diagramLaneHeight + extraFlowFactor;
     if (lanes.length > 0) {
       // Zeichnen der Lanes
