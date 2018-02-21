@@ -30,8 +30,8 @@ declare module "diagram-js/lib/layout/BaseLayouter" {
 
   namespace BaseLayouter {
     export interface IConnectionHints {
-      connectionStart: IPoint;
-      connectionEnd: IPoint;
+      connectionStart: IPoint | false;
+      connectionEnd: IPoint | false;
     }
   }
 }
