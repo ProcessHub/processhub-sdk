@@ -872,13 +872,15 @@ export class BpmnProcess {
       let allSequenceFlows = this.getSequenceFlowElements();
       gatSequenceFlows.forEach(sf => {
         let sfElem = allSequenceFlows.find(s => s.id === sf.id);
-        sfElem.targetRef.incoming = sfElem.targetRef.incoming.filter(fil => fil.id !== gateway.id);
+        sfElem.targetRef.incoming = sfElem.targetRef.incoming.filter(fil => gateway.outgoing.find(out => out.id === fil.id) == null);
       });
       focusedTask.outgoing = focusedTask.outgoing.filter(out => out.targetRef.id !== gateway.id);
       // process.flowElements = process.flowElements.filter(el =>  .find(e => e.id === el.id) == null);
 
       // del gate from flowElements
+
       process.flowElements = process.flowElements.filter(el => el.id !== gateway.id);
+      process.laneSets.forEach(lane => lane.lanes.forEach(l => l.flowNodeRef = l.flowNodeRef.filter(fil => fil.id !== gateway.id)));
       process.flowElements = process.flowElements.filter(el => gateway.outgoing.find(e => e.id === el.id) == null);
 
       if (rowDetails[rowNumber].jumpsTo.length > 0) {
@@ -895,8 +897,6 @@ export class BpmnProcess {
             }
           }
         });
-
-        // console.log(process.flowElements);
         // process.flowElements.forEach(el => console.log(el.id + " in " + (el as Bpmn.FlowNode).incoming.length + " ____  out " + (el as Bpmn.FlowNode).outgoing.length));
 
         // let nextTask: Bpmn.FlowNode = (rowNumber + 1) == rowDetails.length ? this.getEndEvents(this.processId())[0] : this.getExistingTask(this.processId(), rowDetails[rowNumber + 1].taskId) as Bpmn.Task;
