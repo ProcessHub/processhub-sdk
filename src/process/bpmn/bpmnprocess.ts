@@ -978,6 +978,11 @@ export class BpmnProcess {
         });
 
         process.flowElements = process.flowElements.filter(e => e.id != gate.id);
+        for (const laneSet of process.laneSets) {
+          for (const lane of laneSet.lanes) {
+            lane.flowNodeRef = lane.flowNodeRef.filter(fn => fn.id !== gate.id);
+          }
+        }
       }
 
       if (addAfterDelete) {
