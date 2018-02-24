@@ -23,7 +23,7 @@ export function latestActivityAt(instance: PH.Instance.InstanceDetails): Date {
 }
 
 export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment, actionHandler: PH.ActionHandler): Promise<void> {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return;
     
   if (instanceEnv.user.extras.viewStates == null)
@@ -49,7 +49,7 @@ export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment,
 }
 
 export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return null;
 
   if (instanceEnv.user == null || instanceEnv.user.extras.viewStates == null)
@@ -62,7 +62,7 @@ export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date 
 }
 
 export function hasInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return null;
 
   return (instanceEnv.instance.latestCommentAt != null);
@@ -70,7 +70,7 @@ export function hasInstanceComments(instanceEnv: PH.InstanceEnvironment): boolea
 
 // true if there are a) new comments and b) user is a roleOwner - otherwise there should be no notification symbol
 export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): boolean {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return false;
 
   // is user RoleOwner?
@@ -89,7 +89,7 @@ export function notifyNewInstanceComments(instanceEnv: PH.InstanceEnvironment): 
 
 // true if a todo for the current user has been created since last viewing the instance
 export function notifyNewInstanceTodos(instanceEnv: PH.InstanceEnvironment): boolean {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return false;
     
   if (!instanceEnv.instance.extras.todos)
@@ -113,7 +113,7 @@ export function notifyNewInstanceTodos(instanceEnv: PH.InstanceEnvironment): boo
 
 // true if user owns a todo that is pinned
 export function notifyInstancePin(instanceEnv: PH.InstanceEnvironment): boolean {
-  if (!PH.isValidInstanceEnvironment(instanceEnv))
+  if (!instanceEnv.instance || !instanceEnv.user)
     return false;
     
   if (!instanceEnv.instance.extras.todos)
