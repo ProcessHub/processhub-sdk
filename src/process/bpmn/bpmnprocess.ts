@@ -391,13 +391,17 @@ export class BpmnProcess {
     return this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
   }
 
-  /**
-   * Get the StartEvents of the process
-   * @param processId process id
-   * @returns {Bpmn.StartEvent[]} the start events of the process
-   */
+  // get the StartEvents of the process
   public getStartEvents(processId: string): Bpmn.StartEvent[] {
     return this.getEvents(processId, BPMN_STARTEVENT) as Bpmn.StartEvent[];
+  }
+  // get the text that should be displayed on the start button
+  public getStartButtonTitle(): string {
+    let startEvents = this.getStartEvents(this.processId());
+    if (startEvents && startEvents.length > 0 && startEvents[0].name && startEvents[0].name.trim() != "")
+      return startEvents[0].name;
+    else
+      return undefined; // undefined means no member gets created - null would explicitly be stored
   }
 
   public getEndEvents(processId: string): BpmnModdleHelper.BpmnModdleEndEvent[] {
