@@ -21,6 +21,7 @@ export class UserDetails {
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean; // not available in GraphQL
+  lastStatusMailAt?: Date;
   lastSeenAt?: Date; // last time user was online (updated every 24h) / not available in GraphQL
 }
 export const gqlUserTypes = `     
