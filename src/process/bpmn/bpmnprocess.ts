@@ -1269,7 +1269,7 @@ export class BpmnProcess {
     return laneIds;
   }
 
-  public getSortedTasks(processId: string): Bpmn.Task[] {
+  public getSortedTasks(processId: string, ignoreSendTasks: boolean = false): Bpmn.Task[] {
     let startEventObject: Bpmn.StartEvent = this.getStartEvents(processId)[0];
     if (startEventObject == null || startEventObject.outgoing == null || startEventObject.outgoing.length == 0)
       return [];  // process definition is not correct, but function should be fault tolerant
@@ -1280,7 +1280,7 @@ export class BpmnProcess {
 
     // taskObject wird zuerst auf Start event gesetzt!
     while (taskObject != null && taskObject.$type !== BPMN_ENDEVENT) {
-      if ((taskObject.$type === "bpmn:UserTask" || taskObject.$type === "bpmn:SendTask") && sortedTasks.find(e => e.id == taskObject.id) == null) {
+      if ((taskObject.$type === "bpmn:UserTask" || (!ignoreSendTasks && taskObject.$type === "bpmn:SendTask")) && sortedTasks.find(e => e.id == taskObject.id) == null) {
         sortedTasks.push(taskObject as Bpmn.Task);
       } else if (sortedTasks.find(e => e.id == taskObject.id) != null) {
         break; // Vermeidung Endlosschleife
