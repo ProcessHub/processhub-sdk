@@ -15,6 +15,7 @@ export const UserRequestRoutes = {
   LoadUser: "/api/user/loaduser",
   UploadProfilePicture: "/api/user/uploadprofilepicture",
   LoginDemoUser: "/api/user/logindemo",
+  DeleteUser: "/api/user/deleteuser",
 };
 export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 

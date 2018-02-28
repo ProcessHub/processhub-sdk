@@ -187,3 +187,12 @@ export function createUserAction(mail: string, realName: string, password: strin
     }).catch((reason: any) => error(reason));
   };
 }
+
+export async function deleteUser(): Promise<void> {
+  await rootStore.dispatch(deleteUserAction());
+}
+export function deleteUserAction() {
+  return async <S>(dispatch: Dispatch<S>): Promise<void> => {
+    await Api.postJson(UserRequestRoutes.DeleteUser, null);
+  };
+}
