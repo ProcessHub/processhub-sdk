@@ -1,6 +1,6 @@
 import { tl } from "../tl";
 import { UserDetails } from "../user/userinterfaces";
-import { BpmnProcess } from "./bpmn/bpmnprocess";
+import { BpmnProcess, BPMN_TIMEREVENTDEFINITION, BPMN_MESSAGEEVENTDEFINITION } from "./bpmn/bpmnprocess";
 import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterfaces";
 import { PredefinedGroups } from "../user/index";
 import { ProcessDetails } from "./processinterfaces";
@@ -19,7 +19,8 @@ export enum ProcessAccessRights {
   ViewArchive = 1 << 4,  // access to archive tab (available for all workspace members)
   ViewTodos = 1 << 6,  // access to dashboard tab (available for all members and guests)
   ViewAllTodos = 1 << 7,  // user can see all instances, not only instance with own role
-  StartProcessByMail = 1 << 8  // user can start this process by mail
+  StartProcessByMail = 1 << 8,  // user can start this process by mail
+  StartProcessByTimer = 1 << 9  // user can start this process by timer
 }
 
 export interface ProcessRoles {
@@ -52,6 +53,7 @@ export interface ProcessRole {
   potentialRoleOwners: RoleOwner[];
   isStartingRole?: boolean;  // this role is allowed to start the process
   isStartingByMailRole?: boolean;  // this role is allowed to start the process with an incoming mail
+  isStartingByTimerRole?: boolean;  // this role is allowed to start the process with an timer
   allowMultipleOwners?: boolean;  // role can have multiple simultaneous role owners 
 }
 export interface PotentialRoleOwners {
@@ -106,16 +108,20 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
       // clean up starting role setting from all lanes, will be added again in next step
       delete (processRoles[lane.id].isStartingRole);
       delete (processRoles[lane.id].isStartingByMailRole);
+      delete (processRoles[lane.id].isStartingByTimerRole);
     });
 
     // set starting roles
     const startEvents = bpmnProcess.getStartEvents(bpmnProcess.processId());
     startEvents.map(startEvent => {
-      const isMessageStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === "bpmn:MessageEventDefinition") != null;
+      const isMessageStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === BPMN_MESSAGEEVENTDEFINITION) != null;
+      const isTimerStartEvent: boolean = startEvent.eventDefinitions != null && startEvent.eventDefinitions.find(e => e.$type === BPMN_TIMEREVENTDEFINITION) != null;
       let role = bpmnProcess.getLaneOfFlowNode(startEvent.id);
       if (role) { // in new processes somehow the start element is not in a lane (yet)
         if (isMessageStartEvent) {
           processRoles[role.id].isStartingByMailRole = true;
+        } else if (isTimerStartEvent) {
+          processRoles[role.id].isStartingByTimerRole = true;
         } else {
           processRoles[role.id].isStartingRole = true;
         }
@@ -300,6 +306,13 @@ export function canStartProcessByMail(process: ProcessDetails): boolean {
 
   // Only users in the start lane may start the process - even administrators don't inherit that right!
   return ((process.userRights & ProcessAccessRights.StartProcessByMail) != 0);
+}
+export function canStartProcessByTimer(process: ProcessDetails): boolean {
+  if (process == null)
+    return false;
+
+  // Only timer in the start lane may start the process - even administrators don't inherit that right!
+  return ((process.userRights & ProcessAccessRights.StartProcessByTimer) != 0);
 }
 
 export function canViewTodos(process: ProcessDetails): boolean {
