@@ -83,8 +83,11 @@ export enum AccountState {
   Registered = 1, // user has registered but not yet confirmed mail address
   Confirmed = 2, // fully registered, mail address confirmed
   Deleted = 3,
-  Demo = 4 
+  Demo = 4,
+  System = 5
 }
+
+export const SystemUserId: string = "02A7F339F42ADD6D";
 
 // Erste Gruppendefinitionen - echtes Gruppenmanagement folgt später
 export const PredefinedGroups = {
