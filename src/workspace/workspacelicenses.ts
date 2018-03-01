@@ -7,7 +7,7 @@ export function licenseHasModeler(workspace: WorkspaceDetails): boolean {
 
 // does license include PotentialRoleOwners?
 export function licenseHasPotentialRoleOwners(workspace: WorkspaceDetails): boolean {
-  return licenseIsBusinessOrHigher(workspace);
+  return true;
 }
 
 // does license define managers and owners per process?
@@ -17,7 +17,7 @@ export function licenseHasManagersAndOwners(workspace: WorkspaceDetails): boolea
 
 // does license allow to select who can see instances?
 export function licenseHasInstanceVisibility(workspace: WorkspaceDetails): boolean {
-  return licenseIsBusinessOrHigher(workspace);
+  return licenseIsTeamOrHigher(workspace);
 }
 
 // does license allow to select members as admins?
@@ -26,8 +26,8 @@ export function licenseHasWorkspaceAdmins(workspace: WorkspaceDetails): boolean 
 }
 // does license allow to select members as process managers?
 export function licenseHasWorkspaceProcessManagers(workspace: WorkspaceDetails): boolean {
-  // only for Team: Business licenses use process managers per process instead
-  return licenseIsTeam(workspace);
+  // seems too complicated
+  return false;
 }
 
 

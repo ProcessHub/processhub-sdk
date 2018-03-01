@@ -3,6 +3,9 @@ export function sleep(ms = 0): Promise<any> {
 }
 
 export function getFormattedDate(date: Date): string {
+  if (typeof date === "string") {
+    date = new Date(date);
+  }
   const days: string = date.getDate() < 10 ? "0" + date.getDate().toString() : date.getDate().toString();
   const months: string = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1).toString() : (date.getMonth() + 1).toString();
 

@@ -120,7 +120,7 @@ export class BpmnProcess {
       sendTaskInstanceLink: true,
       sendTaskSubject: null,
       sendTaskWithFieldContents: true,
-      allFieldsEditable: true,
+      allFieldsEditable: false,
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
@@ -391,13 +391,17 @@ export class BpmnProcess {
     return this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
   }
 
-  /**
-   * Get the StartEvents of the process
-   * @param processId process id
-   * @returns {Bpmn.StartEvent[]} the start events of the process
-   */
+  // get the StartEvents of the process
   public getStartEvents(processId: string): Bpmn.StartEvent[] {
     return this.getEvents(processId, BPMN_STARTEVENT) as Bpmn.StartEvent[];
+  }
+  // get the text that should be displayed on the start button
+  public getStartButtonTitle(): string {
+    let startEvents = this.getStartEvents(this.processId());
+    if (startEvents && startEvents.length > 0 && startEvents[0].name && startEvents[0].name.trim() != "")
+      return startEvents[0].name;
+    else
+      return undefined; // undefined means no member gets created - null would explicitly be stored
   }
 
   public getEndEvents(processId: string): BpmnModdleHelper.BpmnModdleEndEvent[] {
@@ -746,9 +750,10 @@ export class BpmnProcess {
     this.processDiagram.generateBPMNDiagram(processId);
   }
 
-  public convertTaskType(rowDetails: RowDetails): string {
+  public convertTaskType(rows: RowDetails[], changedTaskIdx: number): string {
 
-    let oldTask: Bpmn.UserTask | Bpmn.SendTask = this.getExistingTask(this.processId(), rowDetails.taskId) as Bpmn.UserTask;
+    const oldTaskId: string = rows[changedTaskIdx].taskId;    
+    let oldTask: Bpmn.Task = this.getExistingTask(this.processId(), oldTaskId);
     let savedIncoming = oldTask.incoming;
     let savedOutgoing = oldTask.outgoing;
 
@@ -762,6 +767,7 @@ export class BpmnProcess {
         index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
       }
     }
+
     // Task aus lane entfernen
     let processLanes: Bpmn.Lane[] = this.getProcessLanes(this.processId());
 
@@ -778,21 +784,19 @@ export class BpmnProcess {
       }
     }
 
-
-
     // standard convert to send task change on switch back
-    let convertToType: "bpmn:SendTask" | "bpmn:UserTask" = rowDetails.taskType as "bpmn:SendTask" | "bpmn:UserTask";
+    let convertToType: "bpmn:SendTask" | "bpmn:UserTask" = rows[changedTaskIdx].taskType as "bpmn:SendTask" | "bpmn:UserTask";
 
     let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
 
     let focusedTask = null;
 
-    rowDetails.taskId = BpmnProcess.getBpmnId(convertToType);
+    rows[changedTaskIdx].taskId = BpmnProcess.getBpmnId(convertToType);
 
     if (convertToType === "bpmn:SendTask") {
-      focusedTask = this.moddle.create("bpmn:SendTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+      focusedTask = this.moddle.create("bpmn:SendTask", { id: rows[changedTaskIdx].taskId, name: rows[changedTaskIdx].task, extensionElements: extensions, incoming: [], outgoing: [] });
     } else if (convertToType === "bpmn:UserTask") {
-      focusedTask = this.moddle.create("bpmn:UserTask", { id: rowDetails.taskId, name: rowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
+      focusedTask = this.moddle.create("bpmn:UserTask", { id: rows[changedTaskIdx].taskId, name: rows[changedTaskIdx].task, extensionElements: extensions, incoming: [], outgoing: [] });
     }
 
     if (focusedTask == null) {
@@ -813,12 +817,21 @@ export class BpmnProcess {
 
     processContext.flowElements.push(focusedTask);
 
-    this.addTaskToLane(this.processId(), rowDetails.laneId, focusedTask);
+    this.addTaskToLane(this.processId(), rows[changedTaskIdx].laneId, focusedTask);
 
     // this.setRoleForTask(this.processId(), rowDetails.laneId, focusedTask);
 
     this.processDiagram.generateBPMNDiagram(this.processId());
-    return rowDetails.taskId;
+
+    // replace all jumpsTo with the id of the new task
+    for (const row of rows) {
+      if (row.jumpsTo.find(j => j === oldTaskId)) {
+        row.jumpsTo = row.jumpsTo.filter(j => j !== oldTaskId);
+        row.jumpsTo.push(rows[changedTaskIdx].taskId);
+      }
+    }
+
+    return rows[changedTaskIdx].taskId;
   }
 
   public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string, renderDiagram: boolean = true) {
@@ -969,6 +982,11 @@ export class BpmnProcess {
         });
 
         process.flowElements = process.flowElements.filter(e => e.id != gate.id);
+        for (const laneSet of process.laneSets) {
+          for (const lane of laneSet.lanes) {
+            lane.flowNodeRef = lane.flowNodeRef.filter(fn => fn.id !== gate.id);
+          }
+        }
       }
 
       if (addAfterDelete) {
@@ -1251,7 +1269,7 @@ export class BpmnProcess {
     return laneIds;
   }
 
-  public getSortedTasks(processId: string): Bpmn.Task[] {
+  public getSortedTasks(processId: string, ignoreSendTasks: boolean = false): Bpmn.Task[] {
     let startEventObject: Bpmn.StartEvent = this.getStartEvents(processId)[0];
     if (startEventObject == null || startEventObject.outgoing == null || startEventObject.outgoing.length == 0)
       return [];  // process definition is not correct, but function should be fault tolerant
@@ -1262,7 +1280,7 @@ export class BpmnProcess {
 
     // taskObject wird zuerst auf Start event gesetzt!
     while (taskObject != null && taskObject.$type !== BPMN_ENDEVENT) {
-      if ((taskObject.$type === "bpmn:UserTask" || taskObject.$type === "bpmn:SendTask") && sortedTasks.find(e => e.id == taskObject.id) == null) {
+      if ((taskObject.$type === "bpmn:UserTask" || (!ignoreSendTasks && taskObject.$type === "bpmn:SendTask")) && sortedTasks.find(e => e.id == taskObject.id) == null) {
         sortedTasks.push(taskObject as Bpmn.Task);
       } else if (sortedTasks.find(e => e.id == taskObject.id) != null) {
         break; // Vermeidung Endlosschleife

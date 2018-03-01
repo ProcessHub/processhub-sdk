@@ -2,9 +2,10 @@ import * as _ from "lodash";
 import * as StateHandler from "../statehandler";
 import * as Api from "../legacyapi";
 import { Dispatch } from "redux";
-import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
-import { LoadWorkspaceReply, LoadWorkspaceRequest, WorkspaceRequestRoutes, RemoveWorkspaceMemberRequest, WorkspaceLoadedMessage, InviteWorkspaceMemberRequest, CreateWorkspaceRequest, UpdateWorkspaceRequest, DeleteWorkspaceRequest, SetMemberRoleRequest } from "./legacyapi";
+import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole, WorkspaceType } from "./workspaceinterfaces";
+import { LoadWorkspaceReply, LoadWorkspaceRequest, WorkspaceRequestRoutes, RemoveWorkspaceMemberRequest, WorkspaceLoadedMessage, InviteWorkspaceMemberRequest, CreateWorkspaceRequest, UpdateWorkspaceRequest, DeleteWorkspaceRequest, SetMemberRoleRequest, StartTrialRequest } from "./legacyapi";
 import { WorkspaceMessages } from "./phclient";
+import { BaseReply } from "../legacyapi";
 
 export async function requireWorkspaceMembers() {
   // Fordert die Workspace-Members an, falls diese in PathState.currentWorkspace noch nicht enthalten sind.
@@ -150,5 +151,24 @@ export function setMemberRoleAction(workspaceId: string, userId: string, memberR
     return Api.postJson(WorkspaceRequestRoutes.SetMemberRole, request, accessToken).then((response) => {
       dispatch(response);
     });
+  };
+}
+
+export async function startTrial(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: string, accessToken: string = null): Promise<BaseReply> {
+  return await StateHandler.rootStore.dispatch(startTrialAction(workspaceId, name, mail, company, phone, testType, userCount, accessToken));
+}
+export function startTrialAction(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<BaseReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<BaseReply> => {
+    let request: StartTrialRequest = {
+      workspaceId,
+      name,
+      mail,
+      company,
+      phone,
+      testType,
+      userCount
+    };
+    const response = await Api.postJson(WorkspaceRequestRoutes.StartTrial, request, accessToken) as BaseReply;
+    return response;
   };
 }

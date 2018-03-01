@@ -1,5 +1,5 @@
 import { BaseRequest, BaseMessage } from "../legacyapi/apiinterfaces";
-import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
+import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole, WorkspaceType } from "./workspaceinterfaces";
 import { WorkspaceMessages } from "./phclient";
 
 // WorkspaceRequestRoutes
@@ -10,7 +10,8 @@ export const WorkspaceRequestRoutes = {
   RemoveWorkspaceMember: "/api/workspace/removemember",
   UpdateWorkspace: "/api/workspace/update",
   DeleteWorkspace: "/api/workspace/delete",
-  SetMemberRole: "/api/workspace/setmemberrole"
+  SetMemberRole: "/api/workspace/setmemberrole",
+  StartTrial: "/api/workspace/starttrial",
 };
 export type WorkspaceRequestRoutes = keyof typeof WorkspaceRequestRoutes;
 
@@ -36,6 +37,16 @@ export interface WorkspaceCreatedMessage extends BaseMessage {
 
 export interface CreateWorkspaceRequest extends BaseRequest {
   workspace: WorkspaceDetails;
+}
+
+export interface StartTrialRequest extends BaseRequest {
+  workspaceId: string;
+  name: string;
+  mail: string;
+  company: string;
+  phone: string;
+  testType: WorkspaceType;
+  userCount: string;
 }
 
 export interface UpdateWorkspaceRequest extends BaseRequest {

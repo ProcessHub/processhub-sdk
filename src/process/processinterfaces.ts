@@ -26,9 +26,10 @@ export interface ProcessDetails {
   description: string;
   useModeler?: boolean;
   isNewProcess?: boolean;  
-  userRights?: ProcessAccessRights; // Access rights of the current user
+  userRights?: ProcessAccessRights; // access rights of the current user
   attachments?: ProcessAttachment[];
   processXmlHash?: string;
+  startEventName?: string; // text on the start button
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;

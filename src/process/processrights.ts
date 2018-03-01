@@ -82,10 +82,10 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     processRoles = {};
 
   // public processes have been removed for now, does not seem to make sense with current version
-  // if (processRoles[DefaultRoles.Viewer] == null) {
-    // default value for visibility
+  if (workspace.workspaceType == WorkspaceType.Templates)
+    processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
+  else    
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
-  // }
 
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
   if (!WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
