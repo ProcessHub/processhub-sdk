@@ -97,6 +97,9 @@ export class ActionHandler {
   openInstancePopup(workspaceId: string, instanceId: string): void {
     PH.Assert.error();
   }
+  openAccountPopup(): void {
+    PH.Assert.error();
+  }
   closeInstancePopup(): void {
     PH.Assert.error();
   }

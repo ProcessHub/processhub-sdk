@@ -23,6 +23,8 @@ export class UserDetails {
   isLibraryAdmin?: boolean; // not available in GraphQL
   lastSeenAt?: Date; // last time user was online (updated every 12h) / not available in GraphQL
   lastStatusMailAt?: Date;
+  noDailyUpdates?: boolean;
+  noWeeklyStatus?: boolean;
 }
 export const gqlUserTypes = `     
   input ViewState {

@@ -17,6 +17,7 @@ export function parseUrl(fullUrl: string): PathDetails {
   // pages not related to workspace
   let part = split[0];
   if ((part == "" && split.length == 1)
+    || (part === "profile" && split.length === 1)
     || (part == "i" && split.length >= 2)) {   // Instance and Todo-links are handled on StartPage
     path.page = Page.StartPage;
     return path;
