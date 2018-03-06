@@ -7,7 +7,7 @@ export function licenseHasModeler(workspace: WorkspaceDetails): boolean {
 
 // does license include PotentialRoleOwners?
 export function licenseHasPotentialRoleOwners(workspace: WorkspaceDetails): boolean {
-  return true;
+  return licenseIsDemoOrHigher(workspace);
 }
 
 // does license define managers and owners per process?
