@@ -34,7 +34,9 @@ export function licenseHasWorkspaceProcessManagers(workspace: WorkspaceDetails):
 export function licenseIsFree(workspace: WorkspaceDetails): boolean {
   return workspace && workspace.workspaceType == WorkspaceType.Free;
 }
-
+export function licenseIsTrial(workspace: WorkspaceDetails): boolean {
+  return workspace.trialExpiresAt && workspace.workspaceType != WorkspaceType.Demo && workspace.workspaceType != WorkspaceType.Free;
+}
 export function licenseIsDemo(workspace: WorkspaceDetails): boolean {
   return workspace && workspace.workspaceType == WorkspaceType.Demo;
 }
