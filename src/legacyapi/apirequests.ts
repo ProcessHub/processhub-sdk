@@ -31,7 +31,8 @@ export async function getJson<Request extends BaseRequest>(path: string, request
     req = {
       headers: {
         "Accept": "application/json",
-        "x-accesstoken": accessToken   // x-accesstoken Kleinschreibung erforderlich
+        "x-accesstoken": accessToken,   // x-accesstoken Kleinschreibung erforderlich
+        "authorization": accessToken
       } as any
     };
   }

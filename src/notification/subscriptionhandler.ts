@@ -33,21 +33,20 @@ let notificationHandler = (update: any, flags: any) => {
 export async function initNotificationClient(user: UserDetails) {
   return new Promise<void>(async (resolve, reject) => {
 
-    let authResult: any = await getJson("/nes/auth", { auth: user.extras.accessToken });
+    // let authResult: any = await getJson("/nes/auth", { auth: user.extras.accessToken });
     
-    if (authResult.status == "authenticated") {
-      notificationClient.connect({ auth: authResult.token }, (err: any) => {
+    // if (authResult.status == "authenticated") {
+      await notificationClient.connect({ auth: { headers: { authorization: user.extras.accessToken } } }, (err: any) => {
         if (err != null) {
           console.log("Error on Websocket connect:");
           console.log(err);
           reject();
-          
         }
         resolve();
       });
-    } else {
-      reject();
-    }
+    // } else {
+      // reject();
+    // }
   });
 }
 

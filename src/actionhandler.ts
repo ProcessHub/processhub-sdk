@@ -1,7 +1,7 @@
 import * as PH from "./";
 import gql from "graphql-tag";
 import { ApiClient, getApiClient } from "./apiclient";
-import { NetworkStatus, ApolloExecutionResult } from "apollo-client";
+import { NetworkStatus, ApolloQueryResult } from "apollo-client";
 import { WorkspaceExtras } from "./workspace/workspaceinterfaces";
 import { ProcessExtras } from "./process/processinterfaces";
 import { InstanceExtras } from "./instance/instanceinterfaces";
@@ -10,6 +10,7 @@ import { CoreEnvironment } from "./environment";
 import { getErrorHandlers } from "./legacyapi/errorhandler";
 import { BaseError, API_FAILED, ApiResult, ApiError } from "./legacyapi";
 import * as _ from "lodash";
+import { FetchResult } from "apollo-link";
 
 export interface ExtrasRequest {
   workspaceExtras?: WorkspaceExtras;
@@ -26,7 +27,7 @@ export class ActionHandler {
     this.graphQLClient = getApiClient(apiHost, accessToken);
   }
 
-  async apiQuery(query: any, variables: any): Promise<ApolloExecutionResult> {
+  async apiQuery(query: any, variables: any): Promise<ApolloQueryResult<any>> {
     let result;
 
     try {
@@ -43,7 +44,7 @@ export class ActionHandler {
     return result;
   }
 
-  async apiMutation(mutation: any, variables: any): Promise<ApolloExecutionResult> {
+  async apiMutation(mutation: any, variables: any): Promise<FetchResult<{}, Record<string, any>>> {
     let result;
 
     try {
