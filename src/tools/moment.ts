@@ -1,4 +1,5 @@
 import * as Moment from "moment";
+import { tl } from "..";
 
 Moment.locale("de", {
   months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
@@ -41,5 +42,13 @@ Moment.locale("de", {
 });
 
 export function momentFromUtcDate(dateInUtc: Date): string {
-  return Moment(dateInUtc).from(Moment(new Date()));
+  if (typeof dateInUtc === "string") {
+    dateInUtc = new Date(dateInUtc);
+  }
+  const now: Date = new Date();
+  const timeNow: number = now.getTime();
+  if (timeNow < dateInUtc.getTime() + 60 * 1000) {
+    return tl("jetzt");
+  }
+  return Moment(dateInUtc).from(Moment(now));
 }
