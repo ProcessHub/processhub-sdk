@@ -9,6 +9,8 @@ import { setContext } from "apollo-link-context";
 import * as _ from "lodash";
 import { loginUser, logoutUser } from "./user/useractions";
 import { FetchResult } from "apollo-link";
+import { FieldContentMap } from "./data";
+import { executeInstance } from "./instance/instanceactions";
 
 // All clients share the same backend client to optimize caching
 // a new client is only created it the host changes (should only happen in tests)
@@ -21,6 +23,7 @@ export class ApiClient {
 
   constructor(apiHost: string = "https://app.processhub.com", accessToken?: string) {
     this.graphQLClient = getGraphQLClient(apiHost, accessToken);
+    this.accessToken = accessToken;
   }
 
   async graphQLQuery(query: any, variables: any): Promise<any> {
@@ -90,6 +93,23 @@ export class ApiClient {
     delete (todo2.user);
 
     await this.graphQLMutation(mutation, { todo: todo2 });
+  }
+
+  async startProcess(workspaceId: string, processId: string, instanceTitle?: string, fieldContents?: FieldContentMap): Promise<string> {
+    let instance: PH.Instance.InstanceDetails = {
+      instanceId: PH.Tools.createId(),
+      displayName: instanceTitle,
+      workspaceId: workspaceId,
+      processId: processId,
+      extras: {
+        roleOwners: {},
+        fieldContents: fieldContents
+      }
+    }
+
+    await executeInstance(processId, instance, this.accessToken);
+
+    return instance.instanceId;
   }
 }
 

@@ -18,15 +18,15 @@ export interface InstanceDetails {
   instanceId: string;
   workspaceId: string;
   processId: string;
-  displayName: string;
+  displayName?: string;
   instanceNumber?: string;  // 123.4567.890, created on execution
   fullUrl?: string; // = /i/@workspace/instanceid
   createdAt?: Date;
   completedAt?: Date;
   isSimulation?: boolean;
   sendSimulationMails?: boolean;
-  state: State;
-  latestCommentAt: Date; // datetime of the latest comment or incoming mail
+  state?: State;
+  latestCommentAt?: Date; // datetime of the latest comment or incoming mail
   processXmlHash?: string;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!

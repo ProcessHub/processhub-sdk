@@ -3,6 +3,7 @@ import { rootStore, mergeInstanceToCache } from "../statehandler";
 import { Dispatch } from "redux";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
 import { JumpReply, ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
+import { access } from "fs";
 
 export const InstanceActionType = {
   Execute: "INSTANCEACTION_EXECUTE",
@@ -39,17 +40,17 @@ export interface InstanceActionJump extends InstanceAction {
   readonly type: InstanceActionType; // "INSTANCEACTION_JUMP";
 }
 
-export async function executeInstance(processId: string, instanceDetails: InstanceDetails): Promise<ExecuteReply> {
-  return await rootStore.dispatch(executeInstanceAction(processId, instanceDetails));
+export async function executeInstance(processId: string, instanceDetails: InstanceDetails, accessToken?: string): Promise<ExecuteReply> {
+  return await rootStore.dispatch(executeInstanceAction(processId, instanceDetails, accessToken));
 }
 
-export function executeInstanceAction(processId: string, instanceDetails: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
+export function executeInstanceAction(processId: string, instanceDetails: InstanceDetails, accessToken?: string): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
 
   return async <S>(dispatch: Dispatch<S>): Promise<ExecuteReply> => {
     let response: ExecuteReply = await Api.postJson(ProcessEngineApiRoutes.execute, {
       processId: processId,
       instance: instanceDetails
-    });
+    }, accessToken);
 
     dispatch<InstanceActionExecute>({
       type: InstanceActionType.Execute as InstanceActionType,
