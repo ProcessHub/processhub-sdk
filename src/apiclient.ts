@@ -1,20 +1,100 @@
+import * as PH from "./";
 import "fetch-everywhere";
-import { NetworkStatus } from "apollo-client";
 import ApolloClient from "apollo-client";
+import { NetworkStatus, ApolloQueryResult } from "apollo-client";
+import gql from "graphql-tag";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { setContext } from "apollo-link-context";
+import * as _ from "lodash";
+import { loginUser, logoutUser } from "./user/useractions";
+import { FetchResult } from "apollo-link";
 
 // All clients share the same backend client to optimize caching
 // a new client is only created it the host changes (should only happen in tests)
-let _apiClient: ApolloClient<{}> = null;
+let _graphQLClient: ApolloClient<{}> = null;
 let _apiHost: string = null;
 
-export type ApiClient = ApolloClient<{}>;
+export class ApiClient {
+  private graphQLClient: ApolloClient<{}>;
+  private accessToken: string;
 
-export function getApiClient(apiHost: string = "https://app.processhub.com", accessToken?: string): ApiClient {
-  if (!_apiClient || apiHost != _apiHost) {
+  constructor(apiHost: string = "https://app.processhub.com", accessToken?: string) {
+    this.graphQLClient = getGraphQLClient(apiHost, accessToken);
+  }
 
+  async graphQLQuery(query: any, variables: any): Promise<any> {
+    let result;
+
+    try {
+      result = await this.graphQLClient.query({
+        query: query,
+        variables: variables
+      });                                                          
+    } catch (e) {
+      console.error(e);
+      // const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
+      // getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
+    }
+    
+    return result.data;
+  }
+
+  async graphQLMutation(mutation: any, variables: any): Promise<FetchResult<{}, Record<string, any>>> {
+    let result;
+
+    try {
+      result = await this.graphQLClient.mutate({
+        mutation: mutation,
+        variables: variables
+      });                                                          
+    } catch (e) {
+      console.error(e);
+      // const error: BaseError = { result: 500 as ApiResult, type: API_FAILED };
+      // getErrorHandlers().forEach(h => h.handleError(error, "/graphql"));
+    }
+    return result;
+  }  
+
+  async signIn(userMail: string, password: string): Promise<PH.User.UserDetails> {
+    let user = (await loginUser(userMail, password)).userDetails;
+    if (user)
+      this.accessToken = user.extras.accessToken;
+
+    return user;
+  }
+
+  async signOut(): Promise<void> {
+    await logoutUser(this.accessToken);
+  }
+
+  async updateViewState(objectId: string, viewState: PH.User.ViewState): Promise<void> {
+    const mutation = gql`
+      mutation updateViewState($objectId: ID!, $viewState: ViewState) {
+        updateViewState(objectId: $objectId, viewState: $viewState)
+      }`;
+
+    // don't wait for server response
+    // tslint:disable-next-line:no-floating-promises
+    this.graphQLMutation(mutation, { objectId: objectId, viewState: viewState });
+  }
+
+  async updateTodo(todo: PH.Todo.TodoDetails): Promise<void> {
+    const mutation = gql`
+      mutation updateTodo($todo: TodoUpdateDetails!) {
+        updateTodo(todo: $todo)
+      }`;
+
+    let todo2 = _.cloneDeep(todo);
+    // graphql does not accept invalid fields in mutation
+    delete (todo2.user);
+
+    await this.graphQLMutation(mutation, { todo: todo2 });
+  }
+}
+
+function getGraphQLClient(apiHost: string = "https://app.processhub.com", accessToken?: string): ApolloClient<{}> {
+  if (!_graphQLClient || apiHost != _apiHost) {
 
     const httpLink = new HttpLink({
       uri: apiHost + "/graphql",
@@ -39,11 +119,10 @@ export function getApiClient(apiHost: string = "https://app.processhub.com", acc
       }
     });
 
-    _apiClient = new ApolloClient({
+    _graphQLClient = new ApolloClient({
       link: authLink.concat(httpLink),
       cache: new InMemoryCache(),
     });
-
 
     /*
         const networkInterface = createNetworkInterface({
@@ -79,5 +158,5 @@ export function getApiClient(apiHost: string = "https://app.processhub.com", acc
           addTypename: true
         });*/
   }
-  return _apiClient;
+  return _graphQLClient;
 }
