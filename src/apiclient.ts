@@ -108,7 +108,7 @@ export class ApiClient {
         roleOwners: {},
         fieldContents: fieldContents
       }
-    }
+    };
 
     await executeInstance(processId, instance, this.accessToken);
 
