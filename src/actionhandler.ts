@@ -5,12 +5,13 @@ import { NetworkStatus, ApolloQueryResult } from "apollo-client";
 import { WorkspaceExtras } from "./workspace/workspaceinterfaces";
 import { ProcessExtras } from "./process/processinterfaces";
 import { InstanceExtras } from "./instance/instanceinterfaces";
-import { UserExtras } from "./user/userinterfaces";
+import { UserExtras, UserDetails } from "./user/userinterfaces";
 import { CoreEnvironment } from "./environment";
 import { getErrorHandlers } from "./legacyapi/errorhandler";
 import { BaseError, API_FAILED, ApiResult, ApiError } from "./legacyapi";
 import * as _ from "lodash";
 import { FetchResult } from "apollo-link";
+import { loginUser, logoutUser } from "./user/useractions";
 
 export interface ExtrasRequest {
   workspaceExtras?: WorkspaceExtras;
@@ -59,6 +60,16 @@ export class ActionHandler {
     }
     return result;
   }  
+
+  async signIn(userMail: string, password: string): Promise<UserDetails> {
+    let user = (await loginUser(userMail, password)).userDetails;
+
+    return user;
+  }
+
+  async signOut(accessToken: string): Promise<void> {
+    await logoutUser(accessToken);
+  }
 
   async updateViewState(objectId: string, viewState: PH.User.ViewState): Promise<void> {
     const mutation = gql`

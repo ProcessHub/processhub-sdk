@@ -32,7 +32,6 @@ export interface LoginRequest extends BaseRequest {
 }
 export interface LoginReply extends BaseMessage {
   userDetails?: UserDetails;
-  accessToken?: string;
 }
 
 export interface LoadUserRequest extends BaseRequest {

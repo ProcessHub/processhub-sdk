@@ -15,7 +15,7 @@ export class UserDetails {
   extras: {
     // New Extras must be added to cache-handling in useractions -> loadUser!
     workspaces?: WorkspaceDetails[];
-    accessToken?: string;  // only used during login
+    accessToken?: string;  // only available in sign in replies
     instances?: InstanceDetails[];
     viewStates?: ViewStates;
   };

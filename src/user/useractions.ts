@@ -150,14 +150,13 @@ export function uploadProfilePictureAction(data: string, accessToken: string = n
   };
 }
 
-export async function logoutUser() {
-  await rootStore.dispatch(logoutUserAction());
+export async function logoutUser(accessToken?: string) {
+  await rootStore.dispatch(logoutUserAction(accessToken));
 }
 // Diese eigentliche Action wird für Mock-Store Tests genutzt
-export function logoutUserAction() {
+export function logoutUserAction(accessToken?: string) {
   return function (dispatch: any) {
-
-    return Api.postJson(UserRequestRoutes.Logout, null).then(() => {      
+    return Api.postJson(UserRequestRoutes.Logout, null, accessToken).then(() => {      
     }).catch(reason => error(reason));
   };
 }
