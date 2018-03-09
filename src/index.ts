@@ -1,6 +1,4 @@
 /// <reference path="./process/types/index.d.ts" />
-export * from "./actionhandler";
-export * from "./frameactionhandler";
 export * from "./tl";
 import * as Tools from "./tools";
 export { Tools };
@@ -31,6 +29,8 @@ export { Config };
 import * as LegacyApi from "./legacyapi";
 export { LegacyApi };
 export * from "./apiclient";
+export * from "./actionhandler";
+export * from "./frameactionhandler";
 export * from "./environment";
 import * as StateHandler from "./statehandler";
 export { StateHandler };

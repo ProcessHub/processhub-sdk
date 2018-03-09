@@ -1,15 +1,13 @@
-import * as PH from "./";
 import gql from "graphql-tag";
-import { ApiClient } from "./apiclient";
 import { WorkspaceExtras } from "./workspace/workspaceinterfaces";
 import { ProcessExtras } from "./process/processinterfaces";
 import { InstanceExtras } from "./instance/instanceinterfaces";
 import { UserExtras, UserDetails } from "./user/userinterfaces";
 import { CoreEnvironment } from "./environment";
-import { getErrorHandlers } from "./legacyapi/errorhandler";
 import { BaseError, API_FAILED, ApiResult, ApiError } from "./legacyapi";
 import * as _ from "lodash";
-
+import * as Assert from "./tools/assert";
+import { ApiClient } from "./apiclient";
 
 
 export interface ExtrasRequest {
@@ -29,20 +27,20 @@ export class ActionHandler extends ApiClient {
   gotoPage(path: string): void {
     // TypeScript requires that all functions in classes are defined. We throw an assertion for
     // functions that must be overridden in derived ActionHandlers 
-    PH.Assert.error();
+    Assert.error();
   }
 
   requestExtras(environment: CoreEnvironment, requestedExtras: ExtrasRequest, forceReload?: boolean): void {
-    PH.Assert.error();
+    Assert.error();
   }
 
   openInstancePopup(workspaceId: string, instanceId: string): void {
-    PH.Assert.error();
+    Assert.error();
   }
   openAccountPopup(): void {
-    PH.Assert.error();
+    Assert.error();
   }
   closeInstancePopup(): void {
-    PH.Assert.error();
+    Assert.error();
   }
 }

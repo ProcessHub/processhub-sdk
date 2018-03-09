@@ -1,4 +1,3 @@
-import * as PH from "./";
 import "fetch-everywhere";
 import ApolloClient from "apollo-client";
 import { NetworkStatus, ApolloQueryResult } from "apollo-client";
@@ -11,6 +10,10 @@ import { loginUser, logoutUser } from "./user/useractions";
 import { FetchResult } from "apollo-link";
 import { FieldContentMap } from "./data";
 import { executeInstance } from "./instance/instanceactions";
+import { createId } from "./tools";
+import { InstanceDetails } from "./instance";
+import { UserDetails, ViewState } from "./user";
+import { TodoDetails } from "./todo";
 
 // All clients share the same backend client to optimize caching
 // a new client is only created it the host changes (should only happen in tests)
@@ -59,7 +62,7 @@ export class ApiClient {
     return result;
   }  
 
-  async signIn(userMail: string, password: string): Promise<PH.User.UserDetails> {
+  async signIn(userMail: string, password: string): Promise<UserDetails> {
     let user = (await loginUser(userMail, password)).userDetails;
     if (user)
       this.accessToken = user.extras.accessToken;
@@ -67,11 +70,11 @@ export class ApiClient {
     return user;
   }
 
-  async signOut(): Promise<void> {
-    await logoutUser(this.accessToken);
+  async signOut(accessToken?: string): Promise<void> {
+    await logoutUser(accessToken ? accessToken : this.accessToken);
   }
 
-  async updateViewState(objectId: string, viewState: PH.User.ViewState): Promise<void> {
+  async updateViewState(objectId: string, viewState: ViewState): Promise<void> {
     const mutation = gql`
       mutation updateViewState($objectId: ID!, $viewState: ViewState) {
         updateViewState(objectId: $objectId, viewState: $viewState)
@@ -82,7 +85,7 @@ export class ApiClient {
     this.graphQLMutation(mutation, { objectId: objectId, viewState: viewState });
   }
 
-  async updateTodo(todo: PH.Todo.TodoDetails): Promise<void> {
+  async updateTodo(todo: TodoDetails): Promise<void> {
     const mutation = gql`
       mutation updateTodo($todo: TodoUpdateDetails!) {
         updateTodo(todo: $todo)
@@ -96,8 +99,8 @@ export class ApiClient {
   }
 
   async startProcess(workspaceId: string, processId: string, instanceTitle?: string, fieldContents?: FieldContentMap): Promise<string> {
-    let instance: PH.Instance.InstanceDetails = {
-      instanceId: PH.Tools.createId(),
+    let instance: InstanceDetails = {
+      instanceId: createId(),
       displayName: instanceTitle,
       workspaceId: workspaceId,
       processId: processId,
