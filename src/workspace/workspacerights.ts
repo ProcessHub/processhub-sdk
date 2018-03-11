@@ -40,3 +40,9 @@ export function canInviteMembers(workspace: WorkspaceDetails): boolean {
 export function canCreateProcess(workspace: WorkspaceDetails): boolean {
   return isWorkspaceAdmin(workspace);
 }
+
+export function canStartTrial(workspace: WorkspaceDetails): boolean {
+  // Admins can start a trial if they didn't have one before and workspace is Free
+  return isWorkspaceAdmin(workspace) 
+     && ((WorkspaceLicenses.licenseIsFree(workspace) && workspace.trialExpiresAt == null) || WorkspaceLicenses.licenseIsTrial(workspace));
+}
