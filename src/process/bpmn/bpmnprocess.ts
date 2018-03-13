@@ -752,7 +752,7 @@ export class BpmnProcess {
 
   public convertTaskType(rows: RowDetails[], changedTaskIdx: number): string {
 
-    const oldTaskId: string = rows[changedTaskIdx].taskId;    
+    const oldTaskId: string = rows[changedTaskIdx].taskId;
     let oldTask: Bpmn.Task = this.getExistingTask(this.processId(), oldTaskId);
     let savedIncoming = oldTask.incoming;
     let savedOutgoing = oldTask.outgoing;
@@ -1520,6 +1520,27 @@ export class BpmnProcess {
       }
       return false;
     });
+  }
+
+  public setFlowName(sourceTaskId: string, targetTaskId: string, name: string): void {
+    let obj = this.getFlowObject(sourceTaskId, targetTaskId);
+    obj.name = name;
+  }
+
+  public getFlowName(sourceTaskId: string, targetTaskId: string): string {
+    return this.getFlowObject(sourceTaskId, targetTaskId).name;
+  }
+
+  private getFlowObject(sourceTaskId: string, targetTaskId: string): Bpmn.FlowElement {
+    let sourceTask = this.getExistingTask(this.processId(), sourceTaskId);
+    let targetObj = null;
+    if (sourceTask.outgoing.length === 1 && sourceTask.outgoing.last().targetRef.$type === BPMN_EXCLUSIVEGATEWAY) {
+      let gateway = sourceTask.outgoing.last().targetRef;
+      targetObj = gateway.outgoing.find(out => out.targetRef.id === targetTaskId);
+    } else {
+      targetObj = sourceTask.outgoing.find(out => out.targetRef.id === targetTaskId);
+    }
+    return targetObj;
   }
 
 }

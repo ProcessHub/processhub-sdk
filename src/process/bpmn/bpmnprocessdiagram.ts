@@ -325,6 +325,32 @@ export class BpmnProcessDiagram {
     }
 
     let edgeObj = this.createEdge(flowObject, flowObject.sourceRef, flowObject.targetRef, waypoints);
+
+    let firstX = waypoints[0].x;
+    let lastX  = waypoints.last().x;
+    let firstY = waypoints[0].y;
+    let lastY  = waypoints.last().y;
+
+    let xDiff = firstX > lastX ? firstX - lastX : lastX - firstX;
+    xDiff = xDiff / 2;
+    let yDiff = firstY > lastY ? firstY - lastY : lastY - firstY;
+    yDiff = yDiff / 2;
+
+    let finalX = firstX > lastX ? lastX + xDiff : firstX + xDiff;
+    let finalY = firstY > lastY ? lastY + yDiff : firstY + yDiff;
+    
+    if (drawJumpFlow) {
+      finalX = firstX;
+      finalY = firstY + yDiff;
+    }
+
+    let bounds = this.bpmnProcess.moddle.create("dc:Bounds", { x: finalX, y: finalY, width: 1, height: 1 });
+    let label = this.bpmnProcess.moddle.create("bpmndi:BPMNLabel", {
+      id: BpmnProcess.BpmnProcess.getBpmnId(DiagramShapeTypes.BPMNDI_EDGE),
+      bounds: bounds
+    });
+    edgeObj.label = label;
+
     diagram.plane.planeElement.push(edgeObj);
   }
 
