@@ -44,6 +44,14 @@ export async function initNotificationClient(user: UserDetails) {
         }
         resolve();
       });
+
+      notificationClient.onDisconnect = () => {
+        // alert("Websocket disconnected!");
+        setTimeout( () => {
+          console.info("Site reload because of websocket disconnect.");
+          window.location.reload();
+        }, 15000);
+      };
     // } else {
       // reject();
     // }
