@@ -1,6 +1,7 @@
 import * as BpmnProcess from "./bpmnprocess";
 import { Bpmn, Bpmndi } from "../bpmn";
 import { isTrue } from "../../tools";
+import { BpmnModdleStartEvent } from "..";
 
 // bpmn Diagram
 export const DiagramShapeTypes = {
@@ -214,7 +215,10 @@ export class BpmnProcessDiagram {
         let thisObj = drawObjectList[i];
         let nextObj = drawObjectList[(i + 1)];
         let tmpSf = sequenceFlows.find(sf => sf.sourceRef.id === thisObj.id && sf.targetRef.id === nextObj.id);
-        if (tmpSf != null) {
+        if (tmpSf != null || thisObj.$type === BpmnProcess.BPMN_STARTEVENT) {
+          if (thisObj.$type === BpmnProcess.BPMN_STARTEVENT) {
+            tmpSf = sequenceFlows.find(sf => sf.sourceRef.id === thisObj.id);
+          }
           normalSequenceFlows.push(tmpSf);
         }
       }
@@ -254,6 +258,14 @@ export class BpmnProcessDiagram {
         iconHeight = sizeStartAndEndEvent;
 
         yParam = (this.diagramYStartParam + BpmnProcessDiagram.GATEWAY_WIDTH) + laneNumber * this.diagramLaneHeight;
+        let startEvent = (workingObject as BpmnModdleStartEvent);
+        if (startEvent.eventDefinitions != null && startEvent.eventDefinitions.length > 0) {
+          xParam -= iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
+          let isMessageStartEvent = startEvent.eventDefinitions.last().$type === BpmnProcess.BPMN_MESSAGEEVENTDEFINITION;
+          isMessageStartEvent ?
+            yParam -= 40 :
+            yParam += 40;
+        }
       }
 
       let shape = this.createShape(workingObject, xParam, yParam, iconWidth, iconHeight);
