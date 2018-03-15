@@ -519,7 +519,7 @@ export class BpmnProcess {
         // extensionElement = extension.$children.find(e => e.name === key);
       }
     }
-    
+
     BpmnModdleHelper.addTaskExtensionInputText(task.extensionElements, key, value);
   }
 
@@ -1018,6 +1018,52 @@ export class BpmnProcess {
         }
       }
     }
+  }
+
+  public addTimerStartEvent(): void {
+    this.addStartEventOfType(BPMN_TIMEREVENTDEFINITION);
+
+  }
+
+  public removeTimerStartEvent(): void {
+    this.removeStartEventOfType(BPMN_TIMEREVENTDEFINITION);
+  }
+
+  public addMailStartEvent(): void {
+    this.addStartEventOfType(BPMN_MESSAGEEVENTDEFINITION);
+  }
+
+  public removeMailStartEvent(): void {
+    this.removeStartEventOfType(BPMN_MESSAGEEVENTDEFINITION);
+  }
+
+  public addStartEventOfType(type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+    if (this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === type) != null) == null) {
+      let start = this.getStartEvents(this.processId()).last();
+      let targetTask = start.outgoing.last().targetRef;
+      let processContext: Bpmn.Process = this.getProcess(this.processId());
+      let startEventObject = this.moddle.create(BPMN_STARTEVENT, { id: BpmnProcess.getBpmnId(BPMN_STARTEVENT), outgoing: [], incoming: [] });
+      let eventDef = type == "bpmn:TimerEventDefinition" ? this.moddle.create(type as "bpmn:TimerEventDefinition", {}) : this.moddle.create(type as "bpmn:MessageEventDefinition", {});
+      startEventObject.eventDefinitions = [eventDef];
+      this.addSequenceFlow(this.processId(), startEventObject, targetTask, false);
+      processContext.flowElements.push(startEventObject);
+
+      let lane = this.getLaneOfFlowNode(start.id);
+      this.addTaskToLane(this.processId(), lane.id, startEventObject);
+
+      this.processDiagram.generateBPMNDiagram(this.processId());
+    }
+  }
+
+  public removeStartEventOfType(type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+    let processContext = this.getProcess(this.processId());
+
+    let messageStartEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(event => event.$type === type) != null);
+    this.removeSequenceFlow(this.processId(), messageStartEvent.outgoing.last());
+
+    processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== messageStartEvent.id);
+
+    this.removeTaskObjectFromLanes(this.processId(), messageStartEvent);
   }
 
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
