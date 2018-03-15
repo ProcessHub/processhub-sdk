@@ -121,6 +121,8 @@ export class BpmnProcess {
       sendTaskSubject: null,
       sendTaskWithFieldContents: true,
       allFieldsEditable: false,
+      viewAllFields: true,
+      sendMailNotification: true,
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
@@ -154,6 +156,12 @@ export class BpmnProcess {
               break;
             case TaskSettings.AllFieldsEditable:
               returnValue.allFieldsEditable = child.$body != "false";
+              break;
+            case TaskSettings.SendMailNotification:
+              returnValue.sendMailNotification = child.$body != "false";
+              break;
+            case TaskSettings.ViewAllFields:
+              returnValue.viewAllFields = child.$body != "false";
               break;
             case TaskSettings.SendTaskReceiver: {
               try {

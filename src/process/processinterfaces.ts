@@ -142,6 +142,8 @@ export const TaskSettings = {
   SendTaskInstanceLink: "send-task-instance-link", // boolean: include a link to the instance in SendTask notification mail?
   SendTaskSubject: "send-task-subject", // string: mail subject of SendTask notification mail
   AllFieldsEditable: "all-fields-editable", // boolean: all existing fields in task can be edited in current task
+  ViewAllFields: "view-all-fields", // boolean: view all existing fields
+  SendMailNotification: "send-mail-notification", // boolean: send notification for task
   SetSenderAsRoleOwner: "set-sender-as-role-owner", // boolean: set mail sender as role owner, default: true
   ServiceTaskApiUrl: "service-task-api-url",
   ServiceTaskRequestObjectString: "service-task-request-object",
@@ -160,6 +162,8 @@ export interface TaskExtensions {
   sendTaskInstanceLink: boolean;
   sendTaskSubject: string;
   allFieldsEditable: boolean;
+  viewAllFields: boolean;
+  sendMailNotification: boolean;
 
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
