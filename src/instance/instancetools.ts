@@ -1,4 +1,5 @@
 import { isFieldValue } from "../data/datainterfaces";
+import { isDefaultRole } from "../process/processrights";
 import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
@@ -33,7 +34,7 @@ export function isRoleOwner(userId: string, roleId: string, instance: InstanceDe
   if (roleId == null || roleId == "") {
     // check if user is owner of any role
     for (let role in instance.extras.roleOwners) {
-      if (isRoleOwner(userId, role, instance))
+      if (!isDefaultRole(role) && isRoleOwner(userId, role, instance))
         return true;
     }
     return false;
