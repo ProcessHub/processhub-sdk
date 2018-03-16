@@ -43,10 +43,12 @@ export interface WorkspaceDetails {
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
-    processes?: ProcessDetails[];  // Nur Prozesse, auf die der angemeldete User Zugriff hat
+    processes?: ProcessDetails[];  // only processes that the current user may access
     settings?: WorkspaceSettings;
+    tags?: string[]; // all available tags in the workspace
   };
 }
+
 export const gqlWorkspaceTypes = `     
   type WorkspaceDetails {
     workspaceId: String!
@@ -96,7 +98,8 @@ export enum WorkspaceExtras {
   None = 0,
   ExtrasMembers = 1 << 0,
   ExtrasProcesses = 1 << 1,
-  ExtrasSettings = 1 << 2
+  ExtrasSettings = 1 << 2,
+  ExtrasTags = 1 << 3
 }
 
 export interface WorkspaceSettings {

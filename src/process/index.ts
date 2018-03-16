@@ -11,3 +11,4 @@ export * from "./bpmn/bpmnprocess";
 export * from "./bpmn/bpmnprocessdiagram";
 export * from "./processactions";
 export * from "./processreducer";
+export * from "./processfilters";

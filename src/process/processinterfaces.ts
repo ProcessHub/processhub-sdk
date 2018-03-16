@@ -30,6 +30,7 @@ export interface ProcessDetails {
   attachments?: ProcessAttachment[];
   processXmlHash?: string;
   startEventName?: string; // text on the start button
+  tags?: string[];
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
@@ -91,7 +92,6 @@ export interface ProcessSettings {
   };
   library?: {  
     rating?: number;  // process rating, used to sort processes in library
-    tags?: string[]; 
     copiedFromId?: string;  // processId of the original process    
   };
 }
