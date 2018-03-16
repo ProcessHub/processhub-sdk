@@ -52,7 +52,7 @@ export function parseUrl(fullUrl: string): PathDetails {
   // -> Process
   path.processUrlName = decodeURIComponent(split[2]);
 
-  part = (split.length >= 4 ? split[3] : ProcessView.Show);
+  part = (split.length >= 4 ? split[3] : ProcessView.Dashboard);
   if (isValidProcessView(part) && split.length <= 4) {
     path.page = Page.ProcessPage;
     path.view = <ProcessView>part;
