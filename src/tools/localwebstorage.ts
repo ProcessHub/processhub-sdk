@@ -15,7 +15,10 @@ export class LocalWebStorage {
   
   public static setItem(key: string, data: string): void {
     try {
-      localStorage.setItem(key, data);
+      if (data != null)
+        localStorage.setItem(key, data);
+      else
+        localStorage.removeItem(key);
     } catch (e) {
       console.warn("localStorage.setItem failed");
       console.warn(e);
