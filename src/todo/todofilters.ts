@@ -18,13 +18,24 @@ export function getTodosFromInstances(instances: InstanceDetails[]): TodoDetails
   return todos;
 }
 
-// todos the user owns or can claim
+// todos assigned to user
 export function filterUserTodos(todos: TodoDetails[], user: UserDetails): TodoDetails[] {
   if (!user || !todos)
     return [];
 
   let filteredTodos: TodoDetails[] = todos.filter(
-    todo => (todo.todoType !== TodoType.Simulation) && (todo.userId === user.userId));
+    todo => (todo.todoType != TodoType.Simulation) && (todo.userId === user.userId));
+
+  return filteredTodos;
+}
+
+// unassigned todos
+export function filterUnassignedTodos(todos: TodoDetails[]): TodoDetails[] {
+  if (!todos)
+    return [];
+
+  let filteredTodos: TodoDetails[] = todos.filter(
+    todo => (todo.todoType != TodoType.Simulation) && (todo.userId == null));
 
   return filteredTodos;
 }
