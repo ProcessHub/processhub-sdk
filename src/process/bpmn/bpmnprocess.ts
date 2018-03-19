@@ -1407,18 +1407,39 @@ export class BpmnProcess {
       return null;
   }
 
-  public getPreviousSequenceFlowName(bpmnTaskId: string): string {
+  public getPreviousSequenceFlowName(bpmnTaskId: string, sharedSourceElementId: string): string {
     let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);
-    // fix for multiple outgoings at the moment or no outgoings
-    if (taskObj == null || taskObj.incoming == null || taskObj.incoming.length > 1) {
-      return null;
-    }
     // sure that taskObj has only 1 outgoing
-    let seqFlow = taskObj.incoming[taskObj.incoming.length - 1];
+    let seqFlow = taskObj.incoming.find(sf => sf.sourceRef.id === sharedSourceElementId);
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
       return seqFlow.name;
     else
       return null;
+  }
+
+  public getSharedOutgoingElementId(taskIds: string[]): string {
+    let map: any = {};
+    taskIds.forEach(taskId => {
+      let obj = this.getExistingTask(this.processId(), taskId);
+      obj.incoming.forEach(inc => {
+        if (map[inc.sourceRef.id] != null) {
+          map[inc.sourceRef.id]++;
+        } else {
+          map[inc.sourceRef.id] = 1;
+        }
+      });
+    });
+
+    let biggestKey = null;
+    let biggestLength = 0;
+    for (let key in map) {
+      if (biggestLength < map[key]) {
+        biggestKey = key;
+        biggestLength = map[key];
+      }
+    }
+
+    return biggestKey;
   }
 
   public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {
