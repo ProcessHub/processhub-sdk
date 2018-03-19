@@ -1597,4 +1597,12 @@ export class BpmnProcess {
     return targetObj;
   }
 
+  public hasTimerStartEvent(): boolean {
+    return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null) != null;
+  }
+
+  public getTimerStartEvent(): Bpmn.StartEvent {
+    return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null);
+  }
+
 }

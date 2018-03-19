@@ -4,8 +4,8 @@ import { rootStore } from "../statehandler";
 import { Dispatch } from "redux";
 import * as StateHandler from "../statehandler";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
-import { ProcessDetails, ProcessExtras } from "./processinterfaces";
-import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest } from "./legacyapi";
+import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration } from "./processinterfaces";
+import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply } from "./legacyapi";
 import { isTrue } from "../tools/assert";
 import { createId } from "../tools/guid";
 import { tl } from "../tl";
@@ -19,6 +19,8 @@ export const ProcessActionType = {
   DeleteFromDbDone: "PROCESSACTION_DELETEFROMDBDONE",
   GetProcessDetails: "PROCESSACTION_GETPROCESSDETAILS",
   GetPublicProcessesDone: "PROCESSACTION_GETPUBLICPROCESSESDONE",
+  GetProcessTimers: "PROCESSACTION_GETTIMERS",
+  SetProcessTimers: "PROCESSACTION_SETTIMERS",
   Update: "PROCESSACTION_UPDATE",
   Failed: "PROCESSACTION_FAILED",
   RateDone: "PROCESSACTION_RATEDONE",
@@ -36,6 +38,11 @@ export interface ProcessActionFailed extends ProcessAction {
 
 export interface ProcessActionGetProcessDetails extends ProcessAction {
   readonly type: ProcessActionType; // "PROCESSACTION_GETPROCESSDETAILS";
+  processId: string;
+}
+
+export interface ProcessActionGetTimers extends ProcessAction {
+  readonly type: ProcessActionType; // "PROCESSACTION_GETTIMERS";
   processId: string;
 }
 
@@ -384,3 +391,34 @@ export function deleteFileAction(processId: string, attachmentId: string, access
   };
 }
 
+export async function getTimersOfProcess(processId: string, accessToken: string = null): Promise<GetTimersOfProcessReply> {
+  // siehe https://github.com/jaysoo/todomvc-redux-react-typescript/blob/master/client/todos/actions.ts
+  return await rootStore.dispatch(getTimersOfProcessAction(processId, accessToken));
+}
+
+export function getTimersOfProcessAction(processId: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetTimersOfProcessReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<GetTimersOfProcessReply> => {
+    let response: GetTimersOfProcessReply = await Api.postJson(ProcessRequestRoutes.GetTimers, {
+      processId: processId
+    }, accessToken);
+
+    dispatch(response);
+    return response;
+  };
+}
+export async function setTimersOfProcess(processId: string, timers: TimerStartEventConfiguration[], accessToken: string = null): Promise<SetTimersOfProcessReply> {
+  // siehe https://github.com/jaysoo/todomvc-redux-react-typescript/blob/master/client/todos/actions.ts
+  return await rootStore.dispatch(setTimersOfProcessAction(processId, timers, accessToken));
+}
+
+export function setTimersOfProcessAction(processId: string, timers: TimerStartEventConfiguration[], accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<SetTimersOfProcessReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<SetTimersOfProcessReply> => {
+    let response: SetTimersOfProcessReply = await Api.postJson(ProcessRequestRoutes.SetTimers, {
+      processId: processId,
+      timers: timers
+    }, accessToken);
+
+    dispatch(response);
+    return response;
+  };
+}

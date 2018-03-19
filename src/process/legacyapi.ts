@@ -1,5 +1,6 @@
 import { BaseMessage, BaseRequest } from "../legacyapi/apiinterfaces";
 import { ProcessDetails, ProcessExtras, ProcessResult } from "./processinterfaces";
+import { TimerStartEventConfiguration } from ".";
 
 // API routes
 export const ProcessRequestRoutes = {
@@ -8,6 +9,8 @@ export const ProcessRequestRoutes = {
   GetProcessDetails: "/api/process/processdetails",
   GetProcessDetailsFromUrl: "/api/process/processfromurl",
   UpdateProcess: "/api/process/updateprocess",
+  GetTimers: "/api/process/gettimers",
+  SetTimers: "/api/process/settimers",
   GetPublicProcesses: "/api/process/publicprocesses",
   CopyProcess: "/api/process/copyprocess",
   RateProcess: "/api/process/rateprocess",
@@ -39,6 +42,19 @@ export interface GetProcessDetailsFromUrlRequest extends BaseRequest {
 }
 export interface GetProcessDetailsReply extends ProcessReply {
   processDetails?: ProcessDetails;
+}
+
+export interface GetTimersOfProcessRequest extends BaseRequest {
+  processId: string;
+}
+export interface GetTimersOfProcessReply extends ProcessReply {
+  timers?: TimerStartEventConfiguration[];
+}
+export interface SetTimersOfProcessRequest extends BaseRequest {
+  processId: string;
+  timers: TimerStartEventConfiguration[];
+}
+export interface SetTimersOfProcessReply extends ProcessReply {
 }
 
 export interface GetPublicProcessesReply extends ProcessReply {

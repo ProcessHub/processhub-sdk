@@ -254,10 +254,15 @@ export class BpmnProcessDiagram {
 
       // weil größe des icons anders
       if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT || workingObject.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY) {
+        // let amountOfStartEvents = taskList.filter(obj => obj.$type === BpmnProcess.BPMN_STARTEVENT);
+
+        // let startEventHeightShift = amountOfStartEvents.length == 2 ? 20 : 40;
+
         iconWidth = sizeStartAndEndEvent;
         iconHeight = sizeStartAndEndEvent;
 
         yParam = (this.diagramYStartParam + BpmnProcessDiagram.GATEWAY_WIDTH) + laneNumber * this.diagramLaneHeight;
+
         let startEvent = (workingObject as BpmnModdleStartEvent);
         if (startEvent.eventDefinitions != null && startEvent.eventDefinitions.length > 0) {
           xParam -= iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
@@ -337,7 +342,7 @@ export class BpmnProcessDiagram {
     }
 
     let edgeObj = this.createEdge(flowObject, flowObject.sourceRef, flowObject.targetRef, waypoints);
-
+/*
     let firstX = waypoints[0].x;
     let lastX  = waypoints.last().x;
     let firstY = waypoints[0].y;
@@ -361,7 +366,7 @@ export class BpmnProcessDiagram {
       id: BpmnProcess.BpmnProcess.getBpmnId(DiagramShapeTypes.BPMNDI_EDGE),
       bounds: bounds
     });
-    edgeObj.label = label;
+    edgeObj.label = label;*/
 
     diagram.plane.planeElement.push(edgeObj);
   }
