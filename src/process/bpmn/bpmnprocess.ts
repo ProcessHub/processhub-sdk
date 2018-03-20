@@ -124,6 +124,8 @@ export class BpmnProcess {
       viewAllFields: true,
       sendMailNotification: true,
       requiredFieldsNeeded: true,
+      saveDecisionInFieldContents: true,
+      customFieldContentsValue: null,
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
@@ -165,7 +167,14 @@ export class BpmnProcess {
               returnValue.viewAllFields = child.$body != "false";
               break;
             case TaskSettings.RequiredFieldsNeeded:
+              console.log(child.$body);
               returnValue.requiredFieldsNeeded = child.$body != "false";
+              break;
+            case TaskSettings.SaveDecisionInFieldContents:
+              returnValue.saveDecisionInFieldContents = child.$body != "false";
+              break;
+            case TaskSettings.CustomFieldContentsValue:
+              returnValue.customFieldContentsValue = child.$body;
               break;
             case TaskSettings.SendTaskReceiver: {
               try {

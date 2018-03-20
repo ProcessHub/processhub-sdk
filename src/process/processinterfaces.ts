@@ -150,6 +150,8 @@ export const TaskSettings = {
   ServiceTaskResponseFieldName: "service-task-response-fieldname",
   TimerStartConfiguration: "timer-start-configuration",
   RequiredFieldsNeeded: "required-fields-needed", // boolean: means that the task needed previous required fields (not necessary on negative decisions)
+  SaveDecisionInFieldContents: "save-decision-in-fields",
+  CustomFieldContentsValue: "custom-field-contents-value",
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -166,6 +168,8 @@ export interface TaskExtensions {
   viewAllFields: boolean;
   sendMailNotification: boolean;
   requiredFieldsNeeded: boolean;
+  saveDecisionInFieldContents: boolean;
+  customFieldContentsValue: string;
 
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
