@@ -123,6 +123,7 @@ export class BpmnProcess {
       allFieldsEditable: false,
       viewAllFields: true,
       sendMailNotification: true,
+      requiredFieldsNeeded: true,
 
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
@@ -162,6 +163,9 @@ export class BpmnProcess {
               break;
             case TaskSettings.ViewAllFields:
               returnValue.viewAllFields = child.$body != "false";
+              break;
+            case TaskSettings.RequiredFieldsNeeded:
+              returnValue.requiredFieldsNeeded = child.$body != "false";
               break;
             case TaskSettings.SendTaskReceiver: {
               try {
@@ -347,7 +351,8 @@ export class BpmnProcess {
           bpmnTaskId: taskId,
           name: nameValue,
           type: Todo.DecisionTaskTypes.Normal,
-          isBoundaryEvent: false
+          isBoundaryEvent: false,
+          // requiredFieldsNeeded: processObject.
           // routeStack: tmpRouteStack
         } as Todo.DecisionTask);
       }

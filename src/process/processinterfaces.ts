@@ -148,7 +148,8 @@ export const TaskSettings = {
   ServiceTaskApiUrl: "service-task-api-url",
   ServiceTaskRequestObjectString: "service-task-request-object",
   ServiceTaskResponseFieldName: "service-task-response-fieldname",
-  TimerStartConfiguration: "timer-start-configuration"
+  TimerStartConfiguration: "timer-start-configuration",
+  RequiredFieldsNeeded: "required-fields-needed", // boolean: means that the task needed previous required fields (not necessary on negative decisions)
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -164,6 +165,7 @@ export interface TaskExtensions {
   allFieldsEditable: boolean;
   viewAllFields: boolean;
   sendMailNotification: boolean;
+  requiredFieldsNeeded: boolean;
 
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
