@@ -677,7 +677,10 @@ export class BpmnProcess {
     }
     this.putGatewaysBack(allgateways);
 
-    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
+    let tmpRowDetails: RowDetails[] = JSON.parse(JSON.stringify(rowDetails));
+    tmpRowDetails.splice(rowNumber, 1);
+
+    this.processDiagram.generateBPMNDiagram(processId, tmpRowDetails.map(row => row.taskId));
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
@@ -1181,6 +1184,9 @@ export class BpmnProcess {
     }
 
     this.putGatewaysBack(allgateways);
+
+    this.getSortedTasks(this.processId()).forEach(t => console.log(t.incoming.length + " ___ " + t.outgoing.length));
+
     this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
     return newTaskRowDetails.taskId;
   }

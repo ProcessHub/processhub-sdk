@@ -78,6 +78,7 @@ export class BpmnProcessDiagram {
   }
 
   public generateBPMNDiagram(processId: string, taskIdsOrderFromTable: string[] = null): void {
+    let copyTaskIdsOrderFromTable: string[] = JSON.parse(JSON.stringify(taskIdsOrderFromTable));
     let diagram = this.getDiagramElement();
     // für die Berechnung der gesamt Breite
     let process = this.bpmnProcess.getProcess(processId);
@@ -90,9 +91,9 @@ export class BpmnProcessDiagram {
     let amountOfOutgoingsOnGateways: number = 0;
     let amountOfOutgoingsOnTasksUnderpass: number = 0;
 
-    let sortedTasks: Bpmn.Task[] = [];
+    let sortedTasks: Bpmn.FlowNode[] = [];
     if (taskIdsOrderFromTable != null) {
-      taskIdsOrderFromTable.splice(0, 1);
+      // taskIdsOrderFromTable.splice(0, 1);
       sortedTasks = taskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
     } else {
       sortedTasks = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
@@ -191,7 +192,10 @@ export class BpmnProcessDiagram {
       let drawObjectList: Bpmn.FlowNode[] = [];
       let startElementObject = flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_STARTEVENT);
       drawObjectList = drawObjectList.concat(startElementObject);
-      let tasks: Bpmn.Task[] = sortedTasks; // this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+      let tasks: Bpmn.Task[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+      
+      tasks = copyTaskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
+
       drawObjectList = drawObjectList.concat(tasks);
 
       let gates: Bpmn.FlowNode[] = this.bpmnProcess.getAllExclusiveGateways();
@@ -243,6 +247,7 @@ export class BpmnProcessDiagram {
   }
 
   private drawAllTasks(diagram: any, laneDictionaries: LaneDictionary[], taskList: Bpmn.FlowNode[], xParam: number) {
+
     for (let workingObject of taskList) {
       let iconWidth = BpmnProcessDiagram.TASK_WIDTH;
       let sizeStartAndEndEvent: number = 36;
@@ -334,7 +339,6 @@ export class BpmnProcessDiagram {
     let sourceDiagramObject = this.getShapeFromDiagram(sourceRef.id);
     let targetRef = flowObject.targetRef;
     let targetDiagramObject = this.getShapeFromDiagram(targetRef.id);
-
     isTrue(sourceRef != null, "Missing Ref Source: " + flowObject.sourceRef);
     isTrue(sourceDiagramObject != null, "Missing Object Source with ID: " + sourceRef.id);
     isTrue(targetRef != null, "Missing Target Source: " + flowObject.targetRef);
