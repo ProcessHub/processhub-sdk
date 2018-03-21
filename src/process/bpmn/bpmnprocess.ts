@@ -1185,8 +1185,6 @@ export class BpmnProcess {
 
     this.putGatewaysBack(allgateways);
 
-    this.getSortedTasks(this.processId()).forEach(t => console.log(t.incoming.length + " ___ " + t.outgoing.length));
-
     this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
     return newTaskRowDetails.taskId;
   }
