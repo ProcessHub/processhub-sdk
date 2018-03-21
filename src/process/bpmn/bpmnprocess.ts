@@ -167,7 +167,6 @@ export class BpmnProcess {
               returnValue.viewAllFields = child.$body != "false";
               break;
             case TaskSettings.RequiredFieldsNeeded:
-              console.log(child.$body);
               returnValue.requiredFieldsNeeded = child.$body != "false";
               break;
             case TaskSettings.SaveDecisionInFieldContents:
@@ -678,7 +677,7 @@ export class BpmnProcess {
     }
     this.putGatewaysBack(allgateways);
 
-    this.processDiagram.generateBPMNDiagram(processId);
+    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
   }
 
   // damit die Komplexität der Methode nicht zu groß wird beschränken wir uns hier auf das Wechseln des Tasks "nach vorne"
@@ -699,8 +698,13 @@ export class BpmnProcess {
     let allgateways = this.removeAllGateways(rowDetails, true);
 
     for (let s of this.getSortedTasks(this.processId())) {
-      console.log(s);
-      console.log(s.id + ": " + s.incoming.length + " -- " + s.outgoing.length);
+      if (s.incoming.length === 0) {
+        let item = rowDetails.find(row => row.taskId === s.id);
+
+        let prevItem = rowDetails[item.rowNumber - 1];
+        prevItem.jumpsTo.push(s.id);
+        this.addSequenceFlow(this.processId(), this.getExistingTask(this.processId(), prevItem.taskId), this.getExistingTask(this.processId(), item.taskId), false);
+      }
     }
 
     // if selectedRowIndex is 0 the previous object is the start element
@@ -730,6 +734,10 @@ export class BpmnProcess {
     objectToSwitch_A.incoming = objectToSwitch_A.incoming.filter(inc => inc.id !== sequenceFlow_RA.id);
 
     let sequenceFlow_AB: Bpmn.SequenceFlow = objectToSwitch_A.outgoing.find(out => out.sourceRef.id === objectToSwitch_A.id && out.targetRef.id === objectToSwitch_B.id); // [0];
+
+    if (sequenceFlow_AB == null) {
+      sequenceFlow_AB = this.moddle.create(BPMN_SEQUENCEFLOW, { id: null });
+    }
     objectToSwitch_A.outgoing = objectToSwitch_A.outgoing.filter(out => out.id !== sequenceFlow_AB.id);
     objectToSwitch_B.incoming = objectToSwitch_B.incoming.filter(inc => inc.id !== sequenceFlow_AB.id);
 
@@ -743,13 +751,17 @@ export class BpmnProcess {
     // 2.
     // muss geleert werden, da sonst mehrere incomings
     // objectToSwitch_A.incoming = [];
-    objectToSwitch_A.incoming.push(sequenceFlow_AB);
+    this.addToWithoutDuplicates(objectToSwitch_A.incoming, sequenceFlow_AB);
+    // objectToSwitch_A.incoming.push(sequenceFlow_AB);
     // isTrue(objectToSwitch_A.incoming.length === 1, "A darf nur 1 incoming haben!");
+
     // 3.
     // muss geleert werden, da sonst mehrere outgoings
     // objectToSwitch_A.outgoing = [];
-    objectToSwitch_A.outgoing.push(sequenceFlow_BS);
-    objectToSwitch_S.incoming.push(sequenceFlow_BS);
+    this.addToWithoutDuplicates(objectToSwitch_A.outgoing, sequenceFlow_BS);
+    // objectToSwitch_A.outgoing.push(sequenceFlow_BS);
+    this.addToWithoutDuplicates(objectToSwitch_S.incoming, sequenceFlow_BS);
+    // objectToSwitch_S.incoming.push(sequenceFlow_BS);
     // isTrue(objectToSwitch_A.outgoing.length === 1, "A darf nur 1 outgoing haben!");
     // 4.
     sequenceFlow_AB.sourceRef = objectToSwitch_B;
@@ -759,17 +771,30 @@ export class BpmnProcess {
     // 6.
     // muss geleert werden, da sonst mehrere incomings
     // objectToSwitch_B.incoming = [];
-    objectToSwitch_B.incoming.push(sequenceFlow_RA);
-    objectToSwitch_R.outgoing.push(sequenceFlow_RA);
+    this.addToWithoutDuplicates(objectToSwitch_B.incoming, sequenceFlow_RA);
+    this.addToWithoutDuplicates(objectToSwitch_R.outgoing, sequenceFlow_RA);
+    // objectToSwitch_B.incoming.push(sequenceFlow_RA);
+    // objectToSwitch_R.outgoing.push(sequenceFlow_RA);
     // isTrue(objectToSwitch_B.incoming.length === 1, "B darf nur 1 incoming haben!");
     // 7.
     // muss geleert werden, da sonst mehrere outgoings
     // objectToSwitch_B.outgoing = [];
-    objectToSwitch_B.outgoing.push(sequenceFlow_AB);
+    this.addToWithoutDuplicates(objectToSwitch_B.outgoing, sequenceFlow_AB);
+
+    // objectToSwitch_B.outgoing.push(sequenceFlow_AB);
     // isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
     this.putGatewaysBack(allgateways);
 
-    this.processDiagram.generateBPMNDiagram(processId);
+    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
+  }
+
+  private addToWithoutDuplicates(inOrOutGoings: Bpmn.SequenceFlow[], addItem: Bpmn.SequenceFlow) {
+    let sfObj = inOrOutGoings.find((sf) => {
+      return sf.sourceRef.id === addItem.sourceRef.id && sf.targetRef.id === addItem.targetRef.id;
+    });
+    if (!sfObj) {
+      inOrOutGoings.push(addItem);
+    }
   }
 
   public convertTaskType(rows: RowDetails[], changedTaskIdx: number): string {
@@ -843,7 +868,7 @@ export class BpmnProcess {
 
     // this.setRoleForTask(this.processId(), rowDetails.laneId, focusedTask);
 
-    this.processDiagram.generateBPMNDiagram(this.processId());
+    this.processDiagram.generateBPMNDiagram(this.processId(), rows.map(row => row.taskId));
 
     // replace all jumpsTo with the id of the new task
     for (const row of rows) {
@@ -942,7 +967,7 @@ export class BpmnProcess {
     isTrue(sfObj != null, "removing object is missing.");
     this.removeSequenceFlow(this.processId(), sfObj);
 
-    this.processDiagram.generateBPMNDiagram(this.processId());
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(row => row.taskId));
   }
 
   private getLastCreatedTask(processId: string): Bpmn.Task {
@@ -1156,8 +1181,7 @@ export class BpmnProcess {
     }
 
     this.putGatewaysBack(allgateways);
-
-    this.processDiagram.generateBPMNDiagram(processId);
+    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
     return newTaskRowDetails.taskId;
   }
 
@@ -1404,7 +1428,6 @@ export class BpmnProcess {
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
     return this.getFlowElementsOfType<Bpmn.SequenceFlow>("bpmn:SequenceFlow");
-
   }
 
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {

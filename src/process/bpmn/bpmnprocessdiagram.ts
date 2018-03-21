@@ -77,7 +77,7 @@ export class BpmnProcessDiagram {
     return res;
   }
 
-  public generateBPMNDiagram(processId: string): void {
+  public generateBPMNDiagram(processId: string, taskIdsOrderFromTable: string[] = null): void {
     let diagram = this.getDiagramElement();
     // für die Berechnung der gesamt Breite
     let process = this.bpmnProcess.getProcess(processId);
@@ -90,9 +90,14 @@ export class BpmnProcessDiagram {
     let amountOfOutgoingsOnGateways: number = 0;
     let amountOfOutgoingsOnTasksUnderpass: number = 0;
 
+    let sortedTasks: Bpmn.Task[] = [];
+    if (taskIdsOrderFromTable != null) {
+      taskIdsOrderFromTable.splice(0, 1);
+      sortedTasks = taskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
+    } else {
+      sortedTasks = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+    }
 
-    let sortedTasks: Bpmn.FlowNode[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
-    
     sortedTasks.forEach(t => {
       let found = sortedTasks.find(st => st.id === t.id);
 
@@ -186,7 +191,7 @@ export class BpmnProcessDiagram {
       let drawObjectList: Bpmn.FlowNode[] = [];
       let startElementObject = flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_STARTEVENT);
       drawObjectList = drawObjectList.concat(startElementObject);
-      let tasks: Bpmn.Task[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
+      let tasks: Bpmn.Task[] = sortedTasks; // this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
       drawObjectList = drawObjectList.concat(tasks);
 
       let gates: Bpmn.FlowNode[] = this.bpmnProcess.getAllExclusiveGateways();
