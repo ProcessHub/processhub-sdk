@@ -34,7 +34,7 @@ export function createWorkspaceId(): string {
 
 // Ist String eine Id?
 export function isId(id: string): boolean {
-  return (id.length === ID_LENGTH && id.toUpperCase() === id);
+  return (id != null && id.length === ID_LENGTH && id.toUpperCase() === id);
 }
 
 export function isUserId(id: string): boolean {
