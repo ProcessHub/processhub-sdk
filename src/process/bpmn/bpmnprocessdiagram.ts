@@ -93,7 +93,7 @@ export class BpmnProcessDiagram {
 
     let sortedTasks: Bpmn.FlowNode[] = [];
     if (taskIdsOrderFromTable != null) {
-      if (taskIdsOrderFromTable.length > 0) {
+      if (taskIdsOrderFromTable != null && taskIdsOrderFromTable.length > 0) {
         let tmp = this.bpmnProcess.getExistingActivityObject(taskIdsOrderFromTable[0]);
         if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
           taskIdsOrderFromTable.splice(0, 1);
@@ -200,14 +200,16 @@ export class BpmnProcessDiagram {
       drawObjectList = drawObjectList.concat(startElementObject);
       let tasks: Bpmn.Task[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
       
-      if (copyTaskIdsOrderFromTable.length > 0) {
+      if (copyTaskIdsOrderFromTable != null && copyTaskIdsOrderFromTable.length > 0) {
         let tmp = this.bpmnProcess.getExistingActivityObject(copyTaskIdsOrderFromTable[0]);
         if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
           copyTaskIdsOrderFromTable.splice(0, 1);
         }
       }
+      if (copyTaskIdsOrderFromTable != null) {
+        tasks = copyTaskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
+      }
 
-      tasks = copyTaskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
       drawObjectList = drawObjectList.concat(tasks);
 
       let gates: Bpmn.FlowNode[] = this.bpmnProcess.getAllExclusiveGateways();
