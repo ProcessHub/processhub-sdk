@@ -124,7 +124,7 @@ export class BpmnProcess {
       viewAllFields: true,
       sendMailNotification: true,
       requiredFieldsNeeded: true,
-      saveDecisionInFieldContents: true,
+      saveDecisionInFieldContents: false,
       customFieldContentsValue: null,
 
       serviceTaskApiUrl: null,
