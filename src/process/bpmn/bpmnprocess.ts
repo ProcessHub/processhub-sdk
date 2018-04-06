@@ -788,7 +788,21 @@ export class BpmnProcess {
     // isTrue(objectToSwitch_B.outgoing.length === 1, "B darf nur 1 outgoing haben!");
     this.putGatewaysBack(allgateways);
 
-    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
+    let tmpObj: string[] = [];
+    
+    for (let row of rowDetails) {
+      if (row.rowNumber != selectedRowIndex && row.rowNumber != (selectedRowIndex + 1)) {
+        tmpObj.push(row.taskId);
+      } else {
+        if (row.rowNumber == selectedRowIndex) {
+          tmpObj.push(rowDetails[selectedRowIndex + 1].taskId);
+        } else {
+          tmpObj.push(rowDetails[selectedRowIndex].taskId);
+        }
+      }
+    }
+
+    this.processDiagram.generateBPMNDiagram(processId, tmpObj);
   }
 
   private addToWithoutDuplicates(inOrOutGoings: Bpmn.SequenceFlow[], addItem: Bpmn.SequenceFlow) {
