@@ -123,7 +123,7 @@ export class BpmnProcess {
       allFieldsEditable: false,
       viewAllFields: true,
       sendMailNotification: true,
-      requiredFieldsNeeded: true,
+      requiredFieldsNeeded: null,
       saveDecisionInFieldContents: false,
       customFieldContentsValue: null,
 
@@ -166,8 +166,15 @@ export class BpmnProcess {
             case TaskSettings.ViewAllFields:
               returnValue.viewAllFields = child.$body != "false";
               break;
-            case TaskSettings.RequiredFieldsNeeded:
-              returnValue.requiredFieldsNeeded = child.$body != "false";
+            case TaskSettings.RequiredFieldsNeeded: {
+              try {
+                returnValue.requiredFieldsNeeded = JSON.parse(child.$body);
+              } catch (ex) {
+                console.log(ex);
+
+                returnValue.requiredFieldsNeeded = [];
+              }
+            }
               break;
             case TaskSettings.SaveDecisionInFieldContents:
               returnValue.saveDecisionInFieldContents = child.$body != "false";
@@ -789,7 +796,7 @@ export class BpmnProcess {
     this.putGatewaysBack(allgateways);
 
     let tmpObj: string[] = [];
-    
+
     for (let row of rowDetails) {
       if (row.rowNumber != selectedRowIndex && row.rowNumber != (selectedRowIndex + 1)) {
         tmpObj.push(row.taskId);

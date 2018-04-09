@@ -5,7 +5,7 @@ import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
 import { gqlLibraryTypes } from "./libraryinterfaces";
-import { FieldDefinition } from "../data";
+import { FieldDefinition, TaskIdRequiredFieldsNeeded } from "../data";
 import { UserDetails } from "../user/userinterfaces";
 
 export interface ProcessAttachment {
@@ -167,7 +167,7 @@ export interface TaskExtensions {
   allFieldsEditable: boolean;
   viewAllFields: boolean;
   sendMailNotification: boolean;
-  requiredFieldsNeeded: boolean;
+  requiredFieldsNeeded: TaskIdRequiredFieldsNeeded[];
   saveDecisionInFieldContents: boolean;
   customFieldContentsValue: string;
 

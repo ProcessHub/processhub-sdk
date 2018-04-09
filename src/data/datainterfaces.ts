@@ -10,6 +10,11 @@ export interface FieldDefinition {
   config: {};
 }
 
+export interface TaskIdRequiredFieldsNeeded {
+  taskId: string;
+  requiredFieldsNeeded: boolean;
+}
+
 export interface FieldValue {
   type: string;
   value:
