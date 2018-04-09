@@ -898,7 +898,7 @@ export class BpmnProcess {
     return rows[changedTaskIdx].taskId;
   }
 
-  public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string, renderDiagram: boolean = true) {
+  public addFlowToNode(taskFromObject: RowDetails, targetBpmnTaskId: string, rowDetails: RowDetails[], renderDiagram: boolean = true) {
 
     let focusedTask: Bpmn.Task = this.getExistingTask(this.processId(), taskFromObject.taskId) as Bpmn.Task;
     let targetTask: Bpmn.Task = this.getExistingTask(this.processId(), targetBpmnTaskId) as Bpmn.Task;
@@ -932,7 +932,7 @@ export class BpmnProcess {
       this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
     }
     if (renderDiagram) {
-      this.processDiagram.generateBPMNDiagram(this.processId());
+      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
     }
   }
 
@@ -970,7 +970,7 @@ export class BpmnProcess {
               this.addSequenceFlow(this.processId(), focusedTask, nextTask, false);
               firstProcess = false;
             } else {
-              this.addFlowToNode(rowDetails[rowNumber], jumpToId, false);
+              this.addFlowToNode(rowDetails[rowNumber], jumpToId, rowDetails, false);
             }
           }
         });
@@ -1078,30 +1078,30 @@ export class BpmnProcess {
     for (let gate of allGateways) {
       for (let targetBpmnTaskId of gate.targetBpmnTaskIds) {
         if (this.getExistingTask(this.processId(), gate.sourceTaskRowDetails.taskId) != null && this.getExistingTask(this.processId(), targetBpmnTaskId) != null) {
-          this.addFlowToNode(gate.sourceTaskRowDetails, targetBpmnTaskId);
+          this.addFlowToNode(gate.sourceTaskRowDetails, targetBpmnTaskId, null, false);
         }
       }
     }
   }
 
-  public addTimerStartEvent(): void {
-    this.addStartEventOfType(BPMN_TIMEREVENTDEFINITION);
+  public addTimerStartEvent(rowDetails: RowDetails[]): void {
+    this.addStartEventOfType(rowDetails, BPMN_TIMEREVENTDEFINITION);
 
   }
 
-  public removeTimerStartEvent(): void {
-    this.removeStartEventOfType(BPMN_TIMEREVENTDEFINITION);
+  public removeTimerStartEvent(rowDetails: RowDetails[]): void {
+    this.removeStartEventOfType(rowDetails, BPMN_TIMEREVENTDEFINITION);
   }
 
-  public addMailStartEvent(): void {
-    this.addStartEventOfType(BPMN_MESSAGEEVENTDEFINITION);
+  public addMailStartEvent(rowDetails: RowDetails[]): void {
+    this.addStartEventOfType(rowDetails, BPMN_MESSAGEEVENTDEFINITION);
   }
 
-  public removeMailStartEvent(): void {
-    this.removeStartEventOfType(BPMN_MESSAGEEVENTDEFINITION);
+  public removeMailStartEvent(rowDetails: RowDetails[]): void {
+    this.removeStartEventOfType(rowDetails, BPMN_MESSAGEEVENTDEFINITION);
   }
 
-  public addStartEventOfType(type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+  public addStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
     if (this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === type) != null) == null) {
       let start = this.getStartEvents(this.processId()).last();
       let targetTask = start.outgoing.last().targetRef;
@@ -1114,12 +1114,12 @@ export class BpmnProcess {
 
       let lane = this.getLaneOfFlowNode(start.id);
       this.addTaskToLane(this.processId(), lane.id, startEventObject);
-
-      this.processDiagram.generateBPMNDiagram(this.processId());
+      console.log(rowDetails);
+      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
     }
   }
 
-  public removeStartEventOfType(type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+  public removeStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
     let processContext = this.getProcess(this.processId());
 
     let messageStartEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(event => event.$type === type) != null);
@@ -1128,6 +1128,7 @@ export class BpmnProcess {
     processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== messageStartEvent.id);
 
     this.removeTaskObjectFromLanes(this.processId(), messageStartEvent);
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
   }
 
   // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
@@ -1675,6 +1676,10 @@ export class BpmnProcess {
 
   public hasTimerStartEvent(): boolean {
     return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null) != null;
+  }
+
+  public hasMailStartEvent(): boolean {
+    return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_MESSAGEEVENTDEFINITION) != null) != null;
   }
 
   public getTimerStartEvent(): Bpmn.StartEvent {
