@@ -3,6 +3,7 @@ import { UserDetails } from "../user/userinterfaces";
 import { WorkspaceDetails } from "../workspace/workspaceinterfaces";
 import { ProcessDetails } from "../process/processinterfaces";
 import { InstanceDetails } from "../instance/instanceinterfaces";
+import _ = require("lodash");
 
 export function mergeUserToCache(user: UserDetails): UserDetails {
   if (user == null)
@@ -144,7 +145,6 @@ export function mergeElementToCache(newElement: any, cacheElements: {[key: strin
     return newElement;
   } else {
     // merge newElement to cacheElement
-
     // Step 1: copy all properties except extras to cache
     for (let property in newElement) {
       if (property != "extras")
@@ -159,7 +159,16 @@ export function mergeElementToCache(newElement: any, cacheElements: {[key: strin
       
     // Step 3: copy extras to cacheElement
     for (let property in newElement.extras) {
-      cacheElement.extras[property] = newElement.extras[property];
+      if (property != "roleOwners") {
+        cacheElement.extras[property] = newElement.extras[property];
+      } else {
+        // would only update highest level (lane_id etc)
+        /*for (let key in newElement.extras["roleOwners"]) {
+          cacheElement.extras["roleOwners"][key] = newElement.extras["roleOwners"][key];
+        }*/
+        // cacheElement.extras["roleOwners"] = mergeDeep(cacheElement.extras["roleOwners"], newElement.extras["roleOwners"]);
+        cacheElement.extras["roleOwners"] = _.merge(cacheElement.extras["roleOwners"], newElement.extras["roleOwners"]);
+      }
     }
     newElement.extras = cacheElement.extras;
 
