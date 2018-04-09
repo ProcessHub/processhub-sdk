@@ -59,7 +59,7 @@ export class BpmnProcessDiagram {
   public getShapeFromDiagram(shapeId: string): Bpmndi.BPMNShape {
     let diagram = this.getDiagramElement();
     for (let planeElement of diagram.plane.planeElement) {
-      if (planeElement.$type === DiagramShapeTypes.BPMNDI_SHAPE && (planeElement as Bpmndi.BPMNShape).bpmnElement.id === shapeId) {
+      if (planeElement.$type === DiagramShapeTypes.BPMNDI_SHAPE && (planeElement as Bpmndi.BPMNShape).bpmnElement != null && (planeElement as Bpmndi.BPMNShape).bpmnElement.id === shapeId) {
         return planeElement as Bpmndi.BPMNShape;
       }
     }
