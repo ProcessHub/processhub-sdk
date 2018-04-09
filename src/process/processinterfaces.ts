@@ -7,6 +7,7 @@ import gql from "graphql-tag";
 import { gqlLibraryTypes } from "./libraryinterfaces";
 import { FieldDefinition, TaskIdRequiredFieldsNeeded } from "../data";
 import { UserDetails } from "../user/userinterfaces";
+import { RowDetails } from ".";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -31,6 +32,7 @@ export interface ProcessDetails {
   processXmlHash?: string;
   startEventName?: string; // text on the start button
   tags?: string[];
+  rowDetails?: RowDetails[];
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
