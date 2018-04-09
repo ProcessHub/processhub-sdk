@@ -1,5 +1,5 @@
 import * as Moment from "moment";
-import { tl } from "..";
+import { tl } from "../tl";
 
 Moment.locale("de", {
   months: ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],

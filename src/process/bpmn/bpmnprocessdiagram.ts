@@ -1,7 +1,7 @@
 import * as BpmnProcess from "./bpmnprocess";
 import { Bpmn, Bpmndi } from "../bpmn";
 import { isTrue } from "../../tools";
-import { BpmnModdleStartEvent } from "..";
+import { BpmnModdleStartEvent } from "./bpmnmoddlehelper";
 
 // bpmn Diagram
 export const DiagramShapeTypes = {

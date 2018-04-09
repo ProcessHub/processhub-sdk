@@ -1,6 +1,6 @@
 import { expect } from "chai";
-import { momentFromUtcDate } from ".";
-import { tl } from "..";
+import { tl } from "../tl";
+import { momentFromUtcDate } from "./moment";
 
 describe("sdk", function () {
   describe("tools", function () {

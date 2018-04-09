@@ -1,6 +1,5 @@
 import { BaseMessage, BaseRequest } from "../legacyapi/apiinterfaces";
-import { ProcessDetails, ProcessExtras, ProcessResult } from "./processinterfaces";
-import { TimerStartEventConfiguration } from ".";
+import { ProcessDetails, ProcessExtras, ProcessResult, TimerStartEventConfiguration } from "./processinterfaces";
 
 // API routes
 export const ProcessRequestRoutes = {
