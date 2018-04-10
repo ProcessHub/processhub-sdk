@@ -323,7 +323,6 @@ describe("sdk", function () {
             assert(tasks.length === 2);
 
             let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
-            console.log(rowDetails);
             assert(lanes.length === 4);
 
             bpmnProcess.deleteTask(bpmnProcess.processId(), rowDetails, 2);

@@ -1057,7 +1057,6 @@ export class BpmnProcess {
 
       let lane = this.getLaneOfFlowNode(start.id);
       this.addTaskToLane(this.processId(), lane.id, startEventObject);
-      console.log(rowDetails);
       this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
     }
   }
