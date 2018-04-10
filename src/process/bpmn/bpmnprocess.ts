@@ -121,6 +121,7 @@ export class BpmnProcess {
       sendTaskSubject: null,
       sendTaskWithFieldContents: true,
       allFieldsEditable: false,
+      roleOwnersEditable: false,
       viewAllFields: true,
       sendMailNotification: true,
       requiredFieldsNeeded: null,
@@ -157,6 +158,8 @@ export class BpmnProcess {
             case TaskSettings.SendTaskWithFieldContents:
               returnValue.sendTaskWithFieldContents = child.$body != "false";
               break;
+            case TaskSettings.RoleOwnersEditable:
+              returnValue.roleOwnersEditable = child.$body != "false";
             case TaskSettings.AllFieldsEditable:
               returnValue.allFieldsEditable = child.$body != "false";
               break;
