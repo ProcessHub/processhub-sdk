@@ -154,6 +154,7 @@ export const TaskSettings = {
   RequiredFieldsNeeded: "required-fields-needed", // boolean: means that the task needed previous required fields (not necessary on negative decisions)
   SaveDecisionInFieldContents: "save-decision-in-fields",
   CustomFieldContentsValue: "custom-field-contents-value",
+  RoleOwnersEditable: "roleowners-editable", // boolean: all role owners can be selected
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -178,6 +179,7 @@ export interface TaskExtensions {
   serviceTaskResponseFieldName: string;
 
   timerStartConfiguration: TimerStartEventConfiguration[];
+  roleOwnersEditable: boolean;
 }
 
 export interface TimerStartEventConfiguration {
