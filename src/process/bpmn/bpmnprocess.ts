@@ -424,6 +424,12 @@ export class BpmnProcess {
       JSON.stringify(fieldDefinitions),
       "Text");
 
+    BpmnProcess.addOrUpdateExtension(
+      startElement,
+      TaskSettings.RoleOwnersEditable as TaskSettings,
+      true,
+      "Boolean");
+
     let sortedTasks = this.getSortedTasks(this.processId(), false);
     this.processDiagram.generateBPMNDiagram(this.processId(), sortedTasks.map(row => row.id));
 
