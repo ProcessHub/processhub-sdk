@@ -331,7 +331,7 @@ describe("sdk", function () {
             let tasksEnd = bpmnProcess.getSortedTasks(bpmnProcess.processId());
             assert(tasksEnd.length === 1);
 
-            lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
+            lanes = bpmnProcess.getLanes(bpmnProcess.processId(), true);
             assert(lanes.length === 1);
           });
         });
