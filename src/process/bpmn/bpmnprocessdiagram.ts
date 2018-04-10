@@ -221,7 +221,7 @@ export class BpmnProcessDiagram {
 
       for (let i = 0; i < drawObjectList.length; i++) {
         let task = drawObjectList[i];
-        if (task.$type !== BpmnProcess.BPMN_ENDEVENT &&  task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
+        if (task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
           let gate = gates.find(g => g.incoming.find(inc => inc.sourceRef.id === task.id) != null);
           drawObjectList.splice((i + 1), 0, gate);
         }
@@ -261,7 +261,6 @@ export class BpmnProcessDiagram {
   }
 
   private drawAllTasks(diagram: any, laneDictionaries: LaneDictionary[], taskList: Bpmn.FlowNode[], xParam: number) {
-
     for (let workingObject of taskList) {
       let iconWidth = BpmnProcessDiagram.TASK_WIDTH;
       let sizeStartAndEndEvent: number = 36;
@@ -281,7 +280,6 @@ export class BpmnProcessDiagram {
         // let amountOfStartEvents = taskList.filter(obj => obj.$type === BpmnProcess.BPMN_STARTEVENT);
 
         // let startEventHeightShift = amountOfStartEvents.length == 2 ? 20 : 40;
-
         iconWidth = sizeStartAndEndEvent;
         iconHeight = sizeStartAndEndEvent;
 
