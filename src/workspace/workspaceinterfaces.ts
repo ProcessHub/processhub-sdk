@@ -40,6 +40,7 @@ export interface WorkspaceDetails {
   description?: string;
   userRole?: WorkspaceRole;  // Rolle des angemeldeten Users im Workspace  
   trialExpiresAt?: Date;
+  licensedUsers?: number;
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];

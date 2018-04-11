@@ -3,7 +3,7 @@ import * as StateHandler from "../statehandler";
 import * as Api from "../legacyapi";
 import { Dispatch } from "redux";
 import { WorkspaceExtras, WorkspaceDetails, WorkspaceRole, WorkspaceType } from "./workspaceinterfaces";
-import { LoadWorkspaceReply, LoadWorkspaceRequest, WorkspaceRequestRoutes, RemoveWorkspaceMemberRequest, WorkspaceLoadedMessage, InviteWorkspaceMemberRequest, CreateWorkspaceRequest, UpdateWorkspaceRequest, DeleteWorkspaceRequest, SetMemberRoleRequest, StartTrialRequest } from "./legacyapi";
+import { LoadWorkspaceReply, LoadWorkspaceRequest, WorkspaceRequestRoutes, RemoveWorkspaceMemberRequest, WorkspaceLoadedMessage, InviteWorkspaceMemberRequest, CreateWorkspaceRequest, UpdateWorkspaceRequest, DeleteWorkspaceRequest, SetMemberRoleRequest, StartTrialRequest, TrialUserCountType } from "./legacyapi";
 import { WorkspaceMessages } from "./phclient";
 import { BaseReply } from "../legacyapi";
 
@@ -156,10 +156,10 @@ export function setMemberRoleAction(workspaceId: string, userId: string, memberR
   };
 }
 
-export async function startTrial(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: string, accessToken: string = null): Promise<BaseReply> {
+export async function startTrial(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: TrialUserCountType, accessToken: string = null): Promise<BaseReply> {
   return await StateHandler.rootStore.dispatch(startTrialAction(workspaceId, name, mail, company, phone, testType, userCount, accessToken));
 }
-export function startTrialAction(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<BaseReply> {
+export function startTrialAction(workspaceId: string, name: string, mail: string, company: string, phone: string, testType: WorkspaceType, userCount: TrialUserCountType, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<BaseReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<BaseReply> => {
     let request: StartTrialRequest = {
       workspaceId,
