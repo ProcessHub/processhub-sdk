@@ -1349,7 +1349,7 @@ export class BpmnProcess {
 
   public async toXmlString(): Promise<string> {
 
-    // this.removeLanesWithoutShape();
+    this.removeLanesWithoutShape();
 
     return await new Promise<string>((resolve, reject) => {
       this.moddle.toXML(this.bpmnXml, { format: true }, function (err: any, xmlStr: string) {
