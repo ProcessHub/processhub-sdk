@@ -39,6 +39,7 @@ export interface CreateWorkspaceRequest extends BaseRequest {
   workspace: WorkspaceDetails;
 }
 
+export type TrialUserCountType = "10" | "25" | "50" | "100" | "100+";
 export interface StartTrialRequest extends BaseRequest {
   workspaceId: string;
   name: string;
@@ -46,7 +47,7 @@ export interface StartTrialRequest extends BaseRequest {
   company: string;
   phone: string;
   testType: WorkspaceType;
-  userCount: string;
+  userCount: TrialUserCountType;
 }
 
 export interface UpdateWorkspaceRequest extends BaseRequest {
