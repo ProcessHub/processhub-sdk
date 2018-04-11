@@ -744,14 +744,11 @@ export class BpmnProcess {
 
     this.removeTaskFromContext(delTaskId);
 
-    console.log(processContext.flowElements);
-
     for (let sourceId of objectIdsWithMissingTarget) {
       let sourceObj = this.getExistingActivityObject(sourceId);
 
       for (let targetId of objectIdsWithMissingSource) {
         let targetObj = this.getExistingActivityObject(targetId);
-        console.log("add sf " + sourceObj.id + " --- " + targetObj.id);
         this.addSequenceFlow(this.processId(), sourceObj, targetObj, false);
       }
     }
