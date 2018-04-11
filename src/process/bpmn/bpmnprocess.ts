@@ -431,7 +431,21 @@ export class BpmnProcess {
       "Boolean");
 
     let sortedTasks = this.getSortedTasks(this.processId(), false);
-    this.processDiagram.generateBPMNDiagram(this.processId(), sortedTasks.map(row => row.id));
+    let counter = -1;
+    let rows: RowDetails[] = sortedTasks.map(task => {
+      counter++;
+      let lane = this.getLaneOfFlowNode(task.id);
+      return {
+        taskId: task.id, 
+        rowNumber: counter,
+        selectedRole: lane.id,
+        task: task.name,
+        laneId: lane.id,
+        taskType: "bpmn:UserTask",
+        jumpsTo: task.outgoing.map(out => out.targetRef.id)
+      } as RowDetails;
+    });
+    this.processDiagram.generateBPMNDiagram(this.processId(), rows);
 
 
     return result;
@@ -514,11 +528,22 @@ export class BpmnProcess {
     task.name = newName;
   }
 
-  public changeRole(taskId: string, laneId: string) {
+  public changeRole(rowDetails: RowDetails[], taskId: string, laneId: string) {
     let task = this.getExistingTask(this.processId(), taskId);
-    if (task != null) {
+    if (task.$type as string == BPMN_STARTEVENT) {
+      this.getStartEvents(this.processId()).forEach(start => {
+        this.setRoleForTask(this.processId(), laneId, start);
+      });
+    } else {
       this.setRoleForTask(this.processId(), laneId, task);
     }
+
+    if (taskId === rowDetails.last().taskId) {
+      let endEvent = this.getEndEvents(this.processId())[0];
+      this.setRoleForTask(this.processId(), laneId, endEvent);
+    }
+
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
   public getAllExclusiveGateways(): Bpmn.FlowNode[] {
@@ -668,10 +693,22 @@ export class BpmnProcess {
     this.addTaskToLane(processId, laneId, taskObject);
   }
 
+  private removeTaskFromContext(taskId: string) {
+    let processContext = this.getProcess(this.processId());
+
+    for (let index = 0; index < processContext.flowElements.length; index++) {
+      let element = processContext.flowElements[index];
+      if (element.id === taskId) {
+        processContext.flowElements.splice(index, 1);
+        index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
+      }
+    }
+  }
+
   // löscht einen Task aus dem XML und dem Diagramm
   public deleteTask(processId: string, rowDetails: RowDetails[], rowNumber: number): void {
     let processContext = this.getProcess(processId);
-    let allgateways = this.removeAllGateways(rowDetails, true);
+    // let allgateways = this.removeAllGateways(rowDetails, true);
 
     // Auch hier wird nach folgendem Beispiel vorgegangen
     // A -[AB]-> B -[BC]-> C
@@ -681,77 +718,117 @@ export class BpmnProcess {
     // 2. B löschen
     // 3. [BC] bekommt als sourceRef A
     // 4. A bekommt als outgoing [BC]
-    let objectToDelete_A: Bpmn.FlowNode = null;
-    if (rowNumber > 0) {
-      objectToDelete_A = this.getExistingTask(processId, rowDetails[(rowNumber - 1)].taskId);
-    } else {
-      objectToDelete_A = this.getStartEvents(processId)[0];
-    }
+    let delTaskId = rowDetails[rowNumber].taskId;
+    let nextObjects = this.getNextActivities(rowDetails[rowNumber].taskId);
 
-    let objectToDelete_C: Bpmn.FlowNode = null;
-    if (rowDetails.length > (rowNumber + 1)) {
-      objectToDelete_C = this.getExistingTask(processId, rowDetails[(rowNumber + 1)].taskId);
-    } else {
-      objectToDelete_C = this.getEndEvents(processId)[0];
-    }
+    let objectIdsWithMissingTarget: string[] = [];
+    let objectIdsWithMissingSource: string[] = [];
+    this.getSequenceFlowElements().forEach(sf => {
+      // remove SF's where target is delete Object 
+      if (sf.targetRef.id === delTaskId) {
+        this.removeSequenceFlow(this.processId(), sf);
+        objectIdsWithMissingTarget.push(sf.sourceRef.id);
+      }
 
-    let objectToDelete_B = this.getExistingTask(processId, rowDetails[rowNumber].taskId);
-    // isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
-    let sequenceFlows_AB: Bpmn.SequenceFlow[] = objectToDelete_B.incoming; // .find(inc => inc.sourceRef.id === objectToDelete_A.id && inc.targetRef.id === objectToDelete_B.id); // [0];
-    // isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
-    let sequenceFlow_BC: Bpmn.SequenceFlow = objectToDelete_B.outgoing.find(out => out.sourceRef.id === objectToDelete_B.id && out.targetRef.id === objectToDelete_C.id); // [0];
-
-    let sequenceFlows_BC_to_delete: Bpmn.SequenceFlow[] = objectToDelete_B.outgoing.filter(out => out.targetRef.id !== objectToDelete_C.id); // [0];
-
-    objectToDelete_B.outgoing.forEach(out => {
-      if (out.targetRef.id !== objectToDelete_C.id) {
-        out.targetRef.incoming = out.targetRef.incoming.filter(inc => inc.sourceRef.id !== objectToDelete_B.id);
+      // remove SF's where source is delete Object 
+      if (sf.sourceRef.id === delTaskId) {
+        this.removeSequenceFlow(this.processId(), sf);
+        objectIdsWithMissingSource.push(sf.targetRef.id);
       }
     });
-    objectToDelete_B.incoming.forEach(inc => inc.sourceRef.outgoing = inc.sourceRef.outgoing.filter(out => out.targetRef.id !== objectToDelete_B.id));
 
-    // 1. & 2. Elemente aus flowElements löschen
-    for (let index = 0; index < processContext.flowElements.length; index++) {
-      let element = processContext.flowElements[index];
-      if (sequenceFlows_AB.find(sf => sf.id === element.id) != null
-        || sequenceFlows_BC_to_delete.find(sf => sf.id === element.id) != null
-        || element.id === objectToDelete_B.id) {
-        processContext.flowElements.splice(index, 1);
-        index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
+    let objToDelete = this.getExistingTask(this.processId(), delTaskId);
+    if (objToDelete != null) {
+      this.removeTaskObjectFromLanes(this.processId(), objToDelete);
+    }
+
+    this.removeTaskFromContext(delTaskId);
+
+    console.log(processContext.flowElements);
+
+    for (let sourceId of objectIdsWithMissingTarget) {
+      let sourceObj = this.getExistingActivityObject(sourceId);
+
+      for (let targetId of objectIdsWithMissingSource) {
+        let targetObj = this.getExistingActivityObject(targetId);
+        console.log("add sf " + sourceObj.id + " --- " + targetObj.id);
+        this.addSequenceFlow(this.processId(), sourceObj, targetObj, false);
       }
     }
-    // 3.
-    isTrue(objectToDelete_A != null);
-    sequenceFlow_BC.sourceRef = objectToDelete_A;
 
-    // 4.
-    // Array zuerst leeren! Da hier nur ein Element im Array sein darf!
-    // objectToDelete_A.outgoing = [];
-    objectToDelete_A.outgoing = objectToDelete_A.outgoing.filter(out => out.sourceRef.id !== objectToDelete_A.id && out.targetRef.id !== objectToDelete_B.id);
-    objectToDelete_A.outgoing.push(sequenceFlow_BC);
+    /*nextObjects.forEach(nextObject => {
+      this.addSequenceFlow(this.processId(), this.getExistingActivityObject(rowDetails[(rowNumber - 1)].taskId), nextObject, false);
+    });*/
 
-    // isTrue(objectToDelete_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
-
-    // Task aus lane entfernen
-    let processLanes: Bpmn.Lane[] = this.getProcessLanes(processId);
-    for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
-      let processLane: Bpmn.Lane = processLanes[laneIndex];
-      if (processLane.flowNodeRef != null) {
-        for (let index = 0; index < processLane.flowNodeRef.length; index++) {
-          let flowNode: Bpmn.FlowNode = processLane.flowNodeRef[index];
-          if (flowNode.id === rowDetails[rowNumber].taskId) {
-            processLane.flowNodeRef.splice(index, 1);
-            index--; // Wegen splicen
+    /*
+        isTrue(rowNumber > 0, "called rownumber have to be bigger than 0");
+        let objectToDelete_A: Bpmn.FlowNode  = this.getExistingTask(processId, rowDetails[(rowNumber - 1)].taskId);
+    
+        if (rowDetails.length > (rowNumber + 1)) {
+          nextObject = this.getExistingTask(processId, rowDetails[(rowNumber + 1)].taskId);
+        } else {
+          nextObject = this.getEndEvents(processId)[0];
+        }
+    
+        let objectToDelete_B = this.getExistingTask(processId, rowDetails[rowNumber].taskId);
+        // isTrue(objectToDelete_B.incoming.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+        let sequenceFlows_AB: Bpmn.SequenceFlow[] = objectToDelete_B.incoming; // .find(inc => inc.sourceRef.id === objectToDelete_A.id && inc.targetRef.id === objectToDelete_B.id); // [0];
+        // isTrue(objectToDelete_B.outgoing.length == 1, "SequenceFlow Länge muss hier 1 sein!");
+        let sequenceFlow_BC: Bpmn.SequenceFlow = objectToDelete_B.outgoing.find(out => out.sourceRef.id === objectToDelete_B.id && out.targetRef.id === nextObject.id); // [0];
+    
+        let sequenceFlows_BC_to_delete: Bpmn.SequenceFlow[] = objectToDelete_B.outgoing.filter(out => out.targetRef.id !== nextObject.id); // [0];
+    
+        objectToDelete_B.outgoing.forEach(out => {
+          if (out.targetRef.id !== nextObject.id) {
+            out.targetRef.incoming = out.targetRef.incoming.filter(inc => inc.sourceRef.id !== objectToDelete_B.id);
+          }
+        });
+        objectToDelete_B.incoming.forEach(inc => inc.sourceRef.outgoing = inc.sourceRef.outgoing.filter(out => out.targetRef.id !== objectToDelete_B.id));
+    
+        // 1. & 2. Elemente aus flowElements löschen
+        for (let index = 0; index < processContext.flowElements.length; index++) {
+          let element = processContext.flowElements[index];
+          if (sequenceFlows_AB.find(sf => sf.id === element.id) != null
+            || sequenceFlows_BC_to_delete.find(sf => sf.id === element.id) != null
+            || element.id === objectToDelete_B.id) {
+            processContext.flowElements.splice(index, 1);
+            index--; // ACHTUNG NICHT VERGESSEN WENN GESPLICED WIRD
           }
         }
-      }
-    }
-    this.putGatewaysBack(allgateways);
-
+        // 3.
+        isTrue(objectToDelete_A != null);
+        sequenceFlow_BC.sourceRef = objectToDelete_A;
+    
+        // 4.
+        // Array zuerst leeren! Da hier nur ein Element im Array sein darf!
+        // objectToDelete_A.outgoing = [];
+        objectToDelete_A.outgoing = objectToDelete_A.outgoing.filter(out => out.sourceRef.id !== objectToDelete_A.id && out.targetRef.id !== objectToDelete_B.id);
+        objectToDelete_A.outgoing.push(sequenceFlow_BC);
+    
+        // isTrue(objectToDelete_A.outgoing.length === 1, "A darf hier nur einen outgoing Flow haben!");
+    
+        // Task aus lane entfernen
+        let processLanes: Bpmn.Lane[] = this.getProcessLanes(processId);
+        for (let laneIndex = 0; laneIndex < processLanes.length; laneIndex++) {
+          let processLane: Bpmn.Lane = processLanes[laneIndex];
+          if (processLane.flowNodeRef != null) {
+            for (let index = 0; index < processLane.flowNodeRef.length; index++) {
+              let flowNode: Bpmn.FlowNode = processLane.flowNodeRef[index];
+              if (flowNode.id === rowDetails[rowNumber].taskId) {
+                processLane.flowNodeRef.splice(index, 1);
+                index--; // Wegen splicen
+              }
+            }
+          }
+        }
+        this.putGatewaysBack(allgateways);
+    
+        let tmpRowDetails: RowDetails[] = JSON.parse(JSON.stringify(rowDetails));
+        tmpRowDetails.splice(rowNumber, 1);
+    */
     let tmpRowDetails: RowDetails[] = JSON.parse(JSON.stringify(rowDetails));
     tmpRowDetails.splice(rowNumber, 1);
-
-    this.processDiagram.generateBPMNDiagram(processId, tmpRowDetails.map(row => row.taskId));
+    this.processDiagram.generateBPMNDiagram(processId, tmpRowDetails);
   }
 
   private addToWithoutDuplicates(inOrOutGoings: Bpmn.SequenceFlow[], addItem: Bpmn.SequenceFlow) {
@@ -834,7 +911,7 @@ export class BpmnProcess {
 
     // this.setRoleForTask(this.processId(), rowDetails.laneId, focusedTask);
 
-    this.processDiagram.generateBPMNDiagram(this.processId(), rows.map(row => row.taskId));
+    this.processDiagram.generateBPMNDiagram(this.processId(), rows);
 
     // replace all jumpsTo with the id of the new task
     for (const row of rows) {
@@ -881,7 +958,7 @@ export class BpmnProcess {
       this.addSequenceFlow(this.processId(), focusedTask, targetTask, false);
     }
     if (renderDiagram) {
-      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
+      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
     }
   }
 
@@ -933,7 +1010,7 @@ export class BpmnProcess {
     isTrue(sfObj != null, "removing object is missing.");
     this.removeSequenceFlow(this.processId(), sfObj);
 
-    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(row => row.taskId));
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
   private getLastCreatedTask(processId: string): Bpmn.Task {
@@ -1063,7 +1140,7 @@ export class BpmnProcess {
 
       let lane = this.getLaneOfFlowNode(start.id);
       this.addTaskToLane(this.processId(), lane.id, startEventObject);
-      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
+      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
     }
   }
 
@@ -1076,7 +1153,7 @@ export class BpmnProcess {
     processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== messageStartEvent.id);
 
     this.removeTaskObjectFromLanes(this.processId(), messageStartEvent);
-    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(r => r.taskId));
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
   // DEPRECATED
@@ -1174,12 +1251,12 @@ export class BpmnProcess {
     this.setRoleForTask(this.processId(), newTaskRowDetails.laneId, focusedTask);
 
     // PREV object
-    let previousElement: Bpmn.Activity = null;
+    let previousElements: Bpmn.Activity[] = [];
 
-    if (focusedRowNumber == 0) {
-      previousElement = this.getStartEvents(this.processId())[0];
+    if (focusedRowNumber == 1) {
+      previousElements = this.getStartEvents(this.processId());
     } else {
-      previousElement = this.getExistingActivityObject(rowDetails[focusedRowNumber - 1].taskId);
+      previousElements = [this.getExistingActivityObject(rowDetails[focusedRowNumber - 1].taskId)];
     }
 
     // TARGET object
@@ -1193,24 +1270,37 @@ export class BpmnProcess {
       nextElement = this.getExistingActivityObject(rowDetails[focusedRowNumber + 1].taskId);
     }
 
-    let targetRefsOfPrev = previousElement != null ? previousElement.outgoing.map(out => out.targetRef.id) : [];
+    let targetRefsOfPrev: string[] = [];
+    previousElements != null ? previousElements.forEach(start => {
+      targetRefsOfPrev = targetRefsOfPrev.concat(start.outgoing.map(out => out.targetRef.id));
+    }) : null;
+    let targetRefsOfPrevUnique: any = [];
+    targetRefsOfPrev.forEach(item => {
+      if (targetRefsOfPrevUnique.indexOf(item) == -1) {
+        targetRefsOfPrevUnique.push(item);
+      }
+    });
+
+
     // remove all outgoings from previous
-    if (previousElement != null) {
-      previousElement.outgoing.forEach(out => {
-        this.removeSequenceFlow(this.processId(), out);
+    if (previousElements != null) {
+      previousElements.forEach(previousElement => {
+        previousElement.outgoing.forEach(out => {
+          this.removeSequenceFlow(this.processId(), out);
+        });
+
+        let sfObj = this.getSequenceFlowElements().find(sf => sf.sourceRef.id === previousElement.id && sf.targetRef.id === nextElement.id);
+        this.removeSequenceFlow(this.processId(), sfObj);
+        this.addSequenceFlow(this.processId(), previousElement, targetElement, true);
       });
     }
 
-    let sfObj = this.getSequenceFlowElements().find(sf => sf.sourceRef.id === previousElement.id && sf.targetRef.id === nextElement.id);
-    this.removeSequenceFlow(this.processId(), sfObj);
-    this.addSequenceFlow(this.processId(), previousElement, targetElement, true);
-
-    for (let targetRefId of targetRefsOfPrev) {
+    for (let targetRefId of targetRefsOfPrevUnique) {
       let tmpTargetElement = this.getExistingActivityObject(targetRefId);
       this.addSequenceFlow(this.processId(), targetElement, tmpTargetElement, false);
     }
 
-    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails.map(row => row.taskId));
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
   private addSequenceFlow(processId: string, sourceReference: Bpmn.FlowNode, targetReference: Bpmn.FlowNode, deleteExistingRefs: boolean = true): Bpmn.SequenceFlow {

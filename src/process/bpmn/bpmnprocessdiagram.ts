@@ -2,6 +2,7 @@ import * as BpmnProcess from "./bpmnprocess";
 import { Bpmn, Bpmndi } from "../bpmn";
 import { isTrue } from "../../tools";
 import { BpmnModdleStartEvent } from "./bpmnmoddlehelper";
+import { RowDetails } from "..";
 
 // bpmn Diagram
 export const DiagramShapeTypes = {
@@ -77,47 +78,37 @@ export class BpmnProcessDiagram {
     return res;
   }
 
-  public generateBPMNDiagram(processId: string, taskIdsOrderFromTable: string[] = null): void {
-    let copyTaskIdsOrderFromTable: string[] = JSON.parse(JSON.stringify(taskIdsOrderFromTable));
+  public generateBPMNDiagram(processId: string, rowDetails: RowDetails[]): void {
+    let copyTaskIdsOrderFromTable: RowDetails[] = JSON.parse(JSON.stringify(rowDetails));
     let diagram = this.getDiagramElement();
     // für die Berechnung der gesamt Breite
     let process = this.bpmnProcess.getProcess(processId);
     let amountOfProcesses = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_USERTASK || e.$type === BpmnProcess.BPMN_SENDTASK).length;
     let amountOfSequences = process.flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_SEQUENCEFLOW).length;
 
-    
+
     let allGateways = this.bpmnProcess.getAllExclusiveGateways();
 
     let amountOfOutgoingsOnGateways: number = 0;
     let amountOfOutgoingsOnTasksUnderpass: number = 0;
 
     let sortedTasks: Bpmn.FlowNode[] = [];
-    if (taskIdsOrderFromTable != null) {
-      if (taskIdsOrderFromTable != null && taskIdsOrderFromTable.length > 0) {
-        let tmp = this.bpmnProcess.getExistingActivityObject(taskIdsOrderFromTable[0]);
-        if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
-          taskIdsOrderFromTable.splice(0, 1);
-        }
+    if (copyTaskIdsOrderFromTable != null && copyTaskIdsOrderFromTable.length > 0) {
+      let tmp = this.bpmnProcess.getExistingActivityObject(copyTaskIdsOrderFromTable[0].taskId);
+      if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
+        copyTaskIdsOrderFromTable.splice(0, 1);
       }
-
-      sortedTasks = taskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
-    } else {
-      sortedTasks = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
     }
 
-    sortedTasks.forEach(t => {
-      let found = sortedTasks.find(st => st.id === t.id);
+    sortedTasks = copyTaskIdsOrderFromTable.map(row => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), row.taskId));
 
-      let rowNumber: number = sortedTasks.indexOf(found);
-      let nextTask: Bpmn.FlowNode = sortedTasks[rowNumber + 1] != null ? sortedTasks[rowNumber + 1] : this.bpmnProcess.getEndEvents(this.bpmnProcess.processId())[0];
-
-      let tmpList = sortedTasks[rowNumber].outgoing.filter(out => out.targetRef.id != nextTask.id && out.targetRef.$type !== BpmnProcess.BPMN_EXCLUSIVEGATEWAY);
-      amountOfOutgoingsOnTasksUnderpass += tmpList.length;
-
-
+    copyTaskIdsOrderFromTable.forEach(row => {
+      if (row.jumpsTo != null && row.jumpsTo.length > 0) {
+        amountOfOutgoingsOnTasksUnderpass += (row.jumpsTo.length - 1);
+      }
     });
-
-    allGateways.forEach(ex => {
+    
+    /*allGateways.forEach(ex => {
       let found = sortedTasks.find(st => st.id === ex.incoming.last().sourceRef.id);
 
       let rowNumber: number = sortedTasks.indexOf(found);
@@ -127,15 +118,15 @@ export class BpmnProcessDiagram {
       amountOfOutgoingsOnGateways += tmpList.length;
     });
 
-    let amountOfProcessesWithMultipleOutgoing = allGateways.length;
+    let amountOfProcessesWithMultipleOutgoing = allGateways.length;*/
 
     // have to minus the multipleoutgoing because of the space calculation width
     // amountOfSequences -= amountOfProcessesWithMultipleOutgoing;
 
     // Anzahl der Prozesse + anzahl der seuqenzen + feste werte für anfang und ende
-    let poolWidth: number = (amountOfProcesses * BpmnProcessDiagram.TASK_WIDTH) 
-      + ((amountOfSequences - amountOfOutgoingsOnGateways) * BpmnProcessDiagram.SPACE_BETWEEN_TASKS) 
-      + (allGateways.length * 36) 
+    let poolWidth: number = (amountOfProcesses * BpmnProcessDiagram.TASK_WIDTH)
+      + ((amountOfSequences - amountOfOutgoingsOnGateways) * BpmnProcessDiagram.SPACE_BETWEEN_TASKS)
+      + (allGateways.length * 36)
       // - (amountOfProcessesWithMultipleOutgoing * BpmnProcessDiagram.SPACE_BETWEEN_TASKS)
       + 200;
     // die lane ist genau 30 pixel kürzer wie der Pool wegen der Beschriftung!
@@ -198,19 +189,8 @@ export class BpmnProcessDiagram {
       let drawObjectList: Bpmn.FlowNode[] = [];
       let startElementObject = flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_STARTEVENT);
       drawObjectList = drawObjectList.concat(startElementObject);
-      let tasks: Bpmn.Task[] = this.bpmnProcess.getSortedTasks(this.bpmnProcess.processId());
-      
-      if (copyTaskIdsOrderFromTable != null && copyTaskIdsOrderFromTable.length > 0) {
-        let tmp = this.bpmnProcess.getExistingActivityObject(copyTaskIdsOrderFromTable[0]);
-        if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
-          copyTaskIdsOrderFromTable.splice(0, 1);
-        }
-      }
-      if (copyTaskIdsOrderFromTable != null) {
-        tasks = copyTaskIdsOrderFromTable.map(taskId => this.bpmnProcess.getExistingTask(this.bpmnProcess.processId(), taskId));
-      }
 
-      drawObjectList = drawObjectList.concat(tasks);
+      drawObjectList = drawObjectList.concat(sortedTasks);
 
       let gates: Bpmn.FlowNode[] = this.bpmnProcess.getAllExclusiveGateways();
       // drawObjectList = drawObjectList.concat(gats);
@@ -276,7 +256,7 @@ export class BpmnProcessDiagram {
       let yParam = (this.diagramYStartParam + 23) + laneNumber * this.diagramLaneHeight;
 
       // weil größe des icons anders
-      if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT || workingObject.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY) {
+      if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT ||  workingObject.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY) {
         // let amountOfStartEvents = taskList.filter(obj => obj.$type === BpmnProcess.BPMN_STARTEVENT);
 
         // let startEventHeightShift = amountOfStartEvents.length == 2 ? 20 : 40;
@@ -344,7 +324,7 @@ export class BpmnProcessDiagram {
     }
   }
 
-  private generateSequenceFlow(diagram: any, flowObject: Bpmn.SequenceFlow, drawJumpFlow: boolean, numberOfJumpEdge: number = 0, laneDictionaries: LaneDictionary[] = null ) {
+  private generateSequenceFlow(diagram: any, flowObject: Bpmn.SequenceFlow, drawJumpFlow: boolean, numberOfJumpEdge: number = 0, laneDictionaries: LaneDictionary[] = null) {
     let waypoints: Waypoint[] = [];
     // hole die beiden Diagramm Objekte von Quell und Ziel Objekt
     let sourceRef = flowObject.sourceRef;
@@ -363,31 +343,31 @@ export class BpmnProcessDiagram {
     }
 
     let edgeObj = this.createEdge(flowObject, flowObject.sourceRef, flowObject.targetRef, waypoints);
-/*
-    let firstX = waypoints[0].x;
-    let lastX  = waypoints.last().x;
-    let firstY = waypoints[0].y;
-    let lastY  = waypoints.last().y;
-
-    let xDiff = firstX > lastX ? firstX - lastX : lastX - firstX;
-    xDiff = xDiff / 2;
-    let yDiff = firstY > lastY ? firstY - lastY : lastY - firstY;
-    yDiff = yDiff / 2;
-
-    let finalX = firstX > lastX ? lastX + xDiff : firstX + xDiff;
-    let finalY = firstY > lastY ? lastY + yDiff : firstY + yDiff;
+    /*
+        let firstX = waypoints[0].x;
+        let lastX  = waypoints.last().x;
+        let firstY = waypoints[0].y;
+        let lastY  = waypoints.last().y;
     
-    if (drawJumpFlow) {
-      finalX = firstX;
-      finalY = firstY + yDiff;
-    }
-
-    let bounds = this.bpmnProcess.moddle.create("dc:Bounds", { x: finalX, y: finalY, width: 1, height: 1 });
-    let label = this.bpmnProcess.moddle.create("bpmndi:BPMNLabel", {
-      id: BpmnProcess.BpmnProcess.getBpmnId(DiagramShapeTypes.BPMNDI_EDGE),
-      bounds: bounds
-    });
-    edgeObj.label = label;*/
+        let xDiff = firstX > lastX ? firstX - lastX : lastX - firstX;
+        xDiff = xDiff / 2;
+        let yDiff = firstY > lastY ? firstY - lastY : lastY - firstY;
+        yDiff = yDiff / 2;
+    
+        let finalX = firstX > lastX ? lastX + xDiff : firstX + xDiff;
+        let finalY = firstY > lastY ? lastY + yDiff : firstY + yDiff;
+        
+        if (drawJumpFlow) {
+          finalX = firstX;
+          finalY = firstY + yDiff;
+        }
+    
+        let bounds = this.bpmnProcess.moddle.create("dc:Bounds", { x: finalX, y: finalY, width: 1, height: 1 });
+        let label = this.bpmnProcess.moddle.create("bpmndi:BPMNLabel", {
+          id: BpmnProcess.BpmnProcess.getBpmnId(DiagramShapeTypes.BPMNDI_EDGE),
+          bounds: bounds
+        });
+        edgeObj.label = label;*/
 
     diagram.plane.planeElement.push(edgeObj);
   }
