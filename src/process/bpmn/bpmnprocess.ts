@@ -1152,7 +1152,8 @@ export class BpmnProcess {
       let targetTask = start.outgoing.last().targetRef;
       let processContext: Bpmn.Process = this.getProcess(this.processId());
       let startEventObject = this.moddle.create(BPMN_STARTEVENT, { id: BpmnProcess.getBpmnId(BPMN_STARTEVENT), outgoing: [], incoming: [] });
-      let eventDef = type == "bpmn:TimerEventDefinition" ? this.moddle.create(type as "bpmn:TimerEventDefinition", {}) : this.moddle.create(type as "bpmn:MessageEventDefinition", {});
+      let eventDef = type == "bpmn:TimerEventDefinition" ? this.moddle.create(type as "bpmn:TimerEventDefinition", { timeDuration: this.moddle.create("bpmn:FormalExpression", { body: "PT0S" }) }) : this.moddle.create(type as "bpmn:MessageEventDefinition", {});
+
       startEventObject.eventDefinitions = [eventDef];
       this.addSequenceFlow(this.processId(), startEventObject, targetTask, false);
       processContext.flowElements.push(startEventObject);
