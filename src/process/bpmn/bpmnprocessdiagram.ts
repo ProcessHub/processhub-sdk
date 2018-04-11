@@ -107,21 +107,6 @@ export class BpmnProcessDiagram {
         amountOfOutgoingsOnTasksUnderpass += (row.jumpsTo.length - 1);
       }
     });
-    
-    /*allGateways.forEach(ex => {
-      let found = sortedTasks.find(st => st.id === ex.incoming.last().sourceRef.id);
-
-      let rowNumber: number = sortedTasks.indexOf(found);
-
-      let nextTask: Bpmn.FlowNode = sortedTasks[rowNumber + 1] != null ? sortedTasks[rowNumber + 1] : this.bpmnProcess.getEndEvents(this.bpmnProcess.processId())[0];
-      let tmpList = sortedTasks[rowNumber].outgoing.filter(out => out.targetRef.id != nextTask.id);
-      amountOfOutgoingsOnGateways += tmpList.length;
-    });
-
-    let amountOfProcessesWithMultipleOutgoing = allGateways.length;*/
-
-    // have to minus the multipleoutgoing because of the space calculation width
-    // amountOfSequences -= amountOfProcessesWithMultipleOutgoing;
 
     // Anzahl der Prozesse + anzahl der seuqenzen + feste werte für anfang und ende
     let poolWidth: number = (amountOfProcesses * BpmnProcessDiagram.TASK_WIDTH)
@@ -203,7 +188,9 @@ export class BpmnProcessDiagram {
         let task = drawObjectList[i];
         if (task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
           let gate = gates.find(g => g.incoming.find(inc => inc.sourceRef.id === task.id) != null);
-          drawObjectList.splice((i + 1), 0, gate);
+          if (drawObjectList.find(obj => obj.id === gate.id) == null) {
+            drawObjectList.splice((i + 1), 0, gate);
+          }
         }
       }
 
