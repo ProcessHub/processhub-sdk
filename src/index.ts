@@ -36,3 +36,5 @@ import * as StateHandler from "./statehandler";
 export { StateHandler };
 import * as Notification from "./notification";
 export { Notification };
+import * as DesktopNotification from "./desktopnotification";
+export { DesktopNotification };
