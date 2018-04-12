@@ -201,6 +201,7 @@ export class BpmnProcessDiagram {
 
       // get all "normal" sf's
       let normalSequenceFlows: Bpmn.SequenceFlow[] = [];
+
       for (let i = 0; i < drawObjectList.length; i++) {
         let thisObj = drawObjectList[i];
         let nextObj = drawObjectList[(i + 1)];
@@ -209,7 +210,9 @@ export class BpmnProcessDiagram {
           if (thisObj.$type === BpmnProcess.BPMN_STARTEVENT) {
             tmpSf = sequenceFlows.find(sf => sf.sourceRef.id === thisObj.id);
           }
-          normalSequenceFlows.push(tmpSf);
+          if (tmpSf != null) {
+            normalSequenceFlows.push(tmpSf);
+          }
         }
       }
 
