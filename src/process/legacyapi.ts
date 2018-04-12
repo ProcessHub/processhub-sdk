@@ -10,6 +10,7 @@ export const ProcessRequestRoutes = {
   UpdateProcess: "/api/process/updateprocess",
   GetTimers: "/api/process/gettimers",
   SetTimers: "/api/process/settimers",
+  DownloadProcess: "/api/process/download",
   GetPublicProcesses: "/api/process/publicprocesses",
   CopyProcess: "/api/process/copyprocess",
   RateProcess: "/api/process/rateprocess",
@@ -54,6 +55,13 @@ export interface SetTimersOfProcessRequest extends BaseRequest {
   timers: TimerStartEventConfiguration[];
 }
 export interface SetTimersOfProcessReply extends ProcessReply {
+}
+
+export interface DownloadProcessRequest extends BaseRequest {
+  processId: string;
+}
+export interface DownloadProcessReply extends ProcessReply {
+  doc: any;
 }
 
 export interface GetPublicProcessesReply extends ProcessReply {
