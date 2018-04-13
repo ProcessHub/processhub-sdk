@@ -26,6 +26,7 @@ function sendNotificationIfInstanceWasNotViewed(instance: InstanceDetails) {
       path: rootStore.getState().pathState.currentPath,
       user: rootStore.getState().userState.currentUser,
     };
+    instance = workspaceEnv.user.extras.instances.find(i => i.instanceId === instance.instanceId);
     let instanceEnv: InstanceEnvironment = { instance, process: null, ...workspaceEnv };
     if (notifyNewInstanceComments(instanceEnv) || notifyNewInstanceTodos(instanceEnv) || notifyInstancePin(instanceEnv)) {
       sendNotification(tl("ProcessHub"), tl("Neue Benachrichtigungen"));
