@@ -28,6 +28,7 @@ export interface TodoDetails {
   user?: UserDetails;
   priority?: number;
   isPinned?: boolean;
+  dueAt?: Date;
 }
 export const gqlTodoTypes = `     
   type TodoDetails {
