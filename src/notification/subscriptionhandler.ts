@@ -34,26 +34,31 @@ export async function initNotificationClient(user: UserDetails) {
   return new Promise<void>(async (resolve, reject) => {
 
     // let authResult: any = await getJson("/nes/auth", { auth: user.extras.accessToken });
-    
-    // if (authResult.status == "authenticated") {
-      await notificationClient.connect({ auth: { headers: { authorization: user.extras.accessToken } } }, (err: any) => {
-        if (err != null) {
-          console.log("Error on Websocket connect:");
-          console.log(err);
-          reject();
-        }
-        resolve();
-      });
 
-      notificationClient.onDisconnect = () => {
-        // alert("Websocket disconnected!");
-        setTimeout( () => {
-          console.info("Site reload because of websocket disconnect.");
-          window.location.reload();
-        }, 15000);
-      };
+    // if (authResult.status == "authenticated") {
+    await notificationClient.connect({ auth: { headers: { authorization: user.extras.accessToken } } }, (err: any) => {
+      if (err != null) {
+        console.log("Error on Websocket connect:");
+        console.log(err);
+        reject();
+      }
+      resolve();
+    });
+
+    notificationClient.onError = () => {
+      console.info("Site reload because of websocket error.");
+      window.location.reload();
+    };
+
+    notificationClient.onDisconnect = () => {
+      // alert("Websocket disconnected!");
+      setTimeout(() => {
+        console.info("Site reload because of websocket disconnect.");
+        window.location.reload();
+      }, 15000);
+    };
     // } else {
-      // reject();
+    // reject();
     // }
   });
 }
