@@ -1,6 +1,7 @@
 import { InstanceEnvironment } from "../environment";
 import { BpmnProcess } from "../process";
 import { InstanceDetails } from "../instance/instanceinterfaces";
+import { SemanticICONS } from "semantic-ui-react";
 
 export interface FieldDefinition {
   rowNumber: number;
@@ -75,7 +76,7 @@ export interface FieldContentMap {
 }
 
 // returns the name of the best fitting Semantic UI icon for the specified file name
-export function getFiletypeIcon(filename: string): string {
+export function getFiletypeIcon(filename: string): SemanticICONS {
   if (filename == null || filename.length == 0)
     return "file outline";
 
