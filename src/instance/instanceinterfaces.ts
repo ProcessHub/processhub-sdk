@@ -149,6 +149,8 @@ export interface AuditTrailEntryDetails {
   todoDisplayName: string;
   // must be set for AuditTrailAction.comment
   comment: string;
+  // may be set for AuditTrailAction.comment, if the comment has attachments - links to all attachment files
+  commentAttachments: string[];
 
   // must be set for AuditTrailAction.incomingMail
   mailText: string;
