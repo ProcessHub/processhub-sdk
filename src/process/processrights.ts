@@ -98,7 +98,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
 
   if (bpmnProcess != null) {
     // set default owners for all roles
-    let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), true);
+    let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
     lanes.map(lane => {
       if (processRoles[lane.id] == null) {
         processRoles[lane.id] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }] };
