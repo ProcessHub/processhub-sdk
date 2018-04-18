@@ -155,6 +155,7 @@ export const TaskSettings = {
   SaveDecisionInFieldContents: "save-decision-in-fields",
   CustomFieldContentsValue: "custom-field-contents-value",
   RoleOwnersEditable: "roleowners-editable", // boolean: all role owners can be selected
+  SubProcessId: "subprocessid", // id of the process a SubProcess references
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -180,6 +181,8 @@ export interface TaskExtensions {
 
   timerStartConfiguration: TimerStartEventConfiguration[];
   roleOwnersEditable: boolean;
+
+  subProcessId: string;
 }
 
 export interface TimerStartEventConfiguration {
