@@ -142,7 +142,8 @@ export enum AuditTrailAction {
   incomingMail = 4,
   jumpPerformed = 5,
   outgoingMail = 6,
-  instanceStartedByTimer = 7
+  instanceStartedByTimer = 7,
+  messageBoundaryEventTriggered = 8
 }
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo

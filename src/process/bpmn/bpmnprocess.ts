@@ -1734,21 +1734,29 @@ export class BpmnProcess {
     return decisionTasks;
   }
 
-  public getBoundaryDecisionTasksForTask(bpmnTaskId: string): DecisionTask {
-    let boundaryDecisionTask: DecisionTask = null;
+  public hasMessageBoundaryEvent(bpmnTaskId: string): boolean {
+    let taskObject = this.getExistingActivityObject(bpmnTaskId);
+    if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
+      let obj = taskObject.boundaryEventRefs.find(b => b.eventDefinitions.find(ed => ed.$type === BPMN_MESSAGEEVENTDEFINITION) != null);
+      return obj != null;
+    }
+    return false;
+  }
+
+  public getBoundaryDecisionTasksForTask(bpmnTaskId: string): DecisionTask[] {
+    let boundaryDecisionTask: DecisionTask[] = [];
 
     let taskObject = this.getExistingActivityObject(bpmnTaskId);
-
     if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
       let tmpBoundary = taskObject.boundaryEventRefs[taskObject.boundaryEventRefs.length - 1];
       equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
-      boundaryDecisionTask = {
+      boundaryDecisionTask = [{
         bpmnTaskId: tmpBoundary.id,
         name: tmpBoundary.name,
         isBoundaryEvent: true,
         type: DecisionTaskTypes.Boundary,
         boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
-      } as DecisionTask;
+      } as DecisionTask];
     }
 
     return boundaryDecisionTask;
@@ -1778,7 +1786,11 @@ export class BpmnProcess {
   }
 
   public getFlowName(sourceTaskId: string, targetTaskId: string): string {
-    return this.getFlowObject(sourceTaskId, targetTaskId).name;
+    let flowObj = this.getFlowObject(sourceTaskId, targetTaskId);
+    if (flowObj != null) {
+      return flowObj.name;
+    }
+    return null;
   }
 
   private getFlowObject(sourceTaskId: string, targetTaskId: string): Bpmn.FlowElement {
