@@ -1745,9 +1745,9 @@ export class BpmnProcess {
 
   public getBoundaryDecisionTasksForTask(bpmnTaskId: string): DecisionTask[] {
     let boundaryDecisionTask: DecisionTask[] = [];
-
     let taskObject = this.getExistingActivityObject(bpmnTaskId);
-    if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
+
+    if (taskObject != null && taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
       let tmpBoundary = taskObject.boundaryEventRefs[taskObject.boundaryEventRefs.length - 1];
       equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
       boundaryDecisionTask = [{
