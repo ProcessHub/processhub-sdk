@@ -112,7 +112,7 @@ export class BpmnProcess {
       return null;
   }
 
-  public static getExtensionValues(taskObject: Bpmn.Task | Bpmn.Activity): TaskExtensions {
+  public static getExtensionValues(activityObject: Bpmn.Activity): TaskExtensions {
     let returnValue: TaskExtensions = {
       description: null,
       fieldDefinitions: null,
@@ -132,20 +132,22 @@ export class BpmnProcess {
       serviceTaskRequestObjectString: null,
       serviceTaskResponseFieldName: null,
 
-      timerStartConfiguration: null
+      timerStartConfiguration: null,
+
+      subProcessId: undefined,
     };
 
-    if (taskObject == null || taskObject.extensionElements == null || (taskObject.extensionElements != null && taskObject.extensionElements.values == null)) {
+    if (activityObject == null || activityObject.extensionElements == null || (activityObject.extensionElements != null && activityObject.extensionElements.values == null)) {
       return returnValue;
     }
 
-    for (let values of taskObject.extensionElements.values) {
+    for (let values of activityObject.extensionElements.values) {
       if (values != null && values.$children != null) {
         for (let child of values.$children) {
           switch (child.name) {
-            // case Process.TASKSETTINGS_ASSIGNEE:
-            //   returnValue.assigneeId = child.$body;
-            //   break;
+            case TaskSettings.SubProcessId:
+              returnValue.subProcessId = child.$body;
+              break;
             case TaskSettings.Description:
               returnValue.description = child.$body;
               break;
@@ -606,7 +608,7 @@ export class BpmnProcess {
     }
   }
 
-  public static addOrUpdateExtension(task: Bpmn.Task | Bpmn.Activity, key: TaskSettings, value: any, extensionValueType: TaskSettingsValueType): void {
+  public static addOrUpdateExtension(activity: Bpmn.Activity, key: TaskSettings, value: string | boolean | {}[], extensionValueType: TaskSettingsValueType): void {
 
     if (extensionValueType === "List") {
       value = JSON.stringify(value);
@@ -620,24 +622,24 @@ export class BpmnProcess {
       value = "";
 
     let extensionElement;
-    if (!task.extensionElements || task.extensionElements.values == null) {
+    if (!activity.extensionElements || activity.extensionElements.values == null) {
       let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
-      task.extensionElements = extensions;
+      activity.extensionElements = extensions;
     }
 
     // remove second processhub:inputOutput
-    if (task.extensionElements.values.length > 1) {
-      task.extensionElements.values = [task.extensionElements.values[0]];
+    if (activity.extensionElements.values.length > 1) {
+      activity.extensionElements.values = [activity.extensionElements.values[0]];
     }
 
-    for (let extension of task.extensionElements.values) {
+    for (let extension of activity.extensionElements.values) {
       if (extension.$children != null) {
         extension.$children = extension.$children.filter(child => child.name !== key);
         // extensionElement = extension.$children.find(e => e.name === key);
       }
     }
 
-    BpmnModdleHelper.addTaskExtensionInputText(task.extensionElements, key, value);
+    BpmnModdleHelper.addTaskExtensionInputText(activity.extensionElements, key, value as string);
   }
 
   public addLane(processId: string, id: string, name: string): string {
@@ -1617,7 +1619,7 @@ export class BpmnProcess {
     return biggestKey;
   }
 
-  public getLaneNumberOfElement(element: any, laneDictionaries: LaneDictionary[]): number {
+  public getLaneNumberOfElement(element: Bpmn.FlowNode, laneDictionaries: LaneDictionary[]): number {
     for (let laneDictionary of laneDictionaries) {
       let index: number = laneDictionary.ObjectIdsInLane.indexOf(element.id);
       if (index > -1) {
@@ -1806,7 +1808,7 @@ export class BpmnProcess {
   }
 
   public hasTimerStartEvent(): boolean {
-    return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null) != null;
+    return this.getTimerStartEvent() != null;
   }
 
   public hasMailStartEvent(): boolean {
