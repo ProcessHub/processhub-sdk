@@ -1737,9 +1737,17 @@ export class BpmnProcess {
   }
 
   public hasMessageBoundaryEvent(bpmnTaskId: string): boolean {
+    return this.hasBoundaryEventOfType(bpmnTaskId, BPMN_MESSAGEEVENTDEFINITION);
+  }
+
+  public hasTimerBoundaryEvent(bpmnTaskId: string): boolean {
+    return this.hasBoundaryEventOfType(bpmnTaskId, BPMN_TIMEREVENTDEFINITION);
+  }
+
+  private hasBoundaryEventOfType(bpmnTaskId: string, type: string): boolean {
     let taskObject = this.getExistingActivityObject(bpmnTaskId);
     if (taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
-      let obj = taskObject.boundaryEventRefs.find(b => b.eventDefinitions.find(ed => ed.$type === BPMN_MESSAGEEVENTDEFINITION) != null);
+      let obj = taskObject.boundaryEventRefs.find(b => b.eventDefinitions.find(ed => ed.$type === type) != null);
       return obj != null;
     }
     return false;
