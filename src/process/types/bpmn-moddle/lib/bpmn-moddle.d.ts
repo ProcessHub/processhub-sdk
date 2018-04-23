@@ -61,6 +61,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
     public create(descriptor: "bpmn:ExclusiveGateway", attrs: Partial<Bpmn.ExclusiveGateway>): Bpmn.ExclusiveGateway;
     public create(descriptor: "bpmn:ExtensionElements", attrs: Partial<Bpmn.ExtensionElements>): Bpmn.ExtensionElements;
     public create(descriptor: "bpmn:FormalExpression", attrs: Partial<Bpmn.FormalExpression>): Bpmn.FormalExpression;
+    public create(descriptor: "bpmn:IntermediateCatchEvent", attrs: Partial<Bpmn.IntermediateCatchEvent>): Bpmn.IntermediateCatchEvent;
     public create(descriptor: "bpmn:Lane", attrs: Partial<Bpmn.Lane>): Bpmn.Lane;
     public create(descriptor: "bpmn:LaneSet", attrs: Partial<Bpmn.LaneSet>): Bpmn.LaneSet;
     public create(descriptor: "bpmn:MessageEventDefinition", attrs: Partial<Bpmn.MessageEventDefinition>): Bpmn.MessageEventDefinition;
