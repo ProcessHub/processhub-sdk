@@ -32,7 +32,6 @@ export interface UpdateTodoRequest {
   workspaceId: string;
   todoId: string;
   dueAt: Date;
-  color: string;
 }
 export interface UpdateTodoReply extends BaseReply  {
 }
