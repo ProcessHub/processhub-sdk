@@ -28,6 +28,7 @@ export interface InstanceDetails {
   state?: State;
   latestCommentAt?: Date; // datetime of the latest comment or incoming mail
   processXmlHash?: string;
+  color?: string;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;
