@@ -12,6 +12,11 @@ export enum State {
   Canceled = 3,
 }
 
+export interface ParentProcessConfig {
+  parentInstanceId: string;
+  parentTodoId: string;
+}
+
 export interface InstanceDetails {
   // Changes must also be reflected in gqlTypes and gqlFragments below!  
 
@@ -29,6 +34,8 @@ export interface InstanceDetails {
   latestCommentAt?: Date; // datetime of the latest comment or incoming mail
   processXmlHash?: string;
   color?: string;
+  runningSubProcesses?: string[];
+  parentProcessConfigObject?: ParentProcessConfig, 
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;

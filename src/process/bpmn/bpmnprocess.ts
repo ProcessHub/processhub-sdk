@@ -18,6 +18,7 @@ import { LoadTemplateReply } from "../legacyapi";
 import { RowDetails } from "../phclient";
 
 export const BPMN_PROCESS = "bpmn:Process";
+export const BPMN_SUBPROCESS = "bpmn:SubProcess";
 export const BPMN_COLLABORATION = "bpmn:Collaboration";
 export const BPMN_PARTICIPANT = "bpmn:Participant";
 export const BPMN_USERTASK = "bpmn:UserTask";
@@ -1804,8 +1805,12 @@ export class BpmnProcess {
   }
 
   private getFlowObject(sourceTaskId: string, targetTaskId: string): Bpmn.FlowElement {
-    let sourceTask = this.getExistingTask(this.processId(), sourceTaskId);
+    let sourceTask = this.getExistingActivityObject(sourceTaskId);
     let targetObj = null;
+    if (sourceTask == null) {
+      return null;
+    }
+
     if (sourceTask.outgoing.length === 1 && sourceTask.outgoing.last().targetRef.$type === BPMN_EXCLUSIVEGATEWAY) {
       let gateway = sourceTask.outgoing.last().targetRef;
       targetObj = gateway.outgoing.find(out => out.targetRef.id === targetTaskId);
