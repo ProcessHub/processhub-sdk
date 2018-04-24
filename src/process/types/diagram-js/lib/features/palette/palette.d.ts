@@ -87,7 +87,7 @@ declare module "diagram-js/lib/features/palette/Palette" {
     export interface IPaletteEntryDescriptor {
       imageUrl?: string;
       action?: IPaletteEntryAction;
-      group?: "tools" | "bpmn";
+      group: string;
       className?: string;
       title?: string;
       separator?: true;

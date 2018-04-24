@@ -142,6 +142,7 @@ declare module "diagram-js/lib/core/EventBus" {
     public on(events: "resize.end", priority: number, callback: (event: EventBus.ResizeEndEvent) => void): void;
     public on(events: "resize.ended", callback: (event: EventBus.EventBusEvent<EventBus.IResizeEndedContext>) => void): void;
 
+    public on(events: "shape.add", callback: (Event: EventBus.ShapeAddEvent) => void): void;
     public on(events: "shape.added", priority: number, callback: (Event: EventBus.ShapeAddedEvent) => void): void;
     public on(events: "shape.added", callback: (Event: EventBus.ShapeAddedEvent) => void): void;
 
@@ -278,6 +279,12 @@ declare module "diagram-js/lib/core/EventBus" {
       public element: Base;
       public gfx: SVGGElement;
       public originalEvent: MouseEvent;
+    }
+
+    export class ShapeAddEvent extends EventBusEvent<void> {
+      public element: Shape;
+      public parent: Shape;
+      public type: "shape.add";
     }
 
     export class ShapeAddedEvent extends EventBusEvent<void> {
