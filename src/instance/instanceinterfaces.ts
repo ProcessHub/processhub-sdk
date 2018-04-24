@@ -35,7 +35,7 @@ export interface InstanceDetails {
   processXmlHash?: string;
   color?: string;
   runningSubProcesses?: string[];
-  parentProcessConfigObject?: ParentProcessConfig, 
+  parentProcessConfigObject?: ParentProcessConfig;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
     instanceState?: any;
