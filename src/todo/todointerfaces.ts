@@ -9,7 +9,9 @@ export enum TodoStatus {
 
 export enum TodoType {
   Regular = 0,
-  Simulation = 1
+  Simulation = 1, // deprecated: maybe delete on some point and remove all simulation code
+  SubProcess = 2,
+  Intermediate = 3
 }
 
 export interface TodoDetails {
