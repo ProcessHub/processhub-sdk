@@ -1503,47 +1503,59 @@ export class BpmnProcess {
   }
 
   public getSortedTasks(processId: string, ignoreSendTasks: boolean = false): Bpmn.Task[] {
-    let startEventObject: Bpmn.StartEvent = this.getStartEvents(processId)[0];
-    if (startEventObject == null || startEventObject.outgoing == null || startEventObject.outgoing.length == 0)
+    let startEvents: Bpmn.StartEvent[] = this.getStartEvents(processId);
+    if (startEvents == null || startEvents.length == 0) {
       return [];  // process definition is not correct, but function should be fault tolerant
-
-    let taskObject = startEventObject.outgoing[0].targetRef;
+    }
 
     let sortedTasks: Bpmn.Task[] = [];
 
-    // taskObject wird zuerst auf Start event gesetzt!
-    while (taskObject != null && taskObject.$type !== BPMN_ENDEVENT) {
-      if ((taskObject.$type === "bpmn:UserTask" || (!ignoreSendTasks && taskObject.$type === "bpmn:SendTask")) && sortedTasks.find(e => e.id == taskObject.id) == null) {
-        sortedTasks.push(taskObject as Bpmn.Task);
-      } else if (sortedTasks.find(e => e.id == taskObject.id) != null) {
-        break; // Vermeidung Endlosschleife
+    const flowNodeQueue: Bpmn.FlowNode[] = [];
+    startEvents.forEach(s => flowNodeQueue.push(s));
+
+    const checkedFlowNodes: Bpmn.FlowNode[] = [];
+
+    while (flowNodeQueue.length) {
+      const curElem: Bpmn.FlowNode = flowNodeQueue.shift();
+
+      if (checkedFlowNodes.find(s => s.id === curElem.id) == null) {
+        if (curElem.$type === "bpmn:UserTask") {
+          sortedTasks.push(curElem as Bpmn.Task);
+        }
+        if ((!ignoreSendTasks) && (curElem.$type === "bpmn:SendTask")) {
+          sortedTasks.push(curElem as Bpmn.Task);
+        }
+
+        if (curElem.outgoing && curElem.outgoing.length) {
+          curElem.outgoing.forEach(o => {
+            if (o) {
+              flowNodeQueue.push(o.targetRef);
+            }
+          });
+        }
+        checkedFlowNodes.push(curElem);
       }
-      if (taskObject.outgoing != null && taskObject.outgoing[0] != null)
-        taskObject = taskObject.outgoing[0].targetRef;
-      else
-        taskObject = null;
     }
 
-    // Liste enthält nur einen Pfad nach Gateways und ist daher nicht unbedingt vollständig
-    // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
-    let tasks = this.getEvents(processId, BPMN_USERTASK);
-    if (tasks != null) {
-      tasks.map(task => {
-        if (sortedTasks.find(e => e.id == task.id) == null) {
-          sortedTasks.push(task as Bpmn.Task);
-        }
-      });
-    }
-
-    tasks = this.getEvents(processId, BPMN_SENDTASK);
-    if (tasks != null) {
-      tasks.map(task => {
-        if (sortedTasks.find(e => e.id == task.id) == null) {
-          sortedTasks.push(task as Bpmn.Task);
-        }
-      });
-    }
-
+     // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
+     let tasks = this.getEvents(processId, BPMN_USERTASK);
+     if (tasks != null) {
+       tasks.map(task => {
+         if (sortedTasks.find(e => e.id == task.id) == null) {
+           sortedTasks.push(task as Bpmn.Task);
+         }
+       });
+     }
+ 
+     tasks = this.getEvents(processId, BPMN_SENDTASK);
+     if (tasks != null) {
+       tasks.map(task => {
+         if (sortedTasks.find(e => e.id == task.id) == null) {
+           sortedTasks.push(task as Bpmn.Task);
+         }
+       });
+     }
+     
     return sortedTasks;
   }
 
