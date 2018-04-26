@@ -725,7 +725,7 @@ export class BpmnProcess {
       }
     });
 
-    return {objectIdsWithMissingTarget: objectIdsWithMissingTarget, objectIdsWithMissingSource: objectIdsWithMissingSource};
+    return { objectIdsWithMissingTarget: objectIdsWithMissingTarget, objectIdsWithMissingSource: objectIdsWithMissingSource };
   }
 
   // löscht einen Task aus dem XML und dem Diagramm
@@ -1752,6 +1752,40 @@ export class BpmnProcess {
       return obj != null;
     }
     return false;
+  }
+
+  public hasMessageEventDefinition(bpmnTaskId: string): boolean {
+    return this.hasEventDefinitionOfType(bpmnTaskId, BPMN_MESSAGEEVENTDEFINITION);
+  }
+
+  public hasTimerEventDefinition(bpmnTaskId: string): boolean {
+    return this.hasEventDefinitionOfType(bpmnTaskId, BPMN_TIMEREVENTDEFINITION);
+  }
+
+  private hasEventDefinitionOfType(bpmnTaskId: string, type: string): boolean {
+    let flowElements = this.getEvents(this.processId(), BPMN_INTERMEDIATECATCHEVENT);
+    let obj = flowElements.find(f => f.id === bpmnTaskId);
+    if (obj != null) {
+      let event = (obj as Bpmn.IntermediateCatchEvent);
+      if (event.eventDefinitions != null && event.eventDefinitions.length > 0) {
+        let def = event.eventDefinitions.find(def => def.$type === type);
+        return def != null;
+      }
+    }
+    return false;
+  }
+
+  public getIntermediateCatchEvent(bpmnTaskId: string, type: string) {
+    let flowElements = this.getEvents(this.processId(), BPMN_INTERMEDIATECATCHEVENT);
+    let obj = flowElements.find(f => f.id === bpmnTaskId);
+    if (obj != null) {
+      let event = (obj as Bpmn.IntermediateCatchEvent);
+      if (event.eventDefinitions != null && event.eventDefinitions.length > 0) {
+        let def = event.eventDefinitions.find(def => def.$type === type);
+        return def;
+      }
+    }
+    return null;
   }
 
   public getBoundaryDecisionTasksForTask(bpmnTaskId: string): DecisionTask[] {
