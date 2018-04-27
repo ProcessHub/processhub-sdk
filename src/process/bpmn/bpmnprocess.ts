@@ -1584,7 +1584,7 @@ export class BpmnProcess {
   }
 
   public getFollowingSequenceFlowName(bpmnTaskId: string): string {
-    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);
+    let taskObj = this.getExistingActivityObject(bpmnTaskId);
     // fix for multiple outgoings at the moment or no outgoings
     if (taskObj == null || taskObj.outgoing == null || taskObj.outgoing.length > 1) {
       return null;
@@ -1598,7 +1598,7 @@ export class BpmnProcess {
   }
 
   public getPreviousSequenceFlowName(bpmnTaskId: string, sharedSourceElementId: string): string {
-    let taskObj = this.getExistingTask(this.processId(), bpmnTaskId);
+    let taskObj = this.getExistingActivityObject(bpmnTaskId);
     // sure that taskObj has only 1 outgoing
     let seqFlow = taskObj.incoming.find(sf => sf.sourceRef.id === sharedSourceElementId);
     if (seqFlow.name != null && seqFlow.name.trim().length > 0) // ignore empty flow names
@@ -1610,7 +1610,7 @@ export class BpmnProcess {
   public getSharedOutgoingElementId(taskIds: string[]): string {
     let map: any = {};
     taskIds.forEach(taskId => {
-      let obj = this.getExistingTask(this.processId(), taskId);
+      let obj = this.getExistingActivityObject(taskId);
       obj.incoming.forEach(inc => {
         if (map[inc.sourceRef.id] != null) {
           map[inc.sourceRef.id]++;
