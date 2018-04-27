@@ -32,6 +32,7 @@ export interface TodoDetails {
   isPinned?: boolean;
   dueAt?: Date;
   color?: string;
+  subInstanceId?: string;
 }
 export const gqlTodoTypes = `     
   type TodoDetails {
