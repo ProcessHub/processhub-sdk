@@ -4,6 +4,9 @@ import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
 import * as Config from "../config";
+import { InstanceEnvironment } from "../environment";
+import { parseAndInsertStringWithFieldContent } from "../data";
+import { ProcessDetails } from "../process";
 
 export function parseIdMailAddress(prefix: string, mail: string): string {
   mail = mail.toLowerCase();
@@ -83,4 +86,14 @@ export function fieldContentsExcerpt(instance: InstanceDetails, maxLen: number):
     excerpt = excerpt.substr(0, excerpt.length - 3);
 
   return stringExcerpt(excerpt, maxLen);
+}
+
+export function getInstanceTitle(instance: InstanceDetails, process: ProcessDetails): string {
+  if (process.extras.settings && process.extras.settings.dashboard && process.extras.settings.dashboard.cardTitle) {
+    // legacy code, settings are not available for new processes any more
+    return parseAndInsertStringWithFieldContent(process.extras.settings.dashboard.cardTitle, instance.extras.fieldContents);
+  } else if (instance.displayName && instance.displayName != "")
+    return instance.displayName;
+  else 
+    return process.displayName + " " + instance.instanceNumber;
 }
