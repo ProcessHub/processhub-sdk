@@ -95,7 +95,7 @@ export class BpmnProcessDiagram {
     let sortedTasks: Bpmn.FlowNode[] = [];
     if (copyTaskIdsOrderFromTable != null && copyTaskIdsOrderFromTable.length > 0) {
       let tmp = this.bpmnProcess.getExistingActivityObject(copyTaskIdsOrderFromTable[0].taskId);
-      if (tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
+      if (tmp != null && tmp.$type == BpmnProcess.BPMN_STARTEVENT) {
         copyTaskIdsOrderFromTable.splice(0, 1);
       }
     }
@@ -173,6 +173,14 @@ export class BpmnProcessDiagram {
       let flowElements = process.flowElements;
       let drawObjectList: Bpmn.FlowNode[] = [];
       let startElementObject = flowElements.filter((e: any) => e.$type === BpmnProcess.BPMN_STARTEVENT);
+      startElementObject = startElementObject.sort((a, b) => {
+        if ((a as BpmnModdleStartEvent).eventDefinitions == null)
+          return -1;
+
+        if ((b as BpmnModdleStartEvent).eventDefinitions == null)
+          return 1;
+        return 0;
+      });
       drawObjectList = drawObjectList.concat(startElementObject);
 
       drawObjectList = drawObjectList.concat(sortedTasks);
@@ -186,13 +194,16 @@ export class BpmnProcessDiagram {
 
       for (let i = 0; i < drawObjectList.length; i++) {
         let task = drawObjectList[i];
-        if (task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
+        if (task != null && task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
           let gate = gates.find(g => g.incoming.find(inc => inc.sourceRef.id === task.id) != null);
           if (drawObjectList.find(obj => obj.id === gate.id) == null) {
             drawObjectList.splice((i + 1), 0, gate);
           }
         }
       }
+
+      // filter undefined
+      drawObjectList = drawObjectList.filter(elem => elem != null);
 
       this.drawAllTasks(diagram, laneDictionaries, drawObjectList, (this.diagramXStartParam + 100));
 
@@ -246,7 +257,7 @@ export class BpmnProcessDiagram {
       let yParam = (this.diagramYStartParam + 23) + laneNumber * this.diagramLaneHeight;
 
       // weil größe des icons anders
-      if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT ||  workingObject.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY) {
+      if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT || workingObject.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY) {
         // let amountOfStartEvents = taskList.filter(obj => obj.$type === BpmnProcess.BPMN_STARTEVENT);
 
         // let startEventHeightShift = amountOfStartEvents.length == 2 ? 20 : 40;
@@ -255,9 +266,15 @@ export class BpmnProcessDiagram {
 
         yParam = (this.diagramYStartParam + BpmnProcessDiagram.GATEWAY_WIDTH) + laneNumber * this.diagramLaneHeight;
 
+        let standardStartEvent = taskList.filter(t => t.$type === BpmnProcess.BPMN_STARTEVENT && (t as BpmnModdleStartEvent).eventDefinitions == null);
+        let startEvents = taskList.filter(t => t.$type === BpmnProcess.BPMN_STARTEVENT);
+
         let startEvent = (workingObject as BpmnModdleStartEvent);
         if (startEvent.eventDefinitions != null && startEvent.eventDefinitions.length > 0) {
-          xParam -= iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
+          if (standardStartEvent.length > 0 || (startEvents.length > 1 && startEvents.last().id == workingObject.id)) {
+            xParam -= iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
+          }
+
           let isMessageStartEvent = startEvent.eventDefinitions.last().$type === BpmnProcess.BPMN_MESSAGEEVENTDEFINITION;
           isMessageStartEvent ?
             yParam -= 40 :

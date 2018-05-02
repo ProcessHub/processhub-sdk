@@ -1874,6 +1874,38 @@ export class BpmnProcess {
     return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_MESSAGEEVENTDEFINITION) != null) != null;
   }
 
+  public hasStandardStartEvent(): boolean {
+    return this.getStartEvents(this.processId()).find(start => start.eventDefinitions == null) != null;
+  }
+
+  public addStartEvent(rowDetails: RowDetails[]): void {
+    if (this.getStartEvents(this.processId()).find(start => start.eventDefinitions == null) == null) {
+      let start = this.getStartEvents(this.processId()).last();
+      let targetTask = start.outgoing.last().targetRef;
+      let processContext: Bpmn.Process = this.getProcess(this.processId());
+      let startEventObject = this.moddle.create(BPMN_STARTEVENT, { id: BpmnProcess.getBpmnId(BPMN_STARTEVENT), outgoing: [], incoming: [] });
+
+      this.addSequenceFlow(this.processId(), startEventObject, targetTask, false);
+      processContext.flowElements.push(startEventObject);
+
+      let lane = this.getLaneOfFlowNode(start.id);
+      this.addTaskToLane(this.processId(), lane.id, startEventObject);
+      this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
+    }
+  }
+
+  public removeStartEvent(rowDetails: RowDetails[]): void {
+    let processContext = this.getProcess(this.processId());
+
+    let startEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions == null);
+    this.removeSequenceFlow(this.processId(), startEvent.outgoing.last());
+
+    processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== startEvent.id);
+
+    this.removeTaskObjectFromLanes(this.processId(), startEvent);
+    this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
+  }
+
   public getTimerStartEvent(): Bpmn.StartEvent {
     return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null);
   }
