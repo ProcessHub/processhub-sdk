@@ -124,6 +124,8 @@ export class BpmnProcess {
       allFieldsEditable: false,
       roleOwnersEditable: false,
       viewAllFields: true,
+      dueAtDateCanBeEdit: true,
+      dueAtDuration: null,
       sendMailNotification: true,
       requiredFieldsNeeded: null,
       saveDecisionInFieldContents: false,
@@ -171,6 +173,12 @@ export class BpmnProcess {
               break;
             case TaskSettings.ViewAllFields:
               returnValue.viewAllFields = child.$body != "false";
+              break;
+            case TaskSettings.DueAtDateCanBeEdit:
+              returnValue.dueAtDateCanBeEdit = child.$body != "false";
+              break;
+            case TaskSettings.DueAtDuration:
+              returnValue.dueAtDuration = child.$body;
               break;
             case TaskSettings.RequiredFieldsNeeded: {
               try {
@@ -1537,25 +1545,25 @@ export class BpmnProcess {
       }
     }
 
-     // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
-     let tasks = this.getEvents(processId, BPMN_USERTASK);
-     if (tasks != null) {
-       tasks.map(task => {
-         if (sortedTasks.find(e => e.id == task.id) == null) {
-           sortedTasks.push(task as Bpmn.Task);
-         }
-       });
-     }
- 
-     tasks = this.getEvents(processId, BPMN_SENDTASK);
-     if (tasks != null) {
-       tasks.map(task => {
-         if (sortedTasks.find(e => e.id == task.id) == null) {
-           sortedTasks.push(task as Bpmn.Task);
-         }
-       });
-     }
-     
+    // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
+    let tasks = this.getEvents(processId, BPMN_USERTASK);
+    if (tasks != null) {
+      tasks.map(task => {
+        if (sortedTasks.find(e => e.id == task.id) == null) {
+          sortedTasks.push(task as Bpmn.Task);
+        }
+      });
+    }
+
+    tasks = this.getEvents(processId, BPMN_SENDTASK);
+    if (tasks != null) {
+      tasks.map(task => {
+        if (sortedTasks.find(e => e.id == task.id) == null) {
+          sortedTasks.push(task as Bpmn.Task);
+        }
+      });
+    }
+
     return sortedTasks;
   }
 

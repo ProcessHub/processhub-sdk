@@ -155,7 +155,9 @@ export const TaskSettings = {
   SaveDecisionInFieldContents: "save-decision-in-fields",
   CustomFieldContentsValue: "custom-field-contents-value",
   RoleOwnersEditable: "roleowners-editable", // boolean: all role owners can be selected
-  SubProcessId: "subprocessid", // id of the process a SubProcess references
+  SubProcessId: "subprocessid", // id of the process a SubProcess references,
+  DueAtDateCanBeEdit: "due-at-can-be-edit",
+  DueAtDuration: "due-at-duration"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -174,6 +176,8 @@ export interface TaskExtensions {
   requiredFieldsNeeded: TaskIdRequiredFieldsNeeded[];
   saveDecisionInFieldContents: boolean;
   customFieldContentsValue: string;
+  dueAtDateCanBeEdit: boolean;
+  dueAtDuration: string; // standard dueAtDuration in seconds
 
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
