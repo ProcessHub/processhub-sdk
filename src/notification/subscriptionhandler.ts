@@ -46,8 +46,10 @@ export async function initNotificationClient(user: UserDetails) {
     });
 
     notificationClient.onError = () => {
-      console.info("Site reload because of websocket error.");
-      window.location.reload();
+      setTimeout(() => {
+        console.info("Site reload because of websocket error.");
+        window.location.reload();
+      }, 15000);
     };
 
     notificationClient.onDisconnect = () => {
