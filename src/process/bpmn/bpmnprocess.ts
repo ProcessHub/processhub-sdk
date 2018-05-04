@@ -1511,6 +1511,14 @@ export class BpmnProcess {
   }
 
   public getSortedTasks(processId: string, ignoreSendTasks: boolean = false): Bpmn.Task[] {
+    if (ignoreSendTasks) {
+      return this.getSortedActivities(processId, ["bpmn:UserTask"]) as Bpmn.Task[];
+    } else {
+      return this.getSortedActivities(processId, ["bpmn:UserTask", "bpmn:SendTask"]) as Bpmn.Task[];
+    }
+  }
+
+  public getSortedActivities(processId: string, types: Bpmn.ElementType[]): Bpmn.Activity[] {
     let startEvents: Bpmn.StartEvent[] = this.getStartEvents(processId);
     if (startEvents == null || startEvents.length == 0) {
       return [];  // process definition is not correct, but function should be fault tolerant
@@ -1527,10 +1535,7 @@ export class BpmnProcess {
       const curElem: Bpmn.FlowNode = flowNodeQueue.shift();
 
       if (checkedFlowNodes.find(s => s.id === curElem.id) == null) {
-        if (curElem.$type === "bpmn:UserTask") {
-          sortedTasks.push(curElem as Bpmn.Task);
-        }
-        if ((!ignoreSendTasks) && (curElem.$type === "bpmn:SendTask")) {
+        if (types.indexOf(curElem.$type) >= 0) {
           sortedTasks.push(curElem as Bpmn.Task);
         }
 
@@ -1545,23 +1550,16 @@ export class BpmnProcess {
       }
     }
 
-    // Nochmals alle Tasks iterieren und fehlende Tasks anfügen
-    let tasks = this.getEvents(processId, BPMN_USERTASK);
-    if (tasks != null) {
-      tasks.map(task => {
-        if (sortedTasks.find(e => e.id == task.id) == null) {
-          sortedTasks.push(task as Bpmn.Task);
-        }
-      });
-    }
-
-    tasks = this.getEvents(processId, BPMN_SENDTASK);
-    if (tasks != null) {
-      tasks.map(task => {
-        if (sortedTasks.find(e => e.id == task.id) == null) {
-          sortedTasks.push(task as Bpmn.Task);
-        }
-      });
+    // Nochmals alle Activities iterieren und fehlende anfügen
+    for (const type of types) {
+      let tasks = this.getEvents(processId, type);
+      if (tasks != null) {
+        tasks.map(task => {
+          if (sortedTasks.find(e => e.id == task.id) == null) {
+            sortedTasks.push(task as Bpmn.Task);
+          }
+        });
+      }
     }
 
     return sortedTasks;
