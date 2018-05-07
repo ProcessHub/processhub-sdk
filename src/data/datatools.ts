@@ -1,5 +1,10 @@
 import { FieldContentMap, isFieldValue, FieldValue, FieldDefinition, FieldType } from "./datainterfaces";
 import { getFormattedDate } from "../tools/timing";
+import { InstanceDetails } from "../instance";
+
+export function replaceAll(target: string, search: string, replacement: string) {
+  return target.replace(new RegExp(search, "g"), replacement);
+}
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
   if (inputString == null)
@@ -13,22 +18,24 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
   let match;
   while ((match = regex.exec(inputString)) !== null) {
-    if (match.index === regex.lastIndex)
-      regex.lastIndex++;
+    /*if (match.index === regex.lastIndex)
+      regex.lastIndex++;*/
 
     let fieldPlaceholder = match[groupIndexForFieldPlaceholder];
     let fieldName = match[groupIndexForFieldName];
 
     if (fieldName != null) {
-      let valueObject = fieldContentMap[fieldName];      
+      let valueObject = fieldContentMap[fieldName];   
+ 
       if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
-          inputString = inputString.replace(fieldPlaceholder, val);
-        } else
-          inputString = inputString.replace(fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
+          inputString = replaceAll(inputString, fieldPlaceholder, val);
+        } else {
+          inputString = replaceAll(inputString, fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
+        }
       } else {
-        inputString = inputString.replace(fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
+        inputString = replaceAll(inputString, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
 
       }
     }
