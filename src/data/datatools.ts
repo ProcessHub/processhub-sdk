@@ -1,32 +1,32 @@
 import { FieldContentMap, isFieldValue, FieldValue, FieldDefinition, FieldType } from "./datainterfaces";
 import { getFormattedDate } from "../tools/timing";
 import { InstanceDetails } from "../instance";
+import { BpmnProcess, RoleOwnerMap } from "../process";
+import { Bpmn } from "../process/bpmn";
 
 export function replaceAll(target: string, search: string, replacement: string) {
   return target.replace(new RegExp(search, "g"), replacement);
 }
 
-export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap): string {
+export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap, process: BpmnProcess, roleOwners: RoleOwnerMap): string {
   if (inputString == null)
     return null;
   if (fieldContentMap == null)
     return inputString;
-    
+
   const regex = /([{]{2}[\s]?field\.(.+?)(\s)*[}]{2})/g;
-  const groupIndexForFieldPlaceholder = 0;
-  const groupIndexForFieldName = 2;
+  const groupIndexForPlaceholder = 0;
+  const groupIndexForIdentifier = 2;
 
   let match;
   while ((match = regex.exec(inputString)) !== null) {
-    /*if (match.index === regex.lastIndex)
-      regex.lastIndex++;*/
 
-    let fieldPlaceholder = match[groupIndexForFieldPlaceholder];
-    let fieldName = match[groupIndexForFieldName];
+    let fieldPlaceholder = match[groupIndexForPlaceholder];
+    let fieldName = match[groupIndexForIdentifier];
 
     if (fieldName != null) {
-      let valueObject = fieldContentMap[fieldName];   
- 
+      let valueObject = fieldContentMap[fieldName];
+
       if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
@@ -41,6 +41,22 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     }
   }
 
+  const roleRegex = /([{]{2}[\s]?role\.(.+?)(\s)*[}]{2})/g;
+  while ((match = roleRegex.exec(inputString)) !== null) {
+
+    const placeHolder: string = match[groupIndexForPlaceholder];
+    const roleName: string = match[groupIndexForIdentifier];
+
+    if (roleName != null) {
+      const lane: Bpmn.Lane = process.getLanes(process.processId(), false).find(l => l.name === roleName);
+      if (lane) {
+        const roleOwner = roleOwners[lane.id];
+        if (roleOwner && roleOwner.length) {
+          inputString = replaceAll(inputString, placeHolder, roleOwner[0].displayName);
+        }
+      }
+    }
+  }
   return inputString;
 }
 
@@ -54,9 +70,9 @@ interface ILegacySchema {
   properties: { [id: string]: ILegacyProperty };
 }
 export function updateLegacyFieldDefinitions(definitions: any): FieldDefinition[] {
-  if (!(definitions instanceof Array)) {        
+  if (!(definitions instanceof Array)) {
     const properties: { [id: string]: ILegacyProperty } = (definitions as ILegacySchema).properties;
-    let updatedDefinitions: FieldDefinition[] = [];      
+    let updatedDefinitions: FieldDefinition[] = [];
     let rowNumber: number = 0;
     for (const id in properties) {
       if (typeof id === "string") {
@@ -66,12 +82,12 @@ export function updateLegacyFieldDefinitions(definitions: any): FieldDefinition[
           isRequired: property.required,
           name: property.title,
           rowNumber,
-          type: property.customWidgetClass as FieldType,              
+          type: property.customWidgetClass as FieldType,
         });
         rowNumber++;
       }
-    }   
-    return updatedDefinitions;     
+    }
+    return updatedDefinitions;
   } else
     return definitions as FieldDefinition[];
 }
