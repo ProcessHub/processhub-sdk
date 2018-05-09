@@ -97,6 +97,8 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
      */
     public preExecute(events: string | string[], priority: number, handlerFn: Function, unwrap: boolean, that: Object): void;
     public preExecute(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeletePreExecuteEvent) => void, unwrap: boolean): void;
+    public preExecute(events: "shape.create", callback: (event: CommandInterceptor.ShapeCreateEvent) => void, unwrap: boolean): void;
+    public preExecute(events: "elements.move", callback: (event: CommandInterceptor.ElementsMoveEvent) => void, unwrap: boolean): void;
 
     /**
      * A named hook for plugging into the command execution
@@ -146,7 +148,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
      */
     public postExecute(events: string | string[], priority: number, handlerFn: Function, unwrap: boolean, that: Object): void;
     public postExecute(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void): void;
-    public postExecute(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeleteEvent) => void): void;
+    public postExecute(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeleteEvent) => void, unwrap?: boolean): void;
     public postExecute(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void, unwrap: boolean): void;
 
     /**

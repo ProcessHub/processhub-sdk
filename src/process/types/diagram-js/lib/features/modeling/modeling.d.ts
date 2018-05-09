@@ -100,7 +100,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
     public reconnectStart(connection: {}, newSource: {}, dockingOrPoints: {}): {};
     public reconnectEnd(connection: Connection, newTarget: Shape, dockingOrPoints: IPoint | IPoint[]): {};
 
-    public connect(source: Base, target: Base, attrs: Object, hints: Modeling.IConnectionHints): Connection;
+    public connect(source: Shape, target: Shape, attrs: Object, hints: Modeling.IConnectionHints): Connection;
     public _create(type: {}, attrs: {}): {};
 
     public toggleCollapse(shape: Base, hints: {}): {};
