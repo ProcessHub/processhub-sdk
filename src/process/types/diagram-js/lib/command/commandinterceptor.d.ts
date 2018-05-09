@@ -96,6 +96,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
      * @param {Object} [that] Pass context (`this`) to the handler function
      */
     public preExecute(events: string | string[], priority: number, handlerFn: Function, unwrap: boolean, that: Object): void;
+    public preExecute(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeletePreExecuteEvent) => void, unwrap: boolean): void;
 
     /**
      * A named hook for plugging into the command execution
@@ -162,6 +163,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
     public postExecuted(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void): void;
     public postExecuted(event: "elements.move", callback: (event: CommandInterceptor.ElementsMoveEvent) => void, unwrap: boolean): void;
     public postExecuted(event: "shape.create", callback: (event: CommandInterceptor.ShapeCreateEvent) => void, unwrap: boolean): void;
+    public postExecuted(events: "shape.delete", callback: (event: CommandInterceptor.ShapeDeleteEvent) => void, unwrap: boolean): void;
 
     /**
      * A named hook for plugging into the command execution
@@ -204,6 +206,13 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
         oldParentIndex: number,
         shape: Shape,
       };
+      hints: {};
+      shape: Shape;
+    }
+
+    export interface ShapeDeletePreExecuteEvent {
+      hints: {};
+      shape: Shape;
     }
 
     export interface ElementsMoveEvent {
@@ -211,7 +220,7 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
       delta: IPoint;
       hints: {};
       newParent: Base;
-      shapes: Shape[];      
+      shapes: Shape[];
     }
 
     export interface ShapeCreateEvent {
