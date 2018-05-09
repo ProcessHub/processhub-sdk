@@ -183,6 +183,7 @@ export function createUserAction(mail: string, realName: string, password: strin
       // Nur Weiterleiten, wenn erfolgreich
       if (response.result === Api.ApiResult.API_OK) {
         if (typeof window !== "undefined") { // window not available in unit tests
+          (window as any).dataLayer.push({ "event": "registered" });
           window.location.href = "/";
         }
       }
