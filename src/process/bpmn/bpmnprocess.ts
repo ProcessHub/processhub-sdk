@@ -540,7 +540,7 @@ export class BpmnProcess {
   }
 
   public changeRole(rowDetails: RowDetails[], taskId: string, laneId: string) {
-    let task = this.getExistingTask(this.processId(), taskId);
+    let task = this.getExistingActivityObject(taskId);
     if (task.$type as string == BPMN_STARTEVENT) {
       this.getStartEvents(this.processId()).forEach(start => {
         this.setRoleForTask(this.processId(), laneId, start);
@@ -1180,6 +1180,12 @@ export class BpmnProcess {
 
     let messageStartEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(event => event.$type === type) != null);
     this.removeSequenceFlow(this.processId(), messageStartEvent.outgoing.last());
+
+    let row = rowDetails.find(row => row.taskId == messageStartEvent.id);
+    if (row != null) {
+      let otherStart = this.getStartEvents(this.processId()).last();
+      row.taskId = otherStart.id;
+    }
 
     processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== messageStartEvent.id);
 
@@ -1905,10 +1911,14 @@ export class BpmnProcess {
 
     let startEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions == null);
     this.removeSequenceFlow(this.processId(), startEvent.outgoing.last());
+    let row = rowDetails.find(row => row.taskId === startEvent.id);
 
     processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== startEvent.id);
 
     this.removeTaskObjectFromLanes(this.processId(), startEvent);
+    let otherStart = this.getStartEvents(this.processId()).last();
+    row.taskId = otherStart.id;
+
     this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
