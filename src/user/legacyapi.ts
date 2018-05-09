@@ -22,6 +22,8 @@ export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 export interface CreateUserRequest extends BaseRequest {
   userDetails: UserDetails;
   password: string;
+  company: string;
+  phone: string;
 }
 
 export interface LoginRequest extends BaseRequest {

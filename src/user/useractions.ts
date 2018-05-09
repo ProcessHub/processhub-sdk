@@ -161,10 +161,10 @@ export function logoutUserAction(accessToken?: string) {
   };
 }
 
-export async function createUser(mail: string, realName: string, password: string) {
-  await rootStore.dispatch(createUserAction(mail, realName, password));
+export async function createUser(mail: string, realName: string, password: string, company: string, phone: string) {
+  await rootStore.dispatch(createUserAction(mail, realName, password, company, phone));
 }
-export function createUserAction(mail: string, realName: string, password: string) {
+export function createUserAction(mail: string, realName: string, password: string, company: string, phone: string) {
   return function (dispatch: any) {
     let userDetails: UserDetails = {
       userId: createUserId(),
@@ -172,10 +172,13 @@ export function createUserAction(mail: string, realName: string, password: strin
       realName: realName,
       extras: {}
     };
-    return Api.postJson(UserRequestRoutes.Register, <CreateUserRequest>{
+    const request: CreateUserRequest = {
       userDetails: userDetails,
-      password: password
-    }).then((response: LoginReply) => {
+      password: password,
+      company,
+      phone,
+    };
+    return Api.postJson(UserRequestRoutes.Register, request).then((response: LoginReply) => {
       dispatch(response);
       // Nur Weiterleiten, wenn erfolgreich
       if (response.result === Api.ApiResult.API_OK) {
