@@ -1,7 +1,7 @@
 declare module "diagram-js/lib/command/CommandInterceptor" {
   import EventBus = require("diagram-js/lib/core/EventBus");
-  import { IBounds } from "diagram-js";
-  import { Shape } from "diagram-js/lib/model";
+  import { IBounds, IPoint } from "diagram-js";
+  import { Shape, Base } from "diagram-js/lib/model";
 
   export = CommandInterceptor;
 
@@ -160,6 +160,8 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
      */
     public postExecuted(events: string | string[], priority: number, handlerFn: Function, unwrap: boolean, that: Object): void;
     public postExecuted(events: "shape.resize", callback: (event: CommandInterceptor.ShapeResizeEvent) => void): void;
+    public postExecuted(event: "elements.move", callback: (event: CommandInterceptor.ElementsMoveEvent) => void, unwrap: boolean): void;
+    public postExecuted(event: "shape.create", callback: (event: CommandInterceptor.ShapeCreateEvent) => void, unwrap: boolean): void;
 
     /**
      * A named hook for plugging into the command execution
@@ -202,6 +204,22 @@ declare module "diagram-js/lib/command/CommandInterceptor" {
         oldParentIndex: number,
         shape: Shape,
       };
+    }
+
+    export interface ElementsMoveEvent {
+      closure: {};
+      delta: IPoint;
+      hints: {};
+      newParent: Base;
+      shapes: Shape[];      
+    }
+
+    export interface ShapeCreateEvent {
+      hints: {};
+      parent: Base;
+      parentIndex: {};
+      position: IPoint;
+      shape: Shape;
     }
   }
 }
