@@ -65,6 +65,9 @@ declare module "diagram-js-direct-editing/lib/DirectEditing" {
         height: number,
       };
       text: string;
+      options?: {
+        centerVertically: boolean;
+      };
     }
 
     export interface DirectEditingProvider {

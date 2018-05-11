@@ -78,7 +78,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
     public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): Label;
 
-    public appendShape(source: {}, shape: Base, position: {}, parent: {}, connection: {}, connectionParent: {}): {};
+    public appendShape(source: Shape, shape: Shape, position: IPoint, parent: Base, connection?: {}, connectionParent?: {}): {};
 
     public removeElements(elements: Base[]): void;
 
