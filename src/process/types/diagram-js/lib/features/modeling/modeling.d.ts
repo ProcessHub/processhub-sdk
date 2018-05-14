@@ -47,7 +47,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
      * @param {Boolean} [isAttach=false]
      * @param {Object} [hints]
      */
-    public moveElements(shapes: Base[], delta: IPoint, target: Base, isAttach: boolean, hints: Object): void;
+    public moveElements(shapes: Base[], delta: IPoint, target: Base, hints: { attach: boolean }): void;
 
     public moveConnection(connection: {}, delta: {}, newParent: {}, newParentIndex: {}, hints: {}): {};
 
@@ -74,11 +74,11 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
       parent: Base,
       hints: Modeling.IConnectionHints): Connection;
 
-    public createShape(shape: Base, position: {}, target: Base, targetIndex: number, isAttach: boolean, hints: Object): {};
+    public createShape(shape: Base, position: {}, target: Base, targetIndex: number, hints: { attach: boolean }): {};
 
     public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): Label;
 
-    public appendShape(source: Shape, shape: Shape, position: IPoint, parent: Base, connection?: {}, connectionParent?: {}): {};
+    public appendShape(source: Shape, shape: Shape, position: IPoint, target: Base, hints: { connection?: {}, connectionParent?: {}, attach?: boolean }): {};
 
     public removeElements(elements: Base[]): void;
 
