@@ -124,7 +124,7 @@ export class BpmnProcess {
       allFieldsEditable: false,
       roleOwnersEditable: false,
       viewAllFields: true,
-      dueAtDateCanBeEdit: true,
+      dueAtDateCanBeEdit: false,
       dueAtDuration: null,
       sendMailNotification: true,
       requiredFieldsNeeded: null,
