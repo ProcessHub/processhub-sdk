@@ -1,5 +1,6 @@
 import { BaseMessage, BaseRequest } from "../legacyapi/apiinterfaces";
 import { ProcessDetails, ProcessExtras, ProcessResult, TimerStartEventConfiguration } from "./processinterfaces";
+import { StatisticRow } from "../data";
 
 // API routes
 export const ProcessRequestRoutes = {
@@ -16,6 +17,7 @@ export const ProcessRequestRoutes = {
   RateProcess: "/api/process/rateprocess",
   UploadFile: "/api/process/uploadfile",
   DeleteFile: "/api/process/deletefile",
+  GetProcessStatistics: "/api/process/getstatistics",
 };
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
@@ -93,6 +95,13 @@ export interface DeleteFileRequest extends BaseRequest {
   processId: string;
   attachmentId: string;
 }
+
+export interface GetProcessStatisticsRequest extends BaseRequest {
+  processId: string;
+}
+export interface GetProcessStatisticsReply extends ProcessReply {
+  statistics: StatisticRow[];
+}  
 
 export const PROCESSLOADED_MESSAGE = "ProcessLoadedMessage";
 export interface ProcessLoadedMessage extends BaseMessage {
