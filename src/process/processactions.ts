@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import * as StateHandler from "../statehandler";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration } from "./processinterfaces";
-import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply } from "./legacyapi";
+import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply, GetProcessStatisticsReply, GetProcessStatisticsRequest } from "./legacyapi";
 import { isTrue } from "../tools/assert";
 import { createId } from "../tools/guid";
 import { tl } from "../tl";
@@ -24,6 +24,7 @@ export const ProcessActionType = {
   Update: "PROCESSACTION_UPDATE",
   Failed: "PROCESSACTION_FAILED",
   RateDone: "PROCESSACTION_RATEDONE",
+  GetProcessStatistics: "PROCESSACTION_GETPROCESSSTATISTICS",
 };
 export type ProcessActionType = keyof typeof ProcessActionType;
 
@@ -417,6 +418,22 @@ export function setTimersOfProcessAction(processId: string, timers: TimerStartEv
       processId: processId,
       timers: timers
     }, accessToken);
+
+    dispatch(response);
+    return response;
+  };
+}
+
+export async function getProcessStatistics(processId: string, accessToken: string = null): Promise<GetProcessStatisticsReply> {
+  // siehe https://github.com/jaysoo/todomvc-redux-react-typescript/blob/master/client/todos/actions.ts
+  return await rootStore.dispatch(getProcessStatisticsAction(processId, accessToken));
+}
+
+export function getProcessStatisticsAction(processId: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessStatisticsReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<GetProcessStatisticsReply> => {
+    let response: GetProcessStatisticsReply = await Api.postJson(ProcessRequestRoutes.GetProcessStatistics, {
+      processId: processId
+    }, accessToken) as GetProcessStatisticsReply;
 
     dispatch(response);
     return response;

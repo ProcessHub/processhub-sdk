@@ -19,16 +19,16 @@ export interface TaskIdRequiredFieldsNeeded {
 export interface FieldValue {
   type: string;
   value:
-    Date | // Date
-    string | // TextInput, TextArea
-    boolean | // Checkbox
-    string[] | // FileUpload
-    { [key: string]: boolean }; // Checklist
+  Date | // Date
+  string | // TextInput, TextArea
+  boolean | // Checkbox
+  string[] | // FileUpload
+  { [key: string]: boolean }; // Checklist
 }
 
 export type FieldType = "ProcessHubTextInput"
   | "ProcessHubTextArea"
-  | "ProcessHubInstanceTitle"  
+  | "ProcessHubInstanceTitle"
   | "ProcessHubCheckbox"
   | "ProcessHubFileUpload"
   | "ProcessHubRoleOwner"
@@ -107,4 +107,47 @@ export function getFiletypeIcon(filename: string): SemanticICONS {
     default:
       return "file outline";
   }
+}
+
+
+/* interfaces for statistics */
+export enum StatisticsAction {
+  // process
+  processCreated = 1,
+  processEdited = 2,
+  processDeleted = 3,
+
+  // instance
+  instanceStarted = 10,
+  instanceAborted = 11,
+  instanceIncomingMail = 12,
+  instanceOutgoingMail = 13,
+  instanceJumped = 14,
+
+  // todo
+  todoCreated = 20,
+  todoCompleted = 21,
+  todoUpdated = 22,
+  todoExecuted = 23,
+  todoWithDecision = 24,
+
+  // user
+  userComment = 30,
+}
+
+export interface StatisticTrailEntry {
+  todo?: { todoId?: string, bpmnTaskId: string, bpmnLaneId: string, desicionTaskBpmnTaskId?: string };
+  instance?: { instanceId: string; jumpToBpmnTask?: string };
+  user?: { instanceId: string; };
+  process?: {};
+}
+
+export interface StatisticRow {
+  statisticsId: string;
+  workspaceId: string;
+  processId: string;
+  details: StatisticTrailEntry;
+  action: StatisticsAction;
+  userId: string;
+  createdAt: Date;
 }
