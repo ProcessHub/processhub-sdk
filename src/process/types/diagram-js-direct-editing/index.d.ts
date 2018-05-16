@@ -1,10 +1,10 @@
 // tslint:disable:variable-name
 declare module "diagram-js-direct-editing" {
-  import Diagram = require("diagram-js");
+  import { IPlugin } from "diagram-js";
 
   interface IDiagramJsDirectEditingExport {
     __init__: string[];
-    __depends__: Diagram.IPlugin[];
+    __depends__: IPlugin[];
   }
 
   const _default: IDiagramJsDirectEditingExport;

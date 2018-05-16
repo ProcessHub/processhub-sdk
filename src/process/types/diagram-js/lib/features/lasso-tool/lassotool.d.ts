@@ -1,10 +1,8 @@
 declare module "diagram-js/lib/features/lasso-tool/LassoTool" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Canvas = require("diagram-js/lib/core/Canvas");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Canvas from "diagram-js/lib/core/Canvas";
 
-  export = LassoTool;
-
-  class LassoTool {
+  export default class LassoTool {
     constructor(eventBus: EventBus, canvas: Canvas, dragging: {}, elementRegistry: {}, selection: {}, toolManager: {});
 
     public activateLasso(event: Event): void;

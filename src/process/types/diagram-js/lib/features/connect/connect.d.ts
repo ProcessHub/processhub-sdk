@@ -1,16 +1,14 @@
 
 declare module "diagram-js/lib/features/connect/Connect" {
   import { Base } from "diagram-js/lib/model";
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Dragging = require("diagram-js/lib/features/dragging/Dragging");
-  import Modeling = require("diagram-js/lib/features/modeling/Modeling");
-  import Rules = require("diagram-js/lib/features/rules/Rules");
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import GraphicsFactory = require("diagram-js/lib/core/GraphicsFactory");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Dragging from "diagram-js/lib/features/dragging/Dragging";
+  import Modeling from "diagram-js/lib/features/modeling/Modeling";
+  import Rules from "diagram-js/lib/features/rules/Rules";
+  import Canvas from "diagram-js/lib/core/Canvas";
+  import GraphicsFactory from "diagram-js/lib/core/GraphicsFactory";
 
-  export = Connect;
-
-  class Connect {
+  export default class Connect {
     constructor(eventBus: EventBus, dragging: Dragging, modeling: Modeling, rules: Rules, canvas: Canvas, graphicsFactory: GraphicsFactory);
 
     /**

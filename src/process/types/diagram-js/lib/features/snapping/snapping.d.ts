@@ -1,12 +1,11 @@
 declare module "diagram-js/lib/features/snapping/Snapping" {
-  export = Snapping;
 
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import Canvas from "diagram-js/lib/core/Canvas";
+  import EventBus from "diagram-js/lib/core/EventBus";
   import { Base, Shape } from "diagram-js/lib/model";
-  import SnapContext = require("diagram-js/lib/features/snapping/SnapContext");
+  import SnapContext, { SnapPoints } from "diagram-js/lib/features/snapping/SnapContext";
 
-  class Snapping {
+  export default class Snapping {
     /**
      * A general purpose snapping component for diagram elements.
      *
@@ -21,7 +20,7 @@ declare module "diagram-js/lib/features/snapping/Snapping" {
     public showSnapLine(orientation: {}, position: {}): void;
     public getSnapLine(orientation: {}): {};
     public hide(): void;
-    public addTargetSnaps(snapPoints: SnapContext.SnapPoints, shape: Shape, target: Base): void;
+    public addTargetSnaps(snapPoints: SnapPoints, shape: Shape, target: Base): void;
     public getSiblings(element: {}, target: {}): {};
   }
 

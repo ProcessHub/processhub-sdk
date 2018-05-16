@@ -1,9 +1,7 @@
 declare module "diagram-js/lib/command/CommandStack" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import EventBus from "diagram-js/lib/core/EventBus";
   import { IBounds } from "diagram-js";
   import { Shape } from "diagram-js/lib/model";
-
-  export = CommandStack;
 
   /**
    * A service that offers un- and redoable execution of commands.
@@ -78,7 +76,7 @@ declare module "diagram-js/lib/command/CommandStack" {
    *
    * @see CommandHandler
    */
-  class CommandStack {
+  export default class CommandStack {
 
     /**
      * A map of all registered command handlers.

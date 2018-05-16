@@ -2,14 +2,12 @@ declare module "diagram-js/lib/layout/BaseLayouter" {
   import { IPoint } from "diagram-js";
   import { Connection } from "diagram-js/lib/model";
 
-  export = BaseLayouter;
-
   /**
    * A base connection layouter implementation
    * that layouts the connection by directly connecting
    * mid(source) + mid(target).
    */
-  class BaseLayouter {
+  export default class BaseLayouter {
     constructor();
 
     /**
@@ -25,13 +23,12 @@ declare module "diagram-js/lib/layout/BaseLayouter" {
      *
      * @return {Array<Point>} the layouted connection waypoints
      */
-    public layoutConnection(connection: Connection, hints: BaseLayouter.IConnectionHints): IPoint[];
+    public layoutConnection(connection: Connection, hints: IConnectionHints): IPoint[];
   }
 
-  namespace BaseLayouter {
-    export interface IConnectionHints {
-      connectionStart: IPoint | false;
-      connectionEnd: IPoint | false;
-    }
+  export interface IConnectionHints {
+    connectionStart: IPoint | false;
+    connectionEnd: IPoint | false;
   }
+
 }

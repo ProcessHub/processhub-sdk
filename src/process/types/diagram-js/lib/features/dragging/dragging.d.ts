@@ -1,8 +1,7 @@
 declare module "diagram-js/lib/features/dragging/Dragging" {
-  export = Dragging;
 
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import Canvas from "diagram-js/lib/core/Canvas";
+  import EventBus from "diagram-js/lib/core/EventBus";
   import { IPoint } from "diagram-js";
   /**
    * A helper that fires canvas localized drag events and realizes
@@ -82,7 +81,7 @@ declare module "diagram-js/lib/features/dragging/Dragging" {
    *   });
    * }
    */
-  class Dragging {
+  export default class Dragging {
     constructor(eventBus: EventBus, canvas: Canvas, selection: Selection);
     /**
      * Initialize a drag operation.

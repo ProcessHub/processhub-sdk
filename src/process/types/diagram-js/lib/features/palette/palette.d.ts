@@ -1,16 +1,14 @@
 declare module "diagram-js/lib/features/palette/Palette" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Canvas = require("diagram-js/lib/core/Canvas");
-
-  export = Palette;
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Canvas from "diagram-js/lib/core/Canvas";
 
   /**
    * A palette containing modeling elements.
    */
-  class Palette {
+  export default class Palette {
     public static HTML_MARKUP: string;
 
-    public _entries: { [name: string]: Palette.IPaletteEntryDescriptor };
+    public _entries: { [name: string]: IPaletteEntryDescriptor };
     public _canvas: Canvas;
     public _container: HTMLElement;
     public _toolsContainer: HTMLElement;
@@ -22,14 +20,14 @@ declare module "diagram-js/lib/features/palette/Palette" {
      *
      * @param  {PaletteProvider} provider
      */
-    public registerProvider(provider: Palette.IPaletteProvider): void;
+    public registerProvider(provider: IPaletteProvider): void;
 
     /**
      * Returns the palette entries for a given element
      *
      * @return {[name: string] : Palette.PaletteEntryDescriptor}list of entries
      */
-    public getEntries(): { [name: string]: Palette.IPaletteEntryDescriptor };
+    public getEntries(): { [name: string]: IPaletteEntryDescriptor };
 
     /**
      * Initialize
@@ -78,24 +76,23 @@ declare module "diagram-js/lib/features/palette/Palette" {
     public isOpen(): boolean;
   }
 
-  namespace Palette {
-    export interface IPaletteEntryAction {
-      click: (event: Event) => void;
-      dragstart?: (event: Event) => void;
-    }
-
-    export interface IPaletteEntryDescriptor {
-      imageUrl?: string;
-      action?: IPaletteEntryAction;
-      group: string;
-      className?: string;
-      title?: string;
-      separator?: true;
-      html?: string;
-    }
-
-    export interface IPaletteProvider {
-      getPaletteEntries(): { [name: string]: IPaletteEntryDescriptor };
-    }
+  export interface IPaletteEntryAction {
+    click: (event: Event) => void;
+    dragstart?: (event: Event) => void;
   }
+
+  export interface IPaletteEntryDescriptor {
+    imageUrl?: string;
+    action?: IPaletteEntryAction;
+    group: string;
+    className?: string;
+    title?: string;
+    separator?: true;
+    html?: string;
+  }
+
+  export interface IPaletteProvider {
+    getPaletteEntries(): { [name: string]: IPaletteEntryDescriptor };
+  }
+
 }

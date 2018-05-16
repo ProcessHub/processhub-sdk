@@ -1,11 +1,9 @@
 declare module "diagram-js/lib/features/overlays/Overlays" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Canvas from "diagram-js/lib/core/Canvas";
+  import ElementRegistry from "diagram-js/lib/core/ElementRegistry";
 
   import { Base } from "diagram-js/lib/model";
-
-  export = Overlays;
 
   /**
    * A service that allows users to attach overlays to diagram elements.
@@ -53,7 +51,7 @@ declare module "diagram-js/lib/features/overlays/Overlays" {
    * @param {Canvas} canvas
    * @param {ElementRegistry} elementRegistry
    */
-  class Overlays {
+  export default class Overlays {
     constructor(eventBus: EventBus, canvas: Canvas, elementRegistry: ElementRegistry);
 
     /**

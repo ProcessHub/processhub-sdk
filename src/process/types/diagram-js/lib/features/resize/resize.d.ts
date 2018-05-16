@@ -1,10 +1,9 @@
 declare module "diagram-js/lib/features/resize/Resize" {
-  export = Resize;
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Rules = require("diagram-js/lib/features/rules/Rules");
-  import Modeling = require("diagram-js/lib/features/modeling/Modeling");
-  import Dragging = require("diagram-js/lib/features/dragging/Dragging");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Rules from "diagram-js/lib/features/rules/Rules";
+  import Modeling from "diagram-js/lib/features/modeling/Modeling";
+  import Dragging from "diagram-js/lib/features/dragging/Dragging";
   import { Shape } from "diagram-js/lib/model";
 
   /**
@@ -44,7 +43,7 @@ declare module "diagram-js/lib/features/resize/Resize" {
    * });
    * ```
    */
-  class Resize {
+  export default class Resize {
 
     constructor(eventBus: EventBus, rules: Rules, modeling: Modeling, dragging: Dragging);
 

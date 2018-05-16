@@ -1,11 +1,9 @@
 declare module "diagram-js/lib/features/tooltips/Tooltips" {
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Canvas = require("diagram-js/lib/core/Canvas");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Canvas from "diagram-js/lib/core/Canvas";
 
-  export = Tooltips;
-
-  class Tooltips {
+  export default class Tooltips {
     /**
      * A service that allows users to render tool tips on the diagram.
      *

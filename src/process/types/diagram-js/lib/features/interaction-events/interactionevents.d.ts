@@ -1,12 +1,10 @@
 declare module "diagram-js/lib/features/interaction-events/InteractionEvents" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
-  import Styles = require("diagram-js/lib/draw/Styles");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import ElementRegistry from "diagram-js/lib/core/ElementRegistry";
+  import Styles from "diagram-js/lib/draw/Styles";
   import { Base } from "diagram-js/lib/model";
 
-  export = InteractionEvents;
-
-  class InteractionEvents {
+  export default class InteractionEvents {
     /**
      * A plugin that provides interaction events for diagram elements.
      *

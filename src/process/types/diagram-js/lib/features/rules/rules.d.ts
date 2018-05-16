@@ -1,6 +1,4 @@
 declare module "diagram-js/lib/features/rules/Rules" {
-  export = Rules;
-
   import Injector = require("didi/lib/injector");
 
   /**
@@ -17,7 +15,7 @@ declare module "diagram-js/lib/features/rules/Rules" {
    *
    * @param {Injector} injector
    */
-  class Rules {
+  export default class Rules {
     constructor(injector: Injector);
 
     /**

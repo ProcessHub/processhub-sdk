@@ -1,12 +1,11 @@
 declare module "diagram-js/lib/core/GraphicsFactory" {
-  export = GraphicsFactory;
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import ElementRegistry from "diagram-js/lib/core/ElementRegistry";
 
   /**
    * A factory that creates graphical elements
    */
-  class GraphicsFactory {
+  export default class GraphicsFactory {
     /**
      * A factory that creates graphical elements
      *
