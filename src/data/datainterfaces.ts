@@ -130,6 +130,7 @@ export enum StatisticsAction {
   todoUpdated = 22,
   todoExecuted = 23,
   todoWithDecision = 24,
+  todoDeleted = 25,
 
   // user
   userComment = 30,

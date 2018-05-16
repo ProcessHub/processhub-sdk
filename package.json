@@ -52,7 +52,7 @@
     "querystring-es3": "^0.2.1",
     "react": "^15.5.4",
     "react-native-crypto": "^2.1.1",
-    "react-native-http": "github:tradle/react-native-http#834492d",
+    "react-native-http": "^0.0.3",
     "react-native-level-fs": "^3.0.0",
     "react-native-randombytes": "^2.3.0",
     "react-native-tcp": "^2.0.4",
