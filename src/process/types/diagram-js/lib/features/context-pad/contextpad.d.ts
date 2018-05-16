@@ -1,12 +1,10 @@
 declare module "diagram-js/lib/features/context-pad/ContextPad" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Overlays = require("diagram-js/lib/features/overlays/Overlays");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Overlays from "diagram-js/lib/features/overlays/Overlays";
 
   import { Base } from "diagram-js/lib/model";
 
-  export = ContextPad;
-
-  class ContextPad {
+  export default class ContextPad {
     /**
      * A context pad that displays element specific, contextual actions next
      * to a diagram element.
@@ -24,9 +22,9 @@ declare module "diagram-js/lib/features/context-pad/ContextPad" {
     /**
      * Register a provider with the context pad
      *
-     * @param  {ContextPadProvider} provider
+     * @param  {IContextPadProvider} provider
      */
-    public registerProvider(provider: ContextPad.ContextPadProvider): void;
+    public registerProvider(provider: IContextPadProvider): void;
 
     /**
      * Returns the context pad entries for a given element
@@ -35,7 +33,7 @@ declare module "diagram-js/lib/features/context-pad/ContextPad" {
      *
      * @return {Array<ContextPadEntryDescriptor>} list of entries
      */
-    public getEntries(element: Base): ContextPad.ContextPadEntryDescriptor[];
+    public getEntries(element: Base): ContextPadEntryDescriptor[];
 
     /**
      * Trigger an action available on the opened context pad
@@ -73,22 +71,20 @@ declare module "diagram-js/lib/features/context-pad/ContextPad" {
     public isOpen(element?: {}): boolean;
   }
 
-  namespace ContextPad {
-    export interface ContextPadProvider {
-      getContextPadEntries(element: Base): ContextPadEntryDescriptor[];
-    }
+  export interface IContextPadProvider {
+    getContextPadEntries(element: Base): ContextPadEntryDescriptor[];
+  }
 
-    export interface ContextPadEntryDescriptor {
-      group?: string;
-      html?: string;
-      className?: string;
-      title: string;
-      imageUrl?: string;
-      action:
-      {
-        click: (originalEvent: MouseEvent, element: Base, autoActivate: boolean) => void,
-        dragStart?: (originalEvent: MouseEvent, element: Base, autoActivate: boolean) => void,
-      };
-    }
+  export interface ContextPadEntryDescriptor {
+    group?: string;
+    html?: string;
+    className?: string;
+    title: string;
+    imageUrl?: string;
+    action:
+    {
+      click: (originalEvent: MouseEvent, element: Base, autoActivate: boolean) => void,
+      dragStart?: (originalEvent: MouseEvent, element: Base, autoActivate: boolean) => void,
+    };
   }
 }

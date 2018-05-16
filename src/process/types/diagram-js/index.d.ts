@@ -1,18 +1,17 @@
 declare module "diagram-js" {
-  export = Diagram;
 
-  import Keyboard = require("diagram-js/lib/features/keyboard/Keyboard");
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import BaseRenderer = require("diagram-js/lib/draw/BaseRenderer");
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import ElementFactory = require("diagram-js/lib/core/ElementFactory");
+  import Keyboard, { IKeyboardConfig } from "diagram-js/lib/features/keyboard/Keyboard";
+  import Canvas, { ICanvasConfig } from "diagram-js/lib/core/Canvas";
+  import BaseRenderer from "diagram-js/lib/draw/BaseRenderer";
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import ElementFactory from "diagram-js/lib/core/ElementFactory";
   import Injector = require("didi/lib/injector");
 
   /**
    * The main diagram-js entry point that bootstraps the diagram with the given
    * configuration.
    */
-  class Diagram {
+  export default class Diagram {
 
     public injector: Injector;
 
@@ -59,7 +58,7 @@ declare module "diagram-js" {
      * @param {Array<Diagram.IPlugin>} [options.modules] external modules to instantiate with the diagram
      * @param {didi.Injector} [injector] an (optional) injector to bootstrap the diagram with
      */
-    constructor(options: Diagram.IDiagramOptions);
+    constructor(options: IDiagramOptions);
 
     /**
      * Resolves a diagram service
@@ -83,7 +82,7 @@ declare module "diagram-js" {
      * @param {Function|Object[]} fn the function to resolve
      * @param {Object} locals a number of locals to use to resolve certain dependencies
      */
-    public invoke(fn: Diagram.InvokeFunction, locals: Object): void;
+    public invoke(fn: InvokeFunction, locals: Object): void;
 
     /**
      * Destroys the diagram
@@ -98,47 +97,44 @@ declare module "diagram-js" {
     public clear(): void;
   }
 
-  namespace Diagram {
+  export interface IConfig {
+    keyboard: IKeyboardConfig;
+    canvas: ICanvasConfig;
+  }
 
-    export interface IConfig {
-      keyboard: Keyboard.IConfig;
-      canvas: Canvas.IConfig;
-    }
+  export type IType = ("type" | Function)[];
+  export type IFactory = ("factory" | Function)[];
+  export type IValue = ("value" | Object)[];
 
-    export type IType = ("type" | Function)[];
-    export type IFactory = ("factory" | Function)[];
-    export type IValue = ("value" | Object)[];
+  // export interface Provider {
+  //   [key: string]: Type | Factory | Value | Module[];
+  // }
 
-    // export interface Provider {
-    //   [key: string]: Type | Factory | Value | Module[];
-    // }
+  export interface IPlugin {
+    [key: string]: IType | IFactory | IValue | IPlugin[] | string[];
+    __depends__: {}[];
+    __init__: string[];
+  }
 
-    export interface IPlugin {
-      [key: string]: IType | IFactory | IValue | IPlugin[] | string[];
-      __depends__: {}[];
-      __init__: string[];
-    }
+  export type InvokeFunction = ((canvas: Canvas, renderer: BaseRenderer) => void) | ((canvas: Canvas) => void);
 
-    export type InvokeFunction = ((canvas: Canvas, renderer: BaseRenderer) => void) | ((canvas: Canvas) => void);
+  export interface ICanvasOptions {
+  }
 
-    export interface ICanvasOptions {
-    }
+  export interface IDiagramOptions {
+    modules?: {}[];
+    components: string[];
+  }
 
-    export interface IDiagramOptions {
-      modules: {}[];
-      components: string[];
-    }
+  export interface IPoint {
+    x: number;
+    y: number;
+  }
 
-    export interface IPoint {
-      x: number;
-      y: number;
-    }
-
-    export interface IBounds {
-      x: number;
-      y: number;
-      width: number;
-      height: number;
-    }
+  export interface IBounds {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
   }
 }

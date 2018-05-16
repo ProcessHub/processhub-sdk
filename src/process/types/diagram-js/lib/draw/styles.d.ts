@@ -1,9 +1,8 @@
 declare module "diagram-js/lib/draw/Styles" {
-  export = Styles;
   /**
    * A component that manages shape styles
    */
-  class Styles {
+  export default class Styles {
     constructor();
 
     /**

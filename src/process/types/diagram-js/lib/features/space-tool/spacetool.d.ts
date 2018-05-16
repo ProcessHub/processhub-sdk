@@ -1,14 +1,12 @@
 declare module "diagram-js/lib/features/space-tool/SpaceTool" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import Dragging = require("diagram-js/lib/features/dragging/Dragging");
-  import Modeling = require("diagram-js/lib/features/modeling/Modeling");
-  import Rules = require("diagram-js/lib/features/rules/Rules");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import Dragging from "diagram-js/lib/features/dragging/Dragging";
+  import Modeling from "diagram-js/lib/features/modeling/Modeling";
+  import Rules from "diagram-js/lib/features/rules/Rules";
   import { IPoint } from "diagram-js";
   import { Base, Shape } from "diagram-js/lib/model";
 
-  export = SpaceTool;
-
-  class SpaceTool {
+  export default class SpaceTool {
     constructor(eventBus: EventBus, dragging: Dragging, modeling: Modeling, rules: Rules, toolManager: {});
 
     /**
@@ -56,13 +54,12 @@ declare module "diagram-js/lib/features/space-tool/SpaceTool" {
      *
      * @return {ICalculateAdjustmentsResult}
      */
-    public calculateAdjustments(elements: Shape[], axis: "y" | "x", offset: number, spacePos: number): SpaceTool.ICalculateAdjustmentsResult;
+    public calculateAdjustments(elements: Shape[], axis: "y" | "x", offset: number, spacePos: number): ICalculateAdjustmentsResult;
   }
 
-  namespace SpaceTool {
-    export interface ICalculateAdjustmentsResult {
-      movingShapes: Shape[];
-      resizingShapes: Shape[];
-    }
+  export interface ICalculateAdjustmentsResult {
+    movingShapes: Shape[];
+    resizingShapes: Shape[];
   }
+
 }

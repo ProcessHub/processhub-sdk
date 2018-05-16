@@ -1,9 +1,8 @@
 declare module "diagram-js/lib/core/Canvas" {
-  export = Canvas;
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import GraphicsFactory = require("diagram-js/lib/core/GraphicsFactory");
-  import ElementRegistry = require("diagram-js/lib/core/ElementRegistry");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import GraphicsFactory from "diagram-js/lib/core/GraphicsFactory";
+  import ElementRegistry from "diagram-js/lib/core/ElementRegistry";
   import { IBounds, IPoint } from "diagram-js";
   import { Base, Connection, Shape } from "diagram-js/lib/model";
 
@@ -13,7 +12,7 @@ declare module "diagram-js/lib/core/Canvas" {
    * @class
    * @constructor  
    */
-  class Canvas {
+  export default class Canvas {
 
     public static $inject: string[];
 
@@ -30,7 +29,7 @@ declare module "diagram-js/lib/core/Canvas" {
      * @param {GraphicsFactory} graphicsFactory
      * @param {ElementRegistry} elementRegistry
      */
-    constructor(config: Canvas.IConfig, eventBus: EventBus, graphicsFactory: GraphicsFactory, elementRegistry: ElementRegistry);
+    constructor(config: ICanvasConfig, eventBus: EventBus, graphicsFactory: GraphicsFactory, elementRegistry: ElementRegistry);
 
     /**
      * Returns the default layer on which
@@ -233,8 +232,8 @@ declare module "diagram-js/lib/core/Canvas" {
      *
      * @return {Object} the current view box
      */
-    public viewbox(cached: false): Canvas.IViewBox;
-    public viewbox(): Canvas.IViewBox;
+    public viewbox(cached: false): IViewBox;
+    public viewbox(): IViewBox;
     public viewbox(box: IBounds): void;
 
     /**
@@ -296,35 +295,33 @@ declare module "diagram-js/lib/core/Canvas" {
     public _fitViewport(): void;
   }
 
-  namespace Canvas {
-
-    export interface IViewBox {
+  export interface IViewBox {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+    scale: number;
+    inner: {
       x: number;
       y: number;
       width: number;
       height: number;
-      scale: number;
-      inner: {
-        x: number;
-        y: number;
-        width: number;
-        height: number;
-      };
-      outer: {
-        width: number;
-        height: number;
-      };
-    }
-
-    export interface IConfig {
-      // debounce canvas.viewbox.changed events
-      // for smoother diagram interaction
-      deferUpdate: boolean;
-
-      container: HTMLElement;
-
-      width: number | string;
-      height: number | string;
-    }
+    };
+    outer: {
+      width: number;
+      height: number;
+    };
   }
+
+  export interface ICanvasConfig {
+    // debounce canvas.viewbox.changed events
+    // for smoother diagram interaction
+    deferUpdate: boolean;
+
+    container: HTMLElement;
+
+    width: number | string;
+    height: number | string;
+  }
+
 }

@@ -1,11 +1,10 @@
 // tslint:disable:max-classes-per-file
 // tslint:disable:variable-name
 declare module "diagram-js/lib/core/EventBus" {
-  export = EventBus;
 
   import { IBounds, IPoint } from "diagram-js";
   import { Base, Connection, Shape } from "diagram-js/lib/model";
-  import SnapContext = require("diagram-js/lib/features/snapping/SnapContext");
+  import SnapContext from "diagram-js/lib/features/snapping/SnapContext";
 
   /**
    * A general purpose event bus.
@@ -90,7 +89,7 @@ declare module "diagram-js/lib/core/EventBus" {
    * console.log(sum); // 3
    * ```
    */
-  class EventBus {
+  export default class EventBus {
     constructor();
 
     /**
@@ -110,52 +109,52 @@ declare module "diagram-js/lib/core/EventBus" {
      * @param {Function} callback
      * @param {Object} [that] Pass context (`this`) to the callback
      */
-    public on(events: EventBus.EventType, priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that: Object): void;
-    public on(events: EventBus.EventType, callback: (event: EventBus.EventBusEvent<Object>) => void): void;
+    public on(events: EventType, priority: number, callback: (Event: EventBusEvent<Object>) => void, that: Object): void;
+    public on(events: EventType, callback: (event: EventBusEvent<Object>) => void): void;
 
-    public on(events: "bendpoint.move.ended", priority: number, callback: (Event: EventBus.BEndpointMoveEndedEvent) => void): void;
-    public on(events: "bendpoint.move.ended", callback: (Event: EventBus.BEndpointMoveEndedEvent) => void): void;
+    public on(events: "bendpoint.move.ended", priority: number, callback: (Event: BEndpointMoveEndedEvent) => void): void;
+    public on(events: "bendpoint.move.ended", callback: (Event: BEndpointMoveEndedEvent) => void): void;
 
-    public on(events: "canvas.init", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
+    public on(events: "canvas.init", callback: (event: EventBusEvent<Object>) => void): void;
 
-    public on(events: "create.canceled", callback: (event: EventBus.CreateCanceledEvent) => void): void;
-    
-    public on(events: "create.ended", callback: (event: EventBus.CreateEndedEvent) => void): void;
+    public on(events: "create.canceled", callback: (event: CreateCanceledEvent) => void): void;
 
-    public on(events: "create.rejected", callback: (event: EventBus.CreateRejectedEvent) => void): void;
+    public on(events: "create.ended", callback: (event: CreateEndedEvent) => void): void;
+
+    public on(events: "create.rejected", callback: (event: CreateRejectedEvent) => void): void;
 
     public on(events: "commandStack.changed", callback: () => void): void;
 
-    public on(events: "connection.added", callback: (event: EventBus.ConnectionAddedEvent) => void): void;
+    public on(events: "connection.added", callback: (event: ConnectionAddedEvent) => void): void;
 
-    public on(events: "connectionSegment.move.ended", callback: (event: EventBus.ConnectionSegmentMoveEndedEvent) => void): void;
+    public on(events: "connectionSegment.move.ended", callback: (event: ConnectionSegmentMoveEndedEvent) => void): void;
 
-    public on(events: "drag.start", callback: (event: EventBus.EventBusEvent<Object>) => void): void;
+    public on(events: "drag.start", callback: (event: EventBusEvent<Object>) => void): void;
 
-    public on(events: "drag.ended", callback: (event: EventBus.DragEndedEvent) => void): void;
+    public on(events: "drag.ended", callback: (event: DragEndedEvent) => void): void;
 
-    public on(events: "element.click", callback: (event: EventBus.ElementClickEvent) => void): void;
+    public on(events: "element.click", callback: (event: ElementClickEvent) => void): void;
 
-    public on(events: "element.dblclick", callback: (event: EventBus.ElementDblClickEvent) => void): void;
+    public on(events: "element.dblclick", callback: (event: ElementDblClickEvent) => void): void;
 
-    public on(events: "resize.end", callback: (event: EventBus.ResizeEndEvent) => void): void;
-    public on(events: "resize.end", priority: number, callback: (event: EventBus.ResizeEndEvent) => void): void;
-    public on(events: "resize.ended", callback: (event: EventBus.EventBusEvent<EventBus.IResizeEndedContext>) => void): void;
+    public on(events: "resize.end", callback: (event: ResizeEndEvent) => void): void;
+    public on(events: "resize.end", priority: number, callback: (event: ResizeEndEvent) => void): void;
+    public on(events: "resize.ended", callback: (event: EventBusEvent<IResizeEndedContext>) => void): void;
 
-    public on(events: "shape.add", callback: (Event: EventBus.ShapeAddEvent) => void): void;
-    public on(events: "shape.added", priority: number, callback: (Event: EventBus.ShapeAddedEvent) => void): void;
-    public on(events: "shape.added", callback: (Event: EventBus.ShapeAddedEvent) => void): void;
+    public on(events: "shape.add", callback: (Event: ShapeAddEvent) => void): void;
+    public on(events: "shape.added", priority: number, callback: (Event: ShapeAddedEvent) => void): void;
+    public on(events: "shape.added", callback: (Event: ShapeAddedEvent) => void): void;
 
-    public on(events: "shape.move.end", priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that: Object): void;
+    public on(events: "shape.move.end", priority: number, callback: (Event: EventBusEvent<Object>) => void, that: Object): void;
 
-    public on(events: "shape.move.ended", priority: number, callback: (Event: EventBus.EventBusEvent<EventBus.IShapeMoveEndContext>) => void): void;
-    public on(events: "shape.move.ended", callback: (Event: EventBus.EventBusEvent<EventBus.IShapeMoveEndContext>) => void): void;
+    public on(events: "shape.move.ended", priority: number, callback: (Event: EventBusEvent<IShapeMoveEndContext>) => void): void;
+    public on(events: "shape.move.ended", callback: (Event: EventBusEvent<IShapeMoveEndContext>) => void): void;
 
-    public on(events: "shape.removed", callback: (Event: EventBus.ShapeRemovedEvent) => void): void;
+    public on(events: "shape.removed", callback: (Event: ShapeRemovedEvent) => void): void;
 
     public on(events: "spaceTool.ended", priority: number, callback: () => void): void;
     public on(events: "spaceTool.ended", callback: () => void): void;
-    public on(events: "spaceTool.ended", callback: (event: EventBus.SpaceToolEndedEvent) => void): void;
+    public on(events: "spaceTool.ended", callback: (event: SpaceToolEndedEvent) => void): void;
 
     /**
      * Register an event listener that is executed only once.
@@ -164,7 +163,7 @@ declare module "diagram-js/lib/core/EventBus" {
      * @param {Function} callback the callback to execute
      * @param {Object} [that] Pass context (`this`) to the callback
      */
-    public once(event: "element.click", priority: number, callback: (Event: EventBus.EventBusEvent<Object>) => void, that?: Object): void;
+    public once(event: "element.click", priority: number, callback: (Event: EventBusEvent<Object>) => void, that?: Object): void;
 
     /**
      * Removes event listeners by event and callback.
@@ -206,8 +205,8 @@ declare module "diagram-js/lib/core/EventBus" {
      * @return {Boolean} the events return value, if specified or false if the
      *                   default action was prevented by listeners
      */
-    public fire(type: EventBus.EventType, data: Object): boolean;
-    public fire(type: "shape.move.end", data: EventBus.IShapeMoveEndData): boolean;
+    public fire(type: EventType, data: Object): boolean;
+    public fire(type: "shape.move.end", data: IShapeMoveEndData): boolean;
     /**
      * Clear the diagram, removing all contents.
      */
@@ -234,186 +233,184 @@ declare module "diagram-js/lib/core/EventBus" {
     public _addListener(event: string, newListener: Object): void;
   }
 
-  namespace EventBus {
+  export type ResizeEndedDirection = "se" | "sw" | "ne" | "nw";
 
-    export type ResizeEndedDirection = "se" | "sw" | "ne" | "nw";
-
-    export interface IResizeEndedContext {
-      canExecute: boolean;
-      delta: IPoint;
-      direction: ResizeEndedDirection;
-      frame: SVGRectElement;
-      newBounds: IBounds;
-      resizeConstraints: Object;
-      shape: Shape;
-    }
-
-    export interface IShapeMoveEndContext {
-      delta: IPoint;
-      canExecute: boolean | string;
-      shape: Base;
-      shapes: Base[];
-    }
-
-    export interface IShapeMoveEndData {
-      context: IShapeMoveEndContext;
-    }
-
-    type EventType = "lasso.selection.ended";
-
-    /**
-     * A event that is emitted via the event bus.
-     */
-    export class EventBusEvent<ContextType> {
-      public context: ContextType;
-
-      public stopPropagation(): void;
-      public preventDefault(): void;
-      public init(data: Object): void;
-    }
-
-    export class ElementDblClickEvent extends ElementClickEvent {
-    }
-
-    export class ElementClickEvent extends EventBusEvent<void> {
-      public element: Base;
-      public gfx: SVGGElement;
-      public originalEvent: MouseEvent;
-    }
-
-    export class ShapeAddEvent extends EventBusEvent<void> {
-      public element: Shape;
-      public parent: Shape;
-      public type: "shape.add";
-    }
-
-    export class ShapeAddedEvent extends EventBusEvent<void> {
-      public element: Shape;
-      public gfx: SVGGElement;
-      public type: "shape.added";
-    }
-
-    export class ConnectionSegmentMoveEndedEvent extends EventBusEvent<Object> {
-      public connection: Connection;
-      public connectionGfx: SVGGElement;
-      public hoverGfx: SVGGElement;
-      public originalEvent: MouseEvent;
-    }
-
-    export class BEndpointMoveEndedEvent extends EventBusEvent<Object> {
-      public connection: Connection;
-      public connectionGfx: SVGGElement;
-      public hoverGfx: SVGGElement;
-      public originalEvent: MouseEvent;
-    }
-
-    export class ShapeRemovedEvent extends EventBusEvent<void> {
-      public element: Shape;
-    }
-
-    export class CreateEndedEvent extends EventBusEvent<void> {
-      public shape: Shape;
-      public originalEvent: Event;
-    }
-
-    export interface ICreateCanceledContext {
-      canExecute: boolean;
-      shape: Shape;
-      snapContext: SnapContext;
-      source: {};
-      target: Shape;
-      visual: SVGGElement;
-    }
-
-    export class CreateCanceledEvent extends EventBusEvent<ICreateCanceledContext> {
-      dx: number;
-      dy: number;
-      hover: Shape;
-      hoverGfx: SVGGElement;
-      originalEvent: MouseEvent;
-      previousSelection: {}[];
-      shape: Shape;
-      x: number;
-      y: number;
-    }
-
-    export class CreateRejectedEvent extends CreateCanceledEvent {
-    }
-
-    export interface ISpaceToolEndedContext {
-      axis: "x" | "y";
-      direction: "e" | "w" | "s" | "n";
-      dragGroup: SVGGElement;
-      frameGroup: SVGGElement;
-      frames: {}[];
-      initialized: boolean;
-      line: SVGPathElement;
-      movingConnections: Connection[];
-      movingShapes: Shape[];
-      resizingShapes: Shape[];
-    }
-
-    export class SpaceToolEndedEvent extends EventBusEvent<ISpaceToolEndedContext> {
-      dx: number;
-      dy: number;
-      hover: Shape;
-      hoverGfx: SVGGElement;
-      originalEvent: MouseEvent;
-      previousSelection: {}[];
-      x: number;
-      y: number;
-    }
-
-    export interface IDragEndedEventContext {
-      allDraggedElements: Base[];
-      canExecute: boolean;
-      delta: IPoint;
-      differentParents: boolean;
-      dragGroup: SVGGElement;
-      shape: Shape;
-      shapes: Shape[];
-      snapContext: SnapContext;
-      target: Shape;
-      validatedShapes: Shape[];
-    }
-
-    export class DragEndedEvent extends EventBusEvent<IDragEndedEventContext> {
-      dx: number;
-      dy: number;
-      hover: Shape;
-      hoverGfx: SVGGElement;
-      originalEvent: MouseEvent;
-      previousSelection: {}[];
-      shape: Shape;
-      x: number;
-      y: number;
-    }
-
-    export class ConnectionAddedEvent extends EventBusEvent<void> {
-      element: Connection;
-      gfx: SVGGElement;
-    }
-
-    export interface IResizeEndContext {
-      canExecute: true;
-      delta: IPoint;
-      direction: "se" | "sw" | "ne" | "nw";
-      frame: SVGRectElement;
-      newBounds: IBounds;
-      resizeConstraints: {};
-      shape: Shape;      
-    }
-
-    export class ResizeEndEvent  extends EventBusEvent<IResizeEndContext> {
-      dx: number;
-      dy: number;
-      hover: Shape;
-      hoverGfx: SVGGElement;
-      originalEvent: MouseEvent;
-      previousSelection: Shape;
-      shape: Shape;
-      x: number;
-      y: number;
-    }
+  export interface IResizeEndedContext {
+    canExecute: boolean;
+    delta: IPoint;
+    direction: ResizeEndedDirection;
+    frame: SVGRectElement;
+    newBounds: IBounds;
+    resizeConstraints: Object;
+    shape: Shape;
   }
+
+  export interface IShapeMoveEndContext {
+    delta: IPoint;
+    canExecute: boolean | string;
+    shape: Base;
+    shapes: Base[];
+  }
+
+  export interface IShapeMoveEndData {
+    context: IShapeMoveEndContext;
+  }
+
+  type EventType = "lasso.selection.ended";
+
+  /**
+   * A event that is emitted via the event bus.
+   */
+  export class EventBusEvent<ContextType> {
+    public context: ContextType;
+
+    public stopPropagation(): void;
+    public preventDefault(): void;
+    public init(data: Object): void;
+  }
+
+  export class ElementDblClickEvent extends ElementClickEvent {
+  }
+
+  export class ElementClickEvent extends EventBusEvent<void> {
+    public element: Base;
+    public gfx: SVGGElement;
+    public originalEvent: MouseEvent;
+  }
+
+  export class ShapeAddEvent extends EventBusEvent<void> {
+    public element: Shape;
+    public parent: Shape;
+    public type: "shape.add";
+  }
+
+  export class ShapeAddedEvent extends EventBusEvent<void> {
+    public element: Shape;
+    public gfx: SVGGElement;
+    public type: "shape.added";
+  }
+
+  export class ConnectionSegmentMoveEndedEvent extends EventBusEvent<Object> {
+    public connection: Connection;
+    public connectionGfx: SVGGElement;
+    public hoverGfx: SVGGElement;
+    public originalEvent: MouseEvent;
+  }
+
+  export class BEndpointMoveEndedEvent extends EventBusEvent<Object> {
+    public connection: Connection;
+    public connectionGfx: SVGGElement;
+    public hoverGfx: SVGGElement;
+    public originalEvent: MouseEvent;
+  }
+
+  export class ShapeRemovedEvent extends EventBusEvent<void> {
+    public element: Shape;
+  }
+
+  export class CreateEndedEvent extends EventBusEvent<void> {
+    public shape: Shape;
+    public originalEvent: Event;
+  }
+
+  export interface ICreateCanceledContext {
+    canExecute: boolean;
+    shape: Shape;
+    snapContext: SnapContext;
+    source: {};
+    target: Shape;
+    visual: SVGGElement;
+  }
+
+  export class CreateCanceledEvent extends EventBusEvent<ICreateCanceledContext> {
+    dx: number;
+    dy: number;
+    hover: Shape;
+    hoverGfx: SVGGElement;
+    originalEvent: MouseEvent;
+    previousSelection: {}[];
+    shape: Shape;
+    x: number;
+    y: number;
+  }
+
+  export class CreateRejectedEvent extends CreateCanceledEvent {
+  }
+
+  export interface ISpaceToolEndedContext {
+    axis: "x" | "y";
+    direction: "e" | "w" | "s" | "n";
+    dragGroup: SVGGElement;
+    frameGroup: SVGGElement;
+    frames: {}[];
+    initialized: boolean;
+    line: SVGPathElement;
+    movingConnections: Connection[];
+    movingShapes: Shape[];
+    resizingShapes: Shape[];
+  }
+
+  export class SpaceToolEndedEvent extends EventBusEvent<ISpaceToolEndedContext> {
+    dx: number;
+    dy: number;
+    hover: Shape;
+    hoverGfx: SVGGElement;
+    originalEvent: MouseEvent;
+    previousSelection: {}[];
+    x: number;
+    y: number;
+  }
+
+  export interface IDragEndedEventContext {
+    allDraggedElements: Base[];
+    canExecute: boolean;
+    delta: IPoint;
+    differentParents: boolean;
+    dragGroup: SVGGElement;
+    shape: Shape;
+    shapes: Shape[];
+    snapContext: SnapContext;
+    target: Shape;
+    validatedShapes: Shape[];
+  }
+
+  export class DragEndedEvent extends EventBusEvent<IDragEndedEventContext> {
+    dx: number;
+    dy: number;
+    hover: Shape;
+    hoverGfx: SVGGElement;
+    originalEvent: MouseEvent;
+    previousSelection: {}[];
+    shape: Shape;
+    x: number;
+    y: number;
+  }
+
+  export class ConnectionAddedEvent extends EventBusEvent<void> {
+    element: Connection;
+    gfx: SVGGElement;
+  }
+
+  export interface IResizeEndContext {
+    canExecute: true;
+    delta: IPoint;
+    direction: "se" | "sw" | "ne" | "nw";
+    frame: SVGRectElement;
+    newBounds: IBounds;
+    resizeConstraints: {};
+    shape: Shape;
+  }
+
+  export class ResizeEndEvent extends EventBusEvent<IResizeEndContext> {
+    dx: number;
+    dy: number;
+    hover: Shape;
+    hoverGfx: SVGGElement;
+    originalEvent: MouseEvent;
+    previousSelection: Shape;
+    shape: Shape;
+    x: number;
+    y: number;
+  }
+
 }

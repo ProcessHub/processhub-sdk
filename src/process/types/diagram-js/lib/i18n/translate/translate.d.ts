@@ -18,8 +18,7 @@ declare module "diagram-js/lib/i18n/translate/translate" {
    * @return {String} the translated string
    */
   const translate: translate.ITranslateFunction;
-
-  export = translate;
+  export default translate;
 
   namespace translate {
     type ITranslateFunction = (template: string, replacements?: Object) => string;

@@ -1,7 +1,6 @@
 declare module "diagram-js/lib/features/keyboard/Keyboard" {
-  export = Keyboard;
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import EventBus from "diagram-js/lib/core/EventBus";
 
   /**
    * A keyboard abstraction that may be activated and
@@ -21,7 +20,7 @@ declare module "diagram-js/lib/features/keyboard/Keyboard" {
    * A default binding for the keyboard may be specified via the
    * `keyboard.bindTo` configuration option.   
    */
-  class Keyboard {
+  export default class Keyboard {
     /**
      * A keyboard abstraction that may be activated and
      * deactivated by users at will, consuming key events
@@ -44,7 +43,7 @@ declare module "diagram-js/lib/features/keyboard/Keyboard" {
      * @param {EventBus} eventBus
      * @param {EditorActions} editorActions
      */
-    constructor(config: Keyboard.IConfig, eventBus: EventBus, editorActions: {});
+    constructor(config: IKeyboardConfig, eventBus: EventBus, editorActions: {});
 
     /**
      * Add a listener function that is notified with (key, modifiers) whenever
@@ -59,11 +58,10 @@ declare module "diagram-js/lib/features/keyboard/Keyboard" {
     public isShift(modifiers: Object): boolean;
   }
 
-  namespace Keyboard {
-    export interface IConfig {
-      bindTo?: Element;
-      invertY?: boolean;
-      speed?: number;
-    }
+  export interface IKeyboardConfig {
+    bindTo?: Element;
+    invertY?: boolean;
+    speed?: number;
   }
+
 }

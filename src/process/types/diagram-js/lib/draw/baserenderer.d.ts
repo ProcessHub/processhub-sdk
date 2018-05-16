@@ -1,13 +1,11 @@
 declare module "diagram-js/lib/draw/BaseRenderer" {
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import EventBus from "diagram-js/lib/core/EventBus";
   import { Connection, Shape } from "diagram-js/lib/model";
-
-  export = BaseRenderer;
 
   /**
    * The base implementation of shape and connection renderers.
    */
-  class BaseRenderer {
+  export default class BaseRenderer {
     /**
      * The base implementation of shape and connection renderers.
      *

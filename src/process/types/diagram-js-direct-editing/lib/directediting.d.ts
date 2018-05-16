@@ -1,8 +1,8 @@
 declare module "diagram-js-direct-editing/lib/DirectEditing" {
   export = DirectEditing;
 
-  import Canvas = require("diagram-js/lib/core/Canvas");
-  import EventBus = require("diagram-js/lib/core/EventBus");
+  import Canvas from "diagram-js/lib/core/Canvas";
+  import EventBus from "diagram-js/lib/core/EventBus";
   import { Base } from "diagram-js/lib/model";
   import { IBounds } from "diagram-js";
 

@@ -1,5 +1,4 @@
-declare module "diagram-js/lib/core/ElementRegistry" {
-  export = ElementRegistry;
+declare module "diagram-js/lib/core/ElementRegistry" {  
 
   import { Base } from "diagram-js/lib/model";
 
@@ -8,7 +7,7 @@ declare module "diagram-js/lib/core/ElementRegistry" {
    *
    * A registry that keeps track of all shapes in the diagram.
    */
-  class ElementRegistry {
+  export default class ElementRegistry {
     constructor();
 
     /**

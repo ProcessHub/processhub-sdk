@@ -1,13 +1,11 @@
 declare module "diagram-js/lib/command/CommandHandler" {
   import { Base } from "diagram-js/lib/model";
 
-  export = CommandHandler;
-
   /**
    * A command handler that may be registered with the
    * {@link CommandStack} via {@link CommandStack#registerHandler}.
    */
-  class CommandHandler {
+  export default class CommandHandler {
 
     /**
      * Execute changes described in the passed action context.

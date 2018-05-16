@@ -1,14 +1,13 @@
 declare module "diagram-js/lib/features/modeling/Modeling" {
-  export = Modeling;
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
-  import CommandStack = require("diagram-js/lib/command/CommandStack");
-  import CommandHandler = require("diagram-js/lib/command/CommandHandler");
-  import ElementFactory = require("diagram-js/lib/core/ElementFactory");
+  import EventBus from "diagram-js/lib/core/EventBus";
+  import CommandStack from "diagram-js/lib/command/CommandStack";
+  import CommandHandler from "diagram-js/lib/command/CommandHandler";
+  import ElementFactory from "diagram-js/lib/core/ElementFactory";
   import { IBounds, IPoint } from "diagram-js";
   import { Base, Connection, Shape, Label } from "diagram-js/lib/model";
 
-  class Modeling {
+  export default class Modeling {
     /**
      * The basic modeling entry point.
      *
@@ -65,18 +64,18 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
      *
      * @return {djs.model.Connection} the created connection.
      */
-    public createConnection(source: Base, target: Base, attrs: Object, parent: Base, hints: Modeling.IConnectionHints): Connection;
+    public createConnection(source: Base, target: Base, attrs: Object, parent: Base, hints: IConnectionHints): Connection;
     public createConnection(
       source: Base,
       target: Base,
       targetIndex: number,
       connection: Connection,
       parent: Base,
-      hints: Modeling.IConnectionHints): Connection;
+      hints: IConnectionHints): Connection;
 
     public createShape(shape: Base, position: {}, target: Base, targetIndex: number, hints: { attach: boolean }): {};
 
-    public createLabel(labelTarget: Base, position: IPoint, options: Modeling.ICreateLabelOptions, parent?: Base): Label;
+    public createLabel(labelTarget: Base, position: IPoint, options: ICreateLabelOptions, parent?: Base): Label;
 
     public appendShape(source: Shape, shape: Shape, position: IPoint, target: Base, hints: { connection?: {}, connectionParent?: {}, attach?: boolean }): {};
 
@@ -84,7 +83,7 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
 
     public distributeElements(groups: {}, axis: {}, dimension: {}): {};
 
-    public removeShape(shape: Shape, hints: Modeling.IRemoveShapeHints): void;
+    public removeShape(shape: Shape, hints: IRemoveShapeHints): void;
 
     public removeConnection(connection: Connection, hints: Object): void;
 
@@ -100,28 +99,26 @@ declare module "diagram-js/lib/features/modeling/Modeling" {
     public reconnectStart(connection: {}, newSource: {}, dockingOrPoints: {}): {};
     public reconnectEnd(connection: Connection, newTarget: Shape, dockingOrPoints: IPoint | IPoint[]): {};
 
-    public connect(source: Shape, target: Shape, attrs: Object, hints: Modeling.IConnectionHints): Connection;
+    public connect(source: Shape, target: Shape, attrs: Object, hints: IConnectionHints): Connection;
     public _create(type: {}, attrs: {}): {};
 
     public toggleCollapse(shape: Base, hints: {}): {};
   }
 
-  namespace Modeling {
-    export interface IConnectionHints {
-      connectionStart: IPoint;
-      connectionEnd: IPoint;
-    }
+  export interface IConnectionHints {
+    connectionStart: IPoint;
+    connectionEnd: IPoint;
+  }
 
-    export interface IRemoveShapeHints {
-      nested: boolean;
-    }
+  export interface IRemoveShapeHints {
+    nested: boolean;
+  }
 
-    export interface ICreateLabelOptions {
-      id: string;
-      hidden: boolean;
-      businessObject?: Object;
-      width: number;
-      height: number;
-    }
+  export interface ICreateLabelOptions {
+    id: string;
+    hidden: boolean;
+    businessObject?: Object;
+    width: number;
+    height: number;
   }
 }

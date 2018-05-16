@@ -1,6 +1,5 @@
 // tslint:disable:max-classes-per-file
 declare module "diagram-js/lib/features/snapping/SnapContext" {
-  export = SnapContext;
 
   import { IPoint } from "diagram-js";
 
@@ -9,14 +8,14 @@ declare module "diagram-js/lib/features/snapping/SnapContext" {
    * mappings of drop targets (to identify the snapping)
    * to computed snap points.
    */
-  class SnapContext {
+  export default class SnapContext {
     /**
      * Map<String, SnapPoints> mapping drop targets to
      * a list of possible snappings.
      *
      * @type {Object}
      */
-    protected _targets: { [location: string]: SnapContext.SnapPoints };
+    protected _targets: { [location: string]: SnapPoints };
 
     /**
      * Map<String, Point> initial positioning of element
@@ -68,54 +67,28 @@ declare module "diagram-js/lib/features/snapping/SnapContext" {
      *
      * @param {Element|String} target
      */
-    public pointsForTarget(target: Element | String): SnapContext.SnapPoints[];
+    public pointsForTarget(target: Element | String): SnapPoints[];
   }
 
-  namespace SnapContext {
-    export class SnapPoints {
+  export class SnapPoints {
 
-      /**
-       * Map<String, Map<(x|y), Array<Number>>> mapping snap locations,
-       * i.e. top-left, bottom-right, center to actual snap values.
-       *
-       * @type {Object}
-       */
-      protected _snapValues: Object;
+    /**
+     * Map<String, Map<(x|y), Array<Number>>> mapping snap locations,
+     * i.e. top-left, bottom-right, center to actual snap values.
+     *
+     * @type {Object}
+     */
+    protected _snapValues: Object;
 
-      /**
-       * Creates the snap points and initializes them with the
-       * given default values.
-       *
-       * @param {Object<String, Array<Point>>} [defaultPoints]
-       */
-      constructor(defaultPoints: {});
+    /**
+     * Creates the snap points and initializes them with the
+     * given default values.
+     *
+     * @param {Object<String, Array<Point>>} [defaultPoints]
+     */
+    constructor(defaultPoints: {});
 
-      public add(snapLocation: string, point: IPoint): void;
-    }
-
+    public add(snapLocation: string, point: IPoint): void;
   }
+
 }
-
-// SnapPoints.prototype.snap = function (point, snapLocation, axis, tolerance) {
-//   var snappingValues = this._snapValues[snapLocation];
-
-//   return snappingValues && snapTo(point[axis], snappingValues[axis], tolerance);
-// };
-
-// /**
-//  * Initialize a number of default snapping points.
-//  *
-//  * @param  {Object} defaultSnaps
-//  */
-// SnapPoints.prototype.initDefaults = function (defaultSnaps) {
-
-//   var self = this;
-
-//   forEach(defaultSnaps || {}, function (snapPoints, snapLocation) {
-//     forEach(snapPoints, function (point) {
-//       self.add(snapLocation, point);
-//     });
-//   });
-// };
-//   }
-// }

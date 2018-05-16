@@ -1,9 +1,7 @@
 declare module "diagram-js/lib/features/selection/Selection" {
-  export = Selection;
+  import EventBus from "diagram-js/lib/core/EventBus";
 
-  import EventBus = require("diagram-js/lib/core/EventBus");
-
-  class Selection {
+  export default class Selection {
     /**
      * A service that offers the current selection in a diagram.
      * Offers the api to control the selection, too.

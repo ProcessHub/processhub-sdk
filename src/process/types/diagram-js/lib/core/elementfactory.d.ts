@@ -1,5 +1,4 @@
 declare module "diagram-js/lib/core/ElementFactory" {
-  export = ElementFactory;
 
   import { IPoint } from "diagram-js";
   import { Base, Shape } from "diagram-js/lib/model";
@@ -7,7 +6,7 @@ declare module "diagram-js/lib/core/ElementFactory" {
   /**
    * A factory for diagram-js shapes
    */
-  class ElementFactory {
+  export default class ElementFactory {
     constructor();
 
     public createRoot(attrs: ElementFactory.ICreationAttrs): {};
@@ -23,11 +22,10 @@ declare module "diagram-js/lib/core/ElementFactory" {
      * @param  {Object} attrs
      * @return {djs.model.Base} the newly created model instance
      */
-    public create(type: ElementFactory.ElementType, attrs: ElementFactory.ICreationAttrs): Base;
+    public create(type: "shape" | "connection" | "label", attrs: ElementFactory.ICreationAttrs): Base;
   }
 
   namespace ElementFactory {
-    export type ElementType = "shape" | "connection" | "label";
 
     export interface ICreationAttrs {
       businessObject?: Object;
