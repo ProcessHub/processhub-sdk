@@ -205,7 +205,7 @@ declare module "diagram-js/lib/core/EventBus" {
      * @return {Boolean} the events return value, if specified or false if the
      *                   default action was prevented by listeners
      */
-    public fire(type: EventType, data: Object): boolean;
+    public fire(type: string, data: Object): boolean;
     public fire(type: "shape.move.end", data: IShapeMoveEndData): boolean;
     /**
      * Clear the diagram, removing all contents.

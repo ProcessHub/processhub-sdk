@@ -18,7 +18,7 @@ declare module "diagram-js/lib/features/keyboard/Keyboard" {
    * All events contain the fields (node, listeners).
    *
    * A default binding for the keyboard may be specified via the
-   * `keyboard.bindTo` configuration option.   
+   * `keyboard.bindTo` configuration option.
    */
   export default class Keyboard {
     /**
@@ -44,6 +44,10 @@ declare module "diagram-js/lib/features/keyboard/Keyboard" {
      * @param {EditorActions} editorActions
      */
     constructor(config: IKeyboardConfig, eventBus: EventBus, editorActions: {});
+
+    public bind(node: Element): void;
+    public getBinding(): Element;
+    public unbind(): void;
 
     /**
      * Add a listener function that is notified with (key, modifiers) whenever
