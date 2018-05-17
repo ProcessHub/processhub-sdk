@@ -94,7 +94,7 @@ export enum InstanceExtras {
   ExtrasRoleOwnersWithNames = 1 << 2, // include roleowner-names
   ExtrasFieldContents = 1 << 3,
   ExtrasTodos = 1 << 4,
-  ExtrasAuditTrail = 1 << 5,
+  ExtrasAuditTrail = 1 << 5
 }
 
 export interface ResumeInstanceDetails {
@@ -151,7 +151,8 @@ export enum AuditTrailAction {
   jumpPerformed = 5,
   outgoingMail = 6,
   instanceStartedByTimer = 7,
-  messageBoundaryEventTriggered = 8
+  messageBoundaryEventTriggered = 8,
+  bouncedMail = 9
 }
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
@@ -173,6 +174,10 @@ export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.jumpPerformed
   jumpFromTodoDisplayName: string;
   jumpToTodoDisplayName: string;
+
+  // must be set for AuditTrailAction.bouncedMail
+  bouncedAddresses: string[];
+  bouncedSubject: string;
 }
 export type Partial<T> = {
   [P in keyof T]?: T[P];
