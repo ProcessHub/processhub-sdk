@@ -2,6 +2,7 @@ import { InstanceEnvironment } from "../environment";
 import { BpmnProcess } from "../process";
 import { InstanceDetails } from "../instance/instanceinterfaces";
 import { SemanticICONS } from "semantic-ui-react";
+import { UserDetails } from "../user";
 
 export interface FieldDefinition {
   rowNumber: number;
@@ -149,6 +150,12 @@ export interface StatisticRow {
   processId: string;
   details: StatisticTrailEntry;
   action: StatisticsAction;
+  userDetails: UserDetails;
   userId: string;
   createdAt: Date;
+}
+
+export interface IHeatmapDatapoint {
+  bpmnElementId: string;
+  value: number;
 }
