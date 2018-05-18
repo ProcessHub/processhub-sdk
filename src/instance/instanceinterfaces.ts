@@ -34,7 +34,8 @@ export interface InstanceDetails {
   latestCommentAt?: Date; // datetime of the latest comment or incoming mail
   processXmlHash?: string;
   color?: string;
-  runningSubProcesses?: string[];
+  runningSubProcesses?: string[]; // contains list for running subinstances
+  subInstanceIds?: string[];
   parentProcessConfigObject?: ParentProcessConfig;
   extras: {
     // New Extras must be added to cache-handling in instanceactions -> loadInstance!
@@ -152,7 +153,8 @@ export enum AuditTrailAction {
   outgoingMail = 6,
   instanceStartedByTimer = 7,
   messageBoundaryEventTriggered = 8,
-  bouncedMail = 9
+  bouncedMail = 9,
+  errorSubprocess = 10
 }
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
