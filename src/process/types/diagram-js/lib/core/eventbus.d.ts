@@ -124,6 +124,7 @@ declare module "diagram-js/lib/core/EventBus" {
     public on(events: "create.rejected", callback: (event: CreateRejectedEvent) => void): void;
 
     public on(events: "commandStack.changed", callback: () => void): void;
+    public on(events: "commandStack.changed", priority: number, callback: () => void): void;
 
     public on(events: "connection.added", callback: (event: ConnectionAddedEvent) => void): void;
 
