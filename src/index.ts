@@ -38,3 +38,5 @@ import * as Notification from "./notification";
 export { Notification };
 import * as DesktopNotification from "./desktopnotification";
 export { DesktopNotification };
+import * as AuditTrail from "./audittrail";
+export { AuditTrail };
