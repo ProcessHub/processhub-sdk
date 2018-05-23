@@ -98,6 +98,8 @@ export interface DeleteFileRequest extends BaseRequest {
 
 export interface GetProcessStatisticsRequest extends BaseRequest {
   processId: string;
+  fromDate?: Date;
+  tillDate?: Date;
 }
 export interface GetProcessStatisticsReply extends ProcessReply {
   statistics: StatisticRow[];
