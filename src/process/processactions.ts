@@ -103,7 +103,7 @@ export function createProcessInDbAction(processDetails: ProcessDetails, accessTo
       processDetails: processDetails
     }, accessToken);
     dispatch(response);
-    processDetails.extras.bpmnProcess = bpmnProcess;    
+    processDetails.extras.bpmnProcess = bpmnProcess;
     return response;
   };
 }
@@ -135,7 +135,7 @@ export async function completeProcessFromCache(process: ProcessDetails): Promise
   let initBpmn = false;
   if (process.extras.bpmnXml)
     initBpmn = true;
-  
+
   process = StateHandler.mergeProcessToCache(process);
 
   if (initBpmn) {
@@ -155,7 +155,7 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
     cachedProcess = processState.processCache[processId];
   if (cachedProcess != null) {
     // Ignore call if all data 
-    if ((getExtras & ProcessExtras.ExtrasBpmnXml) && cachedProcess.extras.bpmnXml) {
+    if ((getExtras & ProcessExtras.ExtrasBpmnXml) && cachedProcess.extras.bpmnXml) {
       getExtras -= ProcessExtras.ExtrasBpmnXml;
       if (cachedProcess.extras.bpmnProcess == null) {
         // special case: Process might be in cache with ExtrasBpmnXml but without bpmnProcess. That can happen when mergeToCache e.g. moves workspace processes to
@@ -168,8 +168,10 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
       getExtras -= ProcessExtras.ExtrasInstances;
     if ((getExtras & ProcessExtras.ExtrasProcessRoles) && cachedProcess.extras.processRoles)
       getExtras -= ProcessExtras.ExtrasProcessRoles;
-      if ((getExtras & ProcessExtras.ExtrasSettings) && cachedProcess.extras.settings)
-      getExtras -= ProcessExtras.ExtrasSettings;      
+    if ((getExtras & ProcessExtras.ExtrasSettings) && cachedProcess.extras.settings)
+      getExtras -= ProcessExtras.ExtrasSettings;
+    if ((getExtras & ProcessExtras.ExtrasAuditTrail) && cachedProcess.extras.auditTrail)
+      getExtras -= ProcessExtras.ExtrasAuditTrail;
     if ((getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames) && cachedProcess.extras.processRoles) {
       // names available?
       for (let roleId in cachedProcess.extras.processRoles) {
@@ -180,7 +182,7 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
             break;
           }
         }
-      }              
+      }
     }
     if (getExtras == 0) {
       // all data available from cache
@@ -206,10 +208,10 @@ export function loadProcessAction(processId: string, instanceId?: string, proces
     if (instanceId != null)
       request.instanceId = instanceId;
 
-    let response: GetProcessDetailsReply = await Api.getJson(ProcessRequestRoutes.GetProcessDetails, request, accessToken); 
+    let response: GetProcessDetailsReply = await Api.getJson(ProcessRequestRoutes.GetProcessDetails, request, accessToken);
     if (response.processDetails)
       response.processDetails = await completeProcessFromCache(response.processDetails);
-    
+
     dispatch(response);
     return response;
   };
@@ -313,7 +315,7 @@ export function listPublicProcessesAction(accessToken: string = null): <S>(dispa
   return async <S>(dispatch: Dispatch<S>): Promise<GetProcessDetailsReply> => {
     dispatch(<ProcessActionGetProcessDetails>{
       type: ProcessActionType.GetProcessDetails as ProcessActionType
-    });    
+    });
     let response: GetProcessDetailsReply = await Api.postJson(ProcessRequestRoutes.GetPublicProcesses, {}, accessToken);
     dispatch(response);
     return response;
@@ -351,7 +353,7 @@ export function rateProcessAction(processId: string, ratingDiff: number, accessT
       { processId, ratingDiff } as RateProcessRequest,
       accessToken);
 
-    response.processDetails = await completeProcessFromCache(response.processDetails);      
+    response.processDetails = await completeProcessFromCache(response.processDetails);
     dispatch(response);
     return response;
   };
@@ -369,7 +371,7 @@ export function uploadFileAction(processId: string, fileName: string, data: stri
       { processId, fileName, data } as UploadFileRequest,
       accessToken);
 
-    response.processDetails = await completeProcessFromCache(response.processDetails);      
+    response.processDetails = await completeProcessFromCache(response.processDetails);
     dispatch(response);
     return response;
   };

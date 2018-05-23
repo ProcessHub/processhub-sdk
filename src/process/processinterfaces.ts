@@ -8,6 +8,7 @@ import { gqlLibraryTypes } from "./libraryinterfaces";
 import { FieldDefinition, TaskIdRequiredFieldsNeeded } from "../data";
 import { UserDetails } from "../user/userinterfaces";
 import { RowDetails } from ".";
+import { AuditTrailEntry } from "../audittrail/audittrailinterfaces";
 
 export interface ProcessAttachment {
   attachmentId: string;
@@ -42,6 +43,7 @@ export interface ProcessDetails {
     processRoles?: ProcessRoles;
     svgString?: string; // only used to save preview to server
     settings?: ProcessSettings;
+    auditTrail?: AuditTrailEntry[];
   };
 }
 export const gqlProcessTypes = `     
@@ -114,7 +116,8 @@ export enum ProcessExtras {
   ExtrasInstances = 1 << 1,
   ExtrasProcessRoles = 1 << 4,
   ExtrasProcessRolesWithMemberNames = 1 << 5, // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
-  ExtrasSettings = 1 << 6
+  ExtrasSettings = 1 << 6,
+  ExtrasAuditTrail = 1 << 7,
 }
 
 export interface TaskToLaneMapEntry {
