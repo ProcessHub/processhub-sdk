@@ -429,15 +429,17 @@ export function setTimersOfProcessAction(processId: string, timers: TimerStartEv
   };
 }
 
-export async function getProcessStatistics(processId: string, accessToken: string = null): Promise<GetProcessStatisticsReply> {
+export async function getProcessStatistics(processId: string, fromDate: Date = null, tillDate: Date = null, accessToken: string = null): Promise<GetProcessStatisticsReply> {
   // siehe https://github.com/jaysoo/todomvc-redux-react-typescript/blob/master/client/todos/actions.ts
-  return await rootStore.dispatch(getProcessStatisticsAction(processId, accessToken));
+  return await rootStore.dispatch(getProcessStatisticsAction(processId, fromDate, tillDate, accessToken));
 }
 
-export function getProcessStatisticsAction(processId: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessStatisticsReply> {
+export function getProcessStatisticsAction(processId: string, fromDate: Date, tillDate: Date, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessStatisticsReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<GetProcessStatisticsReply> => {
     let response: GetProcessStatisticsReply = await Api.postJson(ProcessRequestRoutes.GetProcessStatistics, {
-      processId: processId
+      processId: processId,
+      fromDate: fromDate,
+      tillDate: tillDate
     }, accessToken) as GetProcessStatisticsReply;
 
     dispatch(response);
