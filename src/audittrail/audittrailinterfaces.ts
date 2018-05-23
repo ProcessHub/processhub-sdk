@@ -10,13 +10,16 @@ export enum AuditTrailAction {
   instanceStartedByTimer = 7,
   messageBoundaryEventTriggered = 8,
   bouncedMail = 9,
-  errorSubprocess = 10
+  errorSubprocess = 10,
+  processCreated = 11,
+  processEdited = 12,
+  processComment = 13,
 }
 
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
   todoDisplayName: string;
-  // must be set for AuditTrailAction.comment
+  // must be set for AuditTrailAction.comment and processComment
   comment: string;
   // may be set for AuditTrailAction.comment, if the comment has attachments - links to all attachment files
   commentAttachments: string[];
@@ -37,6 +40,9 @@ export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.bouncedMail
   bouncedAddresses: string[];
   bouncedSubject: string;
+
+  // must be set for AuditTrailAction.processCreated, processEdited and processComment
+  processDisplayName: string;
 }
 
 export type Partial<T> = {

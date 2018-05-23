@@ -18,6 +18,8 @@ export const ProcessRequestRoutes = {
   UploadFile: "/api/process/uploadfile",
   DeleteFile: "/api/process/deletefile",
   GetProcessStatistics: "/api/process/getstatistics",
+  Comment: "/api/process/comment",
+  DeleteComment: "/api/process/deletecomment",
 };
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
@@ -102,6 +104,15 @@ export interface GetProcessStatisticsRequest extends BaseRequest {
 export interface GetProcessStatisticsReply extends ProcessReply {
   statistics: StatisticRow[];
 }  
+
+export interface CommentRequest extends BaseRequest {
+  processId: string;
+  comment: string;
+  trailId: string;
+}
+export interface DeleteCommentRequest extends BaseRequest {
+  trailId: string;
+}
 
 export const PROCESSLOADED_MESSAGE = "ProcessLoadedMessage";
 export interface ProcessLoadedMessage extends BaseMessage {

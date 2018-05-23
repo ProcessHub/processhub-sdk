@@ -293,11 +293,14 @@ export function updateProcessAction(process: ProcessDetails, accessToken: string
       type: ProcessActionType.GetProcessDetails as ProcessActionType
     });
 
-    // bpmnProcess cannot be serialized
+    // bpmnProcess cannot be serialized    
     process.extras.bpmnProcess = null;
+    const requestDetails = _.clone(process);
+    requestDetails.extras.instances = undefined;
+    requestDetails.extras.auditTrail = undefined;
 
     let response: GetProcessDetailsReply = await Api.postJson(ProcessRequestRoutes.UpdateProcess, {
-      processDetails: process
+      processDetails: requestDetails
     }, accessToken);
 
     response.processDetails = await completeProcessFromCache(response.processDetails);
