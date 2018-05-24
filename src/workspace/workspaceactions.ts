@@ -32,6 +32,8 @@ export async function loadWorkspace(workspaceId: string, getExtras: WorkspaceExt
       getExtras -= WorkspaceExtras.ExtrasProcesses;
     if ((getExtras & WorkspaceExtras.ExtrasTags) && cachedWorkspace.extras.tags)
       getExtras -= WorkspaceExtras.ExtrasTags;
+    if ((getExtras & WorkspaceExtras.ExtrasAuditTrail) && cachedWorkspace.extras.auditTrail)
+      getExtras -= WorkspaceExtras.ExtrasAuditTrail;
 
     if (getExtras == 0) {
       // all data available from cache

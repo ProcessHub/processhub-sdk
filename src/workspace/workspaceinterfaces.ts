@@ -2,6 +2,7 @@ import { ProcessDetails, gqlProcessFragments } from "../process/processinterface
 import { UserDetails } from "../user/userinterfaces";
 import gql from "graphql-tag";
 import { tl } from "../tl";
+import { AuditTrailEntry } from "../audittrail";
 
 // WorkspaceType
 export enum WorkspaceType {
@@ -47,6 +48,7 @@ export interface WorkspaceDetails {
     processes?: ProcessDetails[];  // only processes that the current user may access
     settings?: WorkspaceSettings;
     tags?: string[]; // all available tags in the workspace
+    auditTrail?: AuditTrailEntry[];
   };
 }
 
@@ -100,7 +102,8 @@ export enum WorkspaceExtras {
   ExtrasMembers = 1 << 0,
   ExtrasProcesses = 1 << 1,
   ExtrasSettings = 1 << 2,
-  ExtrasTags = 1 << 3
+  ExtrasTags = 1 << 3,
+  ExtrasAuditTrail = 1 << 4,
 }
 
 export interface WorkspaceSettings {
