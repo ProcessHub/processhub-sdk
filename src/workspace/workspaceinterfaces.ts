@@ -3,6 +3,7 @@ import { UserDetails } from "../user/userinterfaces";
 import gql from "graphql-tag";
 import { tl } from "../tl";
 import { AuditTrailEntry } from "../audittrail";
+import { GroupDetails } from "../group/groupinterfaces";
 
 // WorkspaceType
 export enum WorkspaceType {
@@ -49,6 +50,7 @@ export interface WorkspaceDetails {
     settings?: WorkspaceSettings;
     tags?: string[]; // all available tags in the workspace
     auditTrail?: AuditTrailEntry[];
+    groups?: GroupDetails[];
   };
 }
 
@@ -104,6 +106,7 @@ export enum WorkspaceExtras {
   ExtrasSettings = 1 << 2,
   ExtrasTags = 1 << 3,
   ExtrasAuditTrail = 1 << 4,
+  ExtrasGroups = 1 << 5,
 }
 
 export interface WorkspaceSettings {
