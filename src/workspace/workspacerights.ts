@@ -37,6 +37,14 @@ export function canInviteMembers(workspace: WorkspaceDetails): boolean {
   return isWorkspaceAdmin(workspace);
 }
 
+export function canCreateGroups(workspace: WorkspaceDetails): boolean {
+  return isWorkspaceAdmin(workspace);
+}
+
+export function canEditGroups(workspace: WorkspaceDetails): boolean {
+  return isWorkspaceAdmin(workspace);
+}
+
 export function canCreateProcess(workspace: WorkspaceDetails): boolean {
   return isWorkspaceAdmin(workspace);
 }
