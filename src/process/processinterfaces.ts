@@ -34,6 +34,7 @@ export interface ProcessDetails {
   startEventName?: string; // text on the start button
   tags?: string[];
   rowDetails?: RowDetails[];
+  hasWarnings?: boolean;
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
