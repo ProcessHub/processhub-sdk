@@ -9,6 +9,7 @@ import { isFalse, isTrue, error } from "../tools/assert";
 import { isGroupId, isUserId } from "../tools/guid";
 import { Bpmn } from "./bpmn";
 import * as WorkspaceLicenses from "../workspace/workspacelicenses";
+import { GroupDetails } from "../group";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -84,7 +85,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   // public processes have been removed for now, does not seem to make sense with current version
   if (workspace.workspaceType == WorkspaceType.Templates)
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
-  else    
+  else
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
 
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
@@ -149,6 +150,12 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
     return false;
   }
 
+  const { groups } = workspace.extras;
+  if (!groups) {
+    console.error("isPotentialRoleOwner called without valid workspace.extras.groups");
+    return false;
+  }
+
   if (roleId == null) {
     // check if user is PotentialRoleOwner of any role
     for (let role in roles) {
@@ -167,12 +174,21 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
       return true;
     }
     if (!ignorePublic && (member.memberId == PredefinedGroups.Public
-      || member.memberId == PredefinedGroups.Everybody))
+      || member.memberId == PredefinedGroups.Everybody)) {
       return true;
+    }
     if (member.memberId == PredefinedGroups.AllWorkspaceMembers ||
       (ignorePublic && (member.memberId == PredefinedGroups.Public || member.memberId == PredefinedGroups.Everybody))) {
       if (isWorkspaceMember(workspace))
         return true;
+    }
+    if (user && isGroupId(member.memberId)) {
+      const group: GroupDetails = groups.find(g => g.groupId === member.memberId);
+      if (group) {
+        if (group.members.find(gm => gm.userId === user.userId) != null) {
+          return true;
+        }
+      }
     }
   }
 
@@ -233,9 +249,20 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
             displayName: potentialOwner.displayName
           });
         } else if (isGroupId(potentialOwner.memberId)) {
-          error("not implemented");
-        } else
+          if (workspaceDetails.extras.groups) {
+            const group: GroupDetails = workspaceDetails.extras.groups.find(g => g.groupId === potentialOwner.memberId);
+            if (group && group.members) {
+              for (const member of group.members) {
+                owners.potentialRoleOwner.push({
+                  memberId: member.userId,
+                  displayName: member.displayName,
+                });
+              }
+            }
+          }
+        } else {
           error("invalid call");
+        }
       }
       allOwners[role] = owners;
     }
