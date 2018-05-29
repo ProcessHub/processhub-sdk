@@ -138,6 +138,8 @@ export class BpmnProcess {
       timerStartConfiguration: null,
 
       subProcessId: undefined,
+
+      sequenceFlowExpression: undefined,
     };
 
     if (activityObject == null || activityObject.extensionElements == null || (activityObject.extensionElements != null && activityObject.extensionElements.values == null)) {
@@ -148,6 +150,9 @@ export class BpmnProcess {
       if (values != null && values.$children != null) {
         for (let child of values.$children) {
           switch (child.name) {
+            case TaskSettings.SequenceFlowExpression:
+              returnValue.sequenceFlowExpression = child.$body;
+              break;
             case TaskSettings.SubProcessId:
               returnValue.subProcessId = child.$body;
               break;

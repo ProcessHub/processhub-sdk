@@ -160,7 +160,8 @@ export const TaskSettings = {
   RoleOwnersEditable: "roleowners-editable", // boolean: all role owners can be selected
   SubProcessId: "subprocessid", // id of the process a SubProcess references,
   DueAtDateCanBeEdit: "due-at-can-be-edit",
-  DueAtDuration: "due-at-duration"
+  DueAtDuration: "due-at-duration",
+  SequenceFlowExpression: "sequenceflow-expression",
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -190,6 +191,8 @@ export interface TaskExtensions {
   roleOwnersEditable: boolean;
 
   subProcessId: string;
+
+  sequenceFlowExpression: string;
 }
 
 export interface TimerStartEventConfiguration {
