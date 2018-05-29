@@ -213,3 +213,7 @@ export interface RunningTaskLane {
   bpmnTaskId: string;
   bpmnLaneId: string;
 }
+
+export interface StartButtonMap {
+  [id: string]: string;
+}

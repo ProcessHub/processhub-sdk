@@ -8,7 +8,7 @@ import BpmnModdle = require("bpmn-moddle");
 import { Bpmn, Bpmndi } from "../bpmn";
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
-import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType } from "../processinterfaces";
+import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType, StartButtonMap } from "../processinterfaces";
 import { isTrue, equal } from "../../tools/assert";
 import { tl } from "../../tl";
 import { createId } from "../../tools/guid";
@@ -509,6 +509,20 @@ export class BpmnProcess {
       return startEvents[0].name;
     else
       return undefined; // undefined means no member gets created - null would explicitly be stored
+  }
+
+  // get the text that should be displayed on the start button
+  public getStartButtonTitles(): StartButtonMap {
+    let startEvents = this.getStartEvents(this.processId());
+    if (startEvents && startEvents.length > 0) {
+      let map = {} as StartButtonMap;
+      startEvents.forEach(se => {
+        map[se.id] = (se.name && se.name.trim() != "") ? se.name : undefined;
+      });
+      return map;
+    } else {
+      return undefined; // undefined means no member gets created - null would explicitly be stored
+    }
   }
 
   public getEndEvents(processId: string): BpmnModdleHelper.BpmnModdleEndEvent[] {
