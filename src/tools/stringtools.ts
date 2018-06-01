@@ -9,12 +9,9 @@ export function isValidWorkspaceName(workspaceName: string): boolean {
   if (workspaceName == null || workspaceName.length < 5)
     return false;
 
-  // Erlaubt sind alphanumerische Zeichen sowie max. ein Bindestrich
-  // Am Anfang muss ein Buchstabe stehen, am Ende Zahl oder Buchstabe
-  // Format soll evtl. als Subdomain geeignet sein
-  let re = /^[A-Za-z][A-Za-z0-9]*[A-Za-z0-9\-]*[A-Za-z0-9]+$/;
-  // let re = /^[A-Za-z][A-Za-z0-9]*[A-Za-z0-9]+$/;
-  return re.test(workspaceName);
+  // all UTF-Characters are allowed, because the workspace name 
+  // is created from the user name at registration
+  return true;  
 }
 
 // Benutzer-Realname auf Gültigkeit prüfen

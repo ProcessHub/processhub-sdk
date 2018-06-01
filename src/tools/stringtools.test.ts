@@ -23,17 +23,9 @@ describe("sdk", function () {
           assert.isTrue(StringTools.isValidWorkspaceName("thomas32"));
         });
         it("soll ungültige Workspacenamen ablehnen", function () {
-          // Erlaubt sind alphanumerische Zeichen sowie max. ein  Bindestrich
-          assert.isFalse(StringTools.isValidWorkspaceName("Thomas_Test"), "1");
-          assert.isFalse(StringTools.isValidWorkspaceName("T.homasTest"), "2");
-          assert.isTrue(StringTools.isValidWorkspaceName("Thomas-Te-st"), "3");
           assert.isFalse(StringTools.isValidWorkspaceName(""), "4");
           assert.isFalse(StringTools.isValidWorkspaceName(null), "5");
-          assert.isFalse(StringTools.isValidWorkspaceName("thom")), "6";   // Mindestlänge 5 Zeichen
-          assert.isFalse(StringTools.isValidWorkspaceName("Thomas Test"), "7");
-          assert.isFalse(StringTools.isValidWorkspaceName("Thomas@Test"), "8");
-          assert.isFalse(StringTools.isValidWorkspaceName("32Thomas"), "9");  // Muss mit Buchstaben beginnen
-          assert.isFalse(StringTools.isValidWorkspaceName("32Thomas-"), "10");  // Darf nicht mit Sonderzeichen enden
+          assert.isFalse(StringTools.isValidWorkspaceName("thom")), "6"; 
         });
       });
 
