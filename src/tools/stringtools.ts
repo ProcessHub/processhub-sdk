@@ -6,8 +6,11 @@ export function isValidMailAddress(mail: string): boolean {
 }
 
 export function isValidWorkspaceName(workspaceName: string): boolean {
-  if (workspaceName == null || workspaceName.length < 5)
+  if ((workspaceName == null) 
+  || (workspaceName.length < 5)
+  || (workspaceName.indexOf(" ") >= 0)) {
     return false;
+  }
 
   // all UTF-Characters are allowed, because the workspace name 
   // is created from the user name at registration

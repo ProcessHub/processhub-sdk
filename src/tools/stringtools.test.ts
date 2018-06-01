@@ -23,9 +23,10 @@ describe("sdk", function () {
           assert.isTrue(StringTools.isValidWorkspaceName("thomas32"));
         });
         it("soll ungültige Workspacenamen ablehnen", function () {
-          assert.isFalse(StringTools.isValidWorkspaceName(""), "4");
-          assert.isFalse(StringTools.isValidWorkspaceName(null), "5");
-          assert.isFalse(StringTools.isValidWorkspaceName("thom")), "6"; 
+          assert.isFalse(StringTools.isValidWorkspaceName("name with spaces"), "1");
+          assert.isFalse(StringTools.isValidWorkspaceName(""), "2");
+          assert.isFalse(StringTools.isValidWorkspaceName(null), "3");
+          assert.isFalse(StringTools.isValidWorkspaceName("thom")), "4"; 
         });
       });
 
