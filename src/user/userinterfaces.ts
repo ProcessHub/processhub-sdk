@@ -26,6 +26,7 @@ export class UserDetails {
   noDailyUpdates?: boolean;
   noWeeklyStatus?: boolean;
   alwaysSendMails?: boolean;
+  mailSignature?: string;
 }
 export const gqlUserTypes = `     
   input ViewState {
