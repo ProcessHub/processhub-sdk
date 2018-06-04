@@ -31,7 +31,7 @@ export interface ProcessDetails {
   userRights?: ProcessAccessRights; // access rights of the current user
   attachments?: ProcessAttachment[];
   processXmlHash?: string;
-  startEventName?: string; // text on the start button
+  startEventNames?: { [startEventId: string]: string }; // map with starteventid -> start event name
   tags?: string[];
   rowDetails?: RowDetails[];
   hasWarnings?: boolean;
