@@ -1590,6 +1590,14 @@ export class BpmnProcess {
     return sortedTasks;
   }
 
+  private getFlowElementsOfTypes<T extends Bpmn.BaseElement>(types: BpmnModdleHelper.ModdleElementType[]): T[] {
+    let res: T[] = [];
+    for (let type of types) {
+      res = res.concat(this.getFlowElementsOfType<T>(type));
+    }
+    return res;
+  }
+
   private getFlowElementsOfType<T extends Bpmn.BaseElement>(type: BpmnModdleHelper.ModdleElementType): T[] {
     let elements: T[] = [];
     let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter((e) => e.$type === BPMN_PROCESS) as Bpmn.Process[];
@@ -1608,6 +1616,10 @@ export class BpmnProcess {
     }
 
     return elements;
+  }
+
+  public getAllBpmnObjects(): Bpmn.FlowElement[] {
+    return this.getFlowElementsOfTypes<Bpmn.FlowElement>(["bpmn:StartEvent", "bpmn:UserTask", "bpmn:SendTask", "bpmn:ExclusiveGateway", "bpmn:ParallelGateway", "bpmn:SequenceFlow", "bpmn:EndEvent"]);
   }
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
