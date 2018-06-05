@@ -138,7 +138,7 @@ export enum StatisticsAction {
 }
 
 export interface StatisticTrailEntry {
-  todo?: { todoId?: string, bpmnTaskId: string, bpmnLaneId: string, desicionTaskBpmnTaskId?: string };
+  todo?: { todoId?: string, bpmnTaskId: string, bpmnLaneId: string, desicionTaskBpmnTaskId?: string, timeOverDueDate?: number };
   instance?: { instanceId: string; jumpToBpmnTask?: string };
   user?: { instanceId: string; };
   process?: {};
