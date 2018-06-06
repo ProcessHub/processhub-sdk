@@ -86,9 +86,6 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   if (workspace.workspaceType == WorkspaceType.Templates) {
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
   }
-  if (!processRoles[DefaultRoles.Viewer]) {
-    processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
-  }
 
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
   if (!WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
