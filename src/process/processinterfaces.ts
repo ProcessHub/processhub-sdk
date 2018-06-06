@@ -35,6 +35,7 @@ export interface ProcessDetails {
   tags?: string[];
   rowDetails?: RowDetails[];
   hasWarnings?: boolean;
+  latestCommentAt?: Date; // datetime of the latest comment
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
