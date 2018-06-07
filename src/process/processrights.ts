@@ -83,10 +83,9 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
     processRoles = {};
 
   // public processes have been removed for now, does not seem to make sense with current version
-  if (workspace.workspaceType == WorkspaceType.Templates)
+  if (workspace.workspaceType == WorkspaceType.Templates) {
     processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Public }] };
-  else
-    processRoles[DefaultRoles.Viewer] = { potentialRoleOwners: [{ memberId: PredefinedGroups.AllWorkspaceMembers }] };
+  }
 
   // Demo and Free workspaces don't have owners or managers -> remove from roles if they exists
   if (!WorkspaceLicenses.licenseHasManagersAndOwners(workspace)) {
@@ -213,10 +212,6 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
 }
 
 export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, processDetails: ProcessDetails, roleId: string = null): { [roleId: string]: PotentialRoleOwners } {
-  // Diese Funktion soll die User auflisten, die die angegebene Rolle ausfüllen dürfen. Das ist nur für
-  // normale Rollen im Prozess sinnvoll, nicht für die vordefinierten Rollen, da zu diesen kein Inhaber ausgewählt werden muss.
-  isFalse(isDefaultRole(roleId));
-
   let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
   if (processDetails.extras.processRoles == null)

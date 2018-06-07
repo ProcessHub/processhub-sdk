@@ -1,5 +1,13 @@
 import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
 
+export function licenseHasGroups(workspace: WorkspaceDetails): boolean {
+  return licenseIsBusinessOrHigher(workspace);
+}
+
+export function licenseHasProcessVisibility(workspace: WorkspaceDetails): boolean {
+  return licenseIsBusinessOrHigher(workspace);
+}
+
 // does license include modeler?
 export function licenseHasModeler(workspace: WorkspaceDetails): boolean {
   return licenseIsDemoOrHigher(workspace); 

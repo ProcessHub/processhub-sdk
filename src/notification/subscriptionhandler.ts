@@ -17,6 +17,7 @@ export const resolveFunction = (obj: any, value: string): string => {
 export const PublishSubscriptionObjects: { [Id: string]: PublishSubscribeRegisterObject } = {
   newInstance: { wildcard: "{userId}", subscriptionPath: "/ws/newInstance/{userId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
   updateInstance: { wildcard: "{instanceId}", subscriptionPath: "/ws/updateInstance/{instanceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
+  updateProcess: { wildcard: "{processId}", subscriptionPath: "/ws/updateProcess/{processId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
 };
 
 let wsUrl = backendUrl;
@@ -84,5 +85,10 @@ export function subscribeUpdateInstance(instanceId: string): boolean {
 
 export function subscribeNewInstance(userId: string): boolean {
   let subPath = PublishSubscriptionObjects.newInstance.resolvePath(userId);
+  return subscribe(subPath);
+}
+
+export function subscribeUpdateProcess(processId: string): boolean {
+  let subPath = PublishSubscriptionObjects.updateProcess.resolvePath(processId);
   return subscribe(subPath);
 }

@@ -582,6 +582,12 @@ export class BpmnProcess {
     return flowElements;
   }
 
+  public getAllParallelGateways(): Bpmn.FlowNode[] {
+    let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === this.processId()) as Bpmn.Process;
+    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_PARALLELGATEWAY));
+    return flowElements;
+  }
+
   public getExistingActivityObject(objectId: string): Bpmn.Activity {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === this.processId()) as Bpmn.Process;
     let flowElement: Bpmn.Activity = process.flowElements.find((e: Bpmn.Activity) => (e.id === objectId));
@@ -1590,6 +1596,14 @@ export class BpmnProcess {
     return sortedTasks;
   }
 
+  private getFlowElementsOfTypes<T extends Bpmn.BaseElement>(types: BpmnModdleHelper.ModdleElementType[]): T[] {
+    let res: T[] = [];
+    for (let type of types) {
+      res = res.concat(this.getFlowElementsOfType<T>(type));
+    }
+    return res;
+  }
+
   private getFlowElementsOfType<T extends Bpmn.BaseElement>(type: BpmnModdleHelper.ModdleElementType): T[] {
     let elements: T[] = [];
     let processes: Bpmn.Process[] = this.bpmnXml.rootElements.filter((e) => e.$type === BPMN_PROCESS) as Bpmn.Process[];
@@ -1608,6 +1622,10 @@ export class BpmnProcess {
     }
 
     return elements;
+  }
+
+  public getAllBpmnObjects(): Bpmn.FlowElement[] {
+    return this.getFlowElementsOfTypes<Bpmn.FlowElement>(["bpmn:StartEvent", "bpmn:UserTask", "bpmn:SendTask", "bpmn:IntermediateCatchEvent", "bpmn:ExclusiveGateway", "bpmn:ParallelGateway", "bpmn:SequenceFlow", "bpmn:EndEvent"]);
   }
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
