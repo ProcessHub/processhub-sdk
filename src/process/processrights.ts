@@ -212,10 +212,6 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
 }
 
 export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, processDetails: ProcessDetails, roleId: string = null): { [roleId: string]: PotentialRoleOwners } {
-  // Diese Funktion soll die User auflisten, die die angegebene Rolle ausfüllen dürfen. Das ist nur für
-  // normale Rollen im Prozess sinnvoll, nicht für die vordefinierten Rollen, da zu diesen kein Inhaber ausgewählt werden muss.
-  isFalse(isDefaultRole(roleId));
-
   let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
   if (processDetails.extras.processRoles == null)

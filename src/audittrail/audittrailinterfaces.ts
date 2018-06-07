@@ -16,6 +16,10 @@ export enum AuditTrailAction {
   processComment = 13,
   processDeleted = 14,
   errorOnEvaluateGatewayDecision = 15,
+  processDisplayNameChanged = 16,
+  processDescriptionChanged = 17,
+  processVisibilityChanged = 18,
+  processTagsChanged = 19,
 
   workspaceCreated = 100,
 }
