@@ -20,6 +20,8 @@ export enum AuditTrailAction {
   processDescriptionChanged = 17,
   processVisibilityChanged = 18,
   processTagsChanged = 19,
+  processXmlChanged = 20,
+  processRolesChanged = 21,
 
   workspaceCreated = 100,
 }
