@@ -31,7 +31,7 @@ export interface ProcessDetails {
   userRights?: ProcessAccessRights; // access rights of the current user
   attachments?: ProcessAttachment[];
   processXmlHash?: string;
-  startEventNames?: { [startEventId: string]: string }; // map with starteventid -> start event name
+  userStartEvents?: StartButtonMap; // map with starteventid -> start event name
   tags?: string[];
   rowDetails?: RowDetails[];
   hasWarnings?: boolean;
@@ -220,5 +220,5 @@ export interface RunningTaskLane {
 }
 
 export interface StartButtonMap {
-  [id: string]: string;
+  [id: string]: { startEventName: string, laneId: string };
 }

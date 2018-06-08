@@ -315,7 +315,17 @@ export function canSimulateProcess(process: ProcessDetails): boolean {
   }
 }
 
-export function canStartProcess(process: ProcessDetails): boolean {
+export function canStartProcess(process: ProcessDetails, startEventId: string): boolean {
+  if (process == null)
+    return false;
+
+  if (startEventId == null)
+    return false;
+
+  // if userStartEvent is in map, user is allowed to start process
+  return process.userStartEvents[startEventId] != null;
+}
+export function canStartProcessOld(process: ProcessDetails): boolean {
   if (process == null)
     return false;
 

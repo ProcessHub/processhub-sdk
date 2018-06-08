@@ -522,7 +522,9 @@ export class BpmnProcess {
     if (startEvents && startEvents.length > 0) {
       let map = {} as StartButtonMap;
       startEvents.forEach(se => {
-        map[se.id] = (se.name && se.name.trim() != "") ? se.name : undefined;
+        if (se.eventDefinitions == null) {
+          map[se.id] = { startEventName: (se.name && se.name.trim() != "") ? se.name : undefined, laneId: this.getLaneOfFlowNode(se.id).id };
+        }
       });
       return map;
     } else {
