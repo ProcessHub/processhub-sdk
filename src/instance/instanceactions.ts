@@ -40,16 +40,17 @@ export interface InstanceActionJump extends InstanceAction {
   readonly type: InstanceActionType; // "INSTANCEACTION_JUMP";
 }
 
-export async function executeInstance(processId: string, instanceDetails: InstanceDetails, accessToken?: string): Promise<ExecuteReply> {
-  return await rootStore.dispatch(executeInstanceAction(processId, instanceDetails, accessToken));
+export async function executeInstance(processId: string, instanceDetails: InstanceDetails, startEventId?: string, accessToken?: string): Promise<ExecuteReply> {
+  return await rootStore.dispatch(executeInstanceAction(processId, instanceDetails, startEventId, accessToken));
 }
 
-export function executeInstanceAction(processId: string, instanceDetails: InstanceDetails, accessToken?: string): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
+export function executeInstanceAction(processId: string, instanceDetails: InstanceDetails, startEventId?: string, accessToken?: string): <S>(dispatch: Dispatch<S>) => Promise<ExecuteReply> {
 
   return async <S>(dispatch: Dispatch<S>): Promise<ExecuteReply> => {
     let response: ExecuteReply = await Api.postJson(ProcessEngineApiRoutes.execute, {
       processId: processId,
-      instance: instanceDetails
+      instance: instanceDetails,
+      startEventId: startEventId
     }, accessToken);
 
     dispatch<InstanceActionExecute>({

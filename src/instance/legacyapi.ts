@@ -30,6 +30,7 @@ export interface InstanceReply extends BaseReply {
 export interface ExecuteRequest extends InstanceRequest {
   processId: string;
   instance?: InstanceDetails;
+  startEventId?: string;
 }
 export interface ExecuteReply extends InstanceReply { // ExecuteReply ist das selbe wie ResumeReply
   instanceId?: string;
