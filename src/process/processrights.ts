@@ -322,6 +322,9 @@ export function canStartProcess(process: ProcessDetails, startEventId: string): 
   if (startEventId == null)
     return false;
 
+  if (process.userStartEvents == null)
+    return canStartProcessOld(process);
+
   // if userStartEvent is in map, user is allowed to start process
   return process.userStartEvents[startEventId] != null;
 }
