@@ -5,7 +5,6 @@ import { SemanticICONS } from "semantic-ui-react";
 import { UserDetails } from "../user";
 
 export interface FieldDefinition {
-  rowNumber: number;
   name: string;
   type: FieldType;
   isRequired: boolean;

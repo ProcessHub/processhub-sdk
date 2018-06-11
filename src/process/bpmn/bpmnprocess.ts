@@ -405,28 +405,24 @@ export class BpmnProcess {
     let startElement = this.getStartEvents(this.processId())[0];
     let fieldDefinitions: FieldDefinition[] = [
       {
-        rowNumber: 0,
         name: tl("Titel"),
         type: "ProcessHubInstanceTitle",
         isRequired: false,
         config: {}
       },
       {
-        rowNumber: 1,
         name: tl("Feld #1"),
         type: "ProcessHubTextInput",
         isRequired: false,
         config: {}
       },
       {
-        rowNumber: 2,
         name: tl("Feld #2"),
         type: "ProcessHubTextArea",
         isRequired: false,
         config: {}
       },
       {
-        rowNumber: 3,
         name: tl("Anlagen"),
         type: "ProcessHubFileUpload",
         isRequired: false,

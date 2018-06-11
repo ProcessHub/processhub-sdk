@@ -73,7 +73,6 @@ export function updateLegacyFieldDefinitions(definitions: any): FieldDefinition[
   if (!(definitions instanceof Array)) {
     const properties: { [id: string]: ILegacyProperty } = (definitions as ILegacySchema).properties;
     let updatedDefinitions: FieldDefinition[] = [];
-    let rowNumber: number = 0;
     for (const id in properties) {
       if (typeof id === "string") {
         const property: ILegacyProperty = properties[id];
@@ -81,10 +80,8 @@ export function updateLegacyFieldDefinitions(definitions: any): FieldDefinition[
           config: {},
           isRequired: property.required,
           name: property.title,
-          rowNumber,
           type: property.customWidgetClass as FieldType,
         });
-        rowNumber++;
       }
     }
     return updatedDefinitions;
