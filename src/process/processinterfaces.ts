@@ -164,6 +164,8 @@ export const TaskSettings = {
   DueAtDateCanBeEdit: "due-at-can-be-edit",
   DueAtDuration: "due-at-duration",
   SequenceFlowExpression: "sequenceflow-expression",
+  FieldsWhichShouldSend: "fields-which-should-send"
+
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -195,6 +197,8 @@ export interface TaskExtensions {
   subProcessId: string;
 
   sequenceFlowExpression: string;
+
+  fieldsWhichShouldSend: string[];
 }
 
 export interface TimerStartEventConfiguration {
