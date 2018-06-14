@@ -5,7 +5,10 @@ import { BpmnProcess, RoleOwnerMap } from "../process";
 import { Bpmn } from "../process/bpmn";
 
 export function replaceAll(target: string, search: string, replacement: string) {
-  return target.replace(new RegExp(search, "g"), replacement);
+  while (target.indexOf(search) >= 0) {
+    target = target.replace(search, replacement);
+  }
+  return target;
 }
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap, process: BpmnProcess, roleOwners: RoleOwnerMap): string {
@@ -48,6 +51,45 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     const roleName: string = match[groupIndexForIdentifier];
 
     if (roleName != null) {
+      const lane: Bpmn.Lane = process.getLanes(process.processId(), false).find(l => l.name === roleName);
+      if (lane) {
+        const roleOwner = roleOwners[lane.id];
+        if (roleOwner && roleOwner.length) {
+          inputString = replaceAll(inputString, placeHolder, roleOwner[0].displayName);
+        }
+      }
+    }
+  }
+
+  const newFieldRegex = /[{]{1}[\s]?field\['(.+?)'\][}]{1}/g;
+  while ((match = newFieldRegex.exec(inputString)) != null) {
+
+    const placeHolder: string = match[0];
+    const fieldName: string = match[1];
+
+    if (fieldName && fieldName.length) {
+      const valueObject = fieldContentMap[fieldName];
+
+      if (isFieldValue(valueObject)) {
+        if (valueObject.type == "ProcessHubDate") {
+          let val = getFormattedDate(new Date(valueObject.value.toString()));
+          inputString = replaceAll(inputString, placeHolder, val);
+        } else {
+          inputString = replaceAll(inputString, placeHolder, valueObject.value != null ? valueObject.value.toString() : "");
+        }
+      } else {
+        inputString = replaceAll(inputString, placeHolder, valueObject != null ? valueObject.toString() : "");
+      }
+    }
+  }
+
+  const newRoleRegex = /[{]{1}[\s]?role\['(.+?)'\][}]{1}/g;
+  while ((match = newFieldRegex.exec(inputString)) != null) {
+
+    const placeHolder: string = match[0];
+    const roleName: string = match[1];
+
+    if (roleName && roleName.length) {
       const lane: Bpmn.Lane = process.getLanes(process.processId(), false).find(l => l.name === roleName);
       if (lane) {
         const roleOwner = roleOwners[lane.id];
