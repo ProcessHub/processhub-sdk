@@ -43,6 +43,7 @@ export interface WorkspaceDetails {
   userRole?: WorkspaceRole;  // Rolle des angemeldeten Users im Workspace  
   trialExpiresAt?: Date;
   licensedUsers?: number;
+  colors?: WorkspaceColor[];
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
@@ -123,4 +124,9 @@ export enum WorkspaceRole {
 export interface WorkspaceMember {
   userDetails: UserDetails;
   memberRole: WorkspaceRole;
+}
+
+export interface WorkspaceColor {
+  color: string;
+  title: string;
 }
