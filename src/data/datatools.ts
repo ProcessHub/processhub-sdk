@@ -61,7 +61,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     }
   }
 
-  const newFieldRegex = /[{]{1}[\s]?field\['(.+?)'\][}]{1}/g;
+  const newFieldRegex = /[{]{1}[\s]?field\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
   while ((match = newFieldRegex.exec(inputString)) != null) {
 
     const placeHolder: string = match[0];
@@ -83,8 +83,8 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     }
   }
 
-  const newRoleRegex = /[{]{1}[\s]?role\['(.+?)'\][}]{1}/g;
-  while ((match = newFieldRegex.exec(inputString)) != null) {
+  const newRoleRegex = /[{]{1}[\s]?role\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
+  while ((match = newRoleRegex.exec(inputString)) != null) {
 
     const placeHolder: string = match[0];
     const roleName: string = match[1];
