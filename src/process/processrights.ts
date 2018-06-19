@@ -10,6 +10,7 @@ import { isGroupId, isUserId } from "../tools/guid";
 import { Bpmn } from "./bpmn";
 import * as WorkspaceLicenses from "../workspace/workspacelicenses";
 import { GroupDetails } from "../group";
+import _ = require("lodash");
 
 export enum ProcessAccessRights {
   None = 0,
@@ -322,7 +323,7 @@ export function canStartProcess(process: ProcessDetails, startEventId: string): 
   if (startEventId == null)
     return false;
 
-  if (process.userStartEvents == null)
+  if (process.userStartEvents == null || _.isEqual(process.userStartEvents, {}))
     return canStartProcessOld(process);
 
   // if userStartEvent is in map, user is allowed to start process
