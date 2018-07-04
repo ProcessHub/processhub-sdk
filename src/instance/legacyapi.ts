@@ -1,5 +1,6 @@
 import { BaseReply, BaseMessage } from "../legacyapi/apiinterfaces";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
+import { UserDetails } from "../user";
 
 // API routes
 export const ProcessEngineApiRoutes = {
@@ -17,6 +18,7 @@ export const ProcessEngineApiRoutes = {
   deleteInstances: "/api/processengine/deleteinstances",
   uploadCommentAttachment: "/api/processengine/uploadcommentattachment",
   setFieldContent: "/api/processengine/setfieldcontent",
+  getArchive: "/api/processengine/getarchive",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
@@ -77,6 +79,15 @@ export interface UploadAttachmentRequest extends InstanceRequest {
 }
 export interface UploadAttachmentReply extends InstanceReply {
   url: string;
+}
+
+export interface GetArchiveRequest extends InstanceRequest {
+  workspaces: string[];
+  roxFileIds: number[];
+}
+export interface GetArchiveReply extends InstanceReply {
+  instances: InstanceDetails[];
+  instanceUsers: UserDetails[];
 }
 
 export interface UploadCommentAttachmentRequest extends InstanceRequest {
