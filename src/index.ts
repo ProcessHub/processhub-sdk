@@ -42,3 +42,5 @@ import * as AuditTrail from "./audittrail";
 export { AuditTrail };
 import * as Group from "./group";
 export { Group };
+import * as PhRoxApi from "./phroxapi";
+export { PhRoxApi };
