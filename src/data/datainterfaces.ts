@@ -35,7 +35,8 @@ export type FieldType = "ProcessHubTextInput"
   | "ProcessHubDate"
   | "ProcessHubDropdown"
   | "ProcessHubChecklist"
-  | "ProcessHubDecision";
+  | "ProcessHubDecision"
+  | "ProcessHubRoxFile";
 
 export interface IFieldType {
   getType(): FieldType;
