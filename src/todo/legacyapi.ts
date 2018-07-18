@@ -6,7 +6,8 @@ export const TodoRequestRoutes = {
   GetSimulationTodos: "/api/todo/simulationtodos",
   SetPriority: "/api/todo/setpriority",
   DeleteNotificationTodo: "/api/todo/deletenotificationtodo",
-  UpdateTodo: "/api/todo/UpdateTodo"
+  UpdateTodo: "/api/todo/UpdateTodo",
+  GetAmountOfUserTodos: "/api/todo/getamountofusertodos"
 };
 export type TodoRequestRoutes = keyof typeof TodoRequestRoutes;
 
@@ -34,6 +35,12 @@ export interface UpdateTodoRequest {
   dueAt: Date;
 }
 export interface UpdateTodoReply extends BaseReply  {
+}
+
+export interface GetAmountOfUserTodosRequest {
+}
+export interface GetAmountOfUserTodosReply extends BaseReply  {
+  todoAmount: number;
 }
 
 export interface SetTodoPriorityRequest {
