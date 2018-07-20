@@ -20,7 +20,7 @@ export interface GetDocumentRequest {
   roxFileId: number;
   fieldName: string;
   fileName: string;
-  instanceId: string;
+  instanceId: string; 
 }
 
 export interface GetDocumentReply extends BaseReply {
