@@ -5,6 +5,7 @@ export const RequestRoutes = {
   GetRootFolder: "/api/phroxapi/getrootfolder",
   GetFolderContent: "/api/phroxapi/getfoldercontent",
   GetDocument:  "/api/phroxapi/getdocument",
+  GetRoxtraUrl: "/api/phroxapi/getroxtraurl",
 };
 
 export interface GetRootFolderReply extends BaseReply {
@@ -32,4 +33,8 @@ export interface GetFolderContentReply extends BaseReply {
   folderId: number;
   files: IRoxFile[];
   folders: IRoxFolder[];
+}
+
+export interface GetRoxtraUrlReply extends BaseReply {
+  roXtraUrl: string;
 }
