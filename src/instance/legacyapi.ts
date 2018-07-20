@@ -11,6 +11,7 @@ export const ProcessEngineApiRoutes = {
   jump: "/api/processengine/jump",
   getInstanceDetails: "/api/processengine/getinstancedetails",
   uploadAttachment: "/api/processengine/uploadattachment",
+  updateRoxFile: "/api/processengine/uploadroxfile",
   deleteAttachment: "/api/processengine/deleteattachment",
   comment: "/api/processengine/comment",
   deleteComment: "/api/processengine/deletecomment",
@@ -78,6 +79,18 @@ export interface UploadAttachmentRequest extends InstanceRequest {
   data: string;
 }
 export interface UploadAttachmentReply extends InstanceReply {
+  url: string;
+}
+
+export interface UploadRoxFileRequest extends InstanceRequest {
+  instanceId: string;
+  processId: string;
+  fileName: string;
+  oldFileName: string;
+  fieldName: string;
+  data: string;
+}
+export interface UploadRoxFileReply extends InstanceReply {
   url: string;
 }
 

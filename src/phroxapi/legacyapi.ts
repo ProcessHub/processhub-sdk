@@ -17,7 +17,10 @@ export interface GetFolderContentRequest {
 }
 
 export interface GetDocumentRequest {
-  roxFileId: number;  
+  roxFileId: number;
+  fieldName: string;
+  fileName: string;
+  instanceId: string;
 }
 
 export interface GetDocumentReply extends BaseReply {
