@@ -1856,15 +1856,15 @@ export class BpmnProcess {
     let taskObject = this.getExistingActivityObject(bpmnTaskId);
 
     if (taskObject != null && taskObject.boundaryEventRefs != null && taskObject.boundaryEventRefs.length > 0) {
-      let tmpBoundary = taskObject.boundaryEventRefs[taskObject.boundaryEventRefs.length - 1];
-      equal(tmpBoundary.eventDefinitions.length, 1, "Nur eine Boundary Definition ist erlaubt!");
-      boundaryDecisionTask = [{
-        bpmnTaskId: tmpBoundary.id,
-        name: tmpBoundary.name,
-        isBoundaryEvent: true,
-        type: DecisionTaskTypes.Boundary,
-        boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
-      } as DecisionTask];
+      for (const tmpBoundary of taskObject.boundaryEventRefs) {
+        boundaryDecisionTask.push({
+          bpmnTaskId: tmpBoundary.id,
+          name: tmpBoundary.name,
+          isBoundaryEvent: true,
+          type: DecisionTaskTypes.Boundary,
+          boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
+        } as DecisionTask);
+      }     
     }
 
     return boundaryDecisionTask;
