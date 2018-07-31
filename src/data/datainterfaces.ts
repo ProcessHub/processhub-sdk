@@ -90,7 +90,7 @@ export function getFiletypeIcon(filename: string): SemanticICONS {
     case "xlsx":
       return "file excel outline";
     case "doc":
-    case " docx":
+    case "docx":
       return "file word outline";
     case "ppt":
     case "pptx":

@@ -13,17 +13,6 @@ export interface MailContent {
   signature?: string;
 }
 
-export interface MessageNotificationMailContent extends MailContent {
-  sender?: MailSender;
-  instanceUrl?: string;  
-  todoTitle?: string;
-  todoDescription?: string;
-  fieldContents?: FieldContentMap;
-  subject: string;
-  instance: InstanceDetails;
-  bpmnProcess: BpmnProcess;
-}
-
 export interface SendMailTemplateRequest extends BaseRequest {
   instanceUrl?: string;  
   todoDescription?: string;
