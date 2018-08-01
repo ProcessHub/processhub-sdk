@@ -1,3 +1,5 @@
+import { isRoxtraEdition } from "./settings";
+
 // from webpack config
 export let backendUrl = process.env.API_URL;
 // ist nur möglich aus der config zu laden für den Client nicht für den Server
@@ -8,6 +10,10 @@ if (process.env.API_URL == null) {
     // use app.processhub.com because this would route over AWS firewalls!
     // instead backendUrl is localhost for servers.
     backendUrl = "http://localhost"; 
+    if (isRoxtraEdition) {
+      backendUrl = "http://localhost:8080"; 
+    }
+    
     if (process.argv[2] == "production_eb")
       backendUrl = "http://localhost:8081"; 
   } else if (process.argv != null && process.argv.length == 3 && process.argv[2] == "stage-test") {
