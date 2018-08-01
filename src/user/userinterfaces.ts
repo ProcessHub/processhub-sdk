@@ -5,6 +5,10 @@ import { nullId } from "../tools/guid";
 import { isTrue } from "../tools/assert";
 import { tl } from "../tl";
 
+export interface RoxtraUserDetails {
+  ExtendedRights: { Caption: string, Key: string, Licence: number }[];
+}
+
 export class UserDetails {
   userId: string;
   mail: string;
@@ -18,6 +22,7 @@ export class UserDetails {
     accessToken?: string;  // only available in sign in replies
     instances?: InstanceDetails[];
     viewStates?: ViewStates;
+    roXtra?: RoxtraUserDetails;
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean; // not available in GraphQL
