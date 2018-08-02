@@ -4,9 +4,11 @@ import { InstanceDetails } from "../instance/instanceinterfaces";
 import { nullId } from "../tools/guid";
 import { isTrue } from "../tools/assert";
 import { tl } from "../tl";
+import { IEscalation } from "../phroxapi";
 
 export interface RoxtraUserDetails {
-  ExtendedRights: { Caption: string, Key: string, Licence: number }[];
+  extendedRights: { Caption: string, Key: string, Licence: number }[];
+  escalations?: IEscalation[];
 }
 
 export class UserDetails {

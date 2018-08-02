@@ -8,3 +8,11 @@ export interface IRoxFolder {
   name: string;
   folderId: number;
 }
+
+export interface IEscalation {
+  EnableMobileEdit: boolean;
+  Id: string;
+  ParentFileID: number;
+  ShortSubject: string;
+  Title: string;
+}

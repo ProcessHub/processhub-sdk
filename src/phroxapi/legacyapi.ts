@@ -7,11 +7,15 @@ export const RequestRoutes = {
   GetDocument: "/api/phroxapi/getdocument",
   GetRoxtraUrl: "/api/phroxapi/getroxtraurl",
   GetProcessesForRoxFile: "/api/phroxapi/getprocessesforroxfile",
+  SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
 };
 
 export interface ProcessItem {
   processName: string;
   processId: string;
+}
+
+export interface SetCoporateDesignRequest {
 }
 
 export interface GetRootFolderReply extends BaseReply {
