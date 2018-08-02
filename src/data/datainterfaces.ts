@@ -11,6 +11,12 @@ export interface FieldDefinition {
   config: {};
 }
 
+export interface FieldDefinitionItem {
+  bpmnTaskId: string;
+  isStartEvent: boolean;
+  fieldDefinition: FieldDefinition;
+}
+
 export interface TaskIdRequiredFieldsNeeded {
   taskId: string;
   requiredFieldsNeeded: boolean;

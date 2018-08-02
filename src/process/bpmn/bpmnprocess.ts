@@ -1,6 +1,6 @@
 import * as BpmnModdleHelper from "./bpmnmoddlehelper";
 import * as Todo from "../../todo";
-import { FieldDefinition } from "../../data/datainterfaces";
+import { FieldDefinition, FieldDefinitionItem } from "../../data/datainterfaces";
 import { updateLegacyFieldDefinitions } from "../../data/datatools";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
@@ -81,6 +81,32 @@ export class BpmnProcess {
         exGat.outgoing[exGat.outgoing.length - 1].conditionExpression = null;
       }
     }
+  }
+
+  public getFieldDefinitionList(): FieldDefinitionItem[] {
+    let fieldDefinitionsList: FieldDefinitionItem[] = [];
+
+    let process: Bpmn.Process = this.bpmnXml.rootElements.find((e) => e.$type === BPMN_PROCESS) as Bpmn.Process;
+    process.flowElements.map(flowElement => {
+      let extVals = BpmnProcess.getExtensionValues(flowElement);
+      if (extVals) {
+        let taskFields = BpmnProcess.getExtensionValues(flowElement).fieldDefinitions;
+        if (taskFields && taskFields.length > 0) {
+          // currently all tasks have their own fieldDefinitions. It might happen that they have different configs
+          // -> add the first one we find to the result set
+          taskFields.map(taskField => {
+            if (taskField.type == "ProcessHubRoxFile") {
+              fieldDefinitionsList.push({
+                bpmnTaskId: flowElement.id,
+                isStartEvent: flowElement.$type == BPMN_STARTEVENT ? true : false,
+                fieldDefinition: taskField 
+              });
+            }
+          });
+        }
+      }
+    });
+    return fieldDefinitionsList;
   }
 
   public getFieldDefinitions(): FieldDefinition[] {
