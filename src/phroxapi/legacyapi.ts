@@ -6,7 +6,12 @@ export const RequestRoutes = {
   GetFolderContent: "/api/phroxapi/getfoldercontent",
   GetDocument:  "/api/phroxapi/getdocument",
   GetRoxtraUrl: "/api/phroxapi/getroxtraurl",
+  SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
 };
+
+export interface SetCoporateDesignRequest {
+
+}
 
 export interface GetRootFolderReply extends BaseReply {
   folderId: number;
