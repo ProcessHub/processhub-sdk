@@ -16,6 +16,12 @@ export interface ProcessItem {
 }
 
 export interface SetCoporateDesignRequest {
+  MainFontColor: string;
+  MenuFontColor: string;
+  SubMenuColor: string;
+  Darkblue: string;
+  Warningred: string;
+  Logo: string;
 }
 
 export interface GetRootFolderReply extends BaseReply {
