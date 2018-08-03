@@ -13,6 +13,12 @@ export const RequestRoutes = {
 export interface ProcessItem {
   processName: string;
   processId: string;
+  startButtons: StartButtonItem[];
+}
+
+export interface StartButtonItem {
+  startButtonName: string;
+  startButtonId: string;
 }
 
 export interface SetCoporateDesignRequest {
