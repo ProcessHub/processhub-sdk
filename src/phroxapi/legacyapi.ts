@@ -16,6 +16,7 @@ export interface ProcessItem {
 }
 
 export interface SetCoporateDesignRequest {
+  ButtonHoverColor: string;
   MainFontColor: string;
   MenuFontColor: string;
   SubMenuColor: string;
