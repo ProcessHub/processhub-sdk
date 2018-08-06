@@ -1,5 +1,7 @@
-import { BaseReply } from "../legacyapi";
+import { BaseReply, BaseMessage } from "../legacyapi";
 import { IRoxFile, IRoxFolder } from ".";
+import { Instance, Process } from "..";
+import { FieldContentMap } from "../data";
 
 export const RequestRoutes = {
   GetRootFolder: "/api/phroxapi/getrootfolder",
@@ -8,6 +10,7 @@ export const RequestRoutes = {
   GetRoxtraUrl: "/api/phroxapi/getroxtraurl",
   GetProcessesForRoxFile: "/api/phroxapi/getprocessesforroxfile",
   SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
+  DownloadRoxDocToServer: "/api/phroxapi/downloadroxdoctoserver",
 };
 
 export interface ProcessItem {
@@ -46,6 +49,15 @@ export interface GetDocumentRequest {
   fieldName: string;
   fileName: string;
   instanceId: string;
+}
+
+export interface DownloadRoxDocToServerReply extends BaseReply {
+  fieldContents: FieldContentMap;
+}
+
+export interface DownloadRoxDocToServerRequest {
+  instanceDetails: Instance.InstanceDetails;
+  extVals: Process.TaskExtensions;
 }
 
 export interface GetDocumentReply extends BaseReply {

@@ -47,7 +47,7 @@ export type FieldType = "ProcessHubTextInput"
 export interface IFieldType {
   getType(): FieldType;
   getName(): string;
-  getInput(props: IFormElementProps, instanceEnv: InstanceEnvironment, bpmnProcess: BpmnProcess, onFieldValueChanged: () => void, showInvalidFields: boolean, isStartEvent?: boolean): JSX.Element;
+  getInput(props: IFormElementProps, instanceEnv: InstanceEnvironment, bpmnProcess: BpmnProcess, onFieldValueChanged: () => void, showInvalidFields: boolean, startEventId?: string): JSX.Element;
   renderValue(value: {}, instance: InstanceDetails): JSX.Element;
   renderValueForEmail(value: {}, instance: InstanceDetails): JSX.Element;
   getSettingsButton(fieldDefinition: FieldDefinition, onConfigChanged: (fieldDefinition: FieldDefinition) => void): JSX.Element;
