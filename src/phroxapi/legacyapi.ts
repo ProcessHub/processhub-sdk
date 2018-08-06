@@ -19,6 +19,7 @@ export interface ProcessItem {
 export interface StartButtonItem {
   startButtonName: string;
   startButtonId: string;
+  hasOnlyRoxFile: boolean;
 }
 
 export interface SetCoporateDesignRequest {
