@@ -15,6 +15,7 @@ import { sendNotification } from "../desktopnotification";
 import { InstanceDetails } from "./instanceinterfaces";
 import { WorkspaceEnvironment, InstanceEnvironment } from "../environment";
 import { tl } from "../tl";
+import { isRoxtraEdition } from "../settings";
 
 /**
  * Sends a desktop notification if the user should be notified and the instance was not viewed after 15 seconds 
@@ -56,7 +57,9 @@ export function instanceReducer(instanceState: InstanceState, action: any): Inst
       // React cannot detect state changes in objects. Updating cacheState triggers rendering
       // -> only render if data has changed
       if (instanceChanged) {
-        sendNotificationIfInstanceWasNotViewed((<InstanceLoadedMessage>action).instance);
+        if (!isRoxtraEdition) {
+          sendNotificationIfInstanceWasNotViewed((<InstanceLoadedMessage>action).instance);
+        }
 
         return update(instanceState, {
           cacheState: { $set: createId() }
