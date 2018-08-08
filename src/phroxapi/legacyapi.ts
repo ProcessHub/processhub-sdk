@@ -25,10 +25,11 @@ export interface StartButtonItem {
   hasOnlyRoxFile: boolean;
 }
 
-export interface SetCoporateDesignRequest {
+export interface SetCorporateDesignRequest {
   ButtonHoverColor: string;
   MainFontColor: string;
   MenuFontColor: string;
+  MenuFontHoverColor: string;
   SubMenuColor: string;
   Darkblue: string;
   Warningred: string;
