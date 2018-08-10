@@ -11,6 +11,8 @@ import { Bpmn } from "./bpmn";
 import * as WorkspaceLicenses from "../workspace/workspacelicenses";
 import { GroupDetails } from "../group";
 import _ = require("lodash");
+import { isRoxtraEdition } from "../settings";
+import { hasP3Right } from "../phroxapi";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -212,11 +214,28 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
   return false;
 }
 
+function addIfLicenseAllows(owners: PotentialRoleOwners, user: UserDetails): void {
+  if (isRoxtraEdition) {
+    if (hasP3Right(user)) {
+      owners.potentialRoleOwner.push({
+        memberId: user.userId,
+        displayName: user.realName
+      });
+    }
+  } else {
+    owners.potentialRoleOwner.push({
+      memberId: user.userId,
+      displayName: user.realName
+    });
+  }
+}
+
 export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, processDetails: ProcessDetails, roleId: string = null): { [roleId: string]: PotentialRoleOwners } {
   let allOwners: { [roleId: string]: PotentialRoleOwners } = {};
 
-  if (processDetails.extras.processRoles == null)
+  if (processDetails.extras.processRoles == null) {
     return allOwners;
+  }
 
   for (let role in processDetails.extras.processRoles) {
     if ((roleId == null || role == roleId) && processDetails.extras.processRoles[role]) {
@@ -232,10 +251,7 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
           if (workspaceDetails.extras.members) {
             // if someone is not a workspace member he does not have access to the member list, so this list is empty
             for (let member of workspaceDetails.extras.members) {
-              owners.potentialRoleOwner.push({
-                memberId: member.userDetails.userId,
-                displayName: member.userDetails.realName
-              });
+              addIfLicenseAllows(owners, member.userDetails);
             }
             addedWsMembers = true; // Merken, damit Member nicht mehrfach hinzugefügt werden, falls beide Gruppen genannt werden
           }
@@ -249,10 +265,7 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
             const group: GroupDetails = workspaceDetails.extras.groups.find(g => g.groupId === potentialOwner.memberId);
             if (group && group.members) {
               for (const member of group.members) {
-                owners.potentialRoleOwner.push({
-                  memberId: member.userId,
-                  displayName: member.displayName,
-                });
+                addIfLicenseAllows(owners, member);
               }
             }
           }
@@ -263,7 +276,6 @@ export function getPotentialRoleOwners(workspaceDetails: WorkspaceDetails, proce
       allOwners[role] = owners;
     }
   }
-
   return allOwners;
 }
 
@@ -323,7 +335,7 @@ export function canStartProcess(process: ProcessDetails, startEventId: string): 
   if (startEventId == null)
     return false;
 
-  if (process.userStartEvents == null || _.isEqual(process.userStartEvents, {}))
+  if (process.userStartEvents == null || _.isEqual(process.userStartEvents, {}))
     return canStartProcessOld(process);
 
   // if userStartEvent is in map, user is allowed to start process
