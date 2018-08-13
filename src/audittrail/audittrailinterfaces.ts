@@ -22,6 +22,7 @@ export enum AuditTrailAction {
   processTagsChanged = 19,
   processXmlChanged = 20,
   processRolesChanged = 21,
+  retentionPeriodChanged = 22,
 
   workspaceCreated = 100,
 }
@@ -53,6 +54,10 @@ export interface AuditTrailEntryDetails {
 
   // must be set for AuditTrailAction.processCreated, processEdited, processComment and processDeleted
   processDisplayName: string;
+
+  // must be set for AuditTrailAction.retentionPeriodChanged
+  oldValue: string;
+  newValue: string;
 
   // must be set for workspaceCreated
   workspaceDisplayName: string;

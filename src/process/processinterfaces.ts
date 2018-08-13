@@ -36,6 +36,7 @@ export interface ProcessDetails {
   rowDetails?: RowDetails[];
   hasWarnings?: boolean;
   latestCommentAt?: Date; // datetime of the latest comment
+  retentionPeriod?: number; // retention period for insatances in months
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
