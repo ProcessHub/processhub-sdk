@@ -11,6 +11,7 @@ export const RequestRoutes = {
   GetProcessesForRoxFile: "/api/phroxapi/getprocessesforroxfile",
   SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
   DownloadRoxDocToServer: "/api/phroxapi/downloadroxdoctoserver",
+  GetProcessesWithGroup: "/api/phroxapi/getprocesseswithgroup",
 };
 
 export interface ProcessItem {
@@ -82,4 +83,15 @@ export interface GetFolderContentReply extends BaseReply {
 
 export interface GetRoxtraUrlReply extends BaseReply {
   roXtraUrl: string;
+}
+
+export interface GetProcessesWithGroupRequest {
+  groupId: string;
+}
+export interface GetProcessesWithGroupReply extends BaseReply {
+  processes: {
+    displayName: string;
+    urlName: string;
+    workspaceId: string;
+  }[];
 }
