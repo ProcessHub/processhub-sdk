@@ -3,27 +3,47 @@
 // In allen Bereichen außer /test sollen nur die hier gekapselten Asserts verwendet werden,
 // die wir später so implementieren, dass sie im Production-Code automatisch entfernt werden.
 
-import * as Chai from "chai";
-
 // Production Environment?
 let isProduction: boolean = false;
 
 export function error(message?: string): void {
-  if (!isProduction)
-    Chai.assert.fail(true, false, message);
+  if (!isProduction) {
+    throw new Error("Assertion failed: " + message);
+  }
 }
 
 export function equal(actual: any, expected: any, message?: string): void {
-  if (!isProduction)
-    Chai.assert.equal(actual, expected, message);
+  if (!isProduction) {
+    if (actual != expected) {
+      if (message) {
+        throw new Error("Assertion failed: " + message);
+      } else {
+        throw new Error("Assertion failed: expected " + actual + " to equal " + expected);
+      }
+    }
+  }
 }
 
 export function isTrue(actual: boolean, message?: string): void {
-  if (!isProduction)
-    Chai.assert.isTrue(actual, message);
+  if (!isProduction) {
+    if (!actual) {
+      if (message) {
+        throw new Error("Assertion failed: " + message);
+      } else {
+        throw new Error("Assertion failed: expected " + actual + " to be true");
+      }
+    }
+  }
 }
 
 export function isFalse(actual: boolean, message?: string): void {
-  if (!isProduction)
-    Chai.assert.isFalse(actual, message);
+  if (!isProduction) {
+    if (actual) {
+      if (message) {
+        throw new Error("Assertion failed: " + message);
+      } else {
+        throw new Error("Assertion failed: expected " + actual + " to be false");
+      }
+    }
+  }
 }
