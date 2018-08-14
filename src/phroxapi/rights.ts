@@ -13,8 +13,9 @@ function hasRequestedRight(right: string, user: UserDetails): boolean {
 }
 
 // ProcessHub Bearbeiter
-export function hasP3Right(user: UserDetails): boolean {
-  return hasRequestedRight("P3", user);
+export function hasF3Right(user: UserDetails): boolean {
+  // TODO remove P3, right was renamed to F3
+  return hasRequestedRight("P3", user) || hasRequestedRight("F3", user);
 }
 
 export function hasZ1Right(user: UserDetails): boolean {
