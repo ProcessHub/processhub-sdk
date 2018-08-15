@@ -1,4 +1,4 @@
-import { BaseMessage, BaseRequest } from "../legacyapi/apiinterfaces";
+import { BaseMessage, BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
 import { ProcessDetails, ProcessExtras, ProcessResult, TimerStartEventConfiguration } from "./processinterfaces";
 import { StatisticRow } from "../data";
 
@@ -12,6 +12,7 @@ export const ProcessRequestRoutes = {
   GetTimers: "/api/process/gettimers",
   SetTimers: "/api/process/settimers",
   DownloadProcess: "/api/process/download",
+  ExportProcess: "/api/process/export",
   GetPublicProcesses: "/api/process/publicprocesses",
   CopyProcess: "/api/process/copyprocess",
   RateProcess: "/api/process/rateprocess",
@@ -68,6 +69,14 @@ export interface DownloadProcessReply extends ProcessReply {
   doc: any;
 }
 
+export interface ExportProcessRequest extends BaseRequest {
+  processId: string;
+}
+export interface ExportProcessReply extends BaseReply {
+  urlName: string;
+  bpmn: string;
+}
+
 export interface GetPublicProcessesReply extends ProcessReply {
   processes?: ProcessDetails[];
 }
@@ -105,7 +114,7 @@ export interface GetProcessStatisticsRequest extends BaseRequest {
 }
 export interface GetProcessStatisticsReply extends ProcessReply {
   statistics: StatisticRow[];
-}  
+}
 
 export interface CommentRequest extends BaseRequest {
   processId: string;
