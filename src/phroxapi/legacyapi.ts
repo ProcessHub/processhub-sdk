@@ -90,7 +90,7 @@ export interface GetProcessesWithGroupRequest {
 }
 export interface GetProcessesWithGroupReply extends BaseReply {
   processes: {
-    displayName: string;
+    processName: string;
     urlName: string;
     workspaceId: string;
   }[];
