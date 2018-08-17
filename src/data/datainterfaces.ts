@@ -46,6 +46,7 @@ export interface IFieldType {
   getSettingsButton(fieldDefinition: FieldDefinition, onConfigChanged: (fieldDefinition: FieldDefinition) => void): JSX.Element;
   isVisible(): boolean;
   isValid(fieldDefinition: FieldDefinition, instanceEnv: InstanceEnvironment): boolean;
+  isConfigValid(fieldDefinition: FieldDefinition): boolean;
 }
 
 export interface IFormElementProps {
