@@ -215,7 +215,7 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
 
 function addIfLicenseAllows(owners: PotentialRoleOwners, user: UserDetails): void {
   if (isRoxtraEdition) {
-    if (user.extras.roXtra.HasEFormulareReadingAccess) {
+    if (user.extras.roXtra.HasEFormulareEditAccess) {
       owners.potentialRoleOwner.push({
         memberId: user.userId,
         displayName: user.realName

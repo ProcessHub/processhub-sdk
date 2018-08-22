@@ -8,7 +8,7 @@ import { IEscalation } from "../phroxapi";
 
 export interface RoxtraUserDetails {
   HasUserManagementAccess: boolean;
-  HasEFormulareReadingAccess: boolean;
+  HasEFormulareEditAccess: boolean;
   HasEFormulareSetCorporateDesignRight: boolean;
   escalations?: IEscalation[];
 }
