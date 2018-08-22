@@ -12,7 +12,6 @@ import * as WorkspaceLicenses from "../workspace/workspacelicenses";
 import { GroupDetails } from "../group";
 import _ = require("lodash");
 import { isRoxtraEdition } from "../settings";
-import { hasF3Right } from "../phroxapi";
 
 export enum ProcessAccessRights {
   None = 0,
@@ -216,7 +215,7 @@ export function isPotentialRoleOwner(user: UserDetails, roleId: string, workspac
 
 function addIfLicenseAllows(owners: PotentialRoleOwners, user: UserDetails): void {
   if (isRoxtraEdition) {
-    if (hasF3Right(user)) {
+    if (user.extras.roXtra.HasEFormulareReadingAccess) {
       owners.potentialRoleOwner.push({
         memberId: user.userId,
         displayName: user.realName

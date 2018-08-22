@@ -7,7 +7,9 @@ import { tl } from "../tl";
 import { IEscalation } from "../phroxapi";
 
 export interface RoxtraUserDetails {
-  extendedRights: { Caption: string, Key: string, Licence: number }[];
+  HasUserManagementAccess: boolean;
+  HasEFormulareReadingAccess: boolean;
+  HasEFormulareSetCorporateDesignRight: boolean;
   escalations?: IEscalation[];
 }
 
