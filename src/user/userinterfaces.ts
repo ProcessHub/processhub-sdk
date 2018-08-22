@@ -5,6 +5,7 @@ import { nullId } from "../tools/guid";
 import { isTrue } from "../tools/assert";
 import { tl } from "../tl";
 import { IEscalation } from "../phroxapi";
+import { isRoxtraEdition } from "../settings";
 
 export interface RoxtraUserDetails {
   HasUserManagementAccess: boolean;
@@ -100,7 +101,7 @@ export enum AccountState {
   System = 5
 }
 
-export const SystemUserId: string = "02A7F339F42ADD6D";
+export const SystemUserId: string = isRoxtraEdition ? "-1" : "02A7F339F42ADD6D";
 
 // Erste Gruppendefinitionen - echtes Gruppenmanagement folgt später
 export const PredefinedGroups = {
