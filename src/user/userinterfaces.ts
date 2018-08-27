@@ -112,6 +112,14 @@ export const PredefinedGroups = {
 };
 export type PredefinedGroups = keyof typeof PredefinedGroups;
 
+export function getDefaultRoleGroup(): string {
+  if (isRoxtraEdition) {
+    return PredefinedGroups.AllWorkspaceMembers; 
+  } else {
+    return PredefinedGroups.Everybody;
+  }
+}
+
 export function isPredefinedGroup(groupId: string): boolean {
   return (groupId == PredefinedGroups.Public
     || groupId == PredefinedGroups.Everybody

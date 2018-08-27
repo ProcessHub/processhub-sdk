@@ -2,7 +2,7 @@ import { tl } from "../tl";
 import { UserDetails } from "../user/userinterfaces";
 import { BpmnProcess, BPMN_TIMEREVENTDEFINITION, BPMN_MESSAGEEVENTDEFINITION } from "./bpmn/bpmnprocess";
 import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterfaces";
-import { PredefinedGroups } from "../user/index";
+import { PredefinedGroups, getDefaultRoleGroup } from "../user/index";
 import { ProcessDetails } from "./processinterfaces";
 import { isWorkspaceMember } from "../workspace/workspacerights";
 import { isFalse, isTrue, error } from "../tools/assert";
@@ -96,14 +96,14 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
   }
 
   // everybody can be added as a follower
-  processRoles[DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }], allowMultipleOwners: true };
+  processRoles[DefaultRoles.Follower] = { potentialRoleOwners: [{ memberId: getDefaultRoleGroup() }], allowMultipleOwners: true };
 
   if (bpmnProcess != null) {
     // set default owners for all roles
     let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
     lanes.map(lane => {
       if (processRoles[lane.id] == null) {
-        processRoles[lane.id] = { potentialRoleOwners: [{ memberId: PredefinedGroups.Everybody }] };
+        processRoles[lane.id] = { potentialRoleOwners: [{ memberId: getDefaultRoleGroup() }] };
       }
       processRoles[lane.id].roleName = lane.name;
 
