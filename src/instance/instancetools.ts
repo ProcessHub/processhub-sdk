@@ -20,7 +20,7 @@ export function parseIdMailAddress(prefix: string, mail: string): string {
     return null;
 }
 export function getInstanceMailAddress(instanceId: string): string {
-  if (Config.backendUrl == "http://localhost:8080")
+  if (Config.getBackendUrl() == "http://localhost:8080")
     return "i-" + instanceId.toLowerCase() + "@testmail.processhub.com";
   else
     return "i-" + instanceId.toLowerCase() + "@mail.processhub.com";

@@ -1,7 +1,7 @@
 import "fetch-everywhere";
 import { getErrorHandlers } from "./errorhandler";
-import { backendUrl } from "../config";
 import { BaseRequest, ApiResult, BaseError, ApiError, BaseMessage, API_FAILED, BaseReply } from "./apiinterfaces";
+import { getBackendUrl } from "../config";
 
 // Api-Aufruf per GET 
 // Gemäß http-Spezifikation soll GET genutzt werden, wenn der Aufruf keine Änderungen auf Serverseite auslöst
@@ -16,7 +16,9 @@ export async function getJson<Request extends BaseRequest>(path: string, request
     }
   }
 
-  let url = backendUrl + path + "?" + str.join("&");
+  console.log("backendUrl: " + getBackendUrl());
+
+  let url = getBackendUrl() + path + "?" + str.join("&");
 
   let req: RequestInit = null;
   if (accessToken == null) {
@@ -73,7 +75,7 @@ export async function getJson<Request extends BaseRequest>(path: string, request
 // Gemäß http-Spezifikation soll POST genutzt werden, wenn der Aufruf zu Änderungen auf der Serverseite führt
 // POST-Anforderungen werden ohne explizite Useranforderung vom Browser NICHT wiederholt ausgeführt
 export async function postJson<Request extends BaseRequest>(path: string, request: Request, accessToken: string = null): Promise<BaseMessage> {
-  let url = backendUrl + path;
+  let url = getBackendUrl() + path;
 
   let req: RequestInit = null;
   if (accessToken == null) {

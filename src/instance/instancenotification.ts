@@ -44,8 +44,9 @@ export async function instanceHasBeenViewed(instanceEnv: PH.InstanceEnvironment,
   instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId].lastViewedAt = newDate;
 
   // actionHandler causes rerender - only call if viewState was changed
-  if (!_.isEqual(oldViewState, instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId]))
+  if (!_.isEqual(oldViewState, instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId])) {
     await actionHandler.updateViewState(instanceEnv.instance.instanceId, instanceEnv.user.extras.viewStates[instanceEnv.instance.instanceId]);
+  }
 }
 
 export function instanceLastViewedAt(instanceEnv: PH.InstanceEnvironment): Date {

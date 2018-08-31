@@ -6,7 +6,7 @@ export function parseProcessMailAddress(mail: string): string {
   return parseIdMailAddress("p-", mail);
 }
 export function getProcessMailAddress(processId: string): string {
-  if (Config.backendUrl == "http://localhost:8080")
+  if (Config.getBackendUrl() == "http://localhost:8080")
     return "p-" + processId.toLowerCase() + "@testmail.processhub.com";
   else
     return "p-" + processId.toLowerCase() + "@mail.processhub.com";

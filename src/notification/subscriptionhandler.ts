@@ -2,7 +2,7 @@ const Nes = require("nes");
 import * as StateHandler from "../statehandler";
 import { getJson, BaseMessage, ApiResult } from "../legacyapi";
 import { UserDetails } from "../user/userinterfaces";
-import { backendUrl } from "../config";
+import { getBackendUrl } from "../config";
 
 export interface PublishSubscribeRegisterObject {
   wildcard: string;
@@ -21,18 +21,18 @@ export const PublishSubscriptionObjects: { [Id: string]: PublishSubscribeRegiste
   updateUser: { wildcard: "{userId}", subscriptionPath: "/ws/updateUser/{userId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
 };
 
-let wsUrl = backendUrl;
-wsUrl = wsUrl.replace("https://", "wss://");
-wsUrl = wsUrl.replace("http://", "ws://");
-
 let subscriptionPaths: string[] = [];
-let notificationClient = new Nes.Client(wsUrl);
+let notificationClient: any;
 
 let notificationHandler = (update: any, flags: any) => {
   StateHandler.rootStore.dispatch(update);
 };
 
 export async function initNotificationClient(user: UserDetails) {
+  let wsUrl = getBackendUrl();
+  wsUrl = wsUrl.replace("https://", "wss://");
+  wsUrl = wsUrl.replace("http://", "ws://");
+  notificationClient = new Nes.Client(wsUrl);
   return new Promise<void>(async (resolve, reject) => {
 
     // let authResult: any = await getJson("/nes/auth", { auth: user.extras.accessToken });
