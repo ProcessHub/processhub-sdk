@@ -8,7 +8,11 @@ export function getBackendUrl(): string {
   } else {
     // this code is running on the server
     if (isRoxtraEdition) {
-      return process.env.BACKEND_URL;
+      if (process.env.BACKEND_URL) {
+        return process.env.BACKEND_URL;
+      } else {
+        return "http://localhost:8080";
+      }
     } else {
       if (process.argv != null && process.argv.length == 3 && process.argv[2].startsWith("production")) {
         // production flag is used on servers. When servers have to access the api they should NOT
