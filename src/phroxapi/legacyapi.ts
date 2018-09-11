@@ -13,6 +13,10 @@ export const RequestRoutes = {
   DownloadRoxDocToServer: "/api/phroxapi/downloadroxdoctoserver",
   GetProcessesWithGroup: "/api/phroxapi/getprocesseswithgroup",
   GetFileDetails: "/api/phroxapi/getfiledetails",
+  EcRoxFileProcessStart: "/api/phroxapi/ecroxfileprocessstart",
+  EcSetFile: "/api/phroxapi/ecsetfile",
+  EcReleaseFileLock: "/api/phroxapi/ecreleasefilelock",
+  EcGetFileLock: "/api/phroxapi/ecgetfilelock",
 };
 
 export interface ProcessItem {

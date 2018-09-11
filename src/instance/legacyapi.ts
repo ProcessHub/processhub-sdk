@@ -20,8 +20,6 @@ export const ProcessEngineApiRoutes = {
   uploadCommentAttachment: "/api/processengine/uploadcommentattachment",
   setFieldContent: "/api/processengine/setfieldcontent",
   getArchive: "/api/processengine/getarchive",
-  getFileLock: "/api/processengine/getfilelock",
-  releaseFileLock: "/api/processengine/releasefilelock",
 };
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
