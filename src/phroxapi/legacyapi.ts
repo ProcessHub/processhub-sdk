@@ -14,6 +14,7 @@ export const RequestRoutes = {
   GetProcessesWithGroup: "/api/phroxapi/getprocesseswithgroup",
   GetFileDetails: "/api/phroxapi/getfiledetails",
   EcRoxFileProcessStart: "/api/phroxapi/ecroxfileprocessstart",
+  EcRoxFileFieldEdit: "/api/phroxapi/ecroxfilefieldedit",
   EcSetFile: "/api/phroxapi/ecsetfile",
   EcReleaseFileLock: "/api/phroxapi/ecreleasefilelock",
   EcGetFileLock: "/api/phroxapi/ecgetfilelock",
