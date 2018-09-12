@@ -27,6 +27,11 @@ export enum AuditTrailAction {
   workspaceCreated = 100,
 }
 
+export enum AuditTrailProcessFlag {
+  Subprocess = 1,
+  Parentprocess = 2
+}
+
 export interface AuditTrailEntryDetails {
   // must be set for AuditTrailAction.completedTodo
   todoDisplayName: string;
@@ -75,5 +80,6 @@ export interface AuditTrailEntry {
   action: AuditTrailAction;
   user: UserDetails;
   createdAt: Date;  // time of action in UTC
+  entryFrom?: AuditTrailProcessFlag;
   details: Partial<AuditTrailEntryDetails>;
 }
