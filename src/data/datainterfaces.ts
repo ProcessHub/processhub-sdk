@@ -24,6 +24,8 @@ export interface TaskIdRequiredFieldsNeeded {
 
 export interface IRoxFileFieldValue {
   url: string;
+  lockedAt: Date;
+  lockedByUserName: string;
 }
 
 export interface FieldValue {
