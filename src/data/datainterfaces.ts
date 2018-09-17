@@ -22,13 +22,18 @@ export interface TaskIdRequiredFieldsNeeded {
   requiredFieldsNeeded: boolean;
 }
 
+export interface IRoxFileFieldValue {
+  url: string;
+}
+
 export interface FieldValue {
   type: string;
   value:
   Date | // Date
-  string | // TextInput, TextArea
+  string | // TextInput, TextArea, RoleOwner
   boolean | // Checkbox
   string[] | // FileUpload
+  IRoxFileFieldValue | // RoxFile
   { [key: string]: boolean }; // Checklist
 }
 
@@ -57,7 +62,7 @@ export interface IFieldType {
 }
 
 export interface IFormElementProps {
-  value: string | boolean | Date | string[] | {
+  value: string | boolean | Date | string[] | IRoxFileFieldValue | {
     [key: string]: boolean;
   };
   label: string;
