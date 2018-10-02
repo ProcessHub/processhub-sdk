@@ -99,7 +99,7 @@ export class BpmnProcess {
               fieldDefinitionsList.push({
                 bpmnTaskId: flowElement.id,
                 isStartEvent: flowElement.$type == BPMN_STARTEVENT ? true : false,
-                fieldDefinition: taskField 
+                fieldDefinition: taskField
               });
             }
           });
@@ -543,13 +543,25 @@ export class BpmnProcess {
   }
 
   // get the text that should be displayed on the start button
-  public getStartButtonTitles(): StartButtonMap {
+  public getStartButtonMap(): StartButtonMap {
     let startEvents = this.getStartEvents(this.processId());
     if (startEvents && startEvents.length > 0) {
       let map = {} as StartButtonMap;
-      startEvents.forEach(se => {
-        if (se.eventDefinitions == null) {
-          map[se.id] = { startEventName: (se.name && se.name.trim() != "") ? se.name : undefined, laneId: this.getLaneOfFlowNode(se.id).id };
+      startEvents.forEach(startEvent => {
+        if (startEvent.eventDefinitions == null) {
+          // check if start event has only one roxfilefield
+          let onlyRoxFileField: boolean = false;
+          const extVals: TaskExtensions = BpmnProcess.getExtensionValues(startEvent);
+          if (extVals.fieldDefinitions != null && extVals.fieldDefinitions.length === 1) {
+            if (extVals.fieldDefinitions[0].type === "ProcessHubRoxFile") {
+              onlyRoxFileField = true;
+            }
+          }
+          map[startEvent.id] = {
+            startEventName: (startEvent.name && startEvent.name.trim() != "") ? startEvent.name : undefined,
+            laneId: this.getLaneOfFlowNode(startEvent.id).id,
+            onlyRoxFileField,
+          };
         }
       });
       return map;
@@ -1890,7 +1902,7 @@ export class BpmnProcess {
           type: DecisionTaskTypes.Boundary,
           boundaryEventType: tmpBoundary.eventDefinitions[tmpBoundary.eventDefinitions.length - 1].$type.toString()
         } as DecisionTask);
-      }     
+      }
     }
 
     return boundaryDecisionTask;
