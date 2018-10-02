@@ -1665,7 +1665,7 @@ export class BpmnProcess {
   }
 
   public getAllBpmnObjects(): Bpmn.FlowElement[] {
-    return this.getFlowElementsOfTypes<Bpmn.FlowElement>(["bpmn:StartEvent", "bpmn:UserTask", "bpmn:SendTask", "bpmn:IntermediateCatchEvent", "bpmn:ExclusiveGateway", "bpmn:ParallelGateway", "bpmn:SequenceFlow", "bpmn:EndEvent"]);
+    return this.getFlowElementsOfTypes<Bpmn.FlowElement>(["bpmn:StartEvent", "bpmn:UserTask", "bpmn:SendTask", "bpmn:IntermediateCatchEvent", "bpmn:SubProcess", "bpmn:ExclusiveGateway", "bpmn:ParallelGateway", "bpmn:SequenceFlow", "bpmn:EndEvent"]);
   }
 
   public getSequenceFlowElements(): Bpmn.SequenceFlow[] {
