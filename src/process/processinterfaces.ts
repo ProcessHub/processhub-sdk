@@ -225,5 +225,9 @@ export interface RunningTaskLane {
 }
 
 export interface StartButtonMap {
-  [id: string]: { startEventName: string, laneId: string };
+  [id: string]: { 
+    startEventName: string, 
+    laneId: string,
+    onlyRoxFileField: boolean,
+  };
 }
