@@ -16,6 +16,7 @@ export enum State {
 export interface ParentProcessConfig {
   parentInstanceId: string;
   parentTodoId: string;
+  parentUsedToken: string;
 }
 
 export interface InstanceDetails {
@@ -139,7 +140,7 @@ export interface EngineStateDefinitionProcessDetails {
 export interface EngineStateDefinitionChild {
   id: string;
   type: Bpmn.bpmnType;
-  entered: boolean;
+  entered?: string[];
   canceled?: boolean;
   waiting?: boolean;
   taken?: boolean;

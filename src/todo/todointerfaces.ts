@@ -33,6 +33,7 @@ export interface TodoDetails {
   dueAt?: Date;
   color?: string;
   subInstanceId?: string;
+  token?: string;
 }
 export const gqlTodoTypes = `     
   type TodoDetails {
