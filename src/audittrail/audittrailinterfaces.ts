@@ -24,6 +24,7 @@ export enum AuditTrailAction {
   processRolesChanged = 21,
   retentionPeriodChanged = 22,
   instanceRoleChanged = 23,
+  todoDueAtDateChanged = 24,
 
   workspaceCreated = 100,
 }
@@ -34,7 +35,7 @@ export enum AuditTrailProcessFlag {
 }
 
 export interface AuditTrailEntryDetails {
-  // must be set for AuditTrailAction.completedTodo
+  // must be set for completedTodo, todoDueAtDateChanged
   todoDisplayName: string;
   // must be set for AuditTrailAction.comment and processComment
   comment: string;
@@ -70,6 +71,9 @@ export interface AuditTrailEntryDetails {
 
   // must be set for instanceRoleChanged
   roleName: string;
+
+  // must be set for todoDueAtDateChanged
+  todoDueAt: Date;
 }
 
 export type Partial<T> = {
