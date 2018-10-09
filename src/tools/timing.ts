@@ -13,6 +13,9 @@ export function getFormattedDate(date: Date): string {
 }
 
 export function getFormattedDateTime(dateTime: Date): string {
+  if (typeof dateTime === "string") {
+    dateTime = new Date(dateTime);
+  }
   const hours: string = dateTime.getHours() < 10 ? "0" + dateTime.getHours().toString() : dateTime.getHours().toString();
   const minutes: string = dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes().toString() : dateTime.getMinutes().toString();
 
