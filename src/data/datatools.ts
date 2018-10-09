@@ -51,7 +51,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     const roleName: string = match[groupIndexForIdentifier];
 
     if (roleName != null) {
-      const lane: Bpmn.Lane = process.getLanes(process.processId(), false).find(l => l.name === roleName);
+      const lane: Bpmn.Lane = process.getLanes(false).find(l => l.name === roleName);
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
@@ -90,7 +90,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     const roleName: string = match[1];
 
     if (roleName && roleName.length) {
-      const lane: Bpmn.Lane = process.getLanes(process.processId(), false).find(l => l.name === roleName);
+      const lane: Bpmn.Lane = process.getLanes(false).find(l => l.name === roleName);
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {

@@ -46,7 +46,7 @@ export function getDefaultRoleName(roleId: string): string {
     case DefaultRoles.Viewer:
       return tl("Sichtbarkeit");
     case DefaultRoles.Follower:
-      return tl("Follower");
+      return tl("Weitere Beteiligte");
   }
 }
 
@@ -75,6 +75,7 @@ export interface RoleOwner {
 export function isDefaultRole(roleId: string): boolean {
   return (roleId == DefaultRoles.Manager
     || roleId == DefaultRoles.Owner
+    || roleId == DefaultRoles.Follower
     || roleId == DefaultRoles.Viewer);
 }
 
@@ -100,7 +101,7 @@ export function getProcessRoles(currentRoles: ProcessRoles, bpmnProcess: BpmnPro
 
   if (bpmnProcess != null) {
     // set default owners for all roles
-    let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
+    let lanes = bpmnProcess.getLanes(false);
     lanes.map(lane => {
       if (processRoles[lane.id] == null) {
         processRoles[lane.id] = { potentialRoleOwners: [{ memberId: getDefaultRoleGroup() }] };

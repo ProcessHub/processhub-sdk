@@ -23,6 +23,7 @@ export enum AuditTrailAction {
   processXmlChanged = 20,
   processRolesChanged = 21,
   retentionPeriodChanged = 22,
+  instanceRoleChanged = 23,
 
   workspaceCreated = 100,
 }
@@ -66,6 +67,9 @@ export interface AuditTrailEntryDetails {
 
   // must be set for workspaceCreated
   workspaceDisplayName: string;
+
+  // must be set for instanceRoleChanged
+  roleName: string;
 }
 
 export type Partial<T> = {

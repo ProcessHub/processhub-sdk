@@ -192,7 +192,7 @@ describe("sdk", function () {
           let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
           let testLaneId: string = bpmnProcess.addLane(process.id, testId, "Test Lane");
 
-          let lanes: Bpmn.Lane[] = bpmnProcess.getLanes(process.id, false);
+          let lanes: Bpmn.Lane[] = bpmnProcess.getLanes(false);
 
           assert(lanes.length === 3);
           assert(lanes[lanes.length - 1].id === testLaneId);
@@ -322,7 +322,7 @@ describe("sdk", function () {
             let tasks = bpmnProcess.getSortedTasks(bpmnProcess.processId());
             assert(tasks.length === 2);
 
-            let lanes = bpmnProcess.getLanes(bpmnProcess.processId(), false);
+            let lanes = bpmnProcess.getLanes(false);
             assert(lanes.length === 4);
 
             bpmnProcess.deleteTask(bpmnProcess.processId(), rowDetails, 2);
@@ -330,7 +330,7 @@ describe("sdk", function () {
             let tasksEnd = bpmnProcess.getSortedTasks(bpmnProcess.processId());
             assert(tasksEnd.length === 1);
 
-            lanes = bpmnProcess.getLanes(bpmnProcess.processId(), true);
+            lanes = bpmnProcess.getLanes(true);
             assert(lanes.length === 1);
           });
         });
