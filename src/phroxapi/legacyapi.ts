@@ -12,6 +12,7 @@ export const RequestRoutes = {
   SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
   DownloadRoxDocToServer: "/api/phroxapi/downloadroxdoctoserver",
   GetProcessesWithGroup: "/api/phroxapi/getprocesseswithgroup",
+  GetProcessesWithUser: "/api/phroxapi/getprocesseswithuser",
   GetFileDetails: "/api/phroxapi/getfiledetails",
   EcRoxFileProcessStart: "/api/phroxapi/ecroxfileprocessstart",
   EcRoxFileFieldEdit: "/api/phroxapi/ecroxfilefieldedit",
@@ -102,6 +103,17 @@ export interface GetProcessesWithGroupRequest {
   groupId: string;
 }
 export interface GetProcessesWithGroupReply extends BaseReply {
+  processes: {
+    processName: string;
+    urlName: string;
+    workspaceId: string;
+  }[];
+}
+
+export interface GetProcessesWitUserRequest {
+  userId: string;
+}
+export interface GetProcessesWitUserReply extends BaseReply {
   processes: {
     processName: string;
     urlName: string;
