@@ -76,7 +76,6 @@ export interface AuditTrailEntryDetails {
   todoDueAt: Date;
 
   instanceName?: string;
-  test?: string;
 }
 
 export type Partial<T> = {
