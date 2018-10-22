@@ -29,7 +29,7 @@ export interface IRoxFileFieldValue {
 }
 
 export interface FieldValue {
-  type: string;
+  type: FieldType;
   value:
   Date | // Date
   string | // TextInput, TextArea, RoleOwner

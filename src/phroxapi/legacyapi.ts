@@ -120,3 +120,9 @@ export interface GetProcessesWitUserReply extends BaseReply {
     workspaceId: string;
   }[];
 }
+
+export interface EcReleaseFileLockReply {
+  LockReleased: boolean;
+  ShowMessage: boolean;
+  Message: string;
+}

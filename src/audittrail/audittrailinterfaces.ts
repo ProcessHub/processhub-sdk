@@ -25,6 +25,7 @@ export enum AuditTrailAction {
   retentionPeriodChanged = 22,
   instanceRoleChanged = 23,
   todoDueAtDateChanged = 24,
+  fieldContentChanged = 25,
 
   workspaceCreated = 100,
 }
@@ -74,6 +75,10 @@ export interface AuditTrailEntryDetails {
 
   // must be set for todoDueAtDateChanged
   todoDueAt: Date;
+
+  // must be set for fieldContentChanged
+  fieldName: string;
+  newFieldValue: string;
 
   instanceName?: string;
 }
