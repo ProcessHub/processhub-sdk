@@ -26,6 +26,7 @@ export interface IRoxFileFieldValue {
   url: string;
   lockedAt: Date;
   lockedByUserName: string;
+  lockedByUserId: string;
 }
 
 export interface FieldValue {
