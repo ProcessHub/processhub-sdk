@@ -1,4 +1,5 @@
 import { UserDetails } from "../user/userinterfaces";
+import { FieldValue } from "../data/datainterfaces";
 
 export enum AuditTrailAction {
   instanceStarted = 1,
@@ -78,7 +79,7 @@ export interface AuditTrailEntryDetails {
 
   // must be set for fieldContentChanged
   fieldName: string;
-  newFieldValue: string;
+  newFieldValue: FieldValue;
 
   instanceName?: string;
 }
