@@ -10,7 +10,8 @@ import { InstanceState } from "./phclient";
 
 describe("sdk", function () {
     describe("instance", function () {
-        describe("instanceactions", function () {
+        
+        /* describe("instanceactions", function () {
             it("should check executeInstance Action", async () => {
 
                 let instanceDetails: PH.Instance.InstanceDetails = {
@@ -104,6 +105,6 @@ describe("sdk", function () {
                 // assert.isTrue(res.type === "Test Result", "Wrong api return type");
 
             });
-        });
+        });*/
     });
 });
