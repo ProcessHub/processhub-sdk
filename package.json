@@ -47,7 +47,7 @@
   },
   "scripts": {
     "build": "tsc && babel tsc_out --presets babel-preset-es2015 --out-dir lib && npm run copytypings",
-    "test": "cross-env HOTRELOAD=no nyc --reporter=html mocha \"./lib/**/*.test.js\" --timeout 10000 --compilers js:babel-register --recursive --require babel-polyfill",
+    "test": "cross-env HOTRELOAD=no nyc --reporter=html mocha \"./lib/**/*.test.js\" --exit --timeout 10000 --compilers js:babel-register --recursive --require babel-polyfill",
     "lint": "tslint --type-check --project tsconfig.json \"./src/**/*.ts*\"",
     "testall": "npm run lint && npm run test",
     "copytypings": "copyfiles -u 1 \"src/**/*.d.ts\" lib && copyfiles -u 1 \"src/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/**/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/*.d.ts\" lib && copyfiles -u 1 src/process/types/index.d.ts lib"
