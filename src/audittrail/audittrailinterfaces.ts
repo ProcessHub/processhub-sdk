@@ -28,6 +28,7 @@ export enum AuditTrailAction {
   todoDueAtDateChanged = 24,
   fieldContentChanged = 25,
   startEvent = 26,
+  endEvent = 27,
 
   workspaceCreated = 100,
 }
@@ -82,9 +83,11 @@ export interface AuditTrailEntryDetails {
   fieldName: string;
   newFieldValue: FieldValue;
 
+  // must be set for startEvent and endEvent
+  eventId: string;  
+  eventName: string;
+
   // must be set for startEvent
-  startEventId: string;
-  startEventName: string;
   startEventType: "TimerStartEvent" | "MessageStartEvent" | "StartEvent";
  
   instanceName?: string;
