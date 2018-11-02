@@ -20,7 +20,9 @@ export const ProcessEngineApiRoutes = {
   uploadCommentAttachment: "/api/processengine/uploadcommentattachment",
   setFieldContent: "/api/processengine/setfieldcontent",
   getArchive: "/api/processengine/getarchive",
+  exportAuditTrail: "/api/processengine/exportaudittrail",
 };
+
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
 
 // API request/reply objects
@@ -152,4 +154,11 @@ export const INSTANCELOADED_MESSAGE = "InstanceLoadedMessage";
 export interface InstanceLoadedMessage extends BaseMessage {
   type: "InstanceLoadedMessage";
   instance?: InstanceDetails;
+}
+
+export interface ExportAuditTrailRequest extends InstanceRequest {
+  instanceId: string;
+}
+export interface ExportAuditTrailReply extends InstanceReply {
+  doc: any;
 }
