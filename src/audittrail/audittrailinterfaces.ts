@@ -29,6 +29,7 @@ export enum AuditTrailAction {
   fieldContentChanged = 25,
   startEvent = 26,
   endEvent = 27,
+  sendTask = 28,
 
   workspaceCreated = 100,
 }
@@ -53,7 +54,7 @@ export interface AuditTrailEntryDetails {
   mailHtmlLink: string;
   // may be set for AuditTrailAction.incomingMail, if there were attachments in the mail - links to all attachment files. Empty array if there were no attachments.
   mailAttachments: string[];
-  // may be set for AuditTrailAction.outgoingMail
+  // may be set for AuditTrailAction.outgoingMail and sendTask
   mailReceiverList: string[];
   // must be set for AuditTrailAction.jumpPerformed
   jumpFromTodoDisplayName: string;
@@ -89,6 +90,9 @@ export interface AuditTrailEntryDetails {
 
   // must be set for startEvent
   startEventType: "TimerStartEvent" | "MessageStartEvent" | "StartEvent";
+
+  // must be set for sendTask
+  htmlMailContent: string;
  
   instanceName?: string;
 }
