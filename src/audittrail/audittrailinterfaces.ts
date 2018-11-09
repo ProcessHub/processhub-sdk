@@ -30,6 +30,8 @@ export enum AuditTrailAction {
   startEvent = 26,
   endEvent = 27,
   sendTask = 28,
+  setFieldForSubProcess = 29,
+  setFieldForParentProcess = 30,
 
   workspaceCreated = 100,
 }
@@ -80,7 +82,7 @@ export interface AuditTrailEntryDetails {
   // must be set for todoDueAtDateChanged
   todoDueAt: Date;
 
-  // must be set for fieldContentChanged
+  // must be set for fieldContentChanged, setFieldForSubProcess, setFieldForParentProcess
   fieldName: string;
   newFieldValue: FieldValue;
 
@@ -93,7 +95,7 @@ export interface AuditTrailEntryDetails {
 
   // must be set for sendTask
   htmlMailContent: string;
- 
+
   instanceName?: string;
 }
 
