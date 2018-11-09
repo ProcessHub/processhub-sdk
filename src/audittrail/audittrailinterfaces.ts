@@ -32,6 +32,7 @@ export enum AuditTrailAction {
   sendTask = 28,
   setFieldForSubProcess = 29,
   setFieldForParentProcess = 30,
+  decision = 31,
 
   workspaceCreated = 100,
 }
@@ -42,7 +43,7 @@ export enum AuditTrailProcessFlag {
 }
 
 export interface AuditTrailEntryDetails {
-  // must be set for completedTodo, todoDueAtDateChanged
+  // must be set for completedTodo, todoDueAtDateChanged, decision
   todoDisplayName: string;
   // must be set for AuditTrailAction.comment and processComment
   comment: string;
@@ -95,6 +96,9 @@ export interface AuditTrailEntryDetails {
 
   // must be set for sendTask
   htmlMailContent: string;
+
+  // must be set for decision
+  choosenTaskName: string;
 
   instanceName?: string;
 }
