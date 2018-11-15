@@ -1,14 +1,14 @@
 import { UserDetails } from "../user/userinterfaces";
 import { FieldValue } from "../data/datainterfaces";
 
-export enum AuditTrailAction {
-  instanceStarted = 1,
+export enum AuditTrailAction {  
+  instanceStarted = 1, // deprecated - startEvent is logged for new instances
   completedTodo = 2,
   comment = 3,
   incomingMail = 4,
   jumpPerformed = 5,
   outgoingMail = 6,
-  instanceStartedByTimer = 7,
+  instanceStartedByTimer = 7, // deprecated - startEvent is logged for new instances
   messageBoundaryEventTriggered = 8,
   bouncedMail = 9,
   errorSubprocess = 10,  
