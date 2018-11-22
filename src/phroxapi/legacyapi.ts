@@ -70,6 +70,7 @@ export interface GetDocumentRequest {
   fieldName: string;
   fileName: string;
   instanceId: string;
+  versionId: string;
 }
 
 export interface DownloadRoxDocToServerReply extends BaseReply {
