@@ -9,6 +9,7 @@ export enum ApiResult {
   API_DUPLICATE = 409,
   API_NOTEMPTY = 423,
   API_ERROR = 500,
+  API_ERROR_ROXAPI = 512
 }
 // export const API_OK = 200;
 // export const API_INVALID = 400;  // ungültige Anfrage
