@@ -34,7 +34,7 @@ export function toCleanUrl(text: string): string {
     .replace("ö", "oe")
     .replace("ü", "ue")
     .replace("ß", "ss")
-    .replace(/[\/\\+\.?=&_#| -]+/g, "-")
+    .replace(/[\/\\+\.?=&%_#| -]+/g, "-")
     .replace(/[\(\)]+/g, "")
     .trim();
 }
