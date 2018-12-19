@@ -122,6 +122,7 @@ export interface EngineStateDefinition {
   moddleContext: any;
   stopped: boolean;
   processes: EngineStateDefinitionProcess;
+  environment: any;
 }
 
 export interface EngineStateDefinitionProcess {
@@ -135,6 +136,7 @@ export interface EngineStateDefinitionProcessDetails {
   variables: any;
   services: any;
   children: EngineStateDefinitionChild[];
+  environment: any;
 }
 
 export interface EngineStateDefinitionChild {
@@ -144,4 +146,9 @@ export interface EngineStateDefinitionChild {
   canceled?: boolean;
   waiting?: boolean;
   taken?: boolean;
+  token?: string;
+  holdedToken?: string;
+  pendingJoin?: boolean;
+  pendingInbound?: string[];
+  discardedInbound?: string[];
 }
