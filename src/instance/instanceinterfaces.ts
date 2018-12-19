@@ -150,7 +150,7 @@ export interface EngineStateDefinitionChild {
   holdedToken?: string;
   pendingJoin?: boolean;
   pendingInbound?: string[];
-  pendingOutbound?: string[]
+  pendingOutbound?: string[];
   discardedInbound?: string[];
   attachedToId?: string;
   timeout?: number;
