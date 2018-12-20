@@ -18,6 +18,7 @@ export const RequestRoutes = {
   EcRoxFileFieldEdit: "/api/phroxapi/ecroxfilefieldedit",
   EcSetFile: "/api/phroxapi/ecsetfile",
   EcReleaseFileLock: "/api/phroxapi/ecreleasefilelock",
+  EcReleaseWithoutExecute: "/api/phroxapi/ecreleasewithoutexecute",
   EcGetFileLock: "/api/phroxapi/ecgetfilelock",
 };
 
