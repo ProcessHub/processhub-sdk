@@ -1,7 +1,7 @@
 import { UserDetails } from "../user/userinterfaces";
 import { FieldValue } from "../data/datainterfaces";
 
-export enum AuditTrailAction {  
+export enum AuditTrailAction {
   instanceStarted = 1, // deprecated - startEvent is logged for new instances
   completedTodo = 2,
   comment = 3,
@@ -11,7 +11,7 @@ export enum AuditTrailAction {
   instanceStartedByTimer = 7, // deprecated - startEvent is logged for new instances
   messageBoundaryEventTriggered = 8,
   bouncedMail = 9,
-  errorSubprocess = 10,  
+  errorSubprocess = 10,
   processCreated = 11,
   processEdited = 12,
   processComment = 13,
@@ -88,7 +88,7 @@ export interface AuditTrailEntryDetails {
   newFieldValue: FieldValue;
 
   // must be set for startEvent and endEvent
-  eventId: string;  
+  eventId: string;
   eventName: string;
 
   // must be set for startEvent
@@ -101,13 +101,18 @@ export interface AuditTrailEntryDetails {
   choosenTaskName: string;
 
   instanceName?: string;
+
+  // can be set for processXmlChanged if there is an old bpmn file
+  oldXmlFile: string;
+  // can be set for processXmlChanged if there is an old preview file
+  oldPreviewFile: string;
 }
 
 export type Partial<T> = {
   [P in keyof T]?: T[P];
 };
 
-export interface AuditTrailEntry { 
+export interface AuditTrailEntry {
   trailId: string;
   workspaceId: string;
   processId?: string;  // may be null for entries on workspace-level
