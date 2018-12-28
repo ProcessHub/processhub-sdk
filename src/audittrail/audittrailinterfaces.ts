@@ -43,7 +43,7 @@ export enum AuditTrailProcessFlag {
 }
 
 export interface AuditTrailEntryDetails {
-  // must be set for completedTodo, todoDueAtDateChanged, decision
+  // must be set for completedTodo, todoDueAtDateChanged, decision, errorSubProcees, errorOnEvaluateGatewayDecision, sendTask
   todoDisplayName: string;
   // must be set for AuditTrailAction.comment and processComment
   comment: string;
@@ -52,6 +52,7 @@ export interface AuditTrailEntryDetails {
 
   // must be set for AuditTrailAction.incomingMail
   mailText: string;
+  // must be set for AuditTrailAction.incomingMail, sendTask
   mailSubject: string;
   // may be set for AuditTrailAction.incomingMail, if there was html content in the email - link to the HTML document. undefined if there was no HTML content.  
   mailHtmlLink: string;
@@ -106,6 +107,9 @@ export interface AuditTrailEntryDetails {
   oldXmlFile: string;
   // can be set for processXmlChanged if there is an old preview file
   oldPreviewFile: string;
+
+  // must be set for instanceRoleChanged
+  newRoleOwnerDisplayNames: string[];
 }
 
 export type Partial<T> = {
