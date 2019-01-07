@@ -16,3 +16,10 @@ export interface IEscalation {
   ShortSubject: string;
   Title: string;
 }
+
+export interface ITodo {
+  EnableMobileEdit: boolean;
+  Id: string;
+  ShortSubject: string;
+  Subject: string;
+}

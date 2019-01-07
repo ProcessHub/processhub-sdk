@@ -4,7 +4,7 @@ import { InstanceDetails } from "../instance/instanceinterfaces";
 import { nullId } from "../tools/guid";
 import { isTrue } from "../tools/assert";
 import { tl } from "../tl";
-import { IEscalation } from "../phroxapi";
+import { IEscalation, ITodo } from "../phroxapi";
 import { isRoxtraEdition } from "../settings";
 
 export interface RoxtraUserDetails {
@@ -12,6 +12,7 @@ export interface RoxtraUserDetails {
   HasEFormulareEditAccess: boolean;
   HasEFormulareSetCorporateDesignRight: boolean;
   escalations?: IEscalation[];
+  todos?: ITodo[];
 }
 
 export class UserDetails {
