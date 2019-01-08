@@ -33,6 +33,8 @@ export enum AuditTrailAction {
   setFieldForSubProcess = 29,
   setFieldForParentProcess = 30,
   decision = 31,
+  instanceCanceled = 32,
+  instanceDeleted = 33,
 
   workspaceCreated = 100,
 }
