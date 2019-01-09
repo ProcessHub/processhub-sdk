@@ -109,6 +109,8 @@ export interface AuditTrailEntryDetails {
   oldXmlFile: string;
   // can be set for processXmlChanged if there is an old preview file
   oldPreviewFile: string;
+  // must be set for processXmlChanged
+  oldXmlVersion: number;
 
   // must be set for instanceRoleChanged
   newRoleOwnerDisplayNames: string[];

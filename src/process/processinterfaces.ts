@@ -38,6 +38,7 @@ export interface ProcessDetails {
   latestCommentAt?: Date; // datetime of the latest comment
   retentionPeriod?: number; // retention period for insatances in months
   jumpsDisabled?: boolean;
+  xmlVersion?: number;
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
