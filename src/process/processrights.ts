@@ -219,13 +219,13 @@ function addIfLicenseAllows(owners: PotentialRoleOwners, user: UserDetails): voi
     if (user.extras.roXtra.HasEFormulareEditAccess) {
       owners.potentialRoleOwner.push({
         memberId: user.userId,
-        displayName: user.realName
+        displayName: user.displayName
       });
     }
   } else {
     owners.potentialRoleOwner.push({
       memberId: user.userId,
-      displayName: user.realName
+      displayName: user.displayName
     });
   }
 }
