@@ -1,5 +1,5 @@
 export function sleep(ms = 0): Promise<any> {
-    return new Promise(r => setTimeout(r, ms));
+  return new Promise(r => setTimeout(r, ms));
 }
 
 export function getFormattedDate(date: Date): string {
@@ -20,4 +20,33 @@ export function getFormattedDateTime(dateTime: Date): string {
   const minutes: string = dateTime.getMinutes() < 10 ? "0" + dateTime.getMinutes().toString() : dateTime.getMinutes().toString();
 
   return getFormattedDate(dateTime) + " " + hours + ":" + minutes;
+}
+
+export interface IDuration {
+  seconds?: number;
+  minutes?: number;
+  hours?: number;
+  days?: number;
+  weeks?: number;
+  months?: number;
+  years?: number;
+}
+
+export function durationToSeconds(duration: IDuration): number {
+  const d: IDuration = {
+    seconds: duration.seconds || 0,
+    minutes: duration.minutes || 0,
+    hours: duration.hours || 0,
+    days: duration.days || 0,
+    weeks: duration.weeks || 0,
+    months: duration.months || 0,
+    years: duration.years || 0,
+  };
+  return d.seconds
+    + (d.minutes * 60)
+    + (d.hours * 60 * 60)
+    + (d.days * 24 * 60 * 60)
+    + (d.weeks * 7 * 24 * 60 * 60)
+    + (d.months * 30 * 24 * 60 * 60)
+    + (d.years * 365 * 24 * 60 * 60);
 }
