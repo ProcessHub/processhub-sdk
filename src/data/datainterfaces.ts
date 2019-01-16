@@ -29,6 +29,11 @@ export interface IRoxFileFieldValue {
   lockedByUserId: string;
 }
 
+export interface ISignatureFieldValue {
+  svgDataUrl: string;
+  dataPoints: {};
+}
+
 export interface FieldValue {
   type: FieldType;
   value:
@@ -37,6 +42,7 @@ export interface FieldValue {
   boolean | // Checkbox
   string[] | // FileUpload
   IRoxFileFieldValue | // RoxFile
+  ISignatureFieldValue | // Signature
   { [key: string]: boolean }; // Checklist
 }
 
@@ -50,7 +56,8 @@ export type FieldType = "ProcessHubTextInput"
   | "ProcessHubDropdown"
   | "ProcessHubChecklist"
   | "ProcessHubDecision"
-  | "ProcessHubRoxFile";
+  | "ProcessHubRoxFile"
+  | "ProcessHubSignature";
 
 export interface IFieldType {
   getType(): FieldType;
@@ -65,7 +72,7 @@ export interface IFieldType {
 }
 
 export interface IFormElementProps {
-  value: string | boolean | Date | string[] | IRoxFileFieldValue | {
+  value: string | boolean | Date | string[] | IRoxFileFieldValue | ISignatureFieldValue | {
     [key: string]: boolean;
   };
   label: string;
