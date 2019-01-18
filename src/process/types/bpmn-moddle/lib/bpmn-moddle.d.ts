@@ -68,6 +68,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
     public create(descriptor: "bpmn:Participant", attrs: Partial<Bpmn.Participant>): Bpmn.Participant;
     public create(descriptor: "bpmn:ParallelGateway", attrs: Partial<Bpmn.ParallelGateway>): Bpmn.ParallelGateway;
     public create(descriptor: "bpmn:Process", attrs: Partial<Bpmn.Process>): Bpmn.Process;
+    public create(descriptor: "bpmn:ScriptTask", attrs: Partial<Bpmn.ScriptTask>): Bpmn.ScriptTask;
     public create(descriptor: "bpmn:SendTask", attrs: Partial<Bpmn.SendTask>): Bpmn.SendTask;
     public create(descriptor: "bpmn:ServiceTask", attrs: Partial<Bpmn.ServiceTask>): Bpmn.ServiceTask;
     public create(descriptor: "bpmn:SequenceFlow", attrs: Partial<Bpmn.SequenceFlow>): Bpmn.SequenceFlow;
