@@ -26,11 +26,20 @@ describe("sdk", function () {
         });
 
         it("should accept empty field maps", async function () {
-            
+
           let testString = "Hallo {{ field.existiert }}, wie gehts {{ field.existiertnicht }}\n{trölölö} {{{moepmoep}}}\n{{ field.existiert2 }}\n";
           let res = DataTools.parseAndInsertStringWithFieldContent(testString, null, null, null);
 
           assert.equal(res, testString);
+        });
+
+        it("should replace long field names with short values", async function () {
+
+          let testString = "{{ field.fieldname1 }}{{ field.fieldname2 }}{{ field.fieldname3 }}";
+          let resultString = "123";
+          let res = DataTools.parseAndInsertStringWithFieldContent(testString, { fieldname1: "1", fieldname2: "2", fieldname3: "3", } as FieldContentMap, null, null);
+
+          assert.equal(res, resultString);
         });
       });
 

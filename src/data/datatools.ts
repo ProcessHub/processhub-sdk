@@ -21,6 +21,10 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   const groupIndexForPlaceholder = 0;
   const groupIndexForIdentifier = 2;
 
+  let replacedValue: boolean;
+
+  let result: string = inputString;
+
   let match;
   while ((match = regex.exec(inputString)) !== null) {
 
@@ -28,17 +32,18 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     let fieldName = match[groupIndexForIdentifier];
 
     if (fieldName != null) {
+      replacedValue = true;
       let valueObject = fieldContentMap[fieldName];
 
       if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
-          inputString = replaceAll(inputString, fieldPlaceholder, val);
+          result = replaceAll(result, fieldPlaceholder, val);
         } else {
-          inputString = replaceAll(inputString, fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
+          result = replaceAll(result, fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
         }
       } else {
-        inputString = replaceAll(inputString, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
+        result = replaceAll(result, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
 
       }
     }
@@ -55,7 +60,8 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
-          inputString = replaceAll(inputString, placeHolder, roleOwner[0].displayName);
+          replacedValue = true;
+          result = replaceAll(result, placeHolder, roleOwner[0].displayName);
         }
       }
     }
@@ -63,22 +69,22 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
   const newFieldRegex = /[{]{1}[\s]?field\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
   while ((match = newFieldRegex.exec(inputString)) != null) {
-
+    replacedValue = true;
     const placeHolder: string = match[0];
     const fieldName: string = match[1];
 
     if (fieldName && fieldName.length) {
       const valueObject = fieldContentMap[fieldName];
-
+      replacedValue = true;
       if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
-          inputString = replaceAll(inputString, placeHolder, val);
+          result = replaceAll(result, placeHolder, val);
         } else {
-          inputString = replaceAll(inputString, placeHolder, valueObject.value != null ? valueObject.value.toString() : "");
+          result = replaceAll(result, placeHolder, valueObject.value != null ? valueObject.value.toString() : "");
         }
       } else {
-        inputString = replaceAll(inputString, placeHolder, valueObject != null ? valueObject.toString() : "");
+        result = replaceAll(result, placeHolder, valueObject != null ? valueObject.toString() : "");
       }
     }
   }
@@ -94,12 +100,14 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
-          inputString = replaceAll(inputString, placeHolder, roleOwner[0].displayName);
+          replacedValue = true;
+          result = replaceAll(result, placeHolder, roleOwner[0].displayName);
         }
       }
     }
   }
-  return inputString;
+
+  return result;
 }
 
 // convert legacy FieldDefinitions in older processes to new array-based format
