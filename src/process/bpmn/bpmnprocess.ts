@@ -166,7 +166,8 @@ export class BpmnProcess {
       subProcessId: undefined,
 
       sequenceFlowExpression: undefined,
-      fieldsWhichShouldSend: null
+      fieldsWhichShouldSend: null,
+      dateFieldTimer: null
     };
 
     if (activityObject == null || activityObject.extensionElements == null || (activityObject.extensionElements != null && activityObject.extensionElements.values == null)) {
@@ -211,6 +212,9 @@ export class BpmnProcess {
               break;
             case TaskSettings.DueAtDuration:
               returnValue.dueAtDuration = child.$body;
+              break;
+            case TaskSettings.DateFieldTimer:
+              returnValue.dateFieldTimer = child.$body;
               break;
             case TaskSettings.FieldsWhichShouldSend:
               returnValue.fieldsWhichShouldSend = JSON.parse(child.$body);

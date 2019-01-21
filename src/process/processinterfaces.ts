@@ -167,8 +167,8 @@ export const TaskSettings = {
   DueAtDateCanBeEdit: "due-at-can-be-edit",
   DueAtDuration: "due-at-duration",
   SequenceFlowExpression: "sequenceflow-expression",
-  FieldsWhichShouldSend: "fields-which-should-send"
-
+  FieldsWhichShouldSend: "fields-which-should-send",
+  DateFieldTimer: "datefield-for-timercatch"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -202,6 +202,7 @@ export interface TaskExtensions {
   sequenceFlowExpression: string;
 
   fieldsWhichShouldSend: string[];
+  dateFieldTimer: string;
 }
 
 export interface TimerStartEventConfiguration {
