@@ -168,7 +168,8 @@ export const TaskSettings = {
   DueAtDuration: "due-at-duration",
   SequenceFlowExpression: "sequenceflow-expression",
   FieldsWhichShouldSend: "fields-which-should-send",
-  DateFieldTimer: "datefield-for-timercatch"
+  DateFieldTimer: "datefield-for-timercatch",
+  ScriptTaskCode: "script-task-code"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -193,6 +194,7 @@ export interface TaskExtensions {
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
   serviceTaskResponseFieldName: string;
+  scriptTaskCode: string;
 
   timerStartConfiguration: TimerStartEventConfiguration[];
   roleOwnersEditable: boolean;

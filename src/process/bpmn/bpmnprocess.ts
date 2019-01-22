@@ -24,6 +24,7 @@ export const BPMN_PARTICIPANT = "bpmn:Participant";
 export const BPMN_USERTASK = "bpmn:UserTask";
 export const BPMN_SENDTASK = "bpmn:SendTask";
 export const BPMN_SERVICETASK = "bpmn:ServiceTask";
+export const BPMN_SCRIPTTASK = "bpmn:ScriptTask";
 export const BPMN_STARTEVENT = "bpmn:StartEvent";
 export const BPMN_ENDEVENT = "bpmn:EndEvent";
 export const BPMN_SEQUENCEFLOW = "bpmn:SequenceFlow";
@@ -160,6 +161,7 @@ export class BpmnProcess {
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
       serviceTaskResponseFieldName: null,
+      scriptTaskCode: null,
 
       timerStartConfiguration: null,
 
@@ -215,6 +217,9 @@ export class BpmnProcess {
               break;
             case TaskSettings.DateFieldTimer:
               returnValue.dateFieldTimer = child.$body;
+              break;
+            case TaskSettings.ScriptTaskCode:
+              returnValue.scriptTaskCode = child.$body;
               break;
             case TaskSettings.FieldsWhichShouldSend:
               returnValue.fieldsWhichShouldSend = JSON.parse(child.$body);
@@ -591,7 +596,7 @@ export class BpmnProcess {
 
   public getExistingTask(processId: string, taskId: string): Bpmn.Task {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
-    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_STARTEVENT || e.$type === BPMN_ENDEVENT || e.$type === BPMN_USERTASK || e.$type === BPMN_SENDTASK || e.$type === BPMN_SERVICETASK));
+    let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_STARTEVENT || e.$type === BPMN_ENDEVENT || e.$type === BPMN_USERTASK || e.$type === BPMN_SENDTASK || e.$type === BPMN_SERVICETASK || e.$type === BPMN_SCRIPTTASK));
     let task = flowElements.find(element => element.id == taskId);
 
     return task as Bpmn.Task;
