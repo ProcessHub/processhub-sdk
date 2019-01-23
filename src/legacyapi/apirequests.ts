@@ -16,8 +16,6 @@ export async function getJson<Request extends BaseRequest>(path: string, request
     }
   }
 
-  console.log("backendUrl: " + getBackendUrl());
-
   let url = getBackendUrl() + path + "?" + str.join("&");
 
   let req: RequestInit = null;
