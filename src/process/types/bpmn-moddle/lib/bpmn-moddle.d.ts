@@ -1,5 +1,7 @@
 // tslint:disable:interface-name
 declare module "bpmn-moddle/lib/bpmn-moddle" {
+  export = BpmnModdle;
+
   import Factory = require("moddle/lib/factory");
   import Moddle = require("moddle/lib/moddle");
 
@@ -21,7 +23,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
    * @class BpmnModdle
    * @extends Moddle
    */
-  export default class BpmnModdle extends Moddle {
+  class BpmnModdle extends Moddle {
     /**
      * A sub class of {@link Moddle} with support for import and export of BPMN 2.0 xml files.
      *
@@ -31,8 +33,7 @@ declare module "bpmn-moddle/lib/bpmn-moddle" {
      * @param {Object|Array} packages to use for instantiating the model
      * @param {Object} [options] additional options to pass over
      */
-    // should always be created using simple function
-    // constructor(packages?: Object[], options?: Object);
+    constructor(packages?: Object[], options?: Object);
 
     /**
      * Create an instance of the specified type.

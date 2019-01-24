@@ -1,5 +1,4 @@
-import simpleBpmnModdle from "bpmn-moddle/lib/simple";
-import BpmnModdle from "bpmn-moddle/lib/bpmn-moddle";
+import BpmnModdle = require("bpmn-moddle");
 import { assert, expect } from "chai";
 import { Bpmn } from "../../process/bpmn";
 import { isId } from "../../tools/guid";
@@ -74,7 +73,7 @@ describe("sdk", function () {
           const exportedXmlString: string = await bpmnProcess.toXmlString();
 
           // load exported xml with moddle
-          const moddle: BpmnModdle = simpleBpmnModdle([], {});
+          const moddle: BpmnModdle = new BpmnModdle();
           const definitions = await new Promise<Bpmn.Definitions>((resolve, reject) => {
             moddle.fromXML(exportedXmlString, (err, def) => {
               if (err) {
@@ -338,7 +337,7 @@ describe("sdk", function () {
       });
 
       describe("get/setTaskDescription", function () {
-        const bpmnModdle = simpleBpmnModdle([], {});
+        const bpmnModdle = new BpmnModdle([], {});
 
         it("soll Description für SendTask setzen und wieder lesen", function () {
           const task = bpmnModdle.create("bpmn:SendTask", {});
