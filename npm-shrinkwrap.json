@@ -1404,19 +1404,22 @@
       }
     },
     "bpmn-moddle": {
-      "version": "0.14.1",
-      "resolved": "https://registry.npmjs.org/bpmn-moddle/-/bpmn-moddle-0.14.1.tgz",
-      "integrity": "sha512-TowGXEv2oXX4f620cdtnqqDdxuBURhZeBdU5GO1l5/joG4Joe3nvXOy5cST2QlQ3RS4cQU5SHnmHfyevyK2ZZg==",
+      "version": "4.0.0",
+      "resolved": "https://registry.npmjs.org/bpmn-moddle/-/bpmn-moddle-4.0.0.tgz",
+      "integrity": "sha512-wCjt0kiqKo8B/4HVUDTQzAWmpyQOGP8N+/R+IcdvOu+AeDqHhj574J6dP4hXWsBJ/kYv7DubRp+0J7LTJXAtzQ==",
       "requires": {
-        "lodash": "^3.0.0",
-        "moddle": "^1.0.0",
-        "moddle-xml": "^1.1.1"
+        "min-dash": "^2.0.1",
+        "moddle": "^3.0.0",
+        "moddle-xml": "^6.0.0"
       },
       "dependencies": {
-        "lodash": {
-          "version": "3.10.1",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz",
-          "integrity": "sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y="
+        "moddle": {
+          "version": "3.0.0",
+          "resolved": "https://registry.npmjs.org/moddle/-/moddle-3.0.0.tgz",
+          "integrity": "sha512-r81IFvdfAdjhII/Qqb42mld0irpQNgsJb9Vu5rUZMcjCLx/CgI2fkvpJMSa1CHaw4FpPZTz+DK1lTPl6/eCtmw==",
+          "requires": {
+            "min-dash": "^2.0.1"
+          }
         }
       }
     },
@@ -3490,6 +3493,11 @@
         "regex-cache": "^0.4.2"
       }
     },
+    "min-dash": {
+      "version": "2.4.0",
+      "resolved": "https://registry.npmjs.org/min-dash/-/min-dash-2.4.0.tgz",
+      "integrity": "sha512-jmMFOBAd/TJP8IdSzLh7rmNqZEOufp8u10AYMCAQJ+MK1xnHAHQi6aF0DoyOU3oJwIRKKpMKO9nPx4dSf27Wng=="
+    },
     "minimatch": {
       "version": "3.0.4",
       "resolved": "https://registry.npmjs.org/minimatch/-/minimatch-3.0.4.tgz",
@@ -3584,20 +3592,23 @@
       }
     },
     "moddle-xml": {
-      "version": "1.1.1",
-      "resolved": "https://registry.npmjs.org/moddle-xml/-/moddle-xml-1.1.1.tgz",
-      "integrity": "sha512-a9GkVOVVhtE8F/49Mh8mnnex3gFIn685S3DIeUPvLkhmNlrzGIQ+cwufDkFdxjwJY66xiY3bV8SCZUgYeGyliQ==",
+      "version": "6.0.0",
+      "resolved": "https://registry.npmjs.org/moddle-xml/-/moddle-xml-6.0.0.tgz",
+      "integrity": "sha512-wxc4xXBnfnRyJiort/SKenbW0Dkvl1dcoqKRVevpOqlzIZ1aAy6TcfO7WDWp/BO/xzrD4PEp6vtBF7vpua8Z2A==",
       "requires": {
-        "lodash": "^3.0.0",
-        "moddle": "^1.0.0",
-        "sax": "~0.6.0",
+        "min-dash": "^2.0.1",
+        "moddle": "^3.0.0",
+        "saxen": "^7.0.1",
         "tiny-stack": "^0.1.0"
       },
       "dependencies": {
-        "lodash": {
-          "version": "3.10.1",
-          "resolved": "https://registry.npmjs.org/lodash/-/lodash-3.10.1.tgz",
-          "integrity": "sha1-W/Rejkm6QYnhfUgnid/RW9FAt7Y="
+        "moddle": {
+          "version": "3.0.0",
+          "resolved": "https://registry.npmjs.org/moddle/-/moddle-3.0.0.tgz",
+          "integrity": "sha512-r81IFvdfAdjhII/Qqb42mld0irpQNgsJb9Vu5rUZMcjCLx/CgI2fkvpJMSa1CHaw4FpPZTz+DK1lTPl6/eCtmw==",
+          "requires": {
+            "min-dash": "^2.0.1"
+          }
         }
       }
     },
@@ -6172,10 +6183,10 @@
       "resolved": "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.1.tgz",
       "integrity": "sha512-kKvNJn6Mm93gAczWVJg7wH+wGYWNrDHdWvpUmHyEsgCtIwwo3bqPtV4tR5tuPaUhTOo/kvhVwd8XwwOllGYkbg=="
     },
-    "sax": {
-      "version": "0.6.1",
-      "resolved": "https://registry.npmjs.org/sax/-/sax-0.6.1.tgz",
-      "integrity": "sha1-VjsZx8HeiS4Jv8Ty/DDjwn8JUrk="
+    "saxen": {
+      "version": "7.0.1",
+      "resolved": "https://registry.npmjs.org/saxen/-/saxen-7.0.1.tgz",
+      "integrity": "sha512-KK6BKJHHodZs7X3dnO6hZyX1zfAjC2e9snLWtN8ZB5++bjjNtPlh5TsOaBZzeSJRc1+d+TV80/KY2bHzkpsznA=="
     },
     "scheduler": {
       "version": "0.12.0",
