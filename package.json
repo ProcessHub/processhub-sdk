@@ -25,8 +25,9 @@
     "assert": "^1.4.1",
     "babel-core": "^6.25.0",
     "babel-polyfill": "^6.26.0",
-    "bpmn-moddle": "^0.14.0",
+    "bpmn-moddle": "^5.1.6",
     "chai": "^4.1.2",
+    "esm": "^3.1.1",
     "fetch-everywhere": "^1.0.5",
     "graphql": "^0.13.0",
     "graphql-tag": "^2.4.2",
@@ -47,7 +48,7 @@
   },
   "scripts": {
     "build": "tsc && babel tsc_out --presets babel-preset-es2015 --out-dir lib && npm run copytypings",
-    "test": "cross-env HOTRELOAD=no nyc --reporter=html mocha \"./lib/**/*.test.js\" --exit --timeout 10000 --compilers js:babel-register --recursive --require babel-polyfill",
+    "test": "cross-env HOTRELOAD=no nyc --reporter=html mocha \"./lib/**/*.test.js\" --exit --timeout 10000 --compilers js:babel-register --recursive --require babel-polyfill --require ./test-helper.js",
     "lint": "tslint --project tsconfig.json \"./src/**/*.ts*\"",
     "testall": "npm run lint && npm run test",
     "copytypings": "copyfiles -u 1 \"src/**/*.d.ts\" lib && copyfiles -u 1 \"src/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/**/*.d.ts\" lib && copyfiles -u 1 \"tsc_out/*.d.ts\" lib && copyfiles -u 1 src/process/types/index.d.ts lib"

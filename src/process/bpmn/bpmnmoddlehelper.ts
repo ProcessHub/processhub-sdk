@@ -1,4 +1,4 @@
-import BpmnModdle = require("bpmn-moddle");
+import simpleBpmnModdle from "bpmn-moddle/lib/simple";
 import { BpmnProcess } from "./bpmnprocess";
 import * as BpmnProcessDiagramFile from "./bpmnprocessdiagram";
 import * as BpmnProcessFile from "./bpmnprocess";
@@ -30,7 +30,7 @@ export type BpmnModdleStartEvent = Bpmn.StartEvent;
 const processhubNs = "http://processhub.com/schema/1.0/bpmn";
 
 export function createTaskExtensionTemplate(): BpmnModdleExtensionElements {
-  let moddle = new BpmnModdle([], {});
+  let moddle = simpleBpmnModdle([], {});
 
   let inputOutput: Processhub.InputOutput = moddle.createAny("processhub:inputOutput", processhubNs, {
     $children: []
@@ -44,7 +44,7 @@ export function createTaskExtensionTemplate(): BpmnModdleExtensionElements {
 }
 
 export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElements, key: TaskSettings, value: string) {
-  let moddle = new BpmnModdle();
+  let moddle = simpleBpmnModdle([], {});
 
   let inputParameter: Processhub.InputParameter = moddle.createAny("processhub:inputParameter", processhubNs, {
     name: key,
@@ -61,8 +61,8 @@ export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElement
 export async function createBpmnTemplate(moddle: any): Promise<LoadTemplateReply> {
   let xmlStr =
     "<?xml version='1.0' encoding='UTF-8'?>" +
-    "<bpmn:definition xmlns:bpmn='http://www.omg.org/spec/BPMN/20100524/MODEL' id='Definition_" + createId() + "'>" +
-    "</bpmn:definition>";
+    "<bpmn:definitions xmlns:bpmn='http://www.omg.org/spec/BPMN/20100524/MODEL' id='Definition_" + createId() + "'>" +
+    "</bpmn:definitions>";
 
   let promise = new Promise<LoadTemplateReply>(function (resolve, reject) {
     moddle.fromXML(xmlStr, (err: any, bpmnXml: any, bpmnContext: any): void => {

@@ -1,5 +1,5 @@
 declare module "bpmn-moddle/lib/simple" {
-  import BpmnModdle = require("bpmn-moddle/lib/bpmn-moddle");
+  import BpmnModdle from "bpmn-moddle/lib/bpmn-moddle";
 
-  export = BpmnModdle;
+  export default function({}, {}): BpmnModdle;
 }

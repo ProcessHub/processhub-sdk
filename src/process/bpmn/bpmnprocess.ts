@@ -4,7 +4,8 @@ import { FieldDefinition, FieldDefinitionItem } from "../../data/datainterfaces"
 import { updateLegacyFieldDefinitions } from "../../data/datatools";
 import { LaneDictionary } from "./bpmnprocessdiagram";
 import { BpmnProcessDiagram } from "./bpmnprocessdiagram";
-import BpmnModdle = require("bpmn-moddle");
+import simpleBpmnModdle from "bpmn-moddle/lib/simple";
+import BpmnModdle from "bpmn-moddle/lib/bpmn-moddle";
 import { Bpmn, Bpmndi } from "../bpmn";
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
@@ -53,7 +54,7 @@ export class BpmnProcess {
   private processDiagram: BpmnProcessDiagram;
 
   constructor() {
-    this.moddle = new BpmnModdle([], {});
+    this.moddle = simpleBpmnModdle([], {});
     this.bpmnXml = null;
     this.processDiagram = new BpmnProcessDiagram(this);
   }
@@ -1777,7 +1778,7 @@ export class BpmnProcess {
   }
 
   private static setExtensionBody(flowNode: Bpmn.FlowNode, settingsName: string, value: string): void {
-    const bpmnModdle = new BpmnModdle([], {});
+    const bpmnModdle = simpleBpmnModdle([], {});
     if (!flowNode.extensionElements) {
       flowNode.extensionElements = bpmnModdle.create("bpmn:ExtensionElements", { values: [] });
     }
