@@ -84,17 +84,16 @@ export function processReducer(processState: Process.ProcessState, action: any):
       processState.errorMessage = failedAction.errorMessage;
       return processState;
 
-    case ProcessActions.ProcessActionType.DeleteFromDb:
-      {
-        let deleteAction = <ProcessActions.ProcessActionDeleteFromDb><any>action;
-        processState.currentProcess = processState.currentProcess
-          || { processId: deleteAction.processId, workspaceId: null, displayName: null, description: null, extras: {} };
-        return update(processState, {
-          currentProcess: {
-            processId: { $set: deleteAction.processId }
-          }
-        });
-      }
+    case ProcessActions.ProcessActionType.DeleteFromDb: {
+      let deleteAction = <ProcessActions.ProcessActionDeleteFromDb><any>action;
+      processState.currentProcess = processState.currentProcess
+        || { processId: deleteAction.processId, workspaceId: null, displayName: null, description: null, extras: {} };
+      return update(processState, {
+        currentProcess: {
+          processId: { $set: deleteAction.processId }
+        }
+      });
+    }
 
     case ProcessActions.ProcessActionType.DeleteFromDbDone:
       return update(processState, {
