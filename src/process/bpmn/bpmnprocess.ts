@@ -161,6 +161,7 @@ export class BpmnProcess {
       serviceTaskApiUrl: null,
       serviceTaskRequestObjectString: null,
       serviceTaskResponseFieldName: null,
+      serviceTaskConfigObject: null,
       scriptTaskCode: null,
 
       timerStartConfiguration: null,
@@ -221,6 +222,9 @@ export class BpmnProcess {
             case TaskSettings.ScriptTaskCode:
               returnValue.scriptTaskCode = child.$body;
               break;
+            case TaskSettings.ServiceTaskConfigObject:
+              returnValue.serviceTaskConfigObject = JSON.parse(child.$body);
+              break;            
             case TaskSettings.FieldsWhichShouldSend:
               returnValue.fieldsWhichShouldSend = JSON.parse(child.$body);
               break;

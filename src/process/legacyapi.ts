@@ -1,5 +1,5 @@
 import { BaseMessage, BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
-import { ProcessDetails, ProcessExtras, ProcessResult, TimerStartEventConfiguration } from "./processinterfaces";
+import { ProcessDetails, ProcessExtras, ProcessResult, TimerStartEventConfiguration, ServiceDetails } from "./processinterfaces";
 import { StatisticRow } from "../data";
 
 // API routes
@@ -21,6 +21,7 @@ export const ProcessRequestRoutes = {
   GetProcessStatistics: "/api/process/getstatistics",
   Comment: "/api/process/comment",
   DeleteComment: "/api/process/deletecomment",
+  GetAllServices: "/api/process/getallservices",
 };
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
@@ -75,6 +76,12 @@ export interface ExportProcessRequest extends BaseRequest {
 export interface ExportProcessReply extends BaseReply {
   urlName: string;
   bpmn: string;
+}
+
+export interface GetAllServicesRequest extends BaseRequest {
+}
+export interface GetAllServicesReply extends BaseReply {
+  services: ServiceDetails[];
 }
 
 export interface GetPublicProcessesReply extends ProcessReply {

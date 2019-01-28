@@ -34,6 +34,12 @@ export interface ISignatureFieldValue {
   dataPoints: {};
 }
 
+export interface ServiceActionConfigField {
+  key: string;
+  type: string;
+  value: string;
+}
+
 export interface FieldValue {
   type: FieldType;
   value:

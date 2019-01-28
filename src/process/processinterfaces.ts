@@ -5,7 +5,7 @@ import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
 import { gqlLibraryTypes } from "./libraryinterfaces";
-import { FieldDefinition, TaskIdRequiredFieldsNeeded } from "../data";
+import { FieldDefinition, TaskIdRequiredFieldsNeeded, ServiceActionConfigField } from "../data";
 import { UserDetails } from "../user/userinterfaces";
 import { RowDetails } from ".";
 import { AuditTrailEntry } from "../audittrail/audittrailinterfaces";
@@ -14,6 +14,29 @@ export interface ProcessAttachment {
   attachmentId: string;
   fileName: string;
   url: string;
+}
+
+export interface ServiceDetails {
+  id: string;
+  name: string;
+  foldername: string;
+  actions: ServiceActionConfig[];
+}
+export interface ServiceActionConfig {
+  id: string;
+  label: string;
+  configMethod: string;
+  settings: string;
+  configElement: string;
+  fields: ServiceActionField[];
+  serviceFile: string;
+  serviceMethod: string;
+}
+
+export interface ServiceActionField {
+  name: string;
+  type: string;
+  onload: string;
 }
 
 export interface ProcessDetails {
@@ -169,7 +192,8 @@ export const TaskSettings = {
   SequenceFlowExpression: "sequenceflow-expression",
   FieldsWhichShouldSend: "fields-which-should-send",
   DateFieldTimer: "datefield-for-timercatch",
-  ScriptTaskCode: "script-task-code"
+  ScriptTaskCode: "script-task-code",
+  ServiceTaskConfigObject: "service-task-config-object"
 };
 export type TaskSettings = keyof typeof TaskSettings;
 
@@ -194,6 +218,7 @@ export interface TaskExtensions {
   serviceTaskApiUrl: string;
   serviceTaskRequestObjectString: string;
   serviceTaskResponseFieldName: string;
+  serviceTaskConfigObject: ServiceTaskConfigObject;
   scriptTaskCode: string;
 
   timerStartConfiguration: TimerStartEventConfiguration[];
@@ -235,4 +260,10 @@ export interface StartButtonMap {
     laneId: string,
     onlyRoxFileField: boolean,
   };
+}
+
+export interface ServiceTaskConfigObject {
+  selectedServiceId: string;
+  selectedActionId: string;
+  fields: ServiceActionConfigField[];
 }

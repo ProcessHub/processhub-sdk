@@ -4,8 +4,8 @@ import { rootStore } from "../statehandler";
 import { Dispatch } from "redux";
 import * as StateHandler from "../statehandler";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
-import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration } from "./processinterfaces";
-import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply, GetProcessStatisticsReply, GetProcessStatisticsRequest } from "./legacyapi";
+import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration, ServiceDetails } from "./processinterfaces";
+import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply, GetProcessStatisticsReply, GetProcessStatisticsRequest, GetAllServicesReply, GetAllServicesRequest } from "./legacyapi";
 import { isTrue } from "../tools/assert";
 import { createId } from "../tools/guid";
 import { tl } from "../tl";
@@ -145,6 +145,17 @@ export async function completeProcessFromCache(process: ProcessDetails): Promise
   }
 
   return process;
+}
+
+export async function getAllServices(): Promise<GetAllServicesReply> {
+  return await rootStore.dispatch(getAllServicesAction());
+}
+
+export function getAllServicesAction(): <S>(dispatch: Dispatch<S>) => Promise<GetAllServicesReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<GetAllServicesReply> => {
+    let response: GetAllServicesReply = await Api.postJson(ProcessRequestRoutes.GetAllServices, {} as GetAllServicesRequest) as GetAllServicesReply;
+    return response;
+  };
 }
 
 export async function loadProcess(processId: string, instanceId?: string, getExtras: ProcessExtras = ProcessExtras.ExtrasBpmnXml, forceReload: boolean = false, accessToken: string = null): Promise<ProcessDetails> {
