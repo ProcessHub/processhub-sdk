@@ -6,6 +6,8 @@ import { Processhub, Bpmn, Dc } from "../bpmn";
 import { TaskSettings, ProcessResult } from "../processinterfaces";
 import { LoadTemplateReply } from "../legacyapi";
 import { createId } from "../../tools/guid";
+import { tl } from "../../tl";
+import { isRoxtraEdition } from "../../settings";
 
 export type ModdleElementType = Bpmn.bpmnType;
 
@@ -58,7 +60,7 @@ export function addTaskExtensionInputText(extensions: BpmnModdleExtensionElement
 }
 
 // Basis-Bpmn-Prozess erzeugen
-export async function createBpmnTemplate(moddle: any): Promise<LoadTemplateReply> {
+export async function createBpmnTemplate(moddle: BpmnModdle): Promise<LoadTemplateReply> {
   let xmlStr =
     "<?xml version='1.0' encoding='UTF-8'?>" +
     "<bpmn:definitions xmlns:bpmn='http://www.omg.org/spec/BPMN/20100524/MODEL' id='Definition_" + createId() + "'>" +
@@ -131,11 +133,10 @@ export async function createBpmnTemplate(moddle: any): Promise<LoadTemplateReply
         ]
       });
 
-      // 1 unbenannter Pool
       let bpmnParticipant = moddle.create(BpmnProcessFile.BPMN_PARTICIPANT, {
         id: BpmnProcess.getBpmnId(BpmnProcessFile.BPMN_PARTICIPANT),
         processRef: bpmnProcessElement,
-        name: "ProcessHub",
+        name: isRoxtraEdition ? tl("Prozess") : "ProcessHub",
       });
 
       let bpmnCollaboration = moddle.create(BpmnProcessFile.BPMN_COLLABORATION, {
@@ -143,7 +144,7 @@ export async function createBpmnTemplate(moddle: any): Promise<LoadTemplateReply
         participants: [bpmnParticipant]
       });
 
-      let bpmnDiagram = moddle.create(BpmnProcessDiagramFile.DiagramShapeTypes.BPMNDI_DIAGRAM, {
+      let bpmnDiagram = moddle.create("bpmndi:BPMNDiagram", {
         name: BpmnProcess.getBpmnId(BpmnProcessDiagramFile.DiagramShapeTypes.BPMNDI_DIAGRAM),
         plane: moddle.create("bpmndi:BPMNPlane", {
           bpmnElement: bpmnCollaboration,

@@ -8,7 +8,6 @@ import { createBpmnTemplate } from "./bpmnmoddlehelper";
 import { RowDetails } from "../phclient";
 import { TaskSettings } from "../processinterfaces";
 import { readFileAsync } from "../../test/testtools";
-import { defineLocale } from "moment";
 
 let TestRowDetails: RowDetails[] = [];
 
