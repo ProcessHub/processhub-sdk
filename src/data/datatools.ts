@@ -26,7 +26,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   let result: string = inputString;
 
   let match;
-  while ((match = regex.exec(inputString)) !== null) {
+  while ((match = regex.exec(inputString)) != null) {
 
     let fieldPlaceholder = match[groupIndexForPlaceholder];
     let fieldName = match[groupIndexForIdentifier];
@@ -50,7 +50,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   }
 
   const roleRegex = /([{]{2}[\s]?role\.(.+?)(\s)*[}]{2})/g;
-  while ((match = roleRegex.exec(inputString)) !== null) {
+  while ((match = roleRegex.exec(inputString)) != null) {
 
     const placeHolder: string = match[groupIndexForPlaceholder];
     const roleName: string = match[groupIndexForIdentifier];
