@@ -53,6 +53,7 @@ export interface FieldValue {
 }
 
 export type FieldType = "ProcessHubTextInput"
+  | "ProcessHubDateTime"
   | "ProcessHubTextArea"
   | "ProcessHubInstanceTitle"
   | "ProcessHubCheckbox"
