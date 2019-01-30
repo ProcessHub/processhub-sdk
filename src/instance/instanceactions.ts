@@ -61,15 +61,15 @@ export function executeInstanceAction(processId: string, instanceDetails: Instan
   };
 }
 
-export async function updateInstance(instance: InstanceDetails): Promise<UpdateInstanceReply> {
-  return await rootStore.dispatch(updateInstanceAction(instance));
+export async function updateInstance(instance: InstanceDetails, accessToken: string = null): Promise<UpdateInstanceReply> {
+  return await rootStore.dispatch(updateInstanceAction(instance, accessToken));
 }
 
-export function updateInstanceAction(instance: InstanceDetails): <S>(dispatch: Dispatch<S>) => Promise<UpdateInstanceReply> {
+export function updateInstanceAction(instance: InstanceDetails, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<UpdateInstanceReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<UpdateInstanceReply> => {
     let response: UpdateInstanceReply = await Api.postJson(ProcessEngineApiRoutes.updateInstance, {
       instance: instance
-    });
+    }, accessToken);
 
     if (response.instance)
       response.instance = mergeInstanceToCache(response.instance);
