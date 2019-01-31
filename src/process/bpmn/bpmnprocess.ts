@@ -629,6 +629,12 @@ export class BpmnProcess {
     this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
+  public getAllTimers(): Bpmn.CatchEvent[] {
+    let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === this.processId()) as Bpmn.Process;
+    let flowElements: Bpmn.CatchEvent[] = process.flowElements.filter((e: Bpmn.CatchEvent) => (e.eventDefinitions != null && e.eventDefinitions.find(ed => ed.$type == BPMN_TIMEREVENTDEFINITION)));
+    return flowElements;
+  }
+
   public getAllExclusiveGateways(): Bpmn.FlowNode[] {
     let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === this.processId()) as Bpmn.Process;
     let flowElements: Bpmn.FlowNode[] = process.flowElements.filter((e: Bpmn.FlowNode) => (e.$type === BPMN_EXCLUSIVEGATEWAY));
