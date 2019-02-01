@@ -224,7 +224,7 @@ export class BpmnProcess {
               break;
             case TaskSettings.ServiceTaskConfigObject:
               returnValue.serviceTaskConfigObject = JSON.parse(child.$body);
-              break;            
+              break;
             case TaskSettings.FieldsWhichShouldSend:
               returnValue.fieldsWhichShouldSend = JSON.parse(child.$body);
               break;

@@ -22,6 +22,9 @@ export const ProcessRequestRoutes = {
   Comment: "/api/process/comment",
   DeleteComment: "/api/process/deletecomment",
   GetAllServices: "/api/process/getallservices",
+  AddArchiveView: "/api/process/addarchiveview",
+  GetArchiveViews: "/api/process/getarchiveviews",
+  DeleteArchiveView: "/api/process/deletearchiveview",
 };
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
@@ -76,6 +79,28 @@ export interface ExportProcessRequest extends BaseRequest {
 export interface ExportProcessReply extends BaseReply {
   urlName: string;
   bpmn: string;
+}
+
+export interface IArchiveViewDetails {
+  viewName: string;
+  gridOptions: string;
+  publicView: boolean;
+}
+export interface AddArchiveViewRequest extends BaseRequest {
+  processId: string;
+  publicView: boolean;
+  details: IArchiveViewDetails;
+}
+export interface DeleteArchiveViewRequest extends BaseRequest {
+  processId: string;
+  viewId: string;
+}
+
+export interface GetArchiveViewsRequest extends BaseRequest {
+  processId: string;
+}
+export interface GetArchiveViewsReply extends BaseReply {
+  views: { [viewId: string]: IArchiveViewDetails };
 }
 
 export interface GetAllServicesRequest extends BaseRequest {
