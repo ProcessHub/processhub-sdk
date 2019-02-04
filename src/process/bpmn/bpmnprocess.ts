@@ -1692,6 +1692,10 @@ export class BpmnProcess {
     return elements;
   }
 
+  public getAllSubprocesses(): Bpmn.FlowElement[] {
+    return this.getFlowElementsOfType<Bpmn.FlowElement>("bpmn:SubProcess");
+  }
+
   public getAllBpmnObjects(): Bpmn.FlowElement[] {
     return this.getFlowElementsOfTypes<Bpmn.FlowElement>(["bpmn:StartEvent", "bpmn:UserTask", "bpmn:SendTask", "bpmn:IntermediateCatchEvent", "bpmn:SubProcess", "bpmn:ExclusiveGateway", "bpmn:ParallelGateway", "bpmn:SequenceFlow", "bpmn:EndEvent"]);
   }

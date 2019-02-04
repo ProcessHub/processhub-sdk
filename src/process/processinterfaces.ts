@@ -62,6 +62,8 @@ export interface ProcessDetails {
   retentionPeriod?: number; // retention period for insatances in months
   jumpsDisabled?: boolean;
   xmlVersion?: number;
+  parentProcessIds?: string[];
+  childProcessIds?: string[];
   extras: { 
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
@@ -72,6 +74,8 @@ export interface ProcessDetails {
     svgString?: string; // only used to save preview to server
     settings?: ProcessSettings;
     auditTrail?: AuditTrailEntry[];
+    parentProcessDetails?: ProcessDetails[];
+    childProcessDetails?: ProcessDetails[];
   };
 }
 export const gqlProcessTypes = `     
@@ -146,6 +150,7 @@ export enum ProcessExtras {
   ExtrasProcessRolesWithMemberNames = 1 << 5, // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
   ExtrasSettings = 1 << 6,
   ExtrasAuditTrail = 1 << 7,
+  ExtrasParentAndChildDetails = 1 << 8
 }
 
 export interface TaskToLaneMapEntry {
