@@ -4,7 +4,6 @@ import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
 import * as Config from "../config";
-import { InstanceEnvironment } from "../environment";
 import { parseAndInsertStringWithFieldContent } from "../data";
 import { ProcessDetails } from "../process";
 

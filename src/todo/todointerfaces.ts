@@ -1,6 +1,4 @@
-import { ProcessDetails, PotentialRoleOwners } from "../process";
 import { UserDetails } from "../user";
-import { InstanceDetails } from "../instance";
 
 export enum TodoStatus {
   TodoOnTime = 0,
@@ -32,7 +30,6 @@ export interface TodoDetails {
   priority?: number;
   isPinned?: boolean;
   dueAt?: Date;
-  color?: string;
   subInstanceId?: string;
   token?: string;
 }
