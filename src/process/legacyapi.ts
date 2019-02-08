@@ -25,6 +25,8 @@ export const ProcessRequestRoutes = {
   AddArchiveView: "/api/process/addarchiveview",
   GetArchiveViews: "/api/process/getarchiveviews",
   DeleteArchiveView: "/api/process/deletearchiveview",
+  UploadReportDraft: "/api/process/uploadreportdraft",
+  DeleteReportDraft: "/api/process/deletereportdraft",
 };
 export type ProcessRequestRoutes = keyof typeof ProcessRequestRoutes;
 
@@ -132,6 +134,17 @@ export interface UploadFileRequest extends BaseRequest {
   processId: string;
   fileName: string;
   data: string;
+}
+
+export interface UploadReportDraftRequest extends BaseRequest {
+  processId: string;
+  fileName: string;
+  data: string;
+}
+
+export interface DeleteReportDraftRequest extends BaseRequest {
+  processId: string;
+  draftId: string;
 }
 
 export interface DeleteFileRequest extends BaseRequest {

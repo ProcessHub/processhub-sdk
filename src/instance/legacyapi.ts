@@ -21,6 +21,7 @@ export const ProcessEngineApiRoutes = {
   setFieldContent: "/api/processengine/setfieldcontent",
   getArchive: "/api/processengine/getarchive",
   exportAuditTrail: "/api/processengine/exportaudittrail",
+  generateReport: "/api/processengine/generatereport",
 };
 
 export type ProcessEngineApiRoutes = keyof typeof ProcessEngineApiRoutes;
@@ -160,5 +161,12 @@ export interface ExportAuditTrailRequest extends InstanceRequest {
   instanceId: string;
 }
 export interface ExportAuditTrailReply extends InstanceReply {
+  doc: any;
+}
+
+export interface GenerateReportRequest extends InstanceRequest {
+  instanceId: string;
+}
+export interface GenerateReportReply extends InstanceReply {
   doc: any;
 }

@@ -16,6 +16,12 @@ export interface ProcessAttachment {
   url: string;
 }
 
+export interface ProcessReportDraft {
+  draftId: string;
+  fileName: string;
+  url: string;
+}
+
 export interface ServiceDetails {
   id: string;
   name: string;
@@ -53,6 +59,7 @@ export interface ProcessDetails {
   isNewProcess?: boolean;  
   userRights?: ProcessAccessRights; // access rights of the current user
   attachments?: ProcessAttachment[];
+  reportDrafts?: ProcessReportDraft[];
   processXmlHash?: string;
   userStartEvents?: StartButtonMap; // map with starteventid -> start event name
   tags?: string[];

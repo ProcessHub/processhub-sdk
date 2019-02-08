@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import * as StateHandler from "../statehandler";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration, ServiceDetails } from "./processinterfaces";
-import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply, GetProcessStatisticsReply, GetProcessStatisticsRequest, GetAllServicesReply, GetAllServicesRequest } from "./legacyapi";
+import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, GetTimersOfProcessRequest, SetTimersOfProcessReply, GetProcessStatisticsReply, GetProcessStatisticsRequest, GetAllServicesReply, GetAllServicesRequest, UploadReportDraftRequest, DeleteReportDraftRequest } from "./legacyapi";
 import { isTrue } from "../tools/assert";
 import { createId } from "../tools/guid";
 import { tl } from "../tl";
@@ -383,6 +383,41 @@ export function uploadFileAction(processId: string, fileName: string, data: stri
     let response: GetProcessDetailsReply = await Api.postJson(
       ProcessRequestRoutes.UploadFile,
       { processId, fileName, data } as UploadFileRequest,
+      accessToken);
+
+    response.processDetails = await completeProcessFromCache(response.processDetails);
+    dispatch(response);
+    return response;
+  };
+}
+
+
+export async function uploadReportDraft(processId: string, fileName: string, data: string, accessToken: string = null): Promise<GetProcessDetailsReply> {
+  return await rootStore.dispatch(uploadReportDraftAction(processId, fileName, data, accessToken));
+}
+
+export function uploadReportDraftAction(processId: string, fileName: string, data: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessDetailsReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<GetProcessDetailsReply> => {
+    let response: GetProcessDetailsReply = await Api.postJson(
+      ProcessRequestRoutes.UploadReportDraft,
+      { processId, fileName, data } as UploadReportDraftRequest,
+      accessToken);
+
+    response.processDetails = await completeProcessFromCache(response.processDetails);
+    dispatch(response);
+    return response;
+  };
+}
+
+export async function deleteReportDraft(processId: string, draftId: string, accessToken: string = null): Promise<GetProcessDetailsReply> {
+  return await rootStore.dispatch(deleteReportDraftAction(processId, draftId, accessToken));
+}
+
+export function deleteReportDraftAction(processId: string, draftId: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessDetailsReply> {
+  return async <S>(dispatch: Dispatch<S>): Promise<GetProcessDetailsReply> => {
+    let response: GetProcessDetailsReply = await Api.postJson(
+      ProcessRequestRoutes.DeleteReportDraft,
+      { processId, draftId } as DeleteReportDraftRequest,
       accessToken);
 
     response.processDetails = await completeProcessFromCache(response.processDetails);
