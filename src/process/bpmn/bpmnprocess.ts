@@ -8,7 +8,7 @@ import BpmnModdle = require("bpmn-moddle");
 import { Bpmn, Bpmndi } from "../bpmn";
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
-import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType, StartButtonMap } from "../processinterfaces";
+import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType, StartButtonMap, ProcessDiagramSize } from "../processinterfaces";
 import { isTrue, equal } from "../../tools/assert";
 import { tl } from "../../tl";
 import { createId } from "../../tools/guid";
@@ -2033,6 +2033,47 @@ export class BpmnProcess {
 
   public getTimerStartEvent(): Bpmn.StartEvent {
     return this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === BPMN_TIMEREVENTDEFINITION) != null);
+  }
+
+  public getDiagramSize(): ProcessDiagramSize {
+    let allShapes = this.processDiagram.getAllShapes();
+    let minX: number = null;
+    let maxX: number = null;
+    let minY: number = null;
+    let maxY: number = null;
+
+    for (let shape of allShapes) {
+      if (shape.bounds != null) {
+        if (minX == null || minX > shape.bounds.x) {
+          minX = shape.bounds.x;
+        }
+        if (minY == null || minY > shape.bounds.y) {
+          minY = shape.bounds.y;
+        }
+
+        if (maxX == null || maxX < (+shape.bounds.x + +shape.bounds.width)) {
+          maxX = (+shape.bounds.x + +shape.bounds.width);
+        }
+
+        if (maxY == null || maxY < (+shape.bounds.y + +shape.bounds.height)) {
+          maxY = (+shape.bounds.y + +shape.bounds.height);
+        }
+      }
+    }
+
+    return {
+      width: maxX - minX,
+      height: maxY - minY
+    };
+  }
+
+  public getShapeIdAndTypeFromBpmnElementId(bpmnTaskId: string) {
+    let shape = this.processDiagram.getShapeFromDiagram(bpmnTaskId);
+    if (shape != null) {
+      let obj = this.getExistingActivityObject(bpmnTaskId);
+      return { type: obj.$type, id: shape.id };
+    }
+    return null;
   }
 
 }

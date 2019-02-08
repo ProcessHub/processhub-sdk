@@ -67,6 +67,16 @@ export class BpmnProcessDiagram {
     return null;
   }
 
+  public getAllShapes(): Bpmndi.BPMNShape[] {
+    const res: Bpmndi.BPMNShape[] = [];
+    const diagram = this.getDiagramElement();
+    for (const planeElement of diagram.plane.planeElement) {
+      res.push(planeElement as Bpmndi.BPMNShape);
+    }
+    return res;
+  }
+
+
   public getEndEventShapes(): Bpmndi.BPMNShape[] {
     const res: Bpmndi.BPMNShape[] = [];
     const diagram = this.getDiagramElement();

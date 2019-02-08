@@ -71,7 +71,7 @@ export interface ProcessDetails {
     instances?: InstanceDetails[];
     instancesUsers?: UserDetails[];
     processRoles?: ProcessRoles;
-    svgString?: string; // only used to save preview to server
+    svgString?: string; // only used to save preview to server or if requested in extras
     settings?: ProcessSettings;
     auditTrail?: AuditTrailEntry[];
     parentProcessDetails?: ProcessDetails[];
@@ -150,7 +150,8 @@ export enum ProcessExtras {
   ExtrasProcessRolesWithMemberNames = 1 << 5, // Ermittelt zusätzlich die Namen der enthaltenen Mitglieder
   ExtrasSettings = 1 << 6,
   ExtrasAuditTrail = 1 << 7,
-  ExtrasParentAndChildDetails = 1 << 8
+  ExtrasParentAndChildDetails = 1 << 8,
+  ExtrasSvgString = 1 << 9
 }
 
 export interface TaskToLaneMapEntry {
@@ -271,4 +272,9 @@ export interface ServiceTaskConfigObject {
   selectedServiceId: string;
   selectedActionId: string;
   fields: ServiceActionConfigField[];
+}
+
+export interface ProcessDiagramSize {
+  width: number;
+  height: number;
 }
