@@ -27,6 +27,23 @@ export function getInstanceMailAddress(instanceId: string): string {
 export function parseInstanceMailAddress(mail: string): string {
   return parseIdMailAddress("i-", mail);
 }
+export function parseInstanceMailSubject(mail: string): string {
+  let possibleIdString = mail.substring(
+    mail.indexOf("[") + 1,
+    mail.indexOf("]")
+  );
+
+  if (!possibleIdString.startsWith("i-")) {
+    return null;
+  }
+
+  possibleIdString = possibleIdString.substr(2, (possibleIdString.length - 1)); // remove "i-"
+  possibleIdString = possibleIdString.toUpperCase();
+  if (isId(possibleIdString)) {
+    return possibleIdString;
+  }
+  return null;
+}
 
 // roleID == null -> check for any role membership
 export function isRoleOwner(userId: string, roleId: string, instance: InstanceDetails): boolean {
@@ -93,6 +110,6 @@ export function getInstanceTitle(instance: InstanceDetails, process: ProcessDeta
     return parseAndInsertStringWithFieldContent(process.extras.settings.dashboard.cardTitle, instance.extras.fieldContents, process.extras.bpmnProcess, instance.extras.roleOwners);
   } else if (instance.displayName && instance.displayName != "")
     return instance.displayName;
-  else 
+  else
     return process.displayName + " " + instance.instanceNumber;
 }

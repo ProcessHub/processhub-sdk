@@ -44,6 +44,7 @@ export interface WorkspaceDetails {
   trialExpiresAt?: Date;
   licensedUsers?: number;
   colors?: WorkspaceColor[];
+  mailboxAddress?: string; // if defined mailbox is defined in settings
   extras: {
     // New Extras must be added to cache-handling in workspaceactions -> loadWorkspace!
     members?: WorkspaceMember[];
