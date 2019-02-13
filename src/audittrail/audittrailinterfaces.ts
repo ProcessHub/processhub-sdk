@@ -36,6 +36,7 @@ export enum AuditTrailAction {
   instanceCanceled = 32,
   instanceDeleted = 33,
   errorInScriptTask = 34,
+  errorInServiceTask = 35,
 
   workspaceCreated = 100,
 }
