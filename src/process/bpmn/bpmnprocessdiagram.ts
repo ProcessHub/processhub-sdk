@@ -204,7 +204,7 @@ export class BpmnProcessDiagram {
 
       for (let i = 0; i < drawObjectList.length; i++) {
         let task = drawObjectList[i];
-        if (task != null && task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
+        if (task != null && task.$type !== BpmnProcess.BPMN_ENDEVENT && task.outgoing != null && task.outgoing.find(out => out.targetRef.$type === BpmnProcess.BPMN_EXCLUSIVEGATEWAY)) {
           let gate = gates.find(g => g.incoming.find(inc => inc.sourceRef.id === task.id) != null);
           if (drawObjectList.find(obj => obj.id === gate.id) == null) {
             drawObjectList.splice((i + 1), 0, gate);
