@@ -1,6 +1,6 @@
 {
   "name": "processhub-sdk",
-  "version": "8.001.0",
+  "version": "8.002.0",
   "lockfileVersion": 1,
   "requires": true,
   "dependencies": {
