@@ -1,10 +1,6 @@
 import { rootStore } from "../statehandler";
 import { Dispatch } from "redux";
-import { browserHistory } from "react-router";
 import * as StateHandler from "../statehandler";
-import * as Workspace from "../workspace";
-import * as Process from "../process";
-import * as Instance from "../instance";
 import * as Api from "../legacyapi";
 import { UserDetails, UserExtras } from "./userinterfaces";
 import { LoadUserReply, UpdateUserReply, UserRequestRoutes, UpdateUserRequest, UpdatePasswordReply, UpdatePasswordRequest, UserLoadedMessage, LoginReply, LoginRequest, LoadUserRequest, UploadProfilePictureRequest, CreateUserRequest, LoginDemoUserReply, LoginDemoUserRequest } from "./legacyapi";

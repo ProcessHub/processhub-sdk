@@ -1,4 +1,4 @@
-import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
+import { WorkspaceDetails, WorkspaceType } from "./workspaceinterfaces";
 
 export function licenseHasGroups(workspace: WorkspaceDetails): boolean {
   return licenseIsBusinessOrHigher(workspace);

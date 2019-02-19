@@ -1,6 +1,5 @@
-import { ActionHandler, ExtrasRequest } from "./actionhandler";
+import { ActionHandler } from "./actionhandler";
 import { createId } from "./tools/guid";
-import { CoreEnvironment } from "./environment";
 
 let waitingCommands: { [key: string]: any } = {};
 let parenthost: string = "*";

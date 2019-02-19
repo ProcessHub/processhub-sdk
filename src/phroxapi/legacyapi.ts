@@ -1,4 +1,4 @@
-import { BaseReply, BaseMessage } from "../legacyapi";
+import { BaseReply } from "../legacyapi";
 import { IRoxFile, IRoxFolder } from ".";
 import { Instance, Process } from "..";
 import { FieldContentMap } from "../data";

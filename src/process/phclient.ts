@@ -1,6 +1,4 @@
 import { ProcessDetails } from "./processinterfaces";
-import { Bpmn } from "./bpmn/index";
-import * as BpmnProcess from "./bpmn/bpmnprocess";
 // Internal objects used by ProcessHub client and server
 
 export class ProcessState {

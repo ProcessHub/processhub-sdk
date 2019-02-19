@@ -1,7 +1,6 @@
 import "fetch-everywhere";
 import * as Api from "./legacyapi";
 import ApolloClient from "apollo-client";
-import { NetworkStatus, ApolloQueryResult } from "apollo-client";
 import gql from "graphql-tag";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -10,12 +9,11 @@ import * as _ from "lodash";
 import { loginUser, logoutUser } from "./user/useractions";
 import { FetchResult } from "apollo-link";
 import { FieldContentMap } from "./data";
-import { executeInstanceAction } from "./instance/instanceactions";
 import { createId } from "./tools";
 import { InstanceDetails } from "./instance";
 import { UserDetails, ViewState } from "./user";
 import { TodoDetails } from "./todo";
-import { JumpReply, ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./instance/legacyapi";
+import { ExecuteReply, ProcessEngineApiRoutes } from "./instance/legacyapi";
 
 // All clients share the same backend client to optimize caching
 // a new client is only created it the host changes (should only happen in tests)

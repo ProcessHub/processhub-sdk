@@ -1,10 +1,8 @@
 import { ProcessAccessRights, ProcessRoles } from "./processrights";
 import { InstanceDetails } from "../instance";
-import { TodoDetails } from "../todo";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { strEnum } from "../tools/types";
 import gql from "graphql-tag";
-import { gqlLibraryTypes } from "./libraryinterfaces";
 import { FieldDefinition, TaskIdRequiredFieldsNeeded, ServiceActionConfigField } from "../data";
 import { UserDetails } from "../user/userinterfaces";
 import { RowDetails } from ".";

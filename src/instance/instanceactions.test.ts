@@ -1,12 +1,12 @@
-import { assert } from "chai";
-import { fieldContentsExcerpt, parseInstanceMailAddress, getInstanceMailAddress } from "./instancetools";
-import { createId } from "../tools/guid";
-import * as InstanceActions from "./instanceactions";
-import * as PH from "../";
-import { ApiResult } from "../legacyapi/index";
-import { rootStore } from "../statehandler/rootstore";
-import { InstanceExtras } from "./instanceinterfaces";
-import { InstanceState } from "./phclient";
+// import { assert } from "chai";
+// import { fieldContentsExcerpt, parseInstanceMailAddress, getInstanceMailAddress } from "./instancetools";
+// import { createId } from "../tools/guid";
+// import * as InstanceActions from "./instanceactions";
+// import * as PH from "../";
+// import { ApiResult } from "../legacyapi/index";
+// import { rootStore } from "../statehandler/rootstore";
+// import { InstanceExtras } from "./instanceinterfaces";
+// import { InstanceState } from "./phclient";
 
 describe("sdk", function () {
     describe("instance", function () {

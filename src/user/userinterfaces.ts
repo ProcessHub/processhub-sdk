@@ -1,5 +1,4 @@
 import { WorkspaceDetails } from "../workspace";
-import { TodoDetails } from "../todo";
 import { InstanceDetails } from "../instance/instanceinterfaces";
 import { nullId } from "../tools/guid";
 import { isTrue } from "../tools/assert";

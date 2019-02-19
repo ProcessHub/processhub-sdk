@@ -5,7 +5,7 @@ import { WorkspaceDetails, WorkspaceType } from "../workspace/workspaceinterface
 import { PredefinedGroups, getDefaultRoleGroup } from "../user/index";
 import { ProcessDetails } from "./processinterfaces";
 import { isWorkspaceMember } from "../workspace/workspacerights";
-import { isFalse, isTrue, error } from "../tools/assert";
+import { error } from "../tools/assert";
 import { isGroupId, isUserId } from "../tools/guid";
 import { Bpmn } from "./bpmn";
 import * as WorkspaceLicenses from "../workspace/workspacelicenses";

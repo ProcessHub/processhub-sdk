@@ -1,5 +1,4 @@
 import { GroupDetails } from "./groupinterfaces";
-import { UserDetails } from "../user";
 
 export const GroupRequestRoutes = {
   Create: "/api/group/create",

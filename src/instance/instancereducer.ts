@@ -7,7 +7,6 @@ import { INSTANCELOADED_MESSAGE, InstanceLoadedMessage } from "./legacyapi";
 import { createId } from "../tools/guid";
 import { RemoveInstanceMessage, NewInstanceMessage } from "../user/legacyapi";
 import { UserMessages } from "../user/phclient";
-import { InstanceActionType } from "./instanceactions";
 import { ResetStore } from "../statehandler/actions";
 import { rootStore } from "../statehandler";
 import { notifyNewInstanceComments, notifyNewInstanceTodos, notifyInstancePin } from "./instancenotification";

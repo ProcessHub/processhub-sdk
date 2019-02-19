@@ -1,6 +1,5 @@
-import { FieldContentMap, isFieldValue, FieldValue, FieldDefinition, FieldType } from "./datainterfaces";
+import { FieldContentMap, isFieldValue, FieldDefinition, FieldType } from "./datainterfaces";
 import { getFormattedDate } from "../tools/timing";
-import { InstanceDetails } from "../instance";
 import { BpmnProcess, RoleOwnerMap } from "../process";
 import { Bpmn } from "../process/bpmn";
 
@@ -21,7 +20,6 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   const groupIndexForPlaceholder = 0;
   const groupIndexForIdentifier = 2;
 
-  let replacedValue: boolean;
 
   let result: string = inputString;
 
@@ -32,7 +30,6 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     let fieldName = match[groupIndexForIdentifier];
 
     if (fieldName != null) {
-      replacedValue = true;
       let valueObject = fieldContentMap[fieldName];
 
       if (isFieldValue(valueObject)) {
@@ -60,7 +57,6 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
-          replacedValue = true;
           result = replaceAll(result, placeHolder, roleOwner[0].displayName);
         }
       }
@@ -69,13 +65,11 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
   const newFieldRegex = /[{]{1}[\s]?field\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
   while ((match = newFieldRegex.exec(inputString)) != null) {
-    replacedValue = true;
     const placeHolder: string = match[0];
     const fieldName: string = match[1];
 
     if (fieldName && fieldName.length) {
       const valueObject = fieldContentMap[fieldName];
-      replacedValue = true;
       if (isFieldValue(valueObject)) {
         if (valueObject.type == "ProcessHubDate") {
           let val = getFormattedDate(new Date(valueObject.value.toString()));
@@ -100,7 +94,6 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       if (lane) {
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
-          replacedValue = true;
           result = replaceAll(result, placeHolder, roleOwner[0].displayName);
         }
       }

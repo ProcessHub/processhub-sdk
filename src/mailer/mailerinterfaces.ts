@@ -1,7 +1,6 @@
 import { FieldContentMap } from "../data/datainterfaces";
 import { BaseRequest, BaseReply } from "../legacyapi/apiinterfaces";
 import { InstanceDetails } from "../instance/instanceinterfaces";
-import { BpmnProcess } from "../process";
 
 export enum MailSender {
   FromProcessHub,   // noreply@mail.processhub.com

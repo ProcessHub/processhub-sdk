@@ -3,7 +3,6 @@ import { rootStore, mergeInstanceToCache } from "../statehandler";
 import { Dispatch } from "redux";
 import { InstanceDetails, ResumeInstanceDetails, InstanceExtras } from "./instanceinterfaces";
 import { JumpReply, ExecuteReply, ProcessEngineApiRoutes, UpdateInstanceReply, AbortReply, INSTANCELOADED_MESSAGE, InstanceLoadedMessage, GetInstanceDetailsReply } from "./legacyapi";
-import { access } from "fs";
 
 export const InstanceActionType = {
   Execute: "INSTANCEACTION_EXECUTE",

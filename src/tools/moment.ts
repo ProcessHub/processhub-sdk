@@ -58,10 +58,7 @@ export function momentToUtcDate(dateInUtc: Date): string {
     dateInUtc = new Date(dateInUtc);
   }
   const now: Date = new Date();
-  // dateInUtc.setHours(0);
-  // dateInUtc.setMinutes(0, 0);
 
-  const timeNow: number = now.getTime();
   if (dateInUtc.getDate() === now.getDate()) {
     return tl("heute");
   }

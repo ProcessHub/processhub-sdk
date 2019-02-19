@@ -1,6 +1,4 @@
 import { assert } from "chai";
-import { fieldContentsExcerpt, parseInstanceMailAddress, getInstanceMailAddress } from "./instancetools";
-import { createId } from "../tools/guid";
 import * as InstanceFilters from "./instancefilters";
 import * as PH from "../";
 import { TodoDetails } from "../todo/todointerfaces";

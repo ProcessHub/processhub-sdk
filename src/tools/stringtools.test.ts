@@ -1,6 +1,5 @@
 import { assert } from "chai";
 import * as StringTools from "./stringtools";
-import { FieldContentMap } from "../data/datainterfaces";
 
 describe("sdk", function () {
   describe("tools", function () {

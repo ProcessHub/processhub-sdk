@@ -1,6 +1,6 @@
 import "fetch-everywhere";
 import { getErrorHandlers } from "./errorhandler";
-import { BaseRequest, ApiResult, BaseError, ApiError, BaseMessage, API_FAILED, BaseReply } from "./apiinterfaces";
+import { BaseRequest, ApiResult, BaseError, BaseMessage, API_FAILED } from "./apiinterfaces";
 import { getBackendUrl } from "../config";
 
 // Api-Aufruf per GET 

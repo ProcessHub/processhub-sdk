@@ -92,7 +92,6 @@ export function notifyNewProcessTodos(processEnv: PH.ProcessEnvironment): boolea
 
 // notification for workspace-instances analog to filterRemainingInstancesForWorkspace
 export function notifyNewRemainingInstanceComments(workspaceEnv: PH.WorkspaceEnvironment): boolean {
-  let newestInstanceActivity: Date = null;
 
   let instances = PH.Instance.filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);
   let notify = false;
@@ -108,7 +107,6 @@ export function notifyNewRemainingInstanceComments(workspaceEnv: PH.WorkspaceEnv
 
 // notification for workspace-instances analog to filterRemainingInstancesForWorkspace
 export function notifyNewRemainingInstanceTodos(workspaceEnv: PH.WorkspaceEnvironment): boolean {
-  let newestInstanceActivity: Date = null;
 
   let instances = PH.Instance.filterRemainingInstancesForWorkspace(workspaceEnv.user.extras.instances, workspaceEnv.workspace);
   let notify = false;

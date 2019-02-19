@@ -9,7 +9,6 @@ import { ProcessState } from "../process/phclient";
 import { UserState } from "../user/phclient";
 import { PathState } from "../path/phclient";
 import { InstanceState } from "../instance/phclient";
-import { Reducer } from "redux";
 
 export class RootState {
   workspaceState: WorkspaceState;

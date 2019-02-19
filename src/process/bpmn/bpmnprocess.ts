@@ -9,7 +9,7 @@ import { Bpmn, Bpmndi } from "../bpmn";
 import { Processhub } from "modeler/bpmn/processhub";
 import { ModdleElementType } from "./bpmnmoddlehelper";
 import { RunningTaskLane, TaskToLaneMapEntry, TaskExtensions, TaskSettings, TaskSettingsValueType, StartButtonMap, ProcessDiagramSize } from "../processinterfaces";
-import { isTrue, equal } from "../../tools/assert";
+import { isTrue } from "../../tools/assert";
 import { tl } from "../../tl";
 import { createId } from "../../tools/guid";
 import { InstanceDetails } from "../../instance/instanceinterfaces";

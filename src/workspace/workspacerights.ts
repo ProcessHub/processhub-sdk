@@ -1,4 +1,4 @@
-import { WorkspaceDetails, WorkspaceType, WorkspaceRole } from "./workspaceinterfaces";
+import { WorkspaceDetails, WorkspaceRole } from "./workspaceinterfaces";
 import * as WorkspaceLicenses from "./workspacelicenses";
 
 export function isWorkspaceMember(workspace: WorkspaceDetails): boolean {

@@ -1,5 +1,4 @@
 import * as PH from "../";
-import { gqlLibraryTypes } from "../process";
 
 // any new notifications for the workspace?
 export function notifyNewWorkspaceTodosOrComments(workspaceEnv: PH.WorkspaceEnvironment): boolean {
