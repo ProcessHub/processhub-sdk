@@ -5,6 +5,7 @@ import { UserExtras } from "./user/userinterfaces";
 import * as _ from "lodash";
 import * as Assert from "./tools/assert";
 import { ApiClient } from "./apiclient";
+import { CoreEnvironment } from "./environment";
 
 
 export interface ExtrasRequest {
@@ -21,22 +22,24 @@ export class ActionHandler extends ApiClient {
   }
 
   // Load Page "/@workspace/..."
-  gotoPage(): void {
+  gotoPage(_path: string): void {
     // TypeScript requires that all functions in classes are defined. We throw an assertion for
     // functions that must be overridden in derived ActionHandlers 
     Assert.error();
   }
 
-  requestExtras(): void {
+  requestExtras(_environment: CoreEnvironment, _requestedExtras: ExtrasRequest, _forceReload?: boolean): void {
     Assert.error();
   }
 
-  openInstancePopup(): void {
+  openInstancePopup(_workspaceId: string, _instanceId: string): void {
     Assert.error();
   }
+
   openAccountPopup(): void {
     Assert.error();
   }
+  
   closeInstancePopup(): void {
     Assert.error();
   }
