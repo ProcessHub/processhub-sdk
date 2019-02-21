@@ -6,15 +6,15 @@ export function isValidMailAddress(mail: string): boolean {
 }
 
 export function isValidWorkspaceName(workspaceName: string): boolean {
-  if ((workspaceName == null) 
-  || (workspaceName.length < 5)
-  || (workspaceName.indexOf(" ") >= 0)) {
+  if ((workspaceName == null)
+    || (workspaceName.length < 5)
+    || (workspaceName.indexOf(" ") >= 0)) {
     return false;
   }
 
   // all UTF-Characters are allowed, because the workspace name 
   // is created from the user name at registration
-  return true;  
+  return true;
 }
 
 // Benutzer-Realname auf Gültigkeit prüfen
@@ -62,9 +62,9 @@ export function getQueryParameter(parameter: string, location?: string) {
   parameter = parameter.replace(/[\[\]]/g, "\\$&");
   let regex = new RegExp("[?&]" + parameter + "(=([^&#]*)|&|#|$)"),
     results = regex.exec(location);
-  if (!results) 
+  if (!results)
     return null;
-  if (!results[2]) 
+  if (!results[2])
     return "";
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
@@ -88,7 +88,7 @@ export function splitStringOnMultipleSigns(parameter: string, splitSignListOrdne
   }
 
   let result: string[] = [];
-  for (let split of splitResult) { 
+  for (let split of splitResult) {
     if (split.trim().length > 0)
       result.push(split.trim());
   }
@@ -116,3 +116,9 @@ function shuffleArray(array: number[]) {
   return array;
 }
 
+export function removeHtmlTags(html: string): string {
+  if (!html) {
+    return html;
+  }
+  return html.replace(/<\/?("[^"]*"|'[^']*'|[^>])*(>|$)/g, "");
+}
