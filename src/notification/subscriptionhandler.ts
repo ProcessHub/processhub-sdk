@@ -19,6 +19,7 @@ export const PublishSubscriptionObjects: { [Id: string]: PublishSubscribeRegiste
   updateInstance: { wildcard: "{instanceId}", subscriptionPath: "/ws/updateInstance/{instanceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
   updateProcess: { wildcard: "{processId}", subscriptionPath: "/ws/updateProcess/{processId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
   updateUser: { wildcard: "{userId}", subscriptionPath: "/ws/updateUser/{userId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
+  updateWorkspace: { wildcard: "{workspaceId}", subscriptionPath: "/ws/updateWorkspace/{workspaceId}", resolvePath: function (value: string) { return resolveFunction(this, value); } },
 };
 
 let subscriptionPaths: string[] = [];
@@ -96,5 +97,10 @@ export function subscribeUpdateProcess(processId: string): boolean {
 
 export function subscribeUpdateUser(userId: string): boolean {
   let subPath = PublishSubscriptionObjects.updateUser.resolvePath(userId);
+  return subscribe(subPath);
+}
+
+export function subscribeUpdateWorkspace(workspaceId: string): boolean {
+  const subPath = PublishSubscriptionObjects.updateWorkspace.resolvePath(workspaceId);
   return subscribe(subPath);
 }
