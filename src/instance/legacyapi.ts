@@ -167,6 +167,7 @@ export interface ExportAuditTrailReply extends InstanceReply {
 export interface GenerateReportRequest extends InstanceRequest {
   instanceIds: string;
   draftId: string;
+  type: "docx" | "pdf";
 }
 export interface GenerateReportReply extends InstanceReply {
   doc: any;

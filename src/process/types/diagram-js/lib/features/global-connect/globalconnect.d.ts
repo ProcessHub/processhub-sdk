@@ -9,7 +9,6 @@ declare module "diagram-js/lib/features/global-connect/GlobalConnect" {
 
     constructor(eventBus: EventBus, dragging: {}, connect: {}, canvas: Canvas, toolManager: {});
 
-    public registerProvider(provider: IGlobalConnectProvider): void;
     public isActive(): boolean;
     public toggle(): void;
 
@@ -25,16 +24,6 @@ declare module "diagram-js/lib/features/global-connect/GlobalConnect" {
      * @return {Boolean}
      */
     public canStartConnect(startTarget: Base): boolean;
-  }
-
-  export interface IGlobalConnectProvider {
-    /**
-     * Check if source shape can initiate connection.
-     *
-     * @param  {Base} startTarget
-     * @return {Boolean}
-     */
-    canStartConnect(startTarget: Base): boolean;
   }
 
 }

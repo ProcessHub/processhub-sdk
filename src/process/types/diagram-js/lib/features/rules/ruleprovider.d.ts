@@ -68,6 +68,7 @@ declare module "diagram-js/lib/features/rules/RuleProvider" {
      * @param {Function} fn the callback function that performs the actual check
      */
     public addRule(actions: "connection.create", fn: (context: IConnectionCreateContext) => boolean): void;
+    public addRule(actions: "connection.start", fn: (context: IConnectionStartContext) => boolean): void;
     public addRule(actions: "elements.move", fn: (context: IElementsMoveContext) => boolean): void;
     public addRule(actions: "shape.resize", fn: (context: IShapeResizeContext) => boolean): void;
     public addRule(actions: ModelingAction | ModelingAction[], fn: (context: Object) => boolean): void;
@@ -112,6 +113,10 @@ declare module "diagram-js/lib/features/rules/RuleProvider" {
 
   export interface IConnectionReconnectEndContext extends IConnectionReconnectContext {
     type: "connection.reconnectEnd";
+  }
+
+  export interface IConnectionStartContext {
+    source: Base;
   }
 
   export interface IConnectionCreateContext {
