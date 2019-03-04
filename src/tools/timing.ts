@@ -22,6 +22,26 @@ export function getFormattedDateTime(dateTime: Date): string {
   return getFormattedDate(dateTime) + " " + hours + ":" + minutes;
 }
 
+export function getFormattedTimeZoneOffset(offset: number): string {
+  const offsetHours: number = Math.floor(Math.abs(offset) / 60);
+  const offsetMin: number = Math.abs(offset) % 60;
+  let result: string = "GMT";
+  if (offset <= 0) {
+    result += "+";
+  } else {
+    result += "-";
+  }
+  if (offsetHours < 10) {
+    result += "0";
+  }
+  result += offsetHours.toString() + ":";
+  if (offsetMin < 10) {
+    result += "0";
+  }
+  result += offsetMin.toString();
+  return result;
+}
+
 export interface IDuration {
   seconds?: number;
   minutes?: number;
