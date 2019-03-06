@@ -1,5 +1,5 @@
-import { FieldContentMap, isFieldValue, FieldDefinition, FieldType } from "./datainterfaces";
-import { getFormattedDate } from "../tools/timing";
+import { FieldContentMap, isFieldValue, FieldDefinition, FieldType, FieldValue } from "./datainterfaces";
+import { getFormattedDate, getFormattedDateTime, getFormattedTimeZoneOffset } from "../tools/timing";
 import { BpmnProcess, RoleOwnerMap } from "../process";
 import { Bpmn } from "../process/bpmn";
 
@@ -8,6 +8,17 @@ export function replaceAll(target: string, search: string, replacement: string) 
     target = target.replace(search, replacement);
   }
   return target;
+}
+
+function fieldValueToString(valueObject: FieldValue): string {
+  if (valueObject.type === "ProcessHubDate") {
+    return getFormattedDate(new Date(valueObject.value.toString()));
+  } else if (valueObject.type === "ProcessHubDateTime") {
+    const date: Date = new Date(valueObject.value.toString());
+    return getFormattedDateTime(date) + " " + getFormattedTimeZoneOffset(date.getTimezoneOffset());
+  } else {
+    return valueObject.value != null ? valueObject.value.toString() : "";
+  }
 }
 
 export function parseAndInsertStringWithFieldContent(inputString: string, fieldContentMap: FieldContentMap, process: BpmnProcess, roleOwners: RoleOwnerMap): string {
@@ -33,12 +44,8 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
       let valueObject = fieldContentMap[fieldName];
 
       if (isFieldValue(valueObject)) {
-        if (valueObject.type == "ProcessHubDate") {
-          let val = getFormattedDate(new Date(valueObject.value.toString()));
-          result = replaceAll(result, fieldPlaceholder, val);
-        } else {
-          result = replaceAll(result, fieldPlaceholder, valueObject.value != null ? valueObject.value.toString() : "");
-        }
+        const val: string = fieldValueToString(valueObject);
+        result = replaceAll(result, fieldPlaceholder, val);
       } else {
         result = replaceAll(result, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
 
@@ -71,12 +78,8 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     if (fieldName && fieldName.length) {
       const valueObject = fieldContentMap[fieldName];
       if (isFieldValue(valueObject)) {
-        if (valueObject.type == "ProcessHubDate") {
-          let val = getFormattedDate(new Date(valueObject.value.toString()));
-          result = replaceAll(result, placeHolder, val);
-        } else {
-          result = replaceAll(result, placeHolder, valueObject.value != null ? valueObject.value.toString() : "");
-        }
+        const val: string = fieldValueToString(valueObject);
+        result = replaceAll(result, placeHolder, val);
       } else {
         result = replaceAll(result, placeHolder, valueObject != null ? valueObject.toString() : "");
       }
