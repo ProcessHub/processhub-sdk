@@ -28,19 +28,15 @@ export function parseInstanceMailAddress(mail: string): string {
   return parseIdMailAddress("i-", mail);
 }
 export function parseInstanceMailSubject(mail: string): string {
-  let possibleIdString = mail.substring(
-    mail.indexOf("[") + 1,
-    mail.indexOf("]")
-  );
-
-  if (!possibleIdString.startsWith("i-")) {
-    return null;
-  }
-
-  possibleIdString = possibleIdString.substr(2, (possibleIdString.length - 1)); // remove "i-"
-  possibleIdString = possibleIdString.toUpperCase();
-  if (isId(possibleIdString)) {
-    return possibleIdString;
+  const regex: RegExp = /(\[)(i-)(.*?)(\])/gm;
+  let match: RegExpExecArray;
+  // tslint:disable-next-line:no-conditional-assignment
+  while ((match = regex.exec(mail)) != null) {
+    let maybeId: string = match[3];
+    maybeId = maybeId.toUpperCase();
+    if (isId(maybeId)) {
+      return maybeId;
+    }
   }
   return null;
 }
