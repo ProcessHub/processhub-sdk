@@ -128,6 +128,8 @@ declare module "diagram-js/lib/core/EventBus" {
 
     public on(events: "connection.added", callback: (event: ConnectionAddedEvent) => void): void;
 
+    public on(events: "connection.removed", callback: (event: ConnectionRemovedEvent) => void): void;
+
     public on(events: "connectionSegment.move.ended", callback: (event: ConnectionSegmentMoveEndedEvent) => void): void;
 
     public on(events: "drag.start", callback: (event: EventBusEvent<Object>) => void): void;
@@ -390,6 +392,10 @@ declare module "diagram-js/lib/core/EventBus" {
   export class ConnectionAddedEvent extends EventBusEvent<void> {
     element: Connection;
     gfx: SVGGElement;
+  }
+
+  export class ConnectionRemovedEvent extends EventBusEvent<void> {
+    element: Connection;
   }
 
   export interface IResizeEndContext {
