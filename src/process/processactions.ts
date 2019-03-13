@@ -271,7 +271,12 @@ export async function createNewLocalProcess(workspaceId: string): Promise<GetPro
     isNewProcess: true,
     extras: {
       bpmnXml: xml,
-      bpmnProcess: process
+      bpmnProcess: process,
+      settings: {
+        dashboard: {
+          cardTitle: "{{ field.Titel }}"
+        }
+      }
     }
   };
   rootStore.dispatch<ProcessLoadedMessage>({

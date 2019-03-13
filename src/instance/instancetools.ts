@@ -104,8 +104,7 @@ export function getInstanceTitle(instance: InstanceDetails, process: ProcessDeta
   if (process.extras.settings && process.extras.settings.dashboard && process.extras.settings.dashboard.cardTitle) {
     // legacy code, settings are not available for new processes any more
     return parseAndInsertStringWithFieldContent(process.extras.settings.dashboard.cardTitle, instance.extras.fieldContents, process.extras.bpmnProcess, instance.extras.roleOwners);
-  } else if (instance.displayName && instance.displayName != "")
-    return instance.displayName;
-  else
-    return process.displayName + " " + instance.instanceNumber;
+  } else {
+    return process.displayName + " " + instance.instanceId.toLowerCase();
+  }
 }

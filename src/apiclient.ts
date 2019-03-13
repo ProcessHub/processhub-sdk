@@ -98,10 +98,9 @@ export class ApiClient {
     await this.graphQLMutation(mutation, { todo: todo2 });
   }
 
-  async startProcess(workspaceId: string, processId: string, instanceTitle?: string, fieldContents?: FieldContentMap): Promise<string> {
+  async startProcess(workspaceId: string, processId: string, fieldContents?: FieldContentMap): Promise<string> {
     let instance: InstanceDetails = {
       instanceId: createId(),
-      displayName: instanceTitle,
       workspaceId: workspaceId,
       processId: processId,
       extras: {

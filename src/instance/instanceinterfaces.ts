@@ -24,8 +24,8 @@ export interface InstanceDetails {
   instanceId: string;
   workspaceId: string;
   processId: string;
-  displayName?: string;
-  instanceNumber?: string;  // 123.4567.890, created on execution
+  // displayName?: string;
+  // instanceNumber?: string;  // 123.4567.890, created on execution
   fullUrl?: string; // = /i/@workspace/instanceid
   createdAt?: Date;
   completedAt?: Date;

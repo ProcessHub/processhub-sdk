@@ -451,7 +451,7 @@ export class BpmnProcess {
     let fieldDefinitions: FieldDefinition[] = [
       {
         name: tl("Titel"),
-        type: "ProcessHubInstanceTitle",
+        type: "ProcessHubTextInput",
         isRequired: false,
         config: {}
       },
