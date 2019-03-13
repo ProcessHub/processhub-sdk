@@ -43,6 +43,7 @@ export interface ServiceActionConfigField {
 export interface FieldValue {
   type: FieldType;
   value:
+  number | // Number
   Date | // Date
   string | // TextInput, TextArea, RoleOwner
   boolean | // Checkbox
@@ -66,7 +67,8 @@ export type FieldType = "ProcessHubTextInput"
   | "ProcessHubRoxFile"
   | "ProcessHubSignature"
   | "ProcessHubLabel"
-  | "ProcessHubMail";
+  | "ProcessHubMail"
+  | "ProcessHubNumber";
 
 export interface IFieldType {
   getType(): FieldType;
@@ -81,7 +83,7 @@ export interface IFieldType {
 }
 
 export interface IFormElementProps {
-  value: string | boolean | Date | string[] | IRoxFileFieldValue | ISignatureFieldValue | {
+  value: number | string | boolean | Date | string[] | IRoxFileFieldValue | ISignatureFieldValue | {
     [key: string]: boolean;
   };
   label: string;
