@@ -1,11 +1,10 @@
 import { isFieldValue } from "../data/datainterfaces";
-import { isDefaultRole } from "../process/processrights";
 import { InstanceDetails } from "./instanceinterfaces";
 import { isValidMailAddress, stringExcerpt } from "../tools/stringtools";
 import { isId } from "../tools/guid";
 import * as Config from "../config";
 import { parseAndInsertStringWithFieldContent } from "../data";
-import { ProcessDetails } from "../process";
+import { ProcessDetails, isDefaultProcessRole } from "../process";
 
 export function parseIdMailAddress(prefix: string, mail: string): string {
   mail = mail.toLowerCase();
@@ -49,7 +48,7 @@ export function isRoleOwner(userId: string, roleId: string, instance: InstanceDe
   if (roleId == null || roleId == "") {
     // check if user is owner of any role
     for (let role in instance.extras.roleOwners) {
-      if (!isDefaultRole(role) && isRoleOwner(userId, role, instance))
+      if (!isDefaultProcessRole(role) && isRoleOwner(userId, role, instance))
         return true;
     }
     return false;
