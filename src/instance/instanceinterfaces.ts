@@ -106,6 +106,7 @@ export interface ResumeInstanceDetails {
   // Sollte nächste Activity Exclusive Gateway sein, wird hier die Entscheidung über den SF mitgeteilt
   choosenTask?: DecisionTask;
   fieldContents?: FieldContentMap;
+  nonInterrupting?: boolean;
 }
 
 export interface EngineState {
