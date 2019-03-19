@@ -183,6 +183,8 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
       getExtras -= ProcessExtras.ExtrasSettings;
     if ((getExtras & ProcessExtras.ExtrasAuditTrail) && cachedProcess.extras.auditTrail)
       getExtras -= ProcessExtras.ExtrasAuditTrail;
+    if ((getExtras & ProcessExtras.ExtrasSvgString) && cachedProcess.extras.svgString)
+      getExtras -= ProcessExtras.ExtrasSvgString;
     if ((getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames) && cachedProcess.extras.processRoles) {
       // names available?
       for (let roleId in cachedProcess.extras.processRoles) {
