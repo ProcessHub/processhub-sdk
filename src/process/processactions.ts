@@ -183,7 +183,8 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
       getExtras -= ProcessExtras.ExtrasSettings;
     if ((getExtras & ProcessExtras.ExtrasAuditTrail) && cachedProcess.extras.auditTrail)
       getExtras -= ProcessExtras.ExtrasAuditTrail;
-    if ((getExtras & ProcessExtras.ExtrasSvgString) && cachedProcess.extras.svgString)
+
+    if ((getExtras & ProcessExtras.ExtrasSvgString) && (cachedProcess.extras.svgString || cachedProcess.extras.svgString === ""))
       getExtras -= ProcessExtras.ExtrasSvgString;
     if ((getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames) && cachedProcess.extras.processRoles) {
       // names available?
@@ -321,7 +322,13 @@ export function updateProcessAction(process: ProcessDetails, accessToken: string
       processDetails: requestDetails
     }, accessToken);
 
+    // update extras svg string from local change
+    if (response.processDetails.extras.svgString == null && process.extras.svgString != null) {
+      response.processDetails.extras.svgString = process.extras.svgString;
+    }
+
     response.processDetails = await completeProcessFromCache(response.processDetails);
+
     dispatch(response);
     return response;
   };
