@@ -4,7 +4,7 @@
     "type": "git",
     "url": "git://github.com/processhub/processhub-sdk.git"
   },
-  "version": "8.002.0",
+  "version": "8.003.0",
   "author": {
     "name": "ProcessHub",
     "email": "info@processhub.com",
