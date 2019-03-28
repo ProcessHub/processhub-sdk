@@ -41,7 +41,6 @@
     "react-router-redux": "^4.0.8",
     "redux": "^3.7.2",
     "redux-thunk": "^2.2.0",
-    "semantic-ui-react": "^0.84.0",
     "webpack-env": "^0.8.0",
     "webpack-hot-middleware": "^2.20.0"
   },
