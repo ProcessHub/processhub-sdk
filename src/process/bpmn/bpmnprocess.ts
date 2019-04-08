@@ -2019,16 +2019,19 @@ export class BpmnProcess {
 
   public removeStartEvent(rowDetails: RowDetails[]): void {
     let processContext = this.getProcess(this.processId());
-
     let startEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions == null);
-    this.removeSequenceFlow(this.processId(), startEvent.outgoing.last());
-    let row = rowDetails.find(row => row.taskId === startEvent.id);
-
+    this.removeSequenceFlow(this.processId(), startEvent.outgoing.last());   
+    
     processContext.flowElements = processContext.flowElements.filter(elem => elem.id !== startEvent.id);
 
     this.removeTaskObjectFromLanes(this.processId(), startEvent);
-    let otherStart = this.getStartEvents(this.processId()).last();
-    row.taskId = otherStart.id;
+
+    let row = rowDetails.find(row => row.taskId === startEvent.id);
+    if(row)
+    {
+      let otherStart = this.getStartEvents(this.processId()).last();
+      row.taskId = otherStart.id;
+    }
 
     this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
