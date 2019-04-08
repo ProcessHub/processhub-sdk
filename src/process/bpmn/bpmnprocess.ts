@@ -2027,8 +2027,7 @@ export class BpmnProcess {
     this.removeTaskObjectFromLanes(this.processId(), startEvent);
 
     let row = rowDetails.find(row => row.taskId === startEvent.id);
-    if(row)
-    {
+    if (row) {
       let otherStart = this.getStartEvents(this.processId()).last();
       row.taskId = otherStart.id;
     }
