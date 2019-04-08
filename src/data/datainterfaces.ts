@@ -2,6 +2,7 @@ import { InstanceEnvironment } from "../environment";
 import { BpmnProcess } from "../process";
 import { InstanceDetails } from "../instance/instanceinterfaces";
 import { UserDetails } from "../user";
+import { Process } from "..";
 
 export interface FieldDefinition {
   name: string;
@@ -75,7 +76,7 @@ export interface IFieldType {
   getInput(props: IFormElementProps, instanceEnv: InstanceEnvironment, bpmnProcess: BpmnProcess, onFieldValueChanged: () => void, showInvalidFields: boolean, startEventId?: string): JSX.Element;
   renderValue(value: {}, instance: InstanceDetails): JSX.Element;
   renderValueForEmail(value: {}, instance: InstanceDetails): JSX.Element;
-  getSettingsButton(fieldDefinition: FieldDefinition, onConfigChanged: (fieldDefinition: FieldDefinition) => void): JSX.Element;
+  getSettingsButton(fieldDefinition: FieldDefinition, onConfigChanged: (fieldDefinition: FieldDefinition) => void, bpmnProcess: Process.BpmnProcess): JSX.Element;
   isVisible(): boolean;
   isValid(fieldDefinition: FieldDefinition, instanceEnv: InstanceEnvironment): boolean;
   isConfigValid(fieldDefinition: FieldDefinition): { valid: boolean, message?: string };
