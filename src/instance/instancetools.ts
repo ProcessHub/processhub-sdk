@@ -102,7 +102,14 @@ export function fieldContentsExcerpt(instance: InstanceDetails, maxLen: number):
 export function getInstanceTitle(instance: InstanceDetails, process: ProcessDetails): string {
   if (process.extras.settings && process.extras.settings.dashboard && process.extras.settings.dashboard.cardTitle) {
     // legacy code, settings are not available for new processes any more
-    return parseAndInsertStringWithFieldContent(process.extras.settings.dashboard.cardTitle, instance.extras.fieldContents, process.extras.bpmnProcess, instance.extras.roleOwners);
+    try
+    {    
+      return parseAndInsertStringWithFieldContent(process.extras.settings.dashboard.cardTitle, instance.extras.fieldContents, process.extras.bpmnProcess, instance.extras.roleOwners);
+    }
+    catch (ex)
+    {
+      return process.displayName + " " + instance.instanceId.toLowerCase();
+    }
   } else {
     return process.displayName + " " + instance.instanceId.toLowerCase();
   }
