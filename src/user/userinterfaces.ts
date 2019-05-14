@@ -12,6 +12,9 @@ export interface RoxtraUserDetails {
   HasEFormulareSetCorporateDesignRight: boolean;
   escalations?: IEscalation[];
   todos?: ITodo[];
+  ReceiveMails: boolean;
+  ReceiveDailyReports: boolean;
+  ReceiveWeeklyReports: boolean;
 }
 
 export class UserDetails {
