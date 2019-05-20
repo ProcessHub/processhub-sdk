@@ -456,13 +456,13 @@ export class BpmnProcess {
         config: {}
       },
       {
-        name: tl("Feld #1"),
+        name: tl("Feld_1"),
         type: "ProcessHubTextInput",
         isRequired: false,
         config: {}
       },
       {
-        name: tl("Feld #2"),
+        name: tl("Feld_2"),
         type: "ProcessHubTextArea",
         isRequired: false,
         config: {}
