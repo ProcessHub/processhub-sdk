@@ -302,45 +302,6 @@ export class BpmnProcessDiagram {
     }
   }
 
-  private recursiveGenerateDiagramTasks(diagram: any, laneDictionaries: LaneDictionary[], workingObject: any, xParam: number) {
-
-    let iconWidth = BpmnProcessDiagram.TASK_WIDTH;
-    let sizeStartAndEndEvent: number = 36;
-    let iconHeight: number = 80;
-
-    // Jedes element MUSS in einer Lane sein! Wenn hier null returned wird, dann ist das ein FEHLER       
-    let laneNumber: number = this.bpmnProcess.getLaneNumberOfElement(workingObject, laneDictionaries);
-    if (laneNumber == null) {
-      console.log("Error: Element has no lane assignment.");
-    }
-
-    // Berechnung der Y-Koordinate für jedes Element (Task)
-    // 30 ist hier der optimal eingerückte wert für die LaneHöhe
-    let yParam = (this.diagramYStartParam + 23) + laneNumber * this.diagramLaneHeight;
-
-    // weil größe des icons anders
-    if (workingObject.$type === BpmnProcess.BPMN_STARTEVENT || workingObject.$type === BpmnProcess.BPMN_ENDEVENT) {
-      iconWidth = sizeStartAndEndEvent;
-      iconHeight = sizeStartAndEndEvent;
-
-      yParam = (this.diagramYStartParam + 45) + laneNumber * this.diagramLaneHeight;
-    }
-
-    let shape = this.createShape(workingObject, xParam, yParam, iconWidth, iconHeight);
-
-    diagram.plane.planeElement.push(shape);
-
-    // Über den xParam wird gesteuert wie viel weiter rechts das der nächste Task Liegt
-    // Sollte sich ergeben aus der Taskbreite + einem gewissen Raum für den Pfeil (optimal sind 30px)
-    xParam += iconWidth + BpmnProcessDiagram.SPACE_BETWEEN_TASKS;
-
-    if (workingObject.outgoing != null) {
-      for (let outgoingSF of workingObject.outgoing) {
-        this.recursiveGenerateDiagramTasks(diagram, laneDictionaries, outgoingSF.targetRef, xParam);
-      }
-    }
-  }
-
   private generateSequenceFlow(diagram: any, flowObject: Bpmn.SequenceFlow, drawJumpFlow: boolean, numberOfJumpEdge: number = 0, laneDictionaries: LaneDictionary[] = null) {
     let waypoints: Waypoint[] = [];
     // hole die beiden Diagramm Objekte von Quell und Ziel Objekt

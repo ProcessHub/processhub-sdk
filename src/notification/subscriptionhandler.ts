@@ -1,6 +1,5 @@
 const Nes = require("nes");
 import * as StateHandler from "../statehandler";
-import { getJson, BaseMessage, ApiResult } from "../legacyapi";
 import { UserDetails } from "../user/userinterfaces";
 import { getBackendUrl } from "../config";
 

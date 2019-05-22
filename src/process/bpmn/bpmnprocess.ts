@@ -40,11 +40,6 @@ export const BPMN_EXCLUSIVEGATEWAY = "bpmn:ExclusiveGateway";
 export const BPMN_PARALLELGATEWAY = "bpmn:ParallelGateway";
 export const BPMN_FORMALEXPRESSION = "bpmn:FormalExpression";
 
-interface TmpSavedGateway {
-  sourceTaskRowDetails: RowDetails;
-  targetBpmnTaskIds: string[];
-}
-
 export class BpmnProcess {
 
   moddle: BpmnModdle;
@@ -716,7 +711,6 @@ export class BpmnProcess {
     if (value == null)
       value = "";
 
-    let extensionElement;
     if (!activity.extensionElements || activity.extensionElements.values == null) {
       let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
       activity.extensionElements = extensions;
@@ -824,7 +818,6 @@ export class BpmnProcess {
 
   // löscht einen Task aus dem XML und dem Diagramm
   public deleteTask(processId: string, rowDetails: RowDetails[], rowNumber: number): void {
-    let processContext = this.getProcess(processId);
     // let allgateways = this.removeAllGateways(rowDetails, true);
 
     // Auch hier wird nach folgendem Beispiel vorgegangen
@@ -836,7 +829,6 @@ export class BpmnProcess {
     // 3. [BC] bekommt als sourceRef A
     // 4. A bekommt als outgoing [BC]
     let delTaskId = rowDetails[rowNumber].taskId;
-    let nextObjects = this.getNextActivities(rowDetails[rowNumber].taskId);
 
     let res = this.removeElementWithAllReferences(delTaskId);
 
@@ -945,15 +937,6 @@ export class BpmnProcess {
     let tmpRowDetails: RowDetails[] = JSON.parse(JSON.stringify(rowDetails));
     tmpRowDetails.splice(rowNumber, 1);
     this.processDiagram.generateBPMNDiagram(processId, tmpRowDetails);
-  }
-
-  private addToWithoutDuplicates(inOrOutGoings: Bpmn.SequenceFlow[], addItem: Bpmn.SequenceFlow) {
-    let sfObj = inOrOutGoings.find((sf) => {
-      return sf.sourceRef.id === addItem.sourceRef.id && sf.targetRef.id === addItem.targetRef.id;
-    });
-    if (!sfObj) {
-      inOrOutGoings.push(addItem);
-    }
   }
 
   public convertTaskType(rows: RowDetails[], changedTaskIdx: number): string {
@@ -1129,106 +1112,8 @@ export class BpmnProcess {
     this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
 
-  private getLastCreatedTask(processId: string): Bpmn.Task {
-    let process: Bpmn.Process = this.bpmnXml.rootElements.find(e => e.$type === BPMN_PROCESS && e.id === processId) as Bpmn.Process;
-    let flowElements: Bpmn.FlowElement[] = process.flowElements.filter(
-      (e: Bpmn.FlowElement) =>
-        e.$type === BPMN_USERTASK
-        || e.$type === BPMN_SENDTASK
-        || e.$type === BPMN_STARTEVENT
-      // || e.$type === BPMN_ENDEVENT
-    );
-
-    if (flowElements != null && flowElements.length > 0) {
-      let tmpObject: Bpmn.FlowElement = flowElements[flowElements.length - 1];
-
-      return tmpObject as Bpmn.Task;
-    }
-    return null;
-  }
-
-  private removeAllGateways(rowDetails: RowDetails[], addAfterDelete: boolean = false): TmpSavedGateway[] {
-    let process = this.getProcess(this.processId());
-    let allGateways: TmpSavedGateway[] = []; // { sourceTask: null, bpmnTaskIds: [] };
-    // remove all outgoing and incoming
-    if (this.getAllExclusiveGateways().length > 0) {
-      for (let gate of this.getAllExclusiveGateways()) {
-
-        isTrue(gate.incoming.length === 1);
-        let targets = gate.outgoing.map(out => out.targetRef.id);
-        let source = rowDetails.find(det => det.taskId === gate.incoming.last().sourceRef.id);
-
-        // get next element in table... if last, take endevent
-        let targetId = source.rowNumber + 1 === rowDetails.length ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId;
-
-        if (!addAfterDelete) {
-          targets = targets.filter(t => t !== this.getEndEvents(this.processId())[0].id);
-        } else {
-          // only target with no standard path
-          targets = targets.filter(t => t !== targetId);
-        }
-
-        // let takeEndEvent = addAfterDelete ? source.rowNumber + 1 == rowDetails.length : source.rowNumber + 2 == rowDetails.length;
-
-        // let tmp = rowDetails[source.rowNumber + 1] == null ? this.getEndEvents(this.processId())[0].id : rowDetails[source.rowNumber + 1].taskId
-
-        // let nextElementId = takeEndEvent ? this.getEndEvents(this.processId())[0].id : tmp;
-
-        // targets = targets.filter(t => t != nextElementId);
-
-        allGateways.push({ sourceTaskRowDetails: source, targetBpmnTaskIds: targets });
-
-        gate.incoming.forEach(inc => {
-          this.removeSequenceFlow(this.processId(), inc);
-        });
-        // inc.sourceRef.outgoing = inc.sourceRef.outgoing.filter(out => out.targetRef.id !== gate.id));
-        gate.outgoing.forEach(out => {
-          this.removeSequenceFlow(this.processId(), out);
-          // out.targetRef.incoming = out.targetRef.incoming.filter(inc => inc.sourceRef.id !== gate.id);
-        });
-
-        process.flowElements = process.flowElements.filter(e => e.id != gate.id);
-        for (const laneSet of process.laneSets) {
-          for (const lane of laneSet.lanes) {
-            lane.flowNodeRef = lane.flowNodeRef.filter(fn => fn.id !== gate.id);
-          }
-        }
-      }
-
-      if (addAfterDelete) {
-        for (let task of this.getSortedTasks(this.processId())) {
-          if (task.outgoing.length == 0) {
-            let row = rowDetails.find(r => r.taskId === task.id);
-            let targetTask: Bpmn.FlowNode = null;
-            if (row.rowNumber + 1 === rowDetails.length) {
-              targetTask = this.getEndEvents(this.processId())[0];
-
-            } else {
-              targetTask = this.getExistingTask(this.processId(), rowDetails[row.rowNumber + 1].taskId);
-            }
-            this.addSequenceFlow(this.processId(), task, targetTask, false);
-          }
-        }
-      }
-    }
-
-    return allGateways;
-
-  }
-
-  private putGatewaysBack(allGateways: TmpSavedGateway[]) {
-    for (let gate of allGateways) {
-      for (let targetBpmnTaskId of gate.targetBpmnTaskIds) {
-        if (this.getExistingTask(this.processId(), gate.sourceTaskRowDetails.taskId) != null && this.getExistingTask(this.processId(), targetBpmnTaskId) != null) {
-          this.addFlowToNode(gate.sourceTaskRowDetails, targetBpmnTaskId, null, false);
-        }
-      }
-    }
-  }
-
   public addTimerStartEvent(rowDetails: RowDetails[]): void {
     this.addStartEventOfType(rowDetails, BPMN_TIMEREVENTDEFINITION);
-
   }
 
   public removeTimerStartEvent(rowDetails: RowDetails[]): void {
@@ -1612,11 +1497,11 @@ export class BpmnProcess {
   }
 
   public getSortedTasks(processId: string, ignoreSendTasks: boolean = false): Bpmn.Task[] {
-    if (ignoreSendTasks) {
-      return this.getSortedActivities(processId, ["bpmn:UserTask"]) as Bpmn.Task[];
-    } else {
-      return this.getSortedActivities(processId, ["bpmn:UserTask", "bpmn:SendTask"]) as Bpmn.Task[];
+    const types: Bpmn.ElementType[] = ["bpmn:UserTask", "bpmn:ServiceTask", "bpmn:ScriptTask"];
+    if (!ignoreSendTasks) {
+      types.push("bpmn:SendTask");      
     }
+    return this.getSortedActivities(processId, types) as Bpmn.Task[];    
   }
 
   public getSortedActivities(processId: string, types: Bpmn.ElementType[]): Bpmn.Activity[] {

@@ -12,11 +12,8 @@ import { readFileAsync } from "../../test/testtools";
 let TestRowDetails: RowDetails[] = [];
 
 async function addTask(rowDetails: RowDetails[], rowNumber: number, bpmnProcess: any): Promise<void> {
-  let targetRow: RowDetails = rowDetails[rowNumber];
-  let endElement = bpmnProcess.getEndEvents(bpmnProcess.processId())[0];
   rowDetails.splice((rowNumber + 1), 0, { rowNumber: (rowNumber + 1), selectedRole: rowDetails[rowNumber].selectedRole, task: "", taskId: null, laneId: rowDetails[rowNumber].laneId, taskType: BPMN_USERTASK, jumpsTo: rowDetails[rowNumber].jumpsTo });
 
-  let firstProcess = bpmnProcess.processId();
   bpmnProcess.addTaskBetween(rowDetails, (rowNumber + 1));
 
   rowDetails[rowNumber].jumpsTo = [rowDetails[(rowNumber + 1)].taskId];
@@ -84,7 +81,7 @@ describe("sdk", function () {
 
           // check if empty lane is still there
           const process: Bpmn.Process = definitions.rootElements.find(e => e.$type === "bpmn:Process") as Bpmn.Process;
-          const [laneSet, ...laneSets] = process.laneSets;
+          const [laneSet] = process.laneSets;
           expect(laneSet.lanes).not.to.be.undefined;
           expect(laneSet.lanes.length).to.equal(1);
         });
@@ -207,8 +204,6 @@ describe("sdk", function () {
           let rowDetails = JSON.parse(JSON.stringify(TestRowDetails));
 
           // wie test zuvor bis hier her
-          let testLaneName: string = "Test Lane";
-          let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
           let testLane: Bpmn.Lane = bpmnProcess.getProcessLane(process.id, rowDetails[1].laneId);
 
 
@@ -247,7 +242,7 @@ describe("sdk", function () {
           let testLaneName: string = "Test Lane";
 
           let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+          bpmnProcess.addLane(process.id, testId, testLaneName);
           let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
 
           let testTaskId: string = rowDetails[1].taskId;
@@ -274,11 +269,11 @@ describe("sdk", function () {
             // wie test zuvor bis hier her
             let testLaneName: string = "Test Lane";
             let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-            let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+            bpmnProcess.addLane(process.id, testId, testLaneName);
 
             let testLaneName2: string = "Test Lane2";
             let testId2: string = BpmnProcess.getBpmnId(BPMN_LANE);
-            let testLaneId2: string = bpmnProcess.addLane(process.id, testId2, testLaneName2);
+            bpmnProcess.addLane(process.id, testId2, testLaneName2);
 
 
             let testTaskName1: string = "Test Aufgabe A";
@@ -297,7 +292,6 @@ describe("sdk", function () {
 
 
             let testTaskName2: string = "Test Aufgabe B";
-            let rowDetails2: RowDetails = { rowNumber: 1, selectedRole: testLaneId2, task: testTaskName2, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
             let testTaskId2: string = rowDetails[2].taskId;
 
             let testTaskObject2: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId2) as Bpmn.UserTask;
@@ -362,11 +356,7 @@ describe("sdk", function () {
 
           let testLaneName: string = "Test Lane";
           let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
-
-          let testTaskName1: string = "Test Aufgabe A";
-          let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-
+          bpmnProcess.addLane(process.id, testId, testLaneName);
 
           let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
 
@@ -389,11 +379,8 @@ describe("sdk", function () {
 
           let testLaneName: string = "Test Lane";
           let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
-
-          let testTaskName1: string = "Test Aufgabe A";
-          let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
-          
+          bpmnProcess.addLane(process.id, testId, testLaneName);
+       
           let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
 
           let testTaskId1: string = rowDetails[1].taskId;
@@ -409,16 +396,12 @@ describe("sdk", function () {
 
           let testLaneName: string = "Test Lane";
           let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-          let testLaneId: string = bpmnProcess.addLane(process.id, testId, testLaneName);
+          bpmnProcess.addLane(process.id, testId, testLaneName);
 
-          let testTaskName1: string = "Test Aufgabe A";
-          let rowDetails1: RowDetails = { rowNumber: 0, selectedRole: testLaneId, task: testTaskName1, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
           let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
 
           let testTaskId1: string = rowDetails[1].taskId;
 
-          let testTaskName2: string = "Test Aufgabe B";
-          let rowDetails2: RowDetails = { rowNumber: 1, selectedRole: testLaneId, task: testTaskName2, taskId: null, taskType: BPMN_USERTASK, jumpsTo: [] };
           let testTaskId2: string = rowDetails[2].taskId; 
 
           let taskObj = bpmnProcess.getExistingTask(bpmnProcess.processId(), testTaskId1);
@@ -440,8 +423,6 @@ describe("sdk", function () {
         it("should check addtaskbetween method", async function () {
           let bpmnProcess: BpmnProcess;
           bpmnProcess = await createTestBpmnProcess();
-          let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
           let sortedTasks = bpmnProcess.getSortedTasks(bpmnProcess.processId());
           assert.isTrue(sortedTasks.length == 2, "wrong template process 1");

@@ -22,20 +22,20 @@ export class FrameActionHandler extends ActionHandler {
     }
   }
 
-  private sendMessage(command: string, jsonData: any): void {
-    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + createId() + ":" + JSON.stringify(jsonData), parenthost);    
-  }
+  // private sendMessage(command: string, jsonData: any): void {
+  //   window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + createId() + ":" + JSON.stringify(jsonData), parenthost);    
+  // }
 
   // Command format: 
   // [PHActionHandler]Plugin_Component:command:commandId:{data}
-  private sendCommand(command: string, jsonData: any): Promise<any> {
-    let commandId = createId(); 
-    window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
+  // private sendCommand(command: string, jsonData: any): Promise<any> {
+  //   let commandId = createId(); 
+  //   window.parent.postMessage("[PHActionHandler]" + this.plugin + "_" + this.component + ":" + command + ":" + commandId + ":" + JSON.stringify(jsonData), parenthost);
 
-    return new Promise<any>(function(resolve, reject) {
-      waitingCommands[commandId] = resolve;
-    });    
-  }
+  //   return new Promise<any>(function(resolve, reject) {
+  //     waitingCommands[commandId] = resolve;
+  //   });    
+  // }
 
   // Reply format:
   // [PHActionReceiver]Plugin_Component:command:commandId:{data}

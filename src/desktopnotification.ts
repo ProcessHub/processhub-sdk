@@ -20,7 +20,7 @@ let notify: IHtml5DesktopNotifications;
 
 if (typeof window !== "undefined") {
   // tslint:disable-next-line:no-var-requires
-  const notifyPackage: {} = require("html5-desktop-notifications");
+  /*const notifyPackage: {} = */ require("html5-desktop-notifications");
   // tslint:disable-next-line:no-any
   notify = (window as any).notify as IHtml5DesktopNotifications;
 }
