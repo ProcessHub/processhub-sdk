@@ -373,7 +373,7 @@ export class BpmnProcess {
     return tmpList;
   }
 
-  public getTaskIdsAfterGateway(currentGatewayId: string): Todo.DecisionTask[] {
+  private getTaskIdsAfterGateway(currentGatewayId: string): Todo.DecisionTask[] {
     let currentObject: Bpmn.Gateway = this.getExistingActivityObject(currentGatewayId);
     let exclusiveGateway: Bpmn.ExclusiveGateway = null;
     if (currentObject.$type == BPMN_EXCLUSIVEGATEWAY)
@@ -542,14 +542,6 @@ export class BpmnProcess {
   // get the StartEvents of the process
   public getStartEvents(processId: string): Bpmn.StartEvent[] {
     return this.getEvents(processId, BPMN_STARTEVENT) as Bpmn.StartEvent[];
-  }
-  // get the text that should be displayed on the start button
-  public getStartButtonTitle(): string {
-    let startEvents = this.getStartEvents(this.processId());
-    if (startEvents && startEvents.length > 0 && startEvents[0].name && startEvents[0].name.trim() != "")
-      return startEvents[0].name;
-    else
-      return undefined; // undefined means no member gets created - null would explicitly be stored
   }
 
   // get the text that should be displayed on the start button
@@ -1128,7 +1120,7 @@ export class BpmnProcess {
     this.removeStartEventOfType(rowDetails, BPMN_MESSAGEEVENTDEFINITION);
   }
 
-  public addStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+  private addStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
     if (this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(ev => ev.$type === type) != null) == null) {
       let start = this.getStartEvents(this.processId()).last();
       let targetTask = start.outgoing.last().targetRef;
@@ -1146,7 +1138,7 @@ export class BpmnProcess {
     }
   }
 
-  public removeStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
+  private removeStartEventOfType(rowDetails: RowDetails[], type: ("bpmn:TimerEventDefinition" | "bpmn:MessageEventDefinition")): void {
     let processContext = this.getProcess(this.processId());
 
     let messageStartEvent = this.getStartEvents(this.processId()).find(start => start.eventDefinitions != null && start.eventDefinitions.find(event => event.$type === type) != null);
@@ -1163,80 +1155,6 @@ export class BpmnProcess {
     this.removeTaskObjectFromLanes(this.processId(), messageStartEvent);
     this.processDiagram.generateBPMNDiagram(this.processId(), rowDetails);
   }
-
-  // DEPRECATED
-  // in erster Implementierung wird jeder Weitere Prozess an den letzten angelegten angehängt!
-  /*public addOrModifyTask(processId: string, rowDetails: RowDetails[], rowNumber: number): string {
-    // Weiteren Prozess einfügen
-    let newTaskRowDetails = rowDetails[rowNumber];
-    let nextToLastDetails = rowDetails[rowNumber - 1];
-
-    let id: string;
-    if (newTaskRowDetails.taskId == null) {
-      id = BpmnProcess.getBpmnId(BPMN_USERTASK);
-      newTaskRowDetails.taskId = id;
-    }
-
-    let lastCreatedTask: Bpmn.Task = null;
-    if (nextToLastDetails != null) {
-      lastCreatedTask = this.getExistingTask(this.processId(), nextToLastDetails.taskId);
-    } else {
-      lastCreatedTask = this.getLastCreatedTask(this.processId());
-    }
-
-    let focusedTask: Bpmn.Task = this.getExistingTask(processId, newTaskRowDetails.taskId) as Bpmn.Task;
-    let processContext: Bpmn.Process = this.getProcess(processId);
-
-    let isNewTask: boolean = false;
-
-    if (focusedTask == null) {
-      let extensions: BpmnModdleHelper.BpmnModdleExtensionElements = BpmnModdleHelper.createTaskExtensionTemplate();
-      focusedTask = this.moddle.create(newTaskRowDetails.taskType as "bpmn:UserTask", { id: newTaskRowDetails.taskId, name: newTaskRowDetails.task, extensionElements: extensions, incoming: [], outgoing: [] });
-      processContext.flowElements.push(focusedTask);
-      isNewTask = true;
-    } else {
-      id = focusedTask.id;
-      focusedTask.name = newTaskRowDetails.task;
-    }
-
-    let allgateways = this.removeAllGateways(rowDetails, !isNewTask);
-
-
-    // entfernt den task aus einer lane und fügt ihn der neu angegebenen hinzu (fürs bearbeiten)
-    // let laneId: string = BpmnProcess.getBpmnId(BPMN_LANE, rowDetails.selectedRole);    
-    this.setRoleForTask(processId, newTaskRowDetails.laneId, focusedTask);
-
-    // MUSS nochmal überarbeitet werden, da die Code Komplexität extrem erhöht wird
-    if (lastCreatedTask != null && lastCreatedTask.id !== focusedTask.id && isNewTask) {
-      // Sequenz wird erstellt -> wird benötigt für vorherigen Prozess und für erstellten Prozess
-      // VORSICHT! Hier müssen die "Objekte" übergeben werden anstatt der ID!
-      this.addSequenceFlow(processId, lastCreatedTask, focusedTask);
-
-      // lastCreatedTask.outgoing.push(sequenceObject);
-      // focusedTask.incoming.push(sequenceObject);
-
-      // füge sequenz zum Endevent hinzu
-      // TR: getEndEvent changed to getEndEvents and [0] added in following line - does that make sense?
-      let endEventObject = this.getEndEvents(processId)[0];
-
-      // zuerst alten sequenzFlow auf EndEvent löschen
-      this.removeSequenceFlow(processId, endEventObject.incoming.find(inc => inc.sourceRef.id === lastCreatedTask.id));
-      // let tmpSf = lastCreatedTask.outgoing.find(out => out.targetRef.id == endEventObject.id);
-
-      // lastCreatedTask.outgoing = lastCreatedTask.outgoing.filter(out => out.targetRef.id !== endEventObject.id);
-      // endEventObject.incoming = endEventObject.incoming.filter(inc => inc.sourceRef.id !== lastCreatedTask.id);
-      // processContext.flowElements = processContext.flowElements.filter(el => el.id !== tmpSf.id);
-
-      this.addSequenceFlow(processId, focusedTask, endEventObject);
-      // endEventObject.incoming.push(sequenceEndObject);
-      // focusedTask.outgoing.push(sequenceEndObject);
-    }
-
-    this.putGatewaysBack(allgateways);
-
-    this.processDiagram.generateBPMNDiagram(processId, rowDetails.map(row => row.taskId));
-    return newTaskRowDetails.taskId;
-  }*/
 
   public addTaskBetween(rowDetails: RowDetails[], focusedRowNumber: number) {
     // important to refresh rowdetails with new TaskId
@@ -1697,10 +1615,6 @@ export class BpmnProcess {
       settingsElement.$body = value;
     else
       settingsElement.$body = "";
-  }
-
-  public static setTaskDescription(task: Bpmn.Task, description: string): void {
-    BpmnProcess.setExtensionBody(task, TaskSettings.Description, description);
   }
 
   public static setSetSenderAsRoleOwner(startEvent: Bpmn.StartEvent, setSetSenderAsRoleOwner: boolean): void {

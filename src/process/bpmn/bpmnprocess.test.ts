@@ -329,23 +329,6 @@ describe("sdk", function () {
         });
       });
 
-      describe("get/setTaskDescription", function () {
-        const bpmnModdle = new BpmnModdle([], {});
-
-        it("soll Description für SendTask setzen und wieder lesen", function () {
-          const task = bpmnModdle.create("bpmn:SendTask", {});
-          BpmnProcess.setTaskDescription(task, "description");
-          assert.equal(BpmnProcess.getFlowNodeDescription(task), "description");
-        });
-
-        it("soll Description für UserTask setzen und wieder lesen", function () {
-          const task = bpmnModdle.create("bpmn:UserTask", {});
-          BpmnProcess.setTaskDescription(task, "description");
-          assert.equal(BpmnProcess.getFlowNodeDescription(task), "description");
-        });
-
-      });
-
       describe("getFollowingSequenceFlowName", async function () {
 
         it("soll Following Sequence Flow Name zurückgeben", async function () {
