@@ -1,6 +1,8 @@
 // Die ApiResults werden auch als Http Statuscodes genutzt
 export enum ApiResult {
   API_OK = 200,
+  API_CREATED = 201,
+  API_NOCONTENT = 204,
   API_INVALID = 400,
   API_DENIED = 401,
   API_FORBIDDEN = 403,  // is used instead of 401 if no user is authenticated but a function is called that requires authentication
