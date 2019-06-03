@@ -1,6 +1,10 @@
 import { assert } from "chai";
 import * as DataTools from "./datatools";
 import { FieldContentMap } from "../data/datainterfaces";
+import { BpmnProcess } from "../process/bpmn/bpmnprocess";
+import { LoadTemplateReply } from "../process/legacyapi";
+import { createBpmnTemplate } from "../process/bpmn/bpmnmoddlehelper";
+import { RoleOwnerMap } from "../process/processrights";
 
 describe("sdk", function () {
   describe("data", function () {
@@ -38,6 +42,21 @@ describe("sdk", function () {
           let testString = "{{ field.fieldname1 }}{{ field.fieldname2 }}{{ field.fieldname3 }}";
           let resultString = "123";
           let res = DataTools.parseAndInsertStringWithFieldContent(testString, { fieldname1: "1", fieldname2: "2", fieldname3: "3", } as FieldContentMap, null, null);
+
+          assert.equal(res, resultString);
+        });
+
+        it("should replace field and role", async function () {
+
+          let testString = "{{ field.Anlagen }}{{ role.Bearbeiter }}";
+          let resultString = "1Administrator, Admin";
+
+          let bpmnProcess: BpmnProcess = new BpmnProcess();
+          let reply: LoadTemplateReply = await createBpmnTemplate(bpmnProcess.moddle);
+
+          bpmnProcess.bpmnXml = reply.bpmnXml;
+
+          let res = DataTools.parseAndInsertStringWithFieldContent(testString, { Anlagen: "1" } as FieldContentMap, bpmnProcess, { [bpmnProcess.getLanes(false).find(l => l.name == "Bearbeiter").id]: [{ memberId: "1", displayName: "Administrator, Admin" }] } as RoleOwnerMap);
 
           assert.equal(res, resultString);
         });

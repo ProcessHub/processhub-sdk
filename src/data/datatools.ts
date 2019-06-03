@@ -55,16 +55,16 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
 
   const roleRegex = /([{]{2}[\s]?role\.(.+?)(\s)*[}]{2})/g;
   while ((match = roleRegex.exec(inputString)) != null) {
-
     const placeHolder: string = match[groupIndexForPlaceholder];
     const roleName: string = match[groupIndexForIdentifier];
-
     if (roleName != null) {
       const lane: Bpmn.Lane = process.getLanes(false).find(l => l.name === roleName);
       if (lane) {
         const roleOwner = roleOwners[lane.id];
-        if (roleOwner && roleOwner.length) {
+        if (roleOwner && roleOwner.length) {          
           result = replaceAll(result, placeHolder, roleOwner[0].displayName);
+        } else {
+          result = replaceAll(result, placeHolder, "");
         }
       }
     }
@@ -98,6 +98,8 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
         const roleOwner = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {
           result = replaceAll(result, placeHolder, roleOwner[0].displayName);
+        } else {
+          result = replaceAll(result, placeHolder, "");
         }
       }
     }
