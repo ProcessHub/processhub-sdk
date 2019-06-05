@@ -126,6 +126,8 @@ declare module "diagram-js/lib/core/EventBus" {
     public on(events: "commandStack.changed", callback: () => void): void;
     public on(events: "commandStack.changed", priority: number, callback: () => void): void;
 
+    public on(events: "commandStack.connection.create.reverted", callback: (e: {}) => void): void;
+
     public on(events: "connection.added", callback: (event: ConnectionAddedEvent) => void): void;
 
     public on(events: "connection.removed", callback: (event: ConnectionRemovedEvent) => void): void;

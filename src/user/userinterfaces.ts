@@ -17,6 +17,10 @@ export interface RoxtraUserDetails {
   ReceiveWeeklyReports: boolean;
 }
 
+export interface ArchiveViews {
+  [processId: string]: string;
+}
+
 export class UserDetails {
   userId: string;
   mail: string;
@@ -30,7 +34,8 @@ export class UserDetails {
     accessToken?: string;  // only available in sign in replies
     instances?: InstanceDetails[];
     viewStates?: ViewStates;
-    roXtra?: RoxtraUserDetails;
+    archiveViews?: ArchiveViews;
+    roXtra?: RoxtraUserDetails;    
   };
   accountState?: AccountState;
   isLibraryAdmin?: boolean; // not available in GraphQL
@@ -74,7 +79,8 @@ export enum UserExtras {
   ExtrasWorkspaces = 1 << 0, // get workspaces where user is a member
   ExtrasWorkspacesWithMembersAndProcesses = 1 << 1,  // the sidebar needs fully loaded workspaces to display
   ExtrasInstances = 1 << 2,  // instances visible to user
-  ExtrasViewStates = 1 << 3  // user-specific last opening-dates of instances, used to sync notifications on all user devices
+  ExtrasViewStates = 1 << 3,  // user-specific last opening-dates of instances, used to sync notifications on all user devices
+  ExtrasArchiveViews = 1 << 4  // user-specific last viewed archive views by process id
 }
 
 export const emptyUser: UserDetails = {

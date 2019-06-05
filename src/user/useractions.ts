@@ -71,12 +71,12 @@ export async function loginUserWithGoogleToken(userMail: string, userName: strin
 export function loginUserAction(mail: string, password: string, accessToken: string = null, isGoogleAccessToken: boolean = false, userNameFromGoogle: string = null, userProfilePictureLink: string = null): <S>(dispatch: Dispatch<S>) => Promise<LoginReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<LoginReply> => {
     let response:
-     LoginReply = await Api.postJson(UserRequestRoutes.Login, <LoginRequest>{
-      mail: mail,
-      password: password,
-      accessToken: accessToken,
-      isGoogleAccessToken: isGoogleAccessToken
-    });
+      LoginReply = await Api.postJson(UserRequestRoutes.Login, <LoginRequest>{
+        mail: mail,
+        password: password,
+        accessToken: accessToken,
+        isGoogleAccessToken: isGoogleAccessToken
+      });
 
     dispatch(response);
     return response;
@@ -89,7 +89,7 @@ export async function loginDemoUser(): Promise<LoginDemoUserReply> {
 export function loginDemoUserAction(): <S>(dispatch: Dispatch<S>) => Promise<LoginDemoUserReply> {
   return async <S>(dispatch: Dispatch<S>): Promise<LoginDemoUserReply> => {
     let response:
-    LoginDemoUserReply = await Api.postJson(UserRequestRoutes.LoginDemoUser, <LoginDemoUserRequest>{});
+      LoginDemoUserReply = await Api.postJson(UserRequestRoutes.LoginDemoUser, <LoginDemoUserRequest>{});
 
     dispatch(response);
     return response;
@@ -101,13 +101,16 @@ export async function loadUser(userId: string, getExtras: UserExtras = UserExtra
   let currentUser = userState ? userState.currentUser : null;
 
   if (!forceReload && currentUser) {
-    if ((getExtras  & UserExtras.ExtrasWorkspaces) && currentUser.extras.workspaces)
+    if ((getExtras & UserExtras.ExtrasWorkspaces) && currentUser.extras.workspaces)
       getExtras -= UserExtras.ExtrasWorkspaces;
-    if ((getExtras  & UserExtras.ExtrasWorkspacesWithMembersAndProcesses) 
+    if ((getExtras & UserExtras.ExtrasArchiveViews) && currentUser.extras.archiveViews) {
+      getExtras -= UserExtras.ExtrasArchiveViews;
+    }
+    if ((getExtras & UserExtras.ExtrasWorkspacesWithMembersAndProcesses)
       && currentUser.extras.workspaces && currentUser.extras.workspaces.length > 0
       && currentUser.extras.workspaces[0].extras.members && currentUser.extras.workspaces[0].extras.processes)
-      getExtras -= UserExtras.ExtrasWorkspacesWithMembersAndProcesses;  
-      
+      getExtras -= UserExtras.ExtrasWorkspacesWithMembersAndProcesses;
+
     if (getExtras == 0) {
       updateUserInState(currentUser);
       return currentUser;
@@ -152,7 +155,7 @@ export async function logoutUser(accessToken?: string) {
 // Diese eigentliche Action wird für Mock-Store Tests genutzt
 export function logoutUserAction(accessToken?: string) {
   return function (dispatch: any) {
-    return Api.postJson(UserRequestRoutes.Logout, null, accessToken).then(() => {      
+    return Api.postJson(UserRequestRoutes.Logout, null, accessToken).then(() => {
     }).catch(reason => error(reason));
   };
 }

@@ -16,6 +16,7 @@ export const UserRequestRoutes = {
   UploadProfilePicture: "/api/user/uploadprofilepicture",
   LoginDemoUser: "/api/user/logindemo",
   DeleteUser: "/api/user/deleteuser",
+  SetArchiveViewState: "/api/user/setarchiveviewstate",
 };
 export type UserRequestRoutes = keyof typeof UserRequestRoutes;
 
@@ -85,6 +86,11 @@ export interface ConfirmMailRequest extends BaseMessage {
 
 export interface UploadProfilePictureRequest extends BaseMessage {
   data: string;
+}
+
+export interface SetArchiveViewStateRequest extends BaseRequest {
+  processId: string;
+  archiveViewId: string;
 }
 
 // nes websocket messages
