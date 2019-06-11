@@ -177,8 +177,8 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
     }
     if ((getExtras & ProcessExtras.ExtrasInstances) && cachedProcess.extras.instances)
       getExtras -= ProcessExtras.ExtrasInstances;
-    if ((getExtras & ProcessExtras.ExtrasProcessRoles) && cachedProcess.extras.processRoles)
-      getExtras -= ProcessExtras.ExtrasProcessRoles;
+    if ((getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames) && cachedProcess.extras.processRoles)
+      getExtras -= ProcessExtras.ExtrasProcessRolesWithMemberNames;
     if ((getExtras & ProcessExtras.ExtrasSettings) && cachedProcess.extras.settings)
       getExtras -= ProcessExtras.ExtrasSettings;
     if ((getExtras & ProcessExtras.ExtrasAuditTrail) && cachedProcess.extras.auditTrail)
@@ -186,18 +186,7 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
 
     if ((getExtras & ProcessExtras.ExtrasSvgString) && (cachedProcess.extras.svgString || cachedProcess.extras.svgString === ""))
       getExtras -= ProcessExtras.ExtrasSvgString;
-    if ((getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames) && cachedProcess.extras.processRoles) {
-      // names available?
-      for (let roleId in cachedProcess.extras.processRoles) {
-        for (let user of cachedProcess.extras.processRoles[roleId].potentialRoleOwners) {
-          if (user.displayName != null) {
-            if (getExtras & ProcessExtras.ExtrasProcessRolesWithMemberNames)
-              getExtras -= ProcessExtras.ExtrasProcessRolesWithMemberNames;
-            break;
-          }
-        }
-      }
-    }
+    
     if (getExtras == 0) {
       // all data available from cache
       rootStore.dispatch({
