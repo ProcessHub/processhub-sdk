@@ -47,14 +47,14 @@ export interface ProcessDetails {
   // Changes must also be reflected in gqlTypes and gqlFragments below!
 
   processId: string;
-  workspaceId: string;  
+  workspaceId: string;
   displayName: string;
-  urlName?: string; 
+  urlName?: string;
   fullUrl?: string; // @workspace/p/urlname
   previewUrl?: string;  // full url of preview-svg (including https://)
   description: string;
   useModeler?: boolean;
-  isNewProcess?: boolean;  
+  isNewProcess?: boolean;
   userRights?: ProcessAccessRights; // access rights of the current user
   attachments?: ProcessAttachment[];
   reportDrafts?: ProcessReportDraft[];
@@ -69,7 +69,7 @@ export interface ProcessDetails {
   xmlVersion?: number;
   parentProcessIds?: string[];
   childProcessIds?: string[];
-  extras: { 
+  extras: {
     // New Extras must be added to cache-handling in processactions -> loadProcess!   
     bpmnXml?: string;
     bpmnProcess?: BpmnProcess; // available if bpmnXml is available
@@ -131,7 +131,7 @@ export interface ProcessSettings {
     cardDesc?: string;  // additional text on the card
     dashBoardAccess?: ProcessViewAccess;  // who can access todos?
   };
-  library?: {  
+  library?: {
     rating?: number;  // process rating, used to sort processes in library
     copiedFromId?: string;  // processId of the original process    
   };
@@ -140,7 +140,7 @@ export interface ProcessSettings {
 export enum ProcessViewAccess {
   // DO NOT CHANGE NUMBERS - used in database
   EverybodySeesAll = 10,  // all todos/instances are public  NOT YET IMPLEMENTED
-      // Not implemented because Dashboard uses user.extras.todos, which is not available for anonymous guests
+  // Not implemented because Dashboard uses user.extras.todos, which is not available for anonymous guests
   WorkspaceMembersSeeAll = 20,  // team members see all todos/instances
   ParticipantsSeeAll = 30,  // process participants see all todos/instances
   ParticipantsSeeTheirs = 40,  // process participants see their own todos/instances
@@ -265,8 +265,8 @@ export interface RunningTaskLane {
 }
 
 export interface StartButtonMap {
-  [id: string]: { 
-    startEventName: string, 
+  [id: string]: {
+    startEventName: string,
     laneId: string,
     onlyRoxFileField: boolean,
   };

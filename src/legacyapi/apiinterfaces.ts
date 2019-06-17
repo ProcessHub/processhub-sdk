@@ -11,6 +11,7 @@ export enum ApiResult {
   API_DUPLICATE = 409,
   API_NOTEMPTY = 423,
   API_ERROR = 500,
+  API_BADGATEWAY = 502,
   API_ERROR_ROXAPI = 512
 }
 // export const API_OK = 200;
