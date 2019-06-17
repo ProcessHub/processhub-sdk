@@ -2,13 +2,12 @@ import { ActionHandler } from "./actionhandler";
 import { createId } from "./tools/guid";
 
 let waitingCommands: { [key: string]: any } = {};
-let parenthost: string = "*";
 
 // Plugins are hosted in iFrames for security reasons. Communication with ProcessHub is handled by messaging.
 export class FrameActionHandler extends ActionHandler {
   plugin: string;
   component: string;
-  parenthost: string;
+  parenthost: string = "*";
 
   constructor(plugin: string, component: string) {
     super();
@@ -48,7 +47,7 @@ export class FrameActionHandler extends ActionHandler {
       let data = JSON.parse(message.substr(split[0].length + split[1].length + split[2].length + 3));
       console.log("ActionReplyListener.Received: " + command + " " + commandId);
       if (command == "init") {
-        parenthost = data.host;
+        this.parenthost = data.host;
       } else if (waitingCommands[commandId])
         waitingCommands[commandId](data);
     }

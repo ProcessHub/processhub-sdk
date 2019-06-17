@@ -7,7 +7,6 @@ export const RequestRoutes = {
   GetRootFolder: "/api/phroxapi/getrootfolder",
   GetFolderContent: "/api/phroxapi/getfoldercontent",
   GetDocument: "/api/phroxapi/getdocument",
-  GetRoxtraUrl: "/api/phroxapi/getroxtraurl",
   GetProcessesForRoxFile: "/api/phroxapi/getprocessesforroxfile",
   SetCoporateDesign: "/api/phroxapi/setcoporatedesign",
   DownloadRoxDocToServer: "/api/phroxapi/downloadroxdoctoserver",
