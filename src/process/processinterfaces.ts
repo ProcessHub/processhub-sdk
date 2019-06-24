@@ -200,6 +200,7 @@ export const TaskSettings = {
   DueAtDateCanBeEdit: "due-at-can-be-edit",
   DueAtDuration: "due-at-duration",
   SequenceFlowExpression: "sequenceflow-expression",
+  IsBuilderExpression: "isBuilder-expression",
   FieldsWhichShouldSend: "fields-which-should-send",
   DateFieldTimer: "datefield-for-timercatch",
   ScriptTaskCode: "script-task-code",
@@ -237,6 +238,7 @@ export interface TaskExtensions {
   subProcessId: string;
 
   sequenceFlowExpression: string;
+  isBuilderExpression: boolean;
 
   fieldsWhichShouldSend: string[];
   dateFieldTimer: string;

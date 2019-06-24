@@ -164,6 +164,8 @@ export class BpmnProcess {
       subProcessId: undefined,
 
       sequenceFlowExpression: undefined,
+      isBuilderExpression: true,
+
       fieldsWhichShouldSend: null,
       dateFieldTimer: null
     };
@@ -178,6 +180,9 @@ export class BpmnProcess {
           switch (child.name) {
             case TaskSettings.SequenceFlowExpression:
               returnValue.sequenceFlowExpression = child.$body;
+              break;
+            case TaskSettings.IsBuilderExpression:
+              returnValue.isBuilderExpression = child.$body == "true";
               break;
             case TaskSettings.SubProcessId:
               returnValue.subProcessId = child.$body;
