@@ -164,7 +164,7 @@ export class BpmnProcess {
       subProcessId: undefined,
 
       sequenceFlowExpression: undefined,
-      isBuilderExpression: true,
+      isBuilderExpression: false,
 
       fieldsWhichShouldSend: null,
       dateFieldTimer: null
