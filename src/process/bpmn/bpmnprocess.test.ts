@@ -232,33 +232,74 @@ describe("sdk", function () {
           assert(testLane.flowNodeRef.length === 1);
         });
 
-        it("soll Extension Values einfügen und lesen", async function () {
+        describe("Extension Values", function () {
+
           let bpmnProcess: BpmnProcess;
-          bpmnProcess = await createTestBpmnProcess();
-          let processes = bpmnProcess.getProcesses();
-          let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
+          let testTaskObject: Bpmn.UserTask;
 
-          // wie test zuvor bis hier her
-          let testLaneName: string = "Test Lane";
+          before(async () => {
 
-          let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
-          bpmnProcess.addLane(process.id, testId, testLaneName);
-          let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
+            bpmnProcess = await createTestBpmnProcess();
 
-          let testTaskId: string = rowDetails[1].taskId;
+            let processes = bpmnProcess.getProcesses();
+            let process: Bpmn.Process = bpmnProcess.getProcess(processes[0].id);
 
-          let testTaskObject: Bpmn.UserTask = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
-          assert(testTaskObject.name === rowDetails[1].task);
-          assert(testTaskObject.id === testTaskId);
-          assert(testTaskObject.$type === BPMN_USERTASK);
+            // wie test zuvor bis hier her
+            let testLaneName: string = "Test Lane";
 
-          let testDescription = "tritra test 123!";
-          BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.Description as TaskSettings, testDescription, "Text");
+            let testId: string = BpmnProcess.getBpmnId(BPMN_LANE);
+            bpmnProcess.addLane(process.id, testId, testLaneName);
+            let rowDetails: RowDetails[] = JSON.parse(JSON.stringify(TestRowDetails));
 
-          let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+            let testTaskId: string = rowDetails[1].taskId;
 
-          assert(extensionValues.description === testDescription, extensionValues.description + " == " + testDescription);
+            testTaskObject = bpmnProcess.getExistingTask(process.id, testTaskId) as Bpmn.UserTask;
+            assert(testTaskObject.name === rowDetails[1].task);
+            assert(testTaskObject.id === testTaskId);
+            assert(testTaskObject.$type === BPMN_USERTASK);
+          });
+
+          it("soll Text einfügen und lesen - Description", async function () {
+            
+            let testValue = "tritra test 123!";
+            BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.Description as TaskSettings, testValue, "Text");
+
+            let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+
+            assert(extensionValues.description === testValue, extensionValues.description + " == " + testValue);
+          });
+
+          it("soll Text einfügen und lesen - SequenzFlowExpression", async function () {
+            
+            let testValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin'))";
+            BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SequenceFlowExpression as TaskSettings, testValue, "Text");
+
+            let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+
+            assert(extensionValues.sequenceFlowExpression === testValue, extensionValues.sequenceFlowExpression + " == " + testValue);
+          });
+
+          it("soll Boolean einfügen und lesen", async function () {
+            
+            let testValue = true;
+            BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.IsBuilderExpression as TaskSettings, testValue, "Boolean");
+
+            let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+
+            assert(extensionValues.isBuilderExpression === testValue, extensionValues.isBuilderExpression + " == " + testValue);
+          });
+
+          it("soll List einfügen und lesen", async function () {
+            
+            let testValue: string[] = [ "Receiver1", "Receiver2" ];
+            BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SendTaskReceiver as TaskSettings, testValue, "List");
+
+            let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+
+            expect(extensionValues.sendTaskReceiver).to.eql(testValue, extensionValues.sendTaskReceiver + " == " + testValue)
+          });
         });
+
         describe("deleteTask", function () {
           it("soll Task löschen und Reihenfolge überprüfen", async function () {
             let bpmnProcess: BpmnProcess;
