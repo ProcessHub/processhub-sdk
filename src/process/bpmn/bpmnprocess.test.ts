@@ -296,7 +296,7 @@ describe("sdk", function () {
 
             let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
 
-            expect(extensionValues.sendTaskReceiver).to.eql(testValue, extensionValues.sendTaskReceiver + " == " + testValue)
+            expect(extensionValues.sendTaskReceiver).to.eql(testValue, extensionValues.sendTaskReceiver + " == " + testValue);
           });
         });
 
