@@ -298,6 +298,17 @@ describe("sdk", function () {
 
             expect(extensionValues.sendTaskReceiver).to.eql(testValue, extensionValues.sendTaskReceiver + " == " + testValue);
           });
+
+          it("soll alte Syntax korrekt aus XML laden und austauschen", async function () {
+            
+            let testValue = "(({{ field.Feld_1 }} == 1) && ({{ role.Bearbeiter }} == 'Administrator, Admin')) || role['Pruefer'] && role['Ersteller'].firstname";
+            let sollValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'].displayName == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
+            BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SequenceFlowExpression as TaskSettings, testValue, "Text");
+
+            let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
+            
+            expect(extensionValues.sequenceFlowExpression).to.be.equal(sollValue, extensionValues.sequenceFlowExpression + " == " + sollValue);
+          });
         });
 
         describe("deleteTask", function () {

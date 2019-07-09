@@ -26,6 +26,8 @@ export class UserDetails {
   mail: string;
   realName?: string;     
   displayName?: string; // realName or mail if no name is defined
+  firstName?: string;
+  lastName?: string;
   photoUrl?: string;  
   language?: string; // preferred User language (en, de, ...)
   extras: {

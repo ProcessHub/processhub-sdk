@@ -1,3 +1,5 @@
+import { string } from "joi";
+
 // Mailadresse auf Gültigkeit prüfen
 export function isValidMailAddress(mail: string): boolean {
   // fault tolerant - don't block too many
@@ -121,4 +123,12 @@ export function removeHtmlTags(html: string): string {
     return html;
   }
   return html.replace(/<\/?("[^"]*"|'[^']*'|[^>])*(>|$)/g, "");
+}
+
+export function replaceOldFieldSyntax(oldValue: string): string {
+  if(oldValue) {
+    return oldValue.replace(/([{]{2}[\s]?(field|role)\.(.+?)(\s)*[}]{2})/g, (match, p1, p2, p3, p4, offset, string): string => { return p2 + "['" + p3 + "']" }) // fallback: rewrite old syntax {{ field.abc }} -> field['abc'];
+                   .replace(/(role\['[^'\]]*'\])(\s|$|\))/g, (match, p1, offset, string): string => { return p1 + ".displayName " }); // BUG: 13103 | fallback, replace role without property to role.displayName;
+  }
+  return oldValue;
 }

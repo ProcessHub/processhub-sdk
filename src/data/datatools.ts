@@ -1,7 +1,12 @@
 import { FieldContentMap, isFieldValue, FieldDefinition, FieldType, FieldValue } from "./datainterfaces";
 import { getFormattedDate, getFormattedDateTime, getFormattedTimeZoneOffset } from "../tools/timing";
-import { BpmnProcess, RoleOwnerMap } from "../process";
+import { BpmnProcess, RoleOwnerMap, RoleOwner } from "../process";
 import { Bpmn } from "../process/bpmn";
+import { UserDetails } from "../user";
+import { replaceOldFieldSyntax } from "../tools";
+
+const fieldNameRegExp: RegExp = new RegExp("(field\\['([^'\\]]*)'\\])", "g");
+const roleNameRegExp: RegExp = new RegExp("(role\\['([^'\\]]*)'\\](\.(firstName|lastName|displayName))?)", "g");
 
 export function replaceAll(target: string, search: string, replacement: string) {
   while (target.indexOf(search) >= 0) {
@@ -27,18 +32,15 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   if (fieldContentMap == null)
     return inputString;
 
-  const regex = /([{]{2}[\s]?field\.(.+?)(\s)*[}]{2})/g;
-  const groupIndexForPlaceholder = 0;
-  const groupIndexForIdentifier = 2;
+  const groupIndexForFieldPlaceholder = 0;
+  const groupIndexForFieldIdentifier = 2;
 
-
-  let result: string = inputString;
-
+  let result: string = replaceOldFieldSyntax(inputString);
   let match;
-  while ((match = regex.exec(inputString)) != null) {
 
-    let fieldPlaceholder = match[groupIndexForPlaceholder];
-    let fieldName = match[groupIndexForIdentifier];
+  while ((match = fieldNameRegExp.exec(result)) != null) {
+    let fieldPlaceholder = match[groupIndexForFieldPlaceholder];
+    let fieldName = match[groupIndexForFieldIdentifier];
 
     if (fieldName != null) {
       let valueObject = fieldContentMap[fieldName];
@@ -48,21 +50,29 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
         result = replaceAll(result, fieldPlaceholder, val);
       } else {
         result = replaceAll(result, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
-
       }
     }
   }
 
-  const roleRegex = /([{]{2}[\s]?role\.(.+?)(\s)*[}]{2})/g;
-  while ((match = roleRegex.exec(inputString)) != null) {
-    const placeHolder: string = match[groupIndexForPlaceholder];
-    const roleName: string = match[groupIndexForIdentifier];
+  const groupIndexForRolePlaceholder = 0;
+  const groupIndexForRoleIdentifier = 2;
+  const groupIndexForRoleProperty = 4;
+
+  while ((match = roleNameRegExp.exec(result)) != null) {
+    const placeHolder: string = match[groupIndexForRolePlaceholder];    
+    const roleName: string = match[groupIndexForRoleIdentifier];
+
+    let roleProperty: string;
+    if(match.length == 5) {
+      roleProperty = match[groupIndexForRoleProperty];
+    }
+
     if (roleName != null) {
       const lane: Bpmn.Lane = process.getLanes(false).find(l => l.name === roleName);
       if (lane) {
-        const roleOwner = roleOwners[lane.id];
+        const roleOwner: RoleOwner[] = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {          
-          result = replaceAll(result, placeHolder, roleOwner[0].displayName);
+          result = replaceAll(result, placeHolder, roleProperty ? ((roleOwner[0]).user as any)[roleProperty] : roleOwner[0].displayName);
         } else {
           result = replaceAll(result, placeHolder, "");
         }
@@ -71,7 +81,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   }
 
   const newFieldRegex = /[{]{1}[\s]?field\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
-  while ((match = newFieldRegex.exec(inputString)) != null) {
+  while ((match = newFieldRegex.exec(result)) != null) {
     const placeHolder: string = match[0];
     const fieldName: string = match[1];
 
@@ -87,7 +97,7 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
   }
 
   const newRoleRegex = /[{]{1}[\s]?role\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;
-  while ((match = newRoleRegex.exec(inputString)) != null) {
+  while ((match = newRoleRegex.exec(result)) != null) {
 
     const placeHolder: string = match[0];
     const roleName: string = match[1];

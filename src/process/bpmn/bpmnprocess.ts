@@ -16,6 +16,7 @@ import { InstanceDetails } from "../../instance/instanceinterfaces";
 import { DecisionTask, DecisionTaskTypes, filterTodosForInstance } from "../../todo";
 import { LoadTemplateReply } from "../legacyapi";
 import { RowDetails } from "../phclient";
+import { replaceOldFieldSyntax } from "../../tools";
 
 export const BPMN_PROCESS = "bpmn:Process";
 export const BPMN_SUBPROCESS = "bpmn:SubProcess";
@@ -179,7 +180,7 @@ export class BpmnProcess {
         for (let child of values.$children) {
           switch (child.name) {
             case TaskSettings.SequenceFlowExpression:
-              returnValue.sequenceFlowExpression = child.$body;
+              returnValue.sequenceFlowExpression = child.$body ? replaceOldFieldSyntax(child.$body) : child.$body;
               break;
             case TaskSettings.IsBuilderExpression:
               returnValue.isBuilderExpression = child.$body == "true";
