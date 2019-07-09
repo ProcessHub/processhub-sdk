@@ -2,11 +2,10 @@ import { FieldContentMap, isFieldValue, FieldDefinition, FieldType, FieldValue }
 import { getFormattedDate, getFormattedDateTime, getFormattedTimeZoneOffset } from "../tools/timing";
 import { BpmnProcess, RoleOwnerMap, RoleOwner } from "../process";
 import { Bpmn } from "../process/bpmn";
-import { UserDetails } from "../user";
 import { replaceOldFieldSyntax } from "../tools";
 
-const fieldNameRegExp: RegExp = new RegExp("(field\\['([^'\\]]*)'\\])", "g");
-const roleNameRegExp: RegExp = new RegExp("(role\\['([^'\\]]*)'\\](\.(firstName|lastName|displayName))?)", "g");
+const fieldNameRegExp: RegExp = new RegExp("field\\['([^'\\]]*)'\\]");
+const roleNameRegExp: RegExp = new RegExp("role\\['([^'\\]]*)'\\](\.(firstName|lastName|displayName))?");
 
 export function replaceAll(target: string, search: string, replacement: string) {
   while (target.indexOf(search) >= 0) {
@@ -33,12 +32,13 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
     return inputString;
 
   const groupIndexForFieldPlaceholder = 0;
-  const groupIndexForFieldIdentifier = 2;
+  const groupIndexForFieldIdentifier = 1;
 
   let result: string = replaceOldFieldSyntax(inputString);
-  let match;
+  let match: RegExpExecArray = fieldNameRegExp.exec(result);
 
-  while ((match = fieldNameRegExp.exec(result)) != null) {
+  while (match) {
+
     let fieldPlaceholder = match[groupIndexForFieldPlaceholder];
     let fieldName = match[groupIndexForFieldIdentifier];
 
@@ -50,34 +50,38 @@ export function parseAndInsertStringWithFieldContent(inputString: string, fieldC
         result = replaceAll(result, fieldPlaceholder, val);
       } else {
         result = replaceAll(result, fieldPlaceholder, valueObject != null ? valueObject.toString() : "");
-      }
+      }      
     }
+
+    match = fieldNameRegExp.exec(result);
   }
 
   const groupIndexForRolePlaceholder = 0;
-  const groupIndexForRoleIdentifier = 2;
-  const groupIndexForRoleProperty = 4;
+  const groupIndexForRoleIdentifier = 1;
+  const groupIndexForRoleProperty = 3;
 
-  while ((match = roleNameRegExp.exec(result)) != null) {
+  match = roleNameRegExp.exec(result);
+
+  while (match) {
     const placeHolder: string = match[groupIndexForRolePlaceholder];    
     const roleName: string = match[groupIndexForRoleIdentifier];
-
     let roleProperty: string;
-    if(match.length == 5) {
+    if (match.length == 4) {
       roleProperty = match[groupIndexForRoleProperty];
     }
-
     if (roleName != null) {
       const lane: Bpmn.Lane = process.getLanes(false).find(l => l.name === roleName);
       if (lane) {
         const roleOwner: RoleOwner[] = roleOwners[lane.id];
         if (roleOwner && roleOwner.length) {          
-          result = replaceAll(result, placeHolder, roleProperty ? ((roleOwner[0]).user as any)[roleProperty] : roleOwner[0].displayName);
+          result = replaceAll(result, placeHolder, (roleProperty && roleOwner[0].user) ? ((roleOwner[0]).user as any)[roleProperty] : roleOwner[0].displayName);
         } else {
           result = replaceAll(result, placeHolder, "");
         }
       }
     }
+
+    match = roleNameRegExp.exec(result);
   }
 
   const newFieldRegex = /[{]{1}[\s]?field\[['"]?(.+?)['"]?\][\s]?[}]{1}/g;

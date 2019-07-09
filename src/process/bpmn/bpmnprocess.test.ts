@@ -272,11 +272,12 @@ describe("sdk", function () {
           it("soll Text einfügen und lesen - SequenzFlowExpression", async function () {
             
             let testValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin'))";
+            let expectedValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'].displayName == 'Administrator, Admin'))";
             BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SequenceFlowExpression as TaskSettings, testValue, "Text");
 
             let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
 
-            assert(extensionValues.sequenceFlowExpression === testValue, extensionValues.sequenceFlowExpression + " == " + testValue);
+            expect(extensionValues.sequenceFlowExpression).to.be.equal(expectedValue, extensionValues.sequenceFlowExpression + " == " + expectedValue);
           });
 
           it("soll Boolean einfügen und lesen", async function () {

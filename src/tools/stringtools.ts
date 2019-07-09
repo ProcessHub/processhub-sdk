@@ -126,9 +126,9 @@ export function removeHtmlTags(html: string): string {
 }
 
 export function replaceOldFieldSyntax(oldValue: string): string {
-  if(oldValue) {
-    return oldValue.replace(/([{]{2}[\s]?(field|role)\.(.+?)(\s)*[}]{2})/g, (match, p1, p2, p3, p4, offset, string): string => { return p2 + "['" + p3 + "']" }) // fallback: rewrite old syntax {{ field.abc }} -> field['abc'];
-                   .replace(/(role\['[^'\]]*'\])(\s|$|\))/g, (match, p1, offset, string): string => { return p1 + ".displayName " }); // BUG: 13103 | fallback, replace role without property to role.displayName;
+  if (oldValue) {
+    return oldValue.replace(/([{]{2}[\s]?(field|role)\.(.+?)(\s)*[}]{2})/g, (match, p1, p2, p3, p4, offset, value): string => { return p2 + "['" + p3 + "']"; }) // fallback: rewrite old syntax {{ field.abc }} -> field['abc'];
+                   .replace(/(role\['[^'\]]*'\])(\s|$|\))/g, (match, p1, p2, offset, value): string => { return p1 + ".displayName" + p2; }); // BUG: 13103 | fallback, replace role without property to role.displayName;
   }
   return oldValue;
 }

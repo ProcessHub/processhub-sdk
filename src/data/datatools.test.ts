@@ -22,8 +22,8 @@ describe("sdk", function () {
 
         it("should replace field values with {field['name']} notation", async function () {
 
-          let testString = "Hallo {field['existiert']}, wie gehts {field['existiertnicht']}\n{trölölö} {{{moepmoep}}}\n{field['existiert2']}\n";
-          let resultString = "Hallo Teststring eingesetzt!, wie gehts \n{trölölö} {{{moepmoep}}}\n\n";
+          let testString = "Hallo {field['existiert']}, wie gehts {field['existiertnicht']}\n{trölölö} {{{moepmoep}}}\nfield['existiertnicht2']\n";
+          let resultString = "Hallo {Teststring eingesetzt!}, wie gehts {}\n{trölölö} {{{moepmoep}}}\n\n";
           let res = DataTools.parseAndInsertStringWithFieldContent(testString, { existiert: "Teststring eingesetzt!" } as FieldContentMap, null, null);
           console.log(res);
           assert.equal(res, resultString);
@@ -37,9 +37,18 @@ describe("sdk", function () {
           assert.equal(res, testString);
         });
 
-        it("should replace long field names with short values", async function () {
+        it("should replace long field old names with short values", async function () {
 
           let testString = "{{ field.fieldname1 }}{{ field.fieldname2 }}{{ field.fieldname3 }}";
+          let resultString = "123";
+          let res = DataTools.parseAndInsertStringWithFieldContent(testString, { fieldname1: "1", fieldname2: "2", fieldname3: "3", } as FieldContentMap, null, null);
+
+          assert.equal(res, resultString);
+        });
+
+        it("should replace long field names with short values", async function () {
+
+          let testString = "field['fieldname1']field['fieldname2']field['fieldname3']";
           let resultString = "123";
           let res = DataTools.parseAndInsertStringWithFieldContent(testString, { fieldname1: "1", fieldname2: "2", fieldname3: "3", } as FieldContentMap, null, null);
 
