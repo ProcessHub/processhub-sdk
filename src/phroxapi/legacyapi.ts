@@ -95,11 +95,6 @@ export interface GetProcessesForRoxFileReply extends BaseReply {
   processes: ProcessItem[];
 }
 
-
-export interface GetRoxtraUrlReply extends BaseReply {
-  roXtraUrl: string;
-}
-
 export interface GetProcessesWithGroupRequest {
   groupId: string;
 }

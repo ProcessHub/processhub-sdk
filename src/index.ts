@@ -46,3 +46,5 @@ import * as PhRoxApi from "./phroxapi";
 export { PhRoxApi };
 import * as Settings from "./settings";
 export { Settings };
+import * as ServiceTask from "./servicetask";
+export { ServiceTask };
