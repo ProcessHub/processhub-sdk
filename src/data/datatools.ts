@@ -4,8 +4,8 @@ import { BpmnProcess, RoleOwnerMap, RoleOwner } from "../process";
 import { Bpmn } from "../process/bpmn";
 import { replaceOldFieldSyntax } from "../tools";
 
-const fieldNameRegExp: RegExp = /field\['([^'\\]]*)'\]/;
-const roleNameRegExp: RegExp = /role\['([^'\\]]*)'\](\.(firstName|lastName|displayName))?/;
+const fieldNameRegExp: RegExp = /field\['([^'\]]*)'\]/;
+const roleNameRegExp: RegExp = /role\['([^'\]]*)'\](\.(firstName|lastName|displayName))?/;
 
 export function replaceAll(target: string, search: string, replacement: string) {
   while (target.indexOf(search) >= 0) {
