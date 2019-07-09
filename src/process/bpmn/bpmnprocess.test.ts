@@ -272,7 +272,7 @@ describe("sdk", function () {
           it("soll Text einfügen und lesen - SequenzFlowExpression", async function () {
             
             let testValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin'))";
-            let expectedValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'].displayName == 'Administrator, Admin'))";
+            let expectedValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin'))";
             BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SequenceFlowExpression as TaskSettings, testValue, "Text");
 
             let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);
@@ -302,8 +302,8 @@ describe("sdk", function () {
 
           it("soll alte Syntax korrekt aus XML laden und austauschen", async function () {
             
-            let testValue = "(({{ field.Feld_1 }} == 1) && ({{ role.Bearbeiter }} == 'Administrator, Admin')) || role['Pruefer'] && role['Ersteller'].firstname";
-            let sollValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'].displayName == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
+            let testValue = "(({{ field.Feld_1 }} == 1) && ({{ role.Bearbeiter }} == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
+            let sollValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
             BpmnProcess.addOrUpdateExtension(testTaskObject, TaskSettings.SequenceFlowExpression as TaskSettings, testValue, "Text");
 
             let extensionValues = BpmnProcess.getExtensionValues(testTaskObject);

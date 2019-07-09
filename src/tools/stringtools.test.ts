@@ -104,8 +104,8 @@ describe("sdk", function () {
       describe("replaceOldFieldSyntax", function () {
         it("soll alte Syntax austauschen", async function () {
               
-          let testValue = "(({{ field.Feld_1 }} == 1) && ({{ role.Bearbeiter }} == 'Administrator, Admin')) || role['Pruefer'] && role['Ersteller'].firstname";
-          let expectedValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'].displayName == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
+          let testValue = "(({{ field.Feld_1 }} == 1) && ({{ role.Bearbeiter }} == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
+          let expectedValue = "((field['Feld_1'] == 1) && (role['Bearbeiter'] == 'Administrator, Admin')) || role['Pruefer'].displayName && role['Ersteller'].firstname";
 
           const res = StringTools.replaceOldFieldSyntax(testValue);
           
