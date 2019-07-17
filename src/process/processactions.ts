@@ -5,7 +5,7 @@ import { Dispatch } from "redux";
 import * as StateHandler from "../statehandler";
 import { BpmnProcess } from "./bpmn/bpmnprocess";
 import { ProcessDetails, ProcessExtras, TimerStartEventConfiguration } from "./processinterfaces";
-import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, SetTimersOfProcessReply, GetProcessStatisticsReply, GetAllServicesReply, GetAllServicesRequest, UploadReportDraftRequest, DeleteReportDraftRequest } from "./legacyapi";
+import { GetProcessDetailsReply, ProcessRequestRoutes, PROCESSLOADED_MESSAGE, ProcessLoadedMessage, GetProcessDetailsRequest, GetPublicProcessesReply, CopyProcessRequest, RateProcessRequest, UploadFileRequest, DeleteFileRequest, GetTimersOfProcessReply, SetTimersOfProcessReply, GetProcessStatisticsReply, GetAllServicesReply, GetAllServicesRequest, UploadReportDraftRequest, DeleteReportDraftRequest, AddRoXtraFileRequest } from "./legacyapi";
 import { isTrue } from "../tools/assert";
 import { createId } from "../tools/guid";
 import { tl } from "../tl";
@@ -186,7 +186,7 @@ export async function loadProcess(processId: string, instanceId?: string, getExt
 
     if ((getExtras & ProcessExtras.ExtrasSvgString) && (cachedProcess.extras.svgString || cachedProcess.extras.svgString === ""))
       getExtras -= ProcessExtras.ExtrasSvgString;
-    
+
     if (getExtras == 0) {
       // all data available from cache
       rootStore.dispatch({
@@ -376,6 +376,28 @@ export function rateProcessAction(processId: string, ratingDiff: number, accessT
   };
 }
 
+export async function addRoXtraFile(processId: string, fileName: string, fileId: number, iconLink: string, accessToken: string = null): Promise<GetProcessDetailsReply> {
+  return await rootStore.dispatch(addRoXtraFileAction(processId, fileName, fileId, iconLink, accessToken));
+}
+
+export function addRoXtraFileAction(processId: string, fileName: string, fileId: number, iconLink: string, accessToken: string = null): <S>(dispatch: Dispatch<S>) => Promise<GetProcessDetailsReply> {
+  const request: AddRoXtraFileRequest = {
+    processId,
+    fileId,
+    fileName,
+    iconLink,
+  };
+  return async <S>(dispatch: Dispatch<S>): Promise<GetProcessDetailsReply> => {
+    let response: GetProcessDetailsReply = await Api.postJson(
+      ProcessRequestRoutes.AddRoXtraFile,
+      request,
+      accessToken);
+
+    response.processDetails = await completeProcessFromCache(response.processDetails);
+    dispatch(response);
+    return response;
+  };  
+}
 
 export async function uploadFile(processId: string, fileName: string, data: string, accessToken: string = null): Promise<GetProcessDetailsReply> {
   return await rootStore.dispatch(uploadFileAction(processId, fileName, data, accessToken));

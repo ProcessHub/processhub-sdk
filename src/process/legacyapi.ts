@@ -17,6 +17,7 @@ export const ProcessRequestRoutes = {
   CopyProcess: "/api/process/copyprocess",
   RateProcess: "/api/process/rateprocess",
   UploadFile: "/api/process/uploadfile",
+  AddRoXtraFile: "/api/process/addroxtrafile",
   DeleteFile: "/api/process/deletefile",
   GetProcessStatistics: "/api/process/getstatistics",
   Comment: "/api/process/comment",
@@ -134,6 +135,13 @@ export interface UploadFileRequest extends BaseRequest {
   processId: string;
   fileName: string;
   data: string;
+}
+
+export interface AddRoXtraFileRequest extends BaseRequest {
+  processId: string;
+  fileName: string;
+  fileId: number;
+  iconLink: string;
 }
 
 export interface UploadReportDraftRequest extends BaseRequest {

@@ -11,7 +11,9 @@ import { AuditTrailEntry } from "../audittrail/audittrailinterfaces";
 export interface ProcessAttachment {
   attachmentId: string;
   fileName: string;
-  url: string;
+  url?: string; // url must be set if it is an uploaded file
+  roxFileId?: number; // roxFileId must be set if the attachment is a link to a roXtra document
+  iconLink?: string; // iconLink must be set if the attachment is a link to a roXtra document
 }
 
 export interface ProcessReportDraft {
