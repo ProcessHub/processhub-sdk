@@ -44,7 +44,7 @@
     "lodash": "^4.17.4",
     "moddle": "^8.0.0",
     "moment": "2.29.4",
-    "nes": "^6.4.3",
+    "nes": "^10.0.2",
     "os-browserify": "^0.1.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
